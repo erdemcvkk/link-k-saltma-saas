@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { createHash } from "crypto";
-import { cookies } from "next/headers";
 
 function hashPassword(password: string): string {
   return createHash("sha256").update(password + process.env.ADMIN_TOKEN).digest("hex");
