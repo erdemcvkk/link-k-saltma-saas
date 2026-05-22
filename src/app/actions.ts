@@ -2,16 +2,46 @@
 
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 // Helper to ensure caller is admin
 async function ensureAdmin(adminUserId: string) {
-  const adminUser = await db.user.findUnique({
-    where: { id: adminUserId },
-    select: { role: true },
-  });
-  if (!adminUser || adminUser.role !== "ADMIN") {
-    throw new Error("Unauthorized: Admin privilege required");
+  const cookieStore = await cookies();
+  const superAdminSession = cookieStore.get("super-admin-session")?.value;
+  const adminSession = cookieStore.get("admin-session")?.value;
+  const superAdminToken = process.env.SUPER_ADMIN_TOKEN;
+
+  // 1. Super Admin Session Cookie Verification
+  if (superAdminSession && superAdminToken && superAdminSession === superAdminToken) {
+    return; // Authorized
   }
+
+  // 2. Admin User Session Verification
+  if (adminSession) {
+    const adminId = cookieStore.get("admin-id")?.value;
+    if (adminId) {
+      const adminUser = await db.adminUser.findUnique({
+        where: { id: adminId, isActive: true },
+        select: { role: true },
+      });
+      if (adminUser && adminUser.role === "ADMIN") {
+        return; // Authorized
+      }
+    }
+  }
+
+  // 3. Fallback: User Table verification for backward compatibility
+  if (adminUserId && adminUserId !== "super-admin") {
+    const user = await db.user.findUnique({
+      where: { id: adminUserId },
+      select: { role: true },
+    });
+    if (user && user.role === "ADMIN") {
+      return; // Authorized
+    }
+  }
+
+  throw new Error("Unauthorized: Admin privilege required");
 }
 
 export async function addLink(
