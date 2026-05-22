@@ -1,49 +1,64 @@
 import { redirect } from "next/navigation";
-import { checkAndSyncUser } from "@/lib/user-sync";
+import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import AdminClient from "./admin-client";
 
-export const revalidate = 0; // Load fresh stats every time
+export const revalidate = 0;
+
+async function checkAdminAuth() {
+  const cookieStore = await cookies();
+  const superAdminSession = cookieStore.get("super-admin-session")?.value;
+  const adminSession = cookieStore.get("admin-session")?.value;
+
+  // Süper admin kontrolü
+  if (superAdminSession && superAdminSession === process.env.SUPER_ADMIN_TOKEN) {
+    return { role: "SUPER_ADMIN", id: "super-admin" };
+  }
+
+  // Admin session kontrolü
+  if (adminSession) {
+    const adminId = cookieStore.get("admin-id")?.value;
+    if (adminId) {
+      const adminUser = await db.adminUser.findUnique({
+        where: { id: adminId, isActive: true },
+      });
+      if (adminUser) {
+        return { role: adminUser.role, id: adminUser.id };
+      }
+    }
+  }
+
+  return null;
+}
 
 export default async function AdminPage() {
-  const admin = await checkAndSyncUser();
+  const auth = await checkAdminAuth();
 
-  // Authentication check
-  if (!admin) {
-    redirect("/sign-in");
+  if (!auth) {
+    redirect("/admin-login");
   }
 
-  // Authorization check
-  if (admin.role !== "ADMIN") {
-    redirect("/dashboard");
-  }
-
-  // Fetch all users in directory
+  // Fetch all users
   const users = await db.user.findMany({
     orderBy: { createdAt: "desc" },
   });
 
-  // Calculate platform metrics
   const totalUsers = users.length;
   const starterCount = users.filter((u) => u.plan === "STARTER").length;
   const creatorCount = users.filter((u) => u.plan === "CREATOR").length;
 
   const paymentsSum = await db.payment.aggregate({
     where: { status: "SUCCESS" },
-    _sum: {
-      amount: true,
-    },
+    _sum: { amount: true },
   });
   const totalRevenue = paymentsSum._sum.amount ?? 0;
 
-  // Fetch global settings
   const settings = await db.globalSetting.findMany();
   const serializedSettings = settings.reduce((acc, curr) => {
     acc[curr.key] = curr.value;
     return acc;
   }, {} as Record<string, string>);
 
-  // Map database users to match AdminClient UserItem types
   const serializedUsers = users.map((u) => ({
     id: u.id,
     email: u.email,
@@ -56,18 +71,10 @@ export default async function AdminPage() {
     createdAt: u.createdAt,
   }));
 
-  const stats = {
-    totalUsers,
-    starterCount,
-    creatorCount,
-    totalRevenue,
-  };
+  const stats = { totalUsers, starterCount, creatorCount, totalRevenue };
 
-  // Fetch managed fonts
-  const dbFonts = await db.managedFont.findMany({
-    orderBy: { name: "asc" }
-  });
-  const serializedFonts = dbFonts.map(f => ({
+  const dbFonts = await db.managedFont.findMany({ orderBy: { name: "asc" } });
+  const serializedFonts = dbFonts.map((f) => ({
     id: f.id,
     name: f.name,
     value: f.value,
@@ -77,7 +84,7 @@ export default async function AdminPage() {
 
   return (
     <AdminClient
-      adminUserId={admin.id}
+      adminUserId={auth.id}
       initialUsers={serializedUsers}
       initialSettings={serializedSettings}
       stats={stats}
