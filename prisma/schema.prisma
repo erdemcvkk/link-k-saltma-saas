@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  clerkUserId   String    @unique
+  email         String    @unique
+  username      String?   @unique
+  plan          String    @default("FREE") // FREE, STARTER, CREATOR, PRO_BUSINESS
+  role          String    @default("USER") // USER, ADMIN
+  isBanned      Boolean   @default(false)
+  planStartedAt DateTime?
+  planExpiresAt DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  profile       Profile?
+  links         Link[]
+  payments      Payment[]
+  pageViews     PageView[]
+  products      Product[]
+  qrCodes       QrCode[]
+}
+
+model Profile {
+  id             String    @id @default(uuid())
+  userId         String    @unique
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  theme          String    @default("dark") // default to dark
+  bio            String?
+  avatarUrl      String?
+  background     String?
+  fontStyle      String    @default("Inter")
+  bioColor       String?   @default("#888888")
+  usernameColor  String?   @default("#ffffff")
+  customDomain   String?   @unique
+
+  // SEO Fields
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String?
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Link {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title         String
+  url           String
+  type          String    @default("WEBSITE")
+  order         Int       @default(0)
+  isActive      Boolean   @default(true)
+  thumbnailUrl  String?
+  animation     String    @default("")
+
+  // Custom box styling options
+  bgColor       String?
+  textColor     String?
+  borderColor   String?
+  borderStyle   String?
+  borderWidth   String?
+  borderRadius  String?
+  shadow        String?
+  fontWeight    String?
+
+  // Extended Interactive Block Types
+  blockType     String    @default("TEXT_LINK") // TEXT_LINK, VIDEO_PLAYER, AUDIO_PLAYER, BEFORE_AFTER
+  metadata      String?   // JSON metadata payload for dynamic block details
+
+  clicks        LinkClick[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Float
+  status    String   // SUCCESS, FAILED, PENDING
+  package   String   // STARTER, CREATOR, PRO_BUSINESS
+  createdAt DateTime @default(now())
+}
+
+model PageView {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device    String?  // Desktop, Mobile, Tablet
+  browser   String?  // Chrome, Safari, Firefox
+  country   String?  // TR, US, DE, etc.
+  referrer  String?  // Direct, Instagram, Twitter
+  createdAt DateTime @default(now())
+}
+
+model LinkClick {
+  id        String   @id @default(uuid())
+  linkId    String
+  link      Link     @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  type        String   // BEAT, PRESET, SAMPLE_PACK, OTHER
+  price       Float
+  description String?
+  fileUrl     String
+  isActive    Boolean  @default(true)
+  salesCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SliderItem {
+  id        String   @id @default(uuid())
+  title     String
+  imageUrl  String
+  link      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Media {
+  id        String   @id @default(uuid())
+  filename  String
+  url       String
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+}
+
+model GlobalSetting {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String
+}
+
+model ManagedFont {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  value     String
+  tier      String   @default("FREE") // FREE, STARTER, CREATOR
+  giftLabel String?  // Optional text badge for FREE gifts, e.g. "Hediye"
+  createdAt DateTime @default(now())
+}
+
+model QrCode {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  type      String   // WEBSITE, PDF, LINK_LIST, VCARD, BUSINESS, VIDEO, IMAGES, FACEBOOK, INSTAGRAM, SOCIAL_MEDIA, WHATSAPP, MP3, MENU, APPS, COUPON, WIFI
+  value     String   // Stringified JSON payload or text
+  fgColor   String   @default("#000000")
+  bgColor   String   @default("#ffffff")
+  logoUrl   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

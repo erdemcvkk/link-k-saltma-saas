@@ -1,0 +1,35 @@
+/* Premium Theme Styles */
+/* Gradient background for body */
+html, body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, hsl(220, 30%, 15%), hsl(260, 30%, 20%));
+  color: hsl(210, 10%, 90%);
+}
+
+/* Glassmorphism utility class */
+.glass {
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Dark mode overrides */
+.dark html, .dark body {
+  background: linear-gradient(135deg, hsl(220, 30%, 10%), hsl(260, 30%, 15%));
+  color: hsl(210, 10%, 95%);
+}
+
+/* Primary button style */
+.btn-primary {
+  background: linear-gradient(45deg, hsl(212, 90%, 55%), hsl(212, 90%, 70%));
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}

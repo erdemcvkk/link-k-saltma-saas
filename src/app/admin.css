@@ -1,0 +1,57 @@
+/* src/app/admin.css */
+
+/* Glassmorphism card style */
+.admin-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Upload form container */
+.upload-form {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.upload-form.drag-active {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #7c3aed; /* purple-600 */
+}
+
+/* Button styling */
+.btn-primary {
+  background: #7c3aed; /* purple-600 */
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.btn-primary:hover {
+  background: #6d28d9; /* purple-700 */
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  .admin-card {
+    background: rgba(30, 30, 30, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .upload-form {
+    background: rgba(30, 30, 30, 0.25);
+    border: 2px dashed rgba(255, 255, 255, 0.35);
+  }
+}
