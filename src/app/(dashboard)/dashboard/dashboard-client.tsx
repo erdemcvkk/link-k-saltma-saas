@@ -15,7 +15,7 @@ import {
   saveCustomDomain,
   addProduct,
   deleteProduct,
-  switchTestPlan,
+  
   createQrCode,
   updateQrCode,
   deleteQrCode,
@@ -297,7 +297,7 @@ const getLinkIconHelper = (type?: string, url?: string) => {
 
 export default function DashboardClient({ initialUser, initialLinks, initialPageViews, initialProducts, globalSettings, initialFonts = FONTS_CATALOG, initialQrCodes = [] }: DashboardClientProps) {
   const isTemplateUnlocked = (templateTier: string) => {
-    const userPlan = initialUser.plan;
+    const userPlan = simulatedPlan;
     if (userPlan === "CREATOR" || userPlan === "PRO_BUSINESS" || initialUser.role === "ADMIN") {
       return true;
     }
@@ -381,7 +381,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
       }
       return defaultAll.filter(a => a.tier === "FREE");
     }
-  }, [globalSettings, initialUser.plan, initialUser.role]);
+  }, [globalSettings, simulatedPlan, initialUser.role]);
 
   
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
@@ -405,6 +405,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
     }
   }, [initialUser.plan]);
 
+  const [simulatedPlan, setSimulatedPlan] = useState(initialUser.plan);
   const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo">("editor");
 
   const [links, setLinks] = useState<LinkItem[]>(initialLinks);
@@ -903,7 +904,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
     // Typography gating validation on client side
     const currentFontObj = initialFonts.find(f => f.value === fontStyle) || { name: fontStyle, value: fontStyle, tier: "FREE" };
     const currentFontLocked = (
-      currentFontObj.tier === "STARTER" && initialUser.plan === "FREE"
+      currentFontObj.tier === "STARTER" && simulatedPlan === "FREE"
     ) || (
       currentFontObj.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS"
     );
@@ -1252,7 +1253,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
   // Check plan levels
   const isPremium = initialUser.plan !== "FREE";
-  const isCreator = initialUser.plan === "CREATOR" || initialUser.plan === "PRO_BUSINESS";
+  const isCreator = simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS";
 
   const renderSimulator = () => {
     return (
@@ -1851,7 +1852,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         const selectedVal = e.target.value;
                         const selected = initialFonts.find(f => f.value === selectedVal);
                         if (selected) {
-                          const locked = (selected.tier === "STARTER" && initialUser.plan === "FREE") ||
+                          const locked = (selected.tier === "STARTER" && simulatedPlan === "FREE") ||
                                          (selected.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS");
                           if (locked) {
                             setErrorMsg(
@@ -1879,7 +1880,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                       </optgroup>
                       <optgroup label={lang === "tr" ? "Starter Paket Yazı Tipleri (STARTER)" : "Starter Plan Exclusives (STARTER)"}>
                         {initialFonts.filter(f => f.tier === "STARTER").map(f => {
-                          const isLocked = initialUser.plan === "FREE";
+                          const isLocked = simulatedPlan === "FREE";
                           return (
                             <option key={f.value} value={f.value}>
                               {isLocked ? "🔒 " : ""}{f.name}
@@ -1927,7 +1928,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                   {(() => {
                     const activeFont = initialFonts.find(f => f.value === fontStyle);
                     const locked = activeFont && (
-                      (activeFont.tier === "STARTER" && initialUser.plan === "FREE") ||
+                      (activeFont.tier === "STARTER" && simulatedPlan === "FREE") ||
                       (activeFont.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS")
                     );
                     if (!locked || !activeFont) return null;
@@ -1975,16 +1976,9 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                     <button
                       key={p}
                       type="button"
-                      onClick={async () => {
-                        try {
-                          await switchTestPlan(initialUser.id, p);
-                          window.location.reload();
-                        } catch (err) {
-                          alert("Plan simulator failed.");
-                        }
-                      }}
+                      onClick={() => setSimulatedPlan(p)}
                       className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer select-none ${
-                        initialUser.plan === p
+                        simulatedPlan === p
                           ? "bg-purple-600 border-purple-500 text-white shadow-md"
                           : isDark
                             ? "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white"
@@ -2018,7 +2012,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                   )}
                 </div>
 
-                {initialUser.plan === "FREE" && (
+                {simulatedPlan === "FREE" && (
                   <div className="space-y-3">
                     <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Ücretsiz Arka Planlar (5 Adet)" : "Free Plan Backdrops (5 Colors)"}
@@ -2040,7 +2034,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                   </div>
                 )}
 
-                {initialUser.plan === "STARTER" && (
+                {simulatedPlan === "STARTER" && (
                   <div className="space-y-3">
                     <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Starter Paket Arka Planları (10 Adet)" : "Starter Plan Backdrops (10 Colors)"}
@@ -2118,7 +2112,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                   </div>
                 )}
 
-                {(initialUser.plan === "CREATOR" || initialUser.plan === "PRO_BUSINESS") && (
+                {(simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS") && (
                   <div className="space-y-4">
                     <span className="text-[10px] text-purple-400 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Creator Plana Özel Arka Planlar (20 Adet)" : "Creator Exclusive Backdrops (20 Colors)"}
@@ -2803,7 +2797,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               <span className={`text-[10px] uppercase font-black tracking-wider ${isDark ? "text-zinc-400" : "text-zinc-655"}`}>
                                 {lang === "tr" ? "KUTU TASARIM ÖZELLEŞTİRME" : "BOX STYLING CUSTOMIZATION"}
                               </span>
-                              {initialUser.plan === "FREE" && initialUser.role !== "ADMIN" && (
+                              {simulatedPlan === "FREE" && initialUser.role !== "ADMIN" && (
                                 <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-purple-100 text-purple-600 uppercase flex items-center gap-0.5 animate-pulse">
                                   <Lock className="h-2 w-2" />
                                   PRO
@@ -2881,7 +2875,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 <button
                                   key={presetTheme.name}
                                   type="button"
-                                  disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                  disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                   onClick={() => applyPresetTheme(link.id, presetTheme)}
                                   className="px-2.5 py-1.5 rounded-lg text-[9px] font-black border border-zinc-800 hover:border-purple-500/50 bg-zinc-900 text-zinc-300 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
                                 >
@@ -2935,7 +2929,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 <button
                                   key={pTheme.name}
                                   type="button"
-                                  disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                  disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                   onClick={() => applyPresetTheme(link.id, {
                                     bgColor: pTheme.bgColor,
                                     textColor: pTheme.textColor,
@@ -2985,7 +2979,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   <input
                                     type="color"
                                     value={link.bgColor && link.bgColor !== "transparent" ? link.bgColor : "#ffffff"}
-                                    disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                    disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                     onChange={(e) => handleUpdateLinkStyle(link.id, "bgColor", e.target.value)}
                                     className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                                   />
@@ -2995,7 +2989,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase">{link.bgColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
                                   <button
                                     type="button"
-                                    disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                    disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                     onClick={() => handleUpdateLinkStyle(link.id, "bgColor", null)}
                                     className="text-[9px] font-bold text-purple-400 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
                                   >
@@ -3011,7 +3005,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                     <button
                                       key={col}
                                       type="button"
-                                      disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                      disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                       onClick={() => handleUpdateLinkStyle(link.id, "bgColor", col)}
                                       className={`h-5 w-5 rounded-full border hover:scale-110 transition-transform cursor-pointer relative overflow-hidden ${isSelected ? "ring-2 ring-purple-500 ring-offset-1 border-white" : "border-zinc-800"}`}
                                       style={col !== "transparent" ? { backgroundColor: col } : undefined}
@@ -3034,7 +3028,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   <input
                                     type="color"
                                     value={link.textColor || "#000000"}
-                                    disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                    disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                     onChange={(e) => handleUpdateLinkStyle(link.id, "textColor", e.target.value)}
                                     className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                                   />
@@ -3043,7 +3037,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase">{link.textColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
                                   <button
                                     type="button"
-                                    disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                    disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                     onClick={() => handleUpdateLinkStyle(link.id, "textColor", null)}
                                     className="text-[9px] font-bold text-purple-400 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
                                   >
@@ -3059,7 +3053,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                     <button
                                       key={col}
                                       type="button"
-                                      disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                      disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                       onClick={() => handleUpdateLinkStyle(link.id, "textColor", col)}
                                       className={`h-5 w-5 rounded-full border hover:scale-110 transition-transform cursor-pointer ${isSelected ? "ring-2 ring-purple-500 ring-offset-1 border-white" : "border-zinc-800"}`}
                                       style={{ backgroundColor: col }}
@@ -3080,7 +3074,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   <input
                                     type="color"
                                     value={link.borderColor || "#e4e4e7"}
-                                    disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                    disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                     onChange={(e) => handleUpdateLinkStyle(link.id, "borderColor", e.target.value)}
                                     className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                                   />
@@ -3089,7 +3083,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase">{link.borderColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
                                   <button
                                     type="button"
-                                    disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                    disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                     onClick={() => handleUpdateLinkStyle(link.id, "borderColor", null)}
                                     className="text-[9px] font-bold text-purple-400 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
                                   >
@@ -3105,7 +3099,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                     <button
                                       key={col}
                                       type="button"
-                                      disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                      disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                       onClick={() => handleUpdateLinkStyle(link.id, "borderColor", col)}
                                       className={`h-5 w-5 rounded-full border hover:scale-110 transition-transform cursor-pointer ${isSelected ? "ring-2 ring-purple-500 ring-offset-1 border-white" : "border-zinc-800"}`}
                                       style={{ backgroundColor: col }}
@@ -3126,7 +3120,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               </label>
                               <select
                                 value={link.borderStyle || "solid"}
-                                disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "borderStyle", e.target.value)}
                                 className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-purple-500 bg-zinc-900 border-zinc-800 text-white disabled:opacity-50 cursor-pointer"
                               >
@@ -3145,7 +3139,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               </label>
                               <select
                                 value={link.borderWidth || "1px"}
-                                disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "borderWidth", e.target.value)}
                                 className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-purple-500 bg-zinc-900 border-zinc-800 text-white disabled:opacity-50 cursor-pointer"
                               >
@@ -3163,7 +3157,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               </label>
                               <select
                                 value={link.borderRadius || "12px"}
-                                disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "borderRadius", e.target.value)}
                                 className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-purple-500 bg-zinc-900 border-zinc-800 text-white disabled:opacity-50 cursor-pointer"
                               >
@@ -3182,7 +3176,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               </label>
                               <select
                                 value={link.shadow || "none"}
-                                disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "shadow", e.target.value)}
                                 className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-purple-500 bg-zinc-900 border-zinc-800 text-white disabled:opacity-50 cursor-pointer"
                               >
@@ -3201,7 +3195,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               </label>
                               <select
                                 value={link.fontWeight || "font-bold"}
-                                disabled={initialUser.plan === "FREE" && initialUser.role !== "ADMIN"}
+                                disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "fontWeight", e.target.value)}
                                 className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-purple-500 bg-zinc-900 border-zinc-800 text-white disabled:opacity-50 cursor-pointer"
                               >
