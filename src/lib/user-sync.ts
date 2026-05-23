@@ -49,17 +49,21 @@ export async function checkAndSyncUser() {
       throw new Error("User has no email address.");
     }
 
+    const baseUsername = email.split("@")[0].replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+    const uniqueSuffix = Math.random().toString(36).substring(2, 6);
+    const username = `${baseUsername}${uniqueSuffix}`;
+
     dbUser = await db.user.create({
       data: {
         clerkUserId: clerkUser.id,
         email: email,
-        username: "developer_hub",
-        plan: "CREATOR", // Give full premium access!
-        role: "ADMIN",   // Give admin privileges!
+        username: username,
+        plan: "FREE", 
+        role: "USER",
         profile: {
           create: {
             theme: "dark",
-            bio: "Welcome to my developer workspace!",
+            bio: "Merhaba, Link ağacıma hoş geldiniz!",
           },
         },
       },

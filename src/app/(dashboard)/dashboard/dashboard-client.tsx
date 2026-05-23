@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useTransition, useMemo, useRef } from "react";
+import {
+  X, useState, useEffect, useTransition, useMemo, useRef } from "react";
 import Link from "next/link";
+import { SignOutButton } from "@clerk/nextjs";
 import { QRCodeSVG } from "qrcode.react";
 import {
   addLink,
@@ -380,6 +382,28 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
       return defaultAll.filter(a => a.tier === "FREE");
     }
   }, [globalSettings, initialUser.plan, initialUser.role]);
+
+  
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
+
+  useEffect(() => {
+    if (initialUser.plan === "FREE") {
+      const timer = setInterval(() => {
+        setShowUpgradePrompt(true);
+        setTimeout(() => setShowUpgradePrompt(false), 15000);
+      }, 60000 * 3); // Every 3 minutes
+      
+      const initialTimer = setTimeout(() => {
+        setShowUpgradePrompt(true);
+        setTimeout(() => setShowUpgradePrompt(false), 15000);
+      }, 5000); // First time after 5 seconds
+
+      return () => {
+        clearInterval(timer);
+        clearTimeout(initialTimer);
+      };
+    }
+  }, [initialUser.plan]);
 
   const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo">("editor");
 
@@ -1464,6 +1488,20 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
               <ExternalLink className="h-3 w-3" />
             </a>
           )}
+
+          {/* Logout Button */}
+          <SignOutButton>
+            <button
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-all ${
+                isDark
+                  ? "bg-red-950/20 border-red-900 hover:bg-red-900/40 text-red-400"
+                  : "bg-red-50 border-red-200 hover:bg-red-100 text-red-600 shadow-sm"
+              }`}
+            >
+              <span>{lang === "tr" ? "Çıkış Yap" : "Sign Out"}</span>
+            </button>
+          </SignOutButton>
+
         </div>
       </div>
 
