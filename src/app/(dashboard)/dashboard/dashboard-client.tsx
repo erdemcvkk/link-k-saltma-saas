@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  X, useState, useEffect, useTransition, useMemo, useRef } from "react";
+  useState, useEffect, useTransition, useMemo, useRef } from "react";
 import Link from "next/link";
 import { SignOutButton } from "@clerk/nextjs";
 import { QRCodeSVG } from "qrcode.react";
@@ -38,6 +38,7 @@ import {
 } from "recharts";
 import {
   Trash2,
+  X,
   Plus,
   Sparkles,
   ExternalLink,
