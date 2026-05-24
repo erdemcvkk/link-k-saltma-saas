@@ -81,6 +81,8 @@ export default async function DashboardPage() {
     profile: user.profile ? {
       theme: user.profile.theme,
       bio: user.profile.bio,
+      avatarUrl: user.profile.avatarUrl,
+      background: user.profile.background,
       seoTitle: user.profile.seoTitle,
       seoDescription: user.profile.seoDescription,
       seoKeywords: user.profile.seoKeywords,

@@ -364,7 +364,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
         : defaultCreator;
       
       const allAnims = [...freeList, ...starterList, ...creatorList];
-      const userPlan = initialUser.plan;
+      const userPlan = simulatedPlan;
       if (userPlan === "CREATOR" || userPlan === "PRO_BUSINESS") {
         return allAnims;
       }
@@ -374,7 +374,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
       return allAnims.filter(a => a.tier === "FREE");
     } catch (e) {
       const defaultAll = [...defaultFree, ...defaultStarter, ...defaultCreator];
-      const userPlan = initialUser.plan;
+      const userPlan = simulatedPlan;
       if (userPlan === "CREATOR" || userPlan === "PRO_BUSINESS") {
         return defaultAll;
       }

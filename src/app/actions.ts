@@ -699,22 +699,6 @@ export async function generateAiCreatorSuggestions(prompt: string) {
   };
 }
 
-
-export async function switchTestPlan(userId: string, plan: string) {
-  const validPlans = ["FREE", "STARTER", "CREATOR", "PRO_BUSINESS"];
-  if (!validPlans.includes(plan)) {
-    throw new Error("Invalid plan name");
-  }
-
-  await db.user.update({
-    where: { id: userId },
-    data: { plan },
-  });
-
-  revalidatePath("/dashboard");
-  revalidatePath("/[username]", "page");
-}
-
 export async function adminClearCache(adminUserId: string) {
   await ensureAdmin(adminUserId);
 
