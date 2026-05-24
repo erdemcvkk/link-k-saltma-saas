@@ -12,6 +12,14 @@ export default async function Home() {
     return acc;
   }, {} as Record<string, string>);
 
+  const dbSliderItems = await db.sliderItem.findMany({ orderBy: { createdAt: "asc" } });
+  const serializedSliderItems = dbSliderItems.map((item) => ({
+    id: item.id,
+    title: item.title,
+    imageUrl: item.imageUrl,
+    link: item.link || undefined,
+  }));
+
   const siteTitle = serializedSettings["site_title"] || "CREATOR.HUB";
   const siteLogo = serializedSettings["site_logo"] || "";
   const heroTitle = serializedSettings["hero_title"] || "Your home";
@@ -78,6 +86,10 @@ export default async function Home() {
       heroSubtitle={heroSubtitle}
       creatorsData={creatorsData}
       featuresData={featuresData}
+      sliderItems={serializedSliderItems}
+      paymentLinkStarter={serializedSettings["payment_link_starter"] || ""}
+      paymentLinkCreator={serializedSettings["payment_link_creator"] || ""}
+      paymentLinkPro={serializedSettings["payment_link_pro"] || ""}
     />
   );
 }
