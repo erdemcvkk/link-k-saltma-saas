@@ -297,6 +297,7 @@ const getLinkIconHelper = (type?: string, url?: string) => {
 };
 
 export default function DashboardClient({ initialUser, initialLinks, initialPageViews, initialProducts, globalSettings, initialFonts = FONTS_CATALOG, initialQrCodes = [] }: DashboardClientProps) {
+  const [simulatedPlan, setSimulatedPlan] = useState(initialUser.plan);
   const isTemplateUnlocked = (templateTier: string) => {
     const userPlan = simulatedPlan;
     if (userPlan === "CREATOR" || userPlan === "PRO_BUSINESS" || initialUser.role === "ADMIN") {
@@ -406,7 +407,6 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
     }
   }, [initialUser.plan]);
 
-  const [simulatedPlan, setSimulatedPlan] = useState(initialUser.plan);
   const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo">("editor");
 
   const [links, setLinks] = useState<LinkItem[]>(initialLinks);
