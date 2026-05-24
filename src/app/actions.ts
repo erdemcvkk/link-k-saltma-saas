@@ -948,3 +948,47 @@ export async function deleteQrCode(userId: string, qrId: string) {
   return { success: true };
 }
 
+// ===========================
+// Slider Item Management
+// ===========================
+
+export async function addSliderItem(adminUserId: string, title: string, imageUrl: string, link?: string) {
+  await ensureAdmin(adminUserId);
+
+  if (!title || !imageUrl) {
+    throw new Error("Title and image URL are required.");
+  }
+
+  const item = await db.sliderItem.create({
+    data: { title, imageUrl, link: link || null },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  return item;
+}
+
+export async function deleteSliderItem(adminUserId: string, itemId: string) {
+  await ensureAdmin(adminUserId);
+
+  await db.sliderItem.delete({
+    where: { id: itemId },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  return { success: true };
+}
+
+export async function updateSliderItem(adminUserId: string, itemId: string, title: string, imageUrl: string, link?: string) {
+  await ensureAdmin(adminUserId);
+
+  const item = await db.sliderItem.update({
+    where: { id: itemId },
+    data: { title, imageUrl, link: link || null },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  return item;
+}

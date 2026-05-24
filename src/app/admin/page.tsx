@@ -82,6 +82,14 @@ export default async function AdminPage() {
     createdAt: f.createdAt.toISOString(),
   }));
 
+  const dbSliderItems = await db.sliderItem.findMany({ orderBy: { createdAt: "asc" } });
+  const serializedSliderItems = dbSliderItems.map((item) => ({
+    id: item.id,
+    title: item.title,
+    imageUrl: item.imageUrl,
+    link: item.link || undefined,
+  }));
+
   return (
     <AdminClient
       adminUserId={auth.id}
@@ -90,6 +98,7 @@ export default async function AdminPage() {
       initialSettings={serializedSettings}
       stats={stats}
       initialFonts={serializedFonts}
+      initialSliderItems={serializedSliderItems}
     />
   );
 }

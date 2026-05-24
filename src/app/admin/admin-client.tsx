@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { adminToggleBanUser, adminChangeUserPlan, adminToggleUserRole, saveGlobalSetting, adminClearCache, adminDeleteGlobalSetting, adminAddFont, adminDeleteFont, adminUpdateFont } from "@/app/actions";
+import { adminToggleBanUser, adminChangeUserPlan, adminToggleUserRole, saveGlobalSetting, adminClearCache, adminDeleteGlobalSetting, adminAddFont, adminDeleteFont, adminUpdateFont, addSliderItem, deleteSliderItem } from "@/app/actions";
 import {
   ShieldAlert,
   Users,
@@ -58,6 +58,7 @@ interface AdminClientProps {
     totalRevenue: number;
   };
   initialFonts: { id: string; name: string; value: string; tier: string; giftLabel?: string | null; createdAt: string }[];
+  initialSliderItems?: { id: string; title: string; imageUrl: string; link?: string }[];
 }
 
 const DEFAULT_FREE_BGS = [
@@ -169,7 +170,15 @@ const STANDARD_SETTINGS_METADATA: Record<string, { title: string; desc: string }
   }
 };
 
-export default function AdminClient({ adminUserId, adminRole, initialUsers, initialSettings, stats, initialFonts }: AdminClientProps) {
+export default function AdminClient({ 
+  adminUserId, 
+  adminRole, 
+  initialUsers, 
+  initialSettings, 
+  stats, 
+  initialFonts,
+  initialSliderItems = [],
+}: AdminClientProps) {
   const isSuperAdmin = adminRole === "SUPER_ADMIN";
   const [users, setUsers] = useState<UserItem[]>(initialUsers);
   const [searchQuery, setSearchQuery] = useState("");
@@ -179,10 +188,17 @@ export default function AdminClient({ adminUserId, adminRole, initialUsers, init
 
   const [lang, setLang] = useState<"tr" | "en">("en");
   const [activeTheme, setActiveTheme] = useState<"dark" | "light">("light");
-  const [sidebarTab, setSidebarTab] = useState<"directory" | "stats" | "backgrounds" | "settings" | "legal" | "code" | "fonts" | "animations">("directory");
+  const [sidebarTab, setSidebarTab] = useState<"directory" | "stats" | "backgrounds" | "homepage" | "settings" | "legal" | "code" | "fonts" | "animations">("directory");
 
   // Dynamic Fonts state
   const [fonts, setFonts] = useState(initialFonts);
+
+  // Slider items state
+  const [sliderItems, setSliderItems] = useState(initialSliderItems);
+  const [newSliderTitle, setNewSliderTitle] = useState("");
+  const [newSliderLink, setNewSliderLink] = useState("");
+  const [newSliderFile, setNewSliderFile] = useState<File | null>(null);
+  const [isUploadingSlider, setIsUploadingSlider] = useState(false);
   const [fontSearchQuery, setFontSearchQuery] = useState("");
   
   // Font Form state
@@ -816,6 +832,20 @@ export default function AdminClient({ adminUserId, adminRole, initialUsers, init
               </button>
 
               <button
+                onClick={() => setSidebarTab("homepage")}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  sidebarTab === "homepage"
+                    ? activeTheme === "dark" ? "bg-white/10 text-white" : "bg-zinc-200 text-zinc-900"
+                    : activeTheme === "dark" ? "text-zinc-400 hover:text-white hover:bg-white/5" : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Grid className="h-4 w-4" />
+                  Homepage
+                </div>
+              </button>
+
+              <button
                 onClick={() => setSidebarTab("settings")}
                 className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                   sidebarTab === "settings"
@@ -1424,6 +1454,204 @@ export default function AdminClient({ adminUserId, adminRole, initialUsers, init
                     {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
                     {lang === "tr" ? "Tüm Arka Plan Ayarlarını Veritabanına Kaydet" : "Save Backgrounds to Database"}
                   </button>
+                </div>
+              </div>
+            )}
+
+            {/* --- HOMEPAGE / SLIDER MANAGEMENT --- */}
+            {sidebarTab === "homepage" && (
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-xl font-bold">Anasayfa & Slider Yönetimi</h2>
+                  <p className={`text-sm mt-1 ${activeTheme === "dark" ? "text-zinc-400" : "text-zinc-500"}`}>
+                    Mobil önizleme slider resimlerini ve anasayfa özellik kartlarını düzenleyin.
+                  </p>
+                </div>
+
+                <div className={`p-6 rounded-xl border ${activeTheme === "dark" ? "bg-zinc-900/50 border-zinc-800" : "bg-white border-zinc-200 shadow-sm"}`}>
+                  <h3 className="text-lg font-semibold mb-4">Telefon Slider Resimleri</h3>
+                  
+                  {/* Yeni Ekleme Formu */}
+                  <div className={`p-4 rounded-lg border mb-6 ${activeTheme === "dark" ? "bg-black border-zinc-800" : "bg-zinc-50 border-zinc-200"}`}>
+                    <h4 className="text-sm font-semibold mb-3">Yeni Resim Ekle</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium">Başlık (Opsiyonel)</label>
+                        <input
+                          type="text"
+                          value={newSliderTitle}
+                          onChange={(e) => setNewSliderTitle(e.target.value)}
+                          className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all ${
+                            activeTheme === "dark"
+                              ? "bg-zinc-900 border-zinc-700 text-white placeholder-zinc-500"
+                              : "bg-white border-zinc-300 text-zinc-900 placeholder-zinc-400"
+                          }`}
+                          placeholder="Örn: Yeni Neon Tema!"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium">Yönlendirme Linki (Opsiyonel)</label>
+                        <input
+                          type="text"
+                          value={newSliderLink}
+                          onChange={(e) => setNewSliderLink(e.target.value)}
+                          className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all ${
+                            activeTheme === "dark"
+                              ? "bg-zinc-900 border-zinc-700 text-white placeholder-zinc-500"
+                              : "bg-white border-zinc-300 text-zinc-900 placeholder-zinc-400"
+                          }`}
+                          placeholder="https://"
+                        />
+                      </div>
+                      <div className="space-y-2 md:col-span-2">
+                        <label className="text-xs font-medium">Görsel (Mobil ekran formatı tavsiye edilir)</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files[0]) {
+                              setNewSliderFile(e.target.files[0]);
+                            }
+                          }}
+                          className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none transition-all ${
+                            activeTheme === "dark"
+                              ? "bg-zinc-900 border-zinc-700 text-white"
+                              : "bg-white border-zinc-300 text-zinc-900"
+                          }`}
+                        />
+                      </div>
+                    </div>
+                    <button
+                      disabled={isUploadingSlider || !newSliderFile}
+                      onClick={async () => {
+                        if (!newSliderFile) return;
+                        setIsUploadingSlider(true);
+                        try {
+                          const formData = new FormData();
+                          formData.append("file", newSliderFile);
+                          // Upload the image first
+                          const res = await fetch("/api/media", {
+                            method: "POST",
+                            body: formData,
+                          });
+                          if (!res.ok) throw new Error("Resim yüklenemedi");
+                          const media = await res.json();
+                          
+                          // Now create the slider item
+                          await addSliderItem(adminUserId, newSliderTitle || "Yeni Ekran", media.url, newSliderLink);
+                          setSuccessMsg("Slider resmi eklendi!");
+                          // Reset form
+                          setNewSliderTitle("");
+                          setNewSliderLink("");
+                          setNewSliderFile(null);
+                          // Needs page reload or we can fetch again, but Next.js router.refresh is easier if we had the router
+                          window.location.reload();
+                        } catch (e: any) {
+                          alert(e.message);
+                        } finally {
+                          setIsUploadingSlider(false);
+                        }
+                      }}
+                      className="mt-4 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-medium text-sm transition-colors flex items-center gap-2 disabled:opacity-50"
+                    >
+                      {isUploadingSlider && <Loader2 className="h-4 w-4 animate-spin" />}
+                      Ekle
+                    </button>
+                  </div>
+
+                  {/* Mevcut Sliderlar */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {sliderItems.map((item) => (
+                      <div key={item.id} className={`relative group rounded-xl overflow-hidden border ${activeTheme === "dark" ? "border-zinc-800" : "border-zinc-200"}`}>
+                        <div className="aspect-[9/18] relative">
+                          <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
+                          <p className="text-white text-xs font-bold truncate mb-2">{item.title}</p>
+                          <button
+                            onClick={async () => {
+                              if (confirm("Silmek istediğinize emin misiniz?")) {
+                                await deleteSliderItem(adminUserId, item.id);
+                                setSliderItems((prev) => prev.filter((i) => i.id !== item.id));
+                              }
+                            }}
+                            className="bg-red-500/20 text-red-400 hover:bg-red-500/40 p-1.5 rounded-lg backdrop-blur-md self-end"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    {sliderItems.length === 0 && (
+                      <div className="col-span-full py-8 text-center text-sm text-zinc-500">
+                        Hiç resim eklenmemiş. Anasayfada varsayılan statik telefon görünecek.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Özellik Kartları */}
+                <div className={`p-6 rounded-xl border ${activeTheme === "dark" ? "bg-zinc-900/50 border-zinc-800" : "bg-white border-zinc-200 shadow-sm"}`}>
+                  <h3 className="text-lg font-semibold mb-4">Özellik Kartları Metinleri</h3>
+                  
+                  <div className="space-y-6">
+                    {[1, 2, 3].map((num) => (
+                      <div key={`feature_${num}`} className={`p-4 rounded-lg border space-y-3 ${activeTheme === "dark" ? "bg-black/50 border-zinc-800" : "bg-zinc-50 border-zinc-200"}`}>
+                        <h4 className="text-sm font-bold text-purple-500">Kart {num}</h4>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-xs">Başlık</label>
+                            <input
+                              type="text"
+                              value={unsavedSettings[`feature_${num}_title`] ?? (settings[`feature_${num}_title`] || "")}
+                              onChange={(e) => handleSettingChange(`feature_${num}_title`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                                activeTheme === "dark" ? "bg-zinc-900 border-zinc-700 text-white" : "bg-white border-zinc-300 text-zinc-900"
+                              }`}
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-xs">Açıklama</label>
+                            <input
+                              type="text"
+                              value={unsavedSettings[`feature_${num}_desc`] ?? (settings[`feature_${num}_desc`] || "")}
+                              onChange={(e) => handleSettingChange(`feature_${num}_desc`, e.target.value)}
+                              className={`w-full px-3 py-2 rounded-lg border text-sm ${
+                                activeTheme === "dark" ? "bg-zinc-900 border-zinc-700 text-white" : "bg-white border-zinc-300 text-zinc-900"
+                              }`}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {Object.keys(unsavedSettings).some(k => k.startsWith("feature_")) && (
+                      <button
+                        onClick={async () => {
+                          setIsSaving(true);
+                          const featureKeys = Object.keys(unsavedSettings).filter(k => k.startsWith("feature_"));
+                          for (const k of featureKeys) {
+                            await saveGlobalSetting(adminUserId, k, unsavedSettings[k]);
+                            setSettings(prev => ({ ...prev, [k]: unsavedSettings[k] }));
+                          }
+                          // Remove saved items from unsaved
+                          setUnsavedSettings(prev => {
+                            const next = { ...prev };
+                            featureKeys.forEach(k => delete next[k]);
+                            return next;
+                          });
+                          setIsSaving(false);
+                          setSuccessMsg("Kart özellikleri kaydedildi.");
+                          setTimeout(() => setSuccessMsg(""), 3000);
+                        }}
+                        disabled={isSaving}
+                        className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-colors flex items-center gap-2"
+                      >
+                        {isSaving && <Loader2 className="h-4 w-4 animate-spin" />}
+                        Değişiklikleri Kaydet
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

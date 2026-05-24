@@ -19,6 +19,14 @@ interface HomeClientProps {
   paymentLinkStarter?: string;
   paymentLinkCreator?: string;
   paymentLinkPro?: string;
+  // Dynamic feature cards from admin
+  feature1Title?: string;
+  feature1Desc?: string;
+  feature2Title?: string;
+  feature2Desc?: string;
+  feature3Title?: string;
+  feature3Desc?: string;
+  sliderItems?: { id: string; title: string; imageUrl: string; link?: string }[];
 }
 
 export default function HomeClient({
@@ -34,6 +42,13 @@ export default function HomeClient({
   paymentLinkStarter,
   paymentLinkCreator,
   paymentLinkPro,
+  feature1Title,
+  feature1Desc,
+  feature2Title,
+  feature2Desc,
+  feature3Title,
+  feature3Desc,
+  sliderItems = [],
 }: HomeClientProps) {
   const [lang, setLang] = useState<"tr" | "en">("en");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -215,7 +230,8 @@ export default function HomeClient({
           </Link>
         </div>
 
-        {/* Premium Mobile Mockup / Showcase */}
+        {/* Premium Mobile Mockup / Showcase - Static fallback when no slider items */}
+        {sliderItems.length === 0 && (
         <div id="showcase" className={`mt-20 relative max-w-xs mx-auto rounded-[3rem] p-4 transition-all duration-300 ${
           isDark ? "bg-zinc-950 border-4 border-zinc-800 shadow-[0_0_50px_rgba(168,85,247,0.15)]" : "bg-white border-4 border-zinc-200 shadow-xl"
         } overflow-hidden`}>
@@ -268,9 +284,11 @@ export default function HomeClient({
             </div>
           </div>
         </div>
+        )}
       </section>
-        {/* Slider Carousel */}
-        <Slider />
+
+        {/* Phone Mockup Slider Carousel */}
+        {sliderItems.length > 0 && <Slider isDark={isDark} initialItems={sliderItems} />}
 
       {/* Features Grid */}
       <section id="features" className={`max-w-6xl mx-auto px-6 py-20 border-t transition-colors ${
@@ -289,9 +307,9 @@ export default function HomeClient({
             isDark ? "bg-zinc-950/50 border-zinc-900/80 hover:border-purple-500/20" : "bg-white border-zinc-200/80 shadow-sm hover:shadow-md"
           }`}>
             <Zap className="h-8 w-8 text-purple-500 mb-6 animate-pulse" />
-            <h3 className="text-xl font-bold mb-3">{t.feat1Title}</h3>
+            <h3 className="text-xl font-bold mb-3">{feature1Title || t.feat1Title}</h3>
             <p className={`text-sm leading-relaxed ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-              {t.feat1Desc}
+              {feature1Desc || t.feat1Desc}
             </p>
           </div>
 
@@ -300,9 +318,9 @@ export default function HomeClient({
             isDark ? "bg-zinc-950/50 border-zinc-900/80 hover:border-fuchsia-500/20" : "bg-white border-zinc-200/80 shadow-sm hover:shadow-md"
           }`}>
             <Sparkles className="h-8 w-8 text-fuchsia-500 mb-6" />
-            <h3 className="text-xl font-bold mb-3">{t.feat2Title}</h3>
+            <h3 className="text-xl font-bold mb-3">{feature2Title || t.feat2Title}</h3>
             <p className={`text-sm leading-relaxed ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-              {t.feat2Desc}
+              {feature2Desc || t.feat2Desc}
             </p>
           </div>
 
@@ -311,9 +329,9 @@ export default function HomeClient({
             isDark ? "bg-zinc-950/50 border-zinc-900/80 hover:border-pink-500/20" : "bg-white border-zinc-200/80 shadow-sm hover:shadow-md"
           }`}>
             <BarChart3 className="h-8 w-8 text-pink-500 mb-6" />
-            <h3 className="text-xl font-bold mb-3">{t.feat3Title}</h3>
+            <h3 className="text-xl font-bold mb-3">{feature3Title || t.feat3Title}</h3>
             <p className={`text-sm leading-relaxed ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-              {t.feat3Desc}
+              {feature3Desc || t.feat3Desc}
             </p>
           </div>
         </div>

@@ -12,6 +12,14 @@ export default async function Home() {
     return acc;
   }, {} as Record<string, string>);
 
+  const dbSliderItems = await db.sliderItem.findMany({ orderBy: { createdAt: "asc" } });
+  const serializedSliderItems = dbSliderItems.map((item) => ({
+    id: item.id,
+    title: item.title,
+    imageUrl: item.imageUrl,
+    link: item.link || undefined,
+  }));
+
   const siteTitle = serializedSettings["site_title"] || "CREATOR.HUB";
   const siteLogo = serializedSettings["site_logo"] || "";
   const heroTitle = serializedSettings["hero_title"] || "ONE LINK FOR YOUR DIGITAL EMPIRE";
@@ -76,6 +84,13 @@ export default async function Home() {
       paymentLinkStarter={serializedSettings["payment_link_starter"] || ""}
       paymentLinkCreator={serializedSettings["payment_link_creator"] || ""}
       paymentLinkPro={serializedSettings["payment_link_pro"] || ""}
+      feature1Title={serializedSettings["feature_1_title"] || ""}
+      feature1Desc={serializedSettings["feature_1_desc"] || ""}
+      feature2Title={serializedSettings["feature_2_title"] || ""}
+      feature2Desc={serializedSettings["feature_2_desc"] || ""}
+      feature3Title={serializedSettings["feature_3_title"] || ""}
+      feature3Desc={serializedSettings["feature_3_desc"] || ""}
+      sliderItems={serializedSliderItems}
     />
   );
 }
