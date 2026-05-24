@@ -3,18 +3,13 @@ import { useEffect } from 'react';
 
 /**
  * ThemeInitializer synchronizes the website theme with the value stored in
- * `localStorage`. It runs once on the client side to avoid hydration mismatches.
- * The component renders nothing – it only performs a side‑effect.
+ * `localStorage`. We are enforcing a light theme only.
  */
 export default function ThemeInitializer() {
   useEffect(() => {
     try {
-      const theme = localStorage.getItem('theme') || 'dark';
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     } catch (e) {
       // Silently ignore errors (e.g., when localStorage is unavailable)
     }

@@ -207,8 +207,8 @@ const DEFAULT_CREATOR_BACKGROUNDS = [
 ];
 
 const THEMES = [
-  { id: "dark", name: "Deep Obsidian", bg: "bg-black border-zinc-800", color: "from-zinc-900 to-black text-white hover:border-zinc-700" },
-  { id: "neon-purple", name: "Nebula Purple", bg: "bg-purple-950/20 border-purple-500/20", color: "from-purple-950/40 via-fuchsia-950/30 to-black text-purple-200 hover:border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.15)]" },
+  { id: "dark", name: "Deep Obsidian", bg: "bg-black border-gray-100", color: "from-zinc-900 to-black text-slate-900 hover:border-zinc-700" },
+  { id: "neon-purple", name: "Nebula Purple", bg: "bg-purple-950/20 border-teal-500/20", color: "from-purple-950/40 via-fuchsia-950/30 to-black text-purple-200 hover:border-teal-500/50 shadow-[0_0_15px_rgba(168,85,247,0.15)]" },
   { id: "glow-green", name: "Cyberpunk Acid", bg: "bg-emerald-950/20 border-emerald-500/20", color: "from-emerald-950/40 to-black text-emerald-300 hover:border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.15)]" },
   { id: "pink-retro", name: "Synthwave", bg: "bg-pink-950/20 border-pink-500/20", color: "from-pink-950/40 via-rose-950/30 to-black text-pink-200 hover:border-pink-500/50 shadow-[0_0_15px_rgba(244,63,94,0.15)]" },
 ];
@@ -1235,8 +1235,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
       case "neon-purple":
         return {
           bg: "bg-gradient-to-b from-purple-950 via-zinc-950 to-black",
-          card: "bg-purple-950/20 border-purple-500/30 text-purple-200 shadow-[0_0_10px_rgba(168,85,247,0.1)] hover:border-purple-400",
-          glowText: "text-purple-400 font-extrabold tracking-wide",
+          card: "bg-purple-950/20 border-teal-500/30 text-purple-200 shadow-[0_0_10px_rgba(168,85,247,0.1)] hover:border-purple-400",
+          glowText: "text-teal-500 font-extrabold tracking-wide",
           avatarBg: "from-purple-500 to-pink-500",
         };
       case "glow-green":
@@ -1255,9 +1255,9 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
         };
       case "glassmorphism":
         return {
-          bg: "bg-slate-950 text-white",
-          card: "bg-white/10 border border-white/20 backdrop-blur-md text-white shadow-lg hover:bg-white/20",
-          glowText: "text-white font-extrabold tracking-wide drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]",
+          bg: "bg-slate-950 text-slate-900",
+          card: "bg-white/10 border border-white/20 backdrop-blur-md text-slate-900 shadow-lg hover:bg-white/20",
+          glowText: "text-slate-900 font-extrabold tracking-wide drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]",
           avatarBg: "from-purple-500/50 to-pink-500/50",
         };
       case "brutalism":
@@ -1277,8 +1277,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
       default:
         return {
           bg: "bg-black",
-          card: "bg-zinc-900/50 border-zinc-800 text-zinc-200 hover:border-zinc-700",
-          glowText: "text-white",
+          card: "bg-gray-50 border-gray-100 text-zinc-200 hover:border-zinc-700",
+          glowText: "text-slate-900",
           avatarBg: "from-zinc-800 to-zinc-700",
         };
     }
@@ -1295,7 +1295,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
       <div className="hidden lg:block w-[360px] shrink-0 sticky top-32 self-start">
         <div className="text-center mb-4">
           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${
-            isDark ? "bg-zinc-950 border-zinc-900 text-zinc-400" : "bg-white border-zinc-200 text-zinc-700 shadow-sm"
+            "bg-white border-zinc-200 text-zinc-700 shadow-sm"
           }`}>
             <Laptop className="h-3 w-3" />
             {t.sandboxPreview}
@@ -1303,9 +1303,9 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
         </div>
 
         <div className={`relative mx-auto rounded-[3rem] p-4 border-4 shadow-[0_0_50px_rgba(0,0,0,0.15)] overflow-hidden ${
-          isDark ? "bg-zinc-950 border-zinc-800 shadow-[0_0_50px_rgba(0,0,0,0.8)]" : "bg-white border-zinc-200"
+          "bg-white border-zinc-200"
         }`}>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-zinc-800 rounded-b-xl z-20" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-50 rounded-b-xl z-20" />
 
           {(() => {
             const isCustomImg = background?.startsWith("custom-img::");
@@ -1339,7 +1339,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                     {avatarUrl ? (
                       <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
-                      <User className="h-10 w-10 text-white" />
+                      <User className="h-10 w-10 text-slate-900" />
                     )}
                   </div>
                   <div className="space-y-1">
@@ -1351,7 +1351,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                     </h3>
                     <p 
                       style={bioColor ? { color: bioColor } : undefined}
-                      className="text-zinc-400 text-xs px-4 truncate max-w-full"
+                      className="text-slate-500 text-xs px-4 truncate max-w-full"
                     >
                       {bio || "Enter profile bio details..."}
                     </p>
@@ -1360,7 +1360,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                 <div className="space-y-3.5 my-auto overflow-y-auto max-h-[250px] relative z-10 px-2 scrollbar-none">
                   {links.filter((l) => l.isActive).length === 0 ? (
-                    <div className="text-center py-8 text-xs text-zinc-600 font-semibold italic border border-dashed border-zinc-800/80 rounded-xl">
+                    <div className="text-center py-8 text-xs text-zinc-600 font-semibold italic border border-dashed border-gray-100 rounded-xl">
                       No active links published
                     </div>
                   ) : (
@@ -1455,7 +1455,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                   )}
                 </div>
 
-                <div className="text-center text-[9px] text-zinc-600 uppercase tracking-widest font-black py-4 border-t border-zinc-900/60 relative z-10">
+                <div className="text-center text-[9px] text-zinc-600 uppercase tracking-widest font-black py-4 border-t border-gray-100 relative z-10">
                   CREATOR.HUB
                 </div>
               </div>
@@ -1468,24 +1468,24 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
   return (
     <div className={`min-h-screen transition-colors duration-500 p-6 max-w-7xl mx-auto flex flex-col gap-6 ${
-      isDark ? "bg-black text-white" : "bg-zinc-50 text-zinc-900"
+      "bg-zinc-50 text-zinc-900"
     }`}>
       <GlobalOverlayManager onStateChange={handleStateChange} />
 
       {/* Top Header */}
       <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-6 ${
-        isDark ? "border-zinc-900" : "border-zinc-200"
+        "border-zinc-200"
       }`}>
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-fuchsia-500">
               {t.creatorStudioTitle}
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-[9px] font-extrabold text-purple-400 uppercase tracking-widest">
+            <span className="px-2.5 py-0.5 rounded-full bg-teal-400/20 border border-teal-500/30 text-[9px] font-extrabold text-teal-500 uppercase tracking-widest">
               {initialUser.plan}
             </span>
           </div>
-          <p className={isDark ? "text-zinc-500 text-sm" : "text-zinc-500 text-sm"}>{t.creatorStudioDesc}</p>
+          <p className={"text-slate-500 text-sm"}>{t.creatorStudioDesc}</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -1501,9 +1501,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
           <Link
             href="/dashboard/billing"
             className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-all ${
-              isDark 
-                ? "bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-300"
-                : "bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 shadow-sm"
+              "bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 shadow-sm"
             }`}
           >
             <span>{t.billingPlans}</span>
@@ -1515,9 +1513,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
               target="_blank"
               rel="noreferrer"
               className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-all ${
-                isDark
-                  ? "bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-300"
-                  : "bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 shadow-sm"
+                "bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 shadow-sm"
               }`}
             >
               <span>{t.liveSite}</span>
@@ -1529,9 +1525,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
           <SignOutButton>
             <button
               className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-all ${
-                isDark
-                  ? "bg-red-950/20 border-red-900 hover:bg-red-900/40 text-red-400"
-                  : "bg-red-50 border-red-200 hover:bg-red-100 text-red-600 shadow-sm"
+                "bg-red-50 border-red-200 hover:bg-red-100 text-red-600 shadow-sm"
               }`}
             >
               <span>{lang === "tr" ? "Çıkış Yap" : "Sign Out"}</span>
@@ -1543,16 +1537,14 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
       {/* Dynamic Tab Bar */}
       <div className={`flex gap-2 border-b pb-3 overflow-x-auto scrollbar-none ${
-        isDark ? "border-zinc-900" : "border-zinc-200"
+        "border-zinc-200"
       }`}>
         <button
           onClick={() => setActiveTab("editor")}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "editor"
-              ? "bg-purple-600 border-purple-500 text-white shadow-sm"
-              : isDark
-                ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white"
-                : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+              ? "bg-teal-500 border-teal-500 text-slate-900 shadow-sm"
+              : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
           }`}
         >
           <Laptop className="h-3.5 w-3.5" />
@@ -1574,25 +1566,21 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
           }}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "analytics"
-              ? "bg-purple-600 border-purple-500 text-white shadow-sm"
-              : isDark
-                ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white"
-                : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+              ? "bg-teal-500 border-teal-500 text-slate-900 shadow-sm"
+              : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
           }`}
         >
           <TrendingUp className="h-3.5 w-3.5" />
           {t.tabAnalytics}
-          {simulatedPlan === "FREE" && <Lock className="h-3 w-3 text-purple-400 shrink-0" />}
+          {simulatedPlan === "FREE" && <Lock className="h-3 w-3 text-teal-500 shrink-0" />}
         </button>
 
         <button
           onClick={() => setActiveTab("qr")}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "qr"
-              ? "bg-purple-600 border-purple-500 text-white shadow-sm"
-              : isDark
-                ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white"
-                : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+              ? "bg-teal-500 border-teal-500 text-slate-900 shadow-sm"
+              : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
           }`}
         >
           <QrCode className="h-3.5 w-3.5" />
@@ -1603,10 +1591,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
           onClick={() => setActiveTab("seo")}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "seo"
-              ? "bg-purple-600 border-purple-500 text-white shadow-sm"
-              : isDark
-                ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white"
-                : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+              ? "bg-teal-500 border-teal-500 text-slate-900 shadow-sm"
+              : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
           }`}
         >
           <Globe className="h-3.5 w-3.5" />
@@ -1638,18 +1624,18 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
             <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
               {/* Profile customizer */}
               <div className={`p-6 rounded-2xl border space-y-6 ${
-                isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <User className="h-5 w-5 text-purple-400" />
-                    <h2 className={`font-extrabold text-lg ${isDark ? "text-white" : "text-zinc-950"}`}>{t.profileCustomizer}</h2>
+                    <User className="h-5 w-5 text-teal-500" />
+                    <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{t.profileCustomizer}</h2>
                   </div>
                   <button
                     onClick={handleSaveProfile}
                     disabled={isPending}
                     className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
-                      isDark ? "bg-white text-black hover:bg-zinc-200" : "bg-zinc-950 text-white hover:bg-zinc-800"
+                      "bg-white text-slate-900 hover:bg-gray-50"
                     }`}
                   >
                     {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
@@ -1659,41 +1645,41 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className={`text-xs font-semibold uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>{t.usernameLabel}</label>
-                    <div className={`flex items-center rounded-xl border focus-within:border-purple-500/50 overflow-hidden px-3 ${
-                      isDark ? "bg-zinc-900 border-zinc-800" : "bg-zinc-100 border-zinc-200"
+                    <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>{t.usernameLabel}</label>
+                    <div className={`flex items-center rounded-xl border focus-within:border-teal-500/50 overflow-hidden px-3 ${
+                      "bg-zinc-100 border-zinc-200"
                     }`}>
-                      <span className="text-zinc-500 text-sm">hub.com/</span>
+                      <span className="text-slate-500 text-sm">hub.com/</span>
                       <input
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className={`flex-1 bg-transparent py-2.5 outline-none text-sm ${isDark ? "text-white" : "text-zinc-900"}`}
+                        className={`flex-1 bg-transparent py-2.5 outline-none text-sm ${"text-zinc-900"}`}
                         placeholder="username"
                       />
                     </div>
                   </div>
 
                                                       <div className="space-y-2 md:col-span-2">
-                    <label className={`text-xs font-semibold uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
+                    <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>
                       {lang === "tr" ? "Profil Fotoğrafı Yükle" : "Upload Profile Photo"}
                     </label>
                     <div className={`p-4 rounded-xl border flex items-center gap-4 ${
-                      isDark ? "bg-zinc-900 border-zinc-800" : "bg-zinc-100 border-zinc-200"
+                      "bg-zinc-100 border-zinc-200"
                     }`}>
                       <div className={`w-14 h-14 rounded-full border flex items-center justify-center overflow-hidden shrink-0 ${
-                        isDark ? "bg-zinc-950 border-zinc-800" : "bg-white border-zinc-300"
+                        "bg-white border-zinc-300"
                       }`}>
                         {avatarUrl ? (
                           <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" />
                         ) : (
-                          <User className="h-6 w-6 text-zinc-500" />
+                          <User className="h-6 w-6 text-slate-500" />
                         )}
                       </div>
                       <div className="space-y-1.5">
                         <div className="flex gap-2">
                           <label className={`px-3.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
-                            isDark ? "bg-zinc-850 hover:bg-zinc-800 border-zinc-700 text-zinc-200" : "bg-white hover:bg-zinc-55 border-zinc-300 text-zinc-700 shadow-sm"
+                            "bg-white hover:bg-zinc-55 border-zinc-300 text-zinc-700 shadow-sm"
                           }`}>
                             {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
                             <input
@@ -1723,14 +1709,14 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               type="button"
                               onClick={() => setAvatarUrl("")}
                               className={`px-3.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
-                                isDark ? "bg-red-950/20 hover:bg-red-900/40 border-red-500/20 text-red-400" : "bg-red-50 hover:bg-red-100 border-red-200 text-red-600"
+                                "bg-red-50 hover:bg-red-100 border-red-200 text-red-600"
                               }`}
                             >
                               {lang === "tr" ? "Kaldır" : "Remove"}
                             </button>
                           )}
                         </div>
-                        <p className="text-[10px] text-zinc-500 font-semibold">
+                        <p className="text-[10px] text-slate-500 font-semibold">
                           {lang === "tr" ? "Maksimum 2.5MB (PNG, JPG). Fotoğraf veri tabanına güvenle işlenecektir." : "Max 2.5MB (PNG, JPG). Image will be safely encrypted."}
                         </p>
                       </div>
@@ -1738,12 +1724,12 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                   </div>
 
 <div className="space-y-2">
-                    <label className={`text-xs font-semibold uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>{t.bioLabel}</label>
+                    <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>{t.bioLabel}</label>
                     <textarea
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
-                      className={`w-full px-4 py-2.5 rounded-xl border focus:border-purple-500/50 outline-none text-sm ${
-                        isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                      className={`w-full px-4 py-2.5 rounded-xl border focus:border-teal-500/50 outline-none text-sm ${
+                        "bg-zinc-100 border-zinc-200 text-zinc-900"
                       }`}
                       placeholder={t.bioPlaceholder}
                       rows={2}
@@ -1752,10 +1738,10 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                   {/* Custom Colors Palette Selector */}
                   <div className="space-y-4 md:col-span-2 border-t border-zinc-200/50 pt-4">
-                    <h3 className={`text-xs font-black uppercase tracking-wider ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
+                    <h3 className={`text-xs font-black uppercase tracking-wider ${"text-slate-500"}`}>
                       {lang === "tr" ? "Kişisel Renk Paletiniz" : "Personal Typography Color Palette"}
                     </h3>
-                    <p className="text-[10px] text-zinc-500 font-semibold mt-0.5">
+                    <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
                       {lang === "tr" 
                         ? "@Kullanıcı adı ve Biyografi yazınızın renklerini özgürce seçin. Tüm üyelik planları için tamamen ücretsizdir!" 
                         : "Select custom colors for your username and bio details. 100% unlocked for all membership tiers!"}
@@ -1763,9 +1749,9 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       {/* Username Color Selector */}
-                      <div className={`p-4 rounded-xl border space-y-3 ${isDark ? "bg-zinc-900 border-zinc-800" : "bg-zinc-50 border-zinc-200"}`}>
+                      <div className={`p-4 rounded-xl border space-y-3 ${"bg-zinc-50 border-zinc-200"}`}>
                         <div className="flex justify-between items-center">
-                          <label className={`text-[10px] font-black uppercase ${isDark ? "text-zinc-300" : "text-zinc-650"}`}>
+                          <label className={`text-[10px] font-black uppercase ${"text-zinc-650"}`}>
                             {lang === "tr" ? "@ Kullanıcı Adı Rengi" : "@ Username Text Color"}
                           </label>
                           
@@ -1776,7 +1762,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               value={usernameColor} 
                               onChange={(e) => setUsernameColor(e.target.value)}
                               className={`w-16 px-1.5 py-0.5 border border-zinc-300/40 rounded bg-transparent font-mono text-[10px] font-bold text-center ${
-                                isDark ? "text-zinc-200" : "text-zinc-800"
+                                "text-zinc-800"
                               }`}
                             />
                             <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 cursor-pointer shrink-0">
@@ -1808,9 +1794,9 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                       </div>
 
                       {/* Bio Color Selector */}
-                      <div className={`p-4 rounded-xl border space-y-3 ${isDark ? "bg-zinc-900 border-zinc-800" : "bg-zinc-50 border-zinc-200"}`}>
+                      <div className={`p-4 rounded-xl border space-y-3 ${"bg-zinc-50 border-zinc-200"}`}>
                         <div className="flex justify-between items-center">
-                          <label className={`text-[10px] font-black uppercase ${isDark ? "text-zinc-300" : "text-zinc-650"}`}>
+                          <label className={`text-[10px] font-black uppercase ${"text-zinc-650"}`}>
                             {lang === "tr" ? "Biyografi Yazı Rengi" : "Bio Paragraph Color"}
                           </label>
 
@@ -1821,7 +1807,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               value={bioColor} 
                               onChange={(e) => setBioColor(e.target.value)}
                               className={`w-16 px-1.5 py-0.5 border border-zinc-300/40 rounded bg-transparent font-mono text-[10px] font-bold text-center ${
-                                isDark ? "text-zinc-200" : "text-zinc-800"
+                                "text-zinc-800"
                               }`}
                             />
                             <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 cursor-pointer shrink-0">
@@ -1859,16 +1845,16 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
               {/* Yazı Tipi Özelleştirici */}
               <div className={`p-6 rounded-2xl border space-y-6 ${
-                isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Sparkles className="h-5 w-5 text-purple-400" />
+                    <Sparkles className="h-5 w-5 text-teal-500" />
                     <div>
-                      <h2 className={`font-extrabold text-lg ${isDark ? "text-white" : "text-zinc-950"}`}>
+                      <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>
                         {lang === "tr" ? "Yazı Tipi Özelleştirici" : "Typography Customizer"}
                       </h2>
-                      <p className="text-[10px] text-zinc-500 font-semibold mt-0.5">
+                      <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
                         {lang === "tr" 
                           ? "Kreatör profilinizin ve bağlantı kartlarınızın yazı tipini değiştirin." 
                           : "Choose custom typography styles for your profile details and link actions."}
@@ -1880,7 +1866,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                     onClick={handleSaveProfile}
                     disabled={isPending}
                     className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
-                      isDark ? "bg-white text-black hover:bg-zinc-200" : "bg-zinc-950 text-white hover:bg-zinc-800"
+                      "bg-white text-slate-900 hover:bg-gray-50"
                     }`}
                   >
                     {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
@@ -1890,7 +1876,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className={`text-xs font-semibold uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
+                    <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>
                       {lang === "tr" ? "Yazı Tipi Seçin" : "Select Typography Style"}
                     </label>
                     <select
@@ -1915,7 +1901,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         }
                       }}
                       className={`w-full px-4 py-3 rounded-xl border outline-none text-sm font-bold ${
-                        isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                        "bg-zinc-100 border-zinc-200 text-zinc-900"
                       }`}
                     >
                       <optgroup label={lang === "tr" ? "Ücretsiz Yazı Tipleri (FREE)" : "Free Typography Styles (FREE)"}>
@@ -1950,20 +1936,20 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                   {/* Canlı Tipografi Önizleme Kartı */}
                   <div className={`p-4 rounded-xl border space-y-2 text-center transition-all ${
-                    isDark ? "bg-zinc-900 border-zinc-850" : "bg-zinc-50 border-zinc-150"
+                    "bg-zinc-50 border-zinc-150"
                   }`}>
-                    <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400 block">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 block">
                       {lang === "tr" ? "Canlı Yazı Tipi Önizlemesi" : "Typography Live Specimen"}
                     </span>
                     <div 
                       style={{ fontFamily: fontStyle }}
-                      className={`text-xl md:text-2xl py-3 font-bold break-words tracking-tight ${isDark ? "text-purple-300" : "text-purple-750"}`}
+                      className={`text-xl md:text-2xl py-3 font-bold break-words tracking-tight ${"text-purple-750"}`}
                     >
                       Abcde 12345 - {fontStyle} Font Style
                     </div>
                     <p 
                       style={{ fontFamily: fontStyle }}
-                      className="text-xs text-zinc-500 max-w-md mx-auto leading-relaxed"
+                      className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed"
                     >
                       {lang === "tr"
                         ? "Hızlı kahverengi tilki tembel köpeğin üstünden atlar. Creator.Hub ile özelleştirilmiş dijital kimliğiniz."
@@ -1987,7 +1973,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                             <Lock className="h-3.5 w-3.5" />
                             {lang === "tr" ? "Plan Yükseltme Gerekli" : "Membership Upgrade Required"}
                           </span>
-                          <p className="text-[10px] text-zinc-400 leading-relaxed font-semibold">
+                          <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
                             {lang === "tr"
                               ? `"${activeFont.name}" yazı tipi ${activeFont.tier} paketine özeldir. Canlı simülatörde test edebilirsiniz ancak kaydetmek için planınızı yükseltmeniz gerekir.`
                               : `"${activeFont.name}" is exclusive to the ${activeFont.tier} plan. You can test it live in simulator, but you must upgrade your plan to save changes.`}
@@ -2007,14 +1993,14 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
               {/* Plan Switcher Simulator Bar */}
               <div className={`p-4 rounded-2xl border flex flex-col md:flex-row items-center justify-between gap-4 ${
-                isDark ? "bg-purple-950/10 border-purple-500/20" : "bg-purple-50 border-purple-200"
+                "bg-purple-50 border-purple-200"
               }`}>
                 <div className="space-y-0.5">
-                  <div className={`flex items-center gap-2 text-xs font-extrabold ${isDark ? "text-purple-300" : "text-purple-800"}`}>
-                    <Sparkles className="h-4 w-4 animate-pulse text-purple-500" />
+                  <div className={`flex items-center gap-2 text-xs font-extrabold ${"text-purple-800"}`}>
+                    <Sparkles className="h-4 w-4 animate-pulse text-teal-500" />
                     {lang === "tr" ? "Hızlı Plan Simülatörü (Test Modu)" : "Instant Plan Simulator (Testing Mode)"}
                   </div>
-                  <p className="text-[10px] text-zinc-500 font-semibold">
+                  <p className="text-[10px] text-slate-500 font-semibold">
                     {lang === "tr" ? "Arayüzün ve arka plan sınırlarının değiştiğini görmek için anında plan değiştirin:" : "Toggle your active profile plan in real-time to check locked background sets:"}
                   </p>
                 </div>
@@ -2026,10 +2012,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                       onClick={() => setSimulatedPlan(p)}
                       className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer select-none ${
                         simulatedPlan === p
-                          ? "bg-purple-600 border-purple-500 text-white shadow-md"
-                          : isDark
-                            ? "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white"
-                            : "bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50 shadow-sm"
+                          ? "bg-teal-500 border-teal-500 text-slate-900 shadow-md"
+                          : "bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50 shadow-sm"
                       }`}
                     >
                       {p}
@@ -2040,19 +2024,19 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
               {/* Refined Custom Backgrounds Selector */}
               <div className={`p-6 rounded-2xl border space-y-4 relative overflow-hidden ${
-                isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Laptop className="h-5 w-5 text-indigo-400" />
-                    <h2 className={`font-extrabold text-lg ${isDark ? "text-white" : "text-zinc-950"}`}>
+                    <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>
                       {lang === "tr" ? "Arka Plan Özelleştirici" : "Background Customizer"}
                     </h2>
                   </div>
                   {background && (
                     <button
                       onClick={() => setBackground("")}
-                      className={`px-3 py-1 rounded bg-zinc-850 hover:bg-zinc-800 text-zinc-300 font-extrabold text-[10px] transition-all cursor-pointer`}
+                      className={`px-3 py-1 rounded bg-zinc-850 hover:bg-gray-50 text-zinc-300 font-extrabold text-[10px] transition-all cursor-pointer`}
                     >
                       {lang === "tr" ? "Varsayılana Sıfırla" : "Reset to Default"}
                     </button>
@@ -2061,7 +2045,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                 {simulatedPlan === "FREE" && (
                   <div className="space-y-3">
-                    <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block">
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Ücretsiz Arka Planlar (5 Adet)" : "Free Plan Backdrops (5 Colors)"}
                     </span>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -2071,27 +2055,27 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           type="button"
                           onClick={() => setBackground(bg.css)}
                           className={`h-16 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group ${
-                            background === bg.css ? "border-indigo-500 ring-2 ring-indigo-500/20" : "border-zinc-800"
+                            background === bg.css ? "border-indigo-500 ring-2 ring-indigo-500/20" : "border-gray-100"
                           } ${bg.css}`}
                         >
-                          <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span>
+                          <span className="text-[9px] font-bold text-slate-900 z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span>
                         </button>
                       ))}
                     </div>
 
                     {/* Locked Custom Upload Button for Free Plan */}
                     <div className={`mt-2 p-4 rounded-xl border border-dashed flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
-                      isDark ? "border-zinc-850 bg-zinc-900/10" : "border-zinc-200 bg-zinc-50/50"
+                      "border-zinc-200 bg-zinc-50/50"
                     }`}>
                       <div className="space-y-0.5">
-                        <div className={`flex items-center gap-1.5 text-xs font-extrabold ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
+                        <div className={`flex items-center gap-1.5 text-xs font-extrabold ${"text-slate-500"}`}>
                           <Image className="h-3.5 w-3.5" />
                           {lang === "tr" ? "Kendi Fotoğrafını Yükle" : "Upload Custom Photo"}
-                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 text-[8px] text-purple-400 uppercase tracking-wide font-black">
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-teal-400/10 border border-teal-500/20 text-[8px] text-teal-500 uppercase tracking-wide font-black">
                             <Lock className="h-2 w-2" /> PREMIUM
                           </span>
                         </div>
-                        <p className="text-[9px] text-zinc-500 font-semibold">
+                        <p className="text-[9px] text-slate-500 font-semibold">
                           {lang === "tr" ? "Kendi arka plan görsellerinizi veya videolarınızı yükleyin" : "Upload your own background images or loops"}
                         </p>
                       </div>
@@ -2103,7 +2087,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                             ? "Kendi özel resimlerinizi veya videolarınızı arka plan olarak kullanmak Premium pakete özeldir. Hemen yükseltin!"
                             : "Uploading custom background assets is exclusive to our Premium plans. Upgrade now to unlock!"
                         )}
-                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-purple-500/30 bg-purple-950/15 hover:bg-purple-900/30 text-purple-400 font-extrabold text-xs transition-all cursor-pointer"
+                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-teal-500/30 bg-purple-950/15 hover:bg-purple-900/30 text-teal-500 font-extrabold text-xs transition-all cursor-pointer"
                       >
                         <Lock className="h-3.5 w-3.5" />
                         {lang === "tr" ? "Görsel Yükle" : "Upload Photo"}
@@ -2114,7 +2098,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                 {simulatedPlan === "STARTER" && (
                   <div className="space-y-3">
-                    <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block">
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Starter Paket Arka Planları (10 Adet)" : "Starter Plan Backdrops (10 Colors)"}
                     </span>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -2124,24 +2108,24 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           type="button"
                           onClick={() => setBackground(bg.css)}
                           className={`h-16 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group ${
-                            background === bg.css ? "border-indigo-500 ring-2 ring-indigo-500/20" : "border-zinc-800"
+                            background === bg.css ? "border-indigo-500 ring-2 ring-indigo-500/20" : "border-gray-100"
                           } ${bg.css}`}
                         >
-                          <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span>
+                          <span className="text-[9px] font-bold text-slate-900 z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span>
                         </button>
                       ))}
                     </div>
 
                     {/* Starter: Custom Photo Upload */}
                     <div className={`mt-2 p-4 rounded-xl border border-dashed flex flex-col sm:flex-row items-start sm:items-center gap-4 ${
-                      isDark ? "border-zinc-700 bg-zinc-900/40" : "border-zinc-300 bg-zinc-50"
+                      "border-zinc-300 bg-zinc-50"
                     }`}>
                       <div className="flex-1 space-y-0.5">
-                        <div className={`flex items-center gap-1.5 text-xs font-extrabold ${isDark ? "text-zinc-200" : "text-zinc-700"}`}>
+                        <div className={`flex items-center gap-1.5 text-xs font-extrabold ${"text-zinc-700"}`}>
                           <Image className="h-3.5 w-3.5 text-indigo-400" />
                           {lang === "tr" ? "Kendi Fotoğrafını Yükle" : "Upload Custom Photo"}
                         </div>
-                        <p className="text-[10px] text-zinc-500 font-semibold">
+                        <p className="text-[10px] text-slate-500 font-semibold">
                           {lang === "tr" ? "PNG veya JPEG — Maks. 1 MB" : "PNG or JPEG — Max 1 MB"}
                         </p>
                         {customBgError && (
@@ -2149,9 +2133,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         )}
                       </div>
                       <label className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border cursor-pointer font-extrabold text-xs transition-all select-none ${
-                        isDark
-                          ? "bg-indigo-600 hover:bg-indigo-500 border-indigo-500 text-white"
-                          : "bg-indigo-50 hover:bg-indigo-100 border-indigo-200 text-indigo-700"
+                        "bg-indigo-50 hover:bg-indigo-100 border-indigo-200 text-indigo-700"
                       }`}>
                         <Image className="h-3.5 w-3.5" />
                         {lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
@@ -2181,7 +2163,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         <button
                           type="button"
                           onClick={() => setBackground("")}
-                          className="text-[10px] font-black text-zinc-400 hover:text-red-400 transition-colors cursor-pointer"
+                          className="text-[10px] font-black text-slate-500 hover:text-red-400 transition-colors cursor-pointer"
                         >
                           ✕ {lang === "tr" ? "Kaldır" : "Remove"}
                         </button>
@@ -2192,7 +2174,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                 {(simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS") && (
                   <div className="space-y-4">
-                    <span className="text-[10px] text-purple-400 uppercase tracking-wider font-extrabold block">
+                    <span className="text-[10px] text-teal-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Creator Plana Özel Arka Planlar (20 Adet)" : "Creator Exclusive Backdrops (20 Colors)"}
                     </span>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -2202,10 +2184,10 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           type="button"
                           onClick={() => setBackground(bg.css)}
                           className={`h-16 rounded-xl border text-left cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group ${
-                            background === bg.css ? "border-purple-500 ring-2 ring-purple-500/20" : "border-zinc-800"
+                            background === bg.css ? "border-teal-500 ring-2 ring-purple-500/20" : "border-gray-100"
                           } ${bg.css}`}
                         >
-                          <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span>
+                          <span className="text-[9px] font-bold text-slate-900 z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span>
                         </button>
                       ))}
                     </div>
@@ -2214,14 +2196,14 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {/* Photo Upload */}
                       <div className={`p-4 rounded-xl border border-dashed flex flex-col gap-3 ${
-                        isDark ? "border-purple-700/50 bg-purple-950/20" : "border-purple-200 bg-purple-50/50"
+                        "border-purple-200 bg-purple-50/50"
                       }`}>
                         <div className="space-y-0.5">
-                          <div className={`flex items-center gap-1.5 text-xs font-extrabold ${isDark ? "text-purple-200" : "text-purple-700"}`}>
+                          <div className={`flex items-center gap-1.5 text-xs font-extrabold ${"text-purple-700"}`}>
                             <Image className="h-3.5 w-3.5" />
                             {lang === "tr" ? "Özel Fotoğraf Arka Plan" : "Custom Photo Background"}
                           </div>
-                          <p className="text-[10px] text-zinc-500 font-semibold">
+                          <p className="text-[10px] text-slate-500 font-semibold">
                             {lang === "tr" ? "PNG / JPEG / WebP — Maks. 1 MB" : "PNG / JPEG / WebP — Max 1 MB"}
                           </p>
                           {customBgError && customBgError.includes("foto") && (
@@ -2229,9 +2211,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           )}
                         </div>
                         <label className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border cursor-pointer font-extrabold text-xs transition-all select-none ${
-                          isDark
-                            ? "bg-purple-700 hover:bg-purple-600 border-purple-600 text-white"
-                            : "bg-purple-100 hover:bg-purple-200 border-purple-300 text-purple-800"
+                          "bg-purple-100 hover:bg-purple-200 border-purple-300 text-purple-800"
                         }`}>
                           <Image className="h-3.5 w-3.5" />
                           {lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
@@ -2257,7 +2237,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           />
                         </label>
                         {background?.startsWith("custom-img::") && (
-                          <button type="button" onClick={() => setBackground("")} className="text-[10px] font-black text-zinc-400 hover:text-red-400 transition-colors cursor-pointer text-center">
+                          <button type="button" onClick={() => setBackground("")} className="text-[10px] font-black text-slate-500 hover:text-red-400 transition-colors cursor-pointer text-center">
                             ✕ {lang === "tr" ? "Kaldır" : "Remove"}
                           </button>
                         )}
@@ -2265,14 +2245,14 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                       {/* Video Upload */}
                       <div className={`p-4 rounded-xl border border-dashed flex flex-col gap-3 ${
-                        isDark ? "border-amber-700/50 bg-amber-950/20" : "border-amber-200 bg-amber-50/50"
+                        "border-amber-200 bg-amber-50/50"
                       }`}>
                         <div className="space-y-0.5">
-                          <div className={`flex items-center gap-1.5 text-xs font-extrabold ${isDark ? "text-amber-300" : "text-amber-700"}`}>
+                          <div className={`flex items-center gap-1.5 text-xs font-extrabold ${"text-amber-700"}`}>
                             <Play className="h-3.5 w-3.5" />
                             {lang === "tr" ? "Özel Video Arka Plan" : "Custom Video Background"}
                           </div>
-                          <p className="text-[10px] text-zinc-500 font-semibold">
+                          <p className="text-[10px] text-slate-500 font-semibold">
                             {lang === "tr" ? "MP4 / WebM — Maks. 5 MB" : "MP4 / WebM — Max 5 MB"}
                           </p>
                           {customBgError && customBgError.includes("video") && (
@@ -2280,9 +2260,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           )}
                         </div>
                         <label className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border cursor-pointer font-extrabold text-xs transition-all select-none ${
-                          isDark
-                            ? "bg-amber-700 hover:bg-amber-600 border-amber-600 text-white"
-                            : "bg-amber-100 hover:bg-amber-200 border-amber-300 text-amber-800"
+                          "bg-amber-100 hover:bg-amber-200 border-amber-300 text-amber-800"
                         }`}>
                           <Play className="h-3.5 w-3.5" />
                           {lang === "tr" ? "Video Seç" : "Choose Video"}
@@ -2308,14 +2286,14 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           />
                         </label>
                         {background?.startsWith("custom-video::") && (
-                          <button type="button" onClick={() => setBackground("")} className="text-[10px] font-black text-zinc-400 hover:text-red-400 transition-colors cursor-pointer text-center">
+                          <button type="button" onClick={() => setBackground("")} className="text-[10px] font-black text-slate-500 hover:text-red-400 transition-colors cursor-pointer text-center">
                             ✕ {lang === "tr" ? "Kaldır" : "Remove"}
                           </button>
                         )}
                       </div>
                     </div>
 
-                    <p className="text-[9px] text-purple-400 font-extrabold italic text-right">
+                    <p className="text-[9px] text-teal-500 font-extrabold italic text-right">
                       {lang === "tr" ? "+ Dahası Çok Yakında! (Creator Hub Plus)" : "+ More Premium Layouts Coming Soon!"}
                     </p>
                   </div>
@@ -2356,12 +2334,12 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                 return (
                   <div className={`p-6 rounded-2xl border space-y-6 ${
-                    isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                    "bg-white border-zinc-200 shadow-sm"
                   }`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <Plus className="h-5 w-5 text-emerald-400" />
-                        <h2 className={`font-extrabold text-lg ${isDark ? "text-white" : "text-zinc-950"}`}>{t.addLink}</h2>
+                        <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{t.addLink}</h2>
                       </div>
                       {linkSelectedTemplate && (
                         <button
@@ -2371,7 +2349,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                             setNewTitle("");
                             setNewUrl("");
                           }}
-                          className="px-3 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-extrabold text-[10px] transition-all cursor-pointer"
+                          className="px-3 py-1 rounded bg-gray-50 hover:bg-zinc-700 text-zinc-300 font-extrabold text-[10px] transition-all cursor-pointer"
                         >
                           {lang === "tr" ? "Şablon Seçimine Dön" : "Change Template"}
                         </button>
@@ -2380,8 +2358,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                     {!linkSelectedTemplate ? (
                       <div className="space-y-4">
-                        <div className="border-b pb-2 border-zinc-800/20">
-                          <p className="text-xs text-zinc-500 font-semibold">
+                        <div className="border-b pb-2 border-gray-100">
+                          <p className="text-xs text-slate-500 font-semibold">
                             {lang === "tr" 
                               ? "Kreatör profilinize özel premium şablonlardan birini seçerek başlayın."
                               : "Start by selecting one of the premium green templates for your creator profile."}
@@ -2411,14 +2389,12 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 }}
                                 className={`p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-3 transition-all relative group cursor-pointer ${
                                   unlocked 
-                                    ? isDark 
-                                      ? "bg-zinc-950 border-zinc-900 hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.05)]" 
-                                      : "bg-white border-zinc-200 hover:border-emerald-350 hover:shadow-md"
+                                    ? "bg-white border-zinc-200 hover:border-emerald-350 hover:shadow-md"
                                     : "opacity-40 cursor-not-allowed"
                                 }`}
                               >
                                 {!unlocked && (
-                                  <div className="absolute top-2.5 right-2.5 p-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-500">
+                                  <div className="absolute top-2.5 right-2.5 p-1 rounded-md bg-gray-50 border border-gray-100 text-slate-500">
                                     <Lock className="h-3 w-3" />
                                   </div>
                                 )}
@@ -2426,16 +2402,16 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 <div className={`h-12 w-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-105 ${
                                   unlocked 
                                     ? "bg-emerald-50 text-emerald-500" 
-                                    : "bg-zinc-900 text-zinc-500"
+                                    : "bg-gray-50 text-slate-500"
                                 }`}>
                                   <Icon className="h-5 w-5" />
                                 </div>
 
                                 <div className="space-y-0.5">
-                                  <h4 className={`font-black text-xs ${isDark ? "text-white" : "text-zinc-900"}`}>
+                                  <h4 className={`font-black text-xs ${"text-zinc-900"}`}>
                                     {tmpl.name}
                                   </h4>
-                                  <p className="text-[9px] text-zinc-500 font-medium line-clamp-2 leading-tight">
+                                  <p className="text-[9px] text-slate-500 font-medium line-clamp-2 leading-tight">
                                     {tmpl.desc}
                                   </p>
                                 </div>
@@ -2462,7 +2438,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                         <div className="grid grid-cols-1 gap-4">
                           <div>
-                            <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">
+                            <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">
                               {lang === "tr" ? "Bağlantı Başlığı" : "Link Title"}
                             </label>
                             <input
@@ -2470,7 +2446,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               value={newTitle}
                               onChange={(e) => setNewTitle(e.target.value)}
                               className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                "bg-zinc-100 border-zinc-200 text-zinc-900"
                               }`}
                               placeholder={t.linkTitlePlaceholder}
                             />
@@ -2479,36 +2455,36 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           {linkSelectedTemplate === "WIFI" && (
                             <div className="grid md:grid-cols-3 gap-4">
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">Wi-Fi SSID</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">Wi-Fi SSID</label>
                                 <input
                                   type="text"
                                   value={wifiSsid}
                                   onChange={(e) => setWifiSsid(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                   placeholder="SSID (Ağ Adı)"
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Wi-Fi Şifresi" : "Wi-Fi Password"}</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Wi-Fi Şifresi" : "Wi-Fi Password"}</label>
                                 <input
                                   type="password"
                                   value={wifiPassword}
                                   onChange={(e) => setWifiPassword(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                   placeholder="Password"
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Şifreleme" : "Encryption"}</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Şifreleme" : "Encryption"}</label>
                                 <select
                                   value={wifiEncryption}
                                   onChange={(e: any) => setWifiEncryption(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                 >
                                   <option value="WPA">WPA/WPA2</option>
@@ -2522,25 +2498,25 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           {linkSelectedTemplate === "WHATSAPP" && (
                             <div className="grid md:grid-cols-2 gap-4">
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Telefon Numarası" : "Phone Number"}</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Telefon Numarası" : "Phone Number"}</label>
                                 <input
                                   type="text"
                                   value={whatsAppPhone}
                                   onChange={(e) => setWhatsAppPhone(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                   placeholder="905300000000"
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Varsayılan Mesaj" : "Default Message"}</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Varsayılan Mesaj" : "Default Message"}</label>
                                 <input
                                   type="text"
                                   value={whatsAppMessage}
                                   onChange={(e) => setWhatsAppMessage(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                   placeholder={lang === "tr" ? "Örn: Merhaba, bilgi almak istiyorum." : "e.g. Hi! I want more info."}
                                 />
@@ -2551,73 +2527,73 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           {linkSelectedTemplate === "VCARD" && (
                             <div className="grid md:grid-cols-3 gap-4">
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Ad Soyad" : "Full Name"}</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Ad Soyad" : "Full Name"}</label>
                                 <input
                                   type="text"
                                   value={vCardName}
                                   onChange={(e) => setVCardName(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                   placeholder="John Doe"
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Telefon" : "Phone"}</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Telefon" : "Phone"}</label>
                                 <input
                                   type="text"
                                   value={vCardPhone}
                                   onChange={(e) => setVCardPhone(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                   placeholder="+90 530 000 00 00"
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">E-posta</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">E-posta</label>
                                 <input
                                   type="email"
                                   value={vCardEmail}
                                   onChange={(e) => setVCardEmail(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                   placeholder="john@example.com"
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Şirket / Organizasyon" : "Company / Org"}</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Şirket / Organizasyon" : "Company / Org"}</label>
                                 <input
                                   type="text"
                                   value={vCardOrg}
                                   onChange={(e) => setVCardOrg(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                   placeholder="Acme Inc."
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Ünvan" : "Job Title"}</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Ünvan" : "Job Title"}</label>
                                 <input
                                   type="text"
                                   value={vCardTitle}
                                   onChange={(e) => setVCardTitle(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                   placeholder="CEO"
                                 />
                               </div>
                               <div>
-                                <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">Web Sitesi</label>
+                                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">Web Sitesi</label>
                                 <input
                                   type="text"
                                   value={vCardUrl}
                                   onChange={(e) => setVCardUrl(e.target.value)}
                                   className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    "bg-zinc-100 border-zinc-200 text-zinc-900"
                                   }`}
                                   placeholder="https://example.com"
                                 />
@@ -2628,7 +2604,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           {/* Dynamic Block Type Select Selector */}
                           <div className="grid grid-cols-1 gap-4">
                             <div>
-                              <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">
+                              <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">
                                 {lang === "tr" ? "Gelişmiş İçerik Kartı Türü" : "Advanced Content Block Type"}
                               </label>
                               <select
@@ -2638,7 +2614,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   setBlockFileError("");
                                 }}
                                 className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm font-extrabold ${
-                                  isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                  "bg-zinc-100 border-zinc-200 text-zinc-900"
                                 }`}
                               >
                                 <option value="TEXT_LINK">🔗 {lang === "tr" ? "Standart Bağlantı (Text)" : "Standard Link"}</option>
@@ -2651,18 +2627,18 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                           {/* Conditional Fields for BEFORE_AFTER */}
                           {blockType === "BEFORE_AFTER" && (
-                            <div className="grid md:grid-cols-2 gap-4 p-4 rounded-xl border border-dashed border-zinc-800 bg-zinc-950/20">
+                            <div className="grid md:grid-cols-2 gap-4 p-4 rounded-xl border border-dashed border-gray-100 bg-white">
                               <div>
-                                <label className="text-[10px] text-purple-400 uppercase tracking-wider font-extrabold block mb-1">
+                                <label className="text-[10px] text-teal-500 uppercase tracking-wider font-extrabold block mb-1">
                                   {lang === "tr" ? "Önceki Görsel (Before - Sol)" : "Before Image (Left)"}
                                 </label>
                                 {beforeImage ? (
-                                  <div className="relative aspect-video rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900 mb-2">
+                                  <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-100 bg-gray-50 mb-2">
                                     <img src={beforeImage} className="w-full h-full object-cover" />
                                     <button
                                       type="button"
                                       onClick={() => setBeforeImage("")}
-                                      className="absolute top-1 right-1 p-1 bg-red-600 rounded-full text-white text-[10px] font-bold"
+                                      className="absolute top-1 right-1 p-1 bg-red-600 rounded-full text-slate-900 text-[10px] font-bold"
                                     >
                                       Sil
                                     </button>
@@ -2684,23 +2660,23 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                       }
                                     }}
                                     className={`w-full text-xs px-2 py-3 rounded-lg border ${
-                                      isDark ? "bg-zinc-900 border-zinc-800 text-zinc-400" : "bg-zinc-100 border-zinc-200 text-zinc-600"
+                                      "bg-zinc-100 border-zinc-200 text-zinc-600"
                                     }`}
                                   />
                                 )}
                               </div>
 
                               <div>
-                                <label className="text-[10px] text-purple-400 uppercase tracking-wider font-extrabold block mb-1">
+                                <label className="text-[10px] text-teal-500 uppercase tracking-wider font-extrabold block mb-1">
                                   {lang === "tr" ? "Sonraki Görsel (After - Sağ)" : "After Image (Right)"}
                                 </label>
                                 {afterImage ? (
-                                  <div className="relative aspect-video rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900 mb-2">
+                                  <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-100 bg-gray-50 mb-2">
                                     <img src={afterImage} className="w-full h-full object-cover" />
                                     <button
                                       type="button"
                                       onClick={() => setAfterImage("")}
-                                      className="absolute top-1 right-1 p-1 bg-red-600 rounded-full text-white text-[10px] font-bold"
+                                      className="absolute top-1 right-1 p-1 bg-red-600 rounded-full text-slate-900 text-[10px] font-bold"
                                     >
                                       Sil
                                     </button>
@@ -2722,7 +2698,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                       }
                                     }}
                                     className={`w-full text-xs px-2 py-3 rounded-lg border ${
-                                      isDark ? "bg-zinc-900 border-zinc-800 text-zinc-400" : "bg-zinc-100 border-zinc-200 text-zinc-600"
+                                      "bg-zinc-100 border-zinc-200 text-zinc-600"
                                     }`}
                                   />
                                 )}
@@ -2736,7 +2712,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                           {linkSelectedTemplate !== "WIFI" && linkSelectedTemplate !== "WHATSAPP" && linkSelectedTemplate !== "VCARD" && (
                             <div>
-                              <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-extrabold block mb-1">
+                              <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">
                                 {blockType === "VIDEO_PLAYER" 
                                   ? (lang === "tr" ? "Video Paylaşım Bağlantısı (Youtube / Vimeo / Direct URL)" : "Video Showcase Link (Youtube / Vimeo / Direct URL)")
                                   : blockType === "AUDIO_PLAYER"
@@ -2749,7 +2725,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 value={newUrl}
                                 onChange={(e) => setNewUrl(e.target.value)}
                                 className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
-                                  isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                  "bg-zinc-100 border-zinc-200 text-zinc-900"
                                 }`}
                                 placeholder={
                                   blockType === "VIDEO_PLAYER" ? "https://youtube.com/watch?v=..."
@@ -2764,7 +2740,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         <button
                           type="submit"
                           disabled={isPending || !newTitle || (blockType === "BEFORE_AFTER" ? (!beforeImage || !afterImage) : (!newUrl && !computedLinkValue))}
-                          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm transition-all disabled:opacity-50 cursor-pointer shadow-[0_0_20px_rgba(16,185,129,0.15)]"
+                          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-black text-sm transition-all disabled:opacity-50 cursor-pointer shadow-[0_0_20px_rgba(16,185,129,0.15)]"
                         >
                           {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                           {t.addLinkBtn}
@@ -2777,12 +2753,12 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
               {/* Active Links Manager */}
               <div className="space-y-4">
-                <h2 className="font-extrabold uppercase tracking-wider text-xs px-2 text-zinc-400">{t.activeLinks} ({links.length})</h2>
+                <h2 className="font-extrabold uppercase tracking-wider text-xs px-2 text-slate-500">{t.activeLinks} ({links.length})</h2>
 
                 <div className="space-y-3">
                   {links.length === 0 ? (
-                    <div className={`p-8 text-center rounded-2xl border border-dashed text-sm text-zinc-500 ${
-                      isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                    <div className={`p-8 text-center rounded-2xl border border-dashed text-sm text-slate-500 ${
+                      "bg-white border-zinc-200 shadow-sm"
                     }`}>
                       {t.noLinks}
                     </div>
@@ -2792,8 +2768,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         key={link.id}
                         className={`p-4 rounded-xl border flex flex-col gap-3 transition-all ${
                           link.isActive 
-                            ? isDark ? "bg-zinc-950 border-zinc-800" : "bg-white border-zinc-200 shadow-sm text-zinc-800"
-                            : isDark ? "bg-zinc-950/40 border-zinc-900/60 opacity-60" : "bg-zinc-50 border-zinc-100 opacity-60 text-zinc-400"
+                            ? "bg-white border-zinc-200 shadow-sm text-zinc-800"
+                            : "bg-zinc-50 border-zinc-100 opacity-60 text-slate-500"
                         }`}
                       >
                         <div className="flex items-center justify-between gap-4">
@@ -2803,17 +2779,17 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                           <div className="space-y-1 overflow-hidden flex-1">
                             <div className="flex items-center gap-2">
-                              <span className={`font-bold text-sm truncate ${isDark ? "text-white" : "text-zinc-900"}`}>{link.title}</span>
-                              {!link.isActive && <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-zinc-900 text-zinc-500">Draft</span>}
+                              <span className={`font-bold text-sm truncate ${"text-zinc-900"}`}>{link.title}</span>
+                              {!link.isActive && <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-gray-50 text-slate-500">Draft</span>}
                             </div>
-                            <span className="text-zinc-500 text-xs truncate block">{link.url}</span>
+                            <span className="text-slate-500 text-xs truncate block">{link.url}</span>
                           </div>
 
                           <div className="flex items-center gap-3">
                             <button
                               onClick={() => handleToggleActive(link.id, link.isActive)}
                               className={`w-10 h-6 rounded-full p-1 cursor-pointer transition-all flex items-center ${
-                                link.isActive ? "bg-purple-600 justify-end" : "bg-zinc-850 justify-start"
+                                link.isActive ? "bg-teal-500 justify-end" : "bg-zinc-850 justify-start"
                               }`}
                             >
                               <div className="h-4 w-4 rounded-full bg-white shadow-sm" />
@@ -2821,15 +2797,15 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                             <button
                               onClick={() => handleDelete(link.id)}
-                              className="p-2 rounded-lg bg-zinc-900 hover:bg-red-950/20 text-zinc-400 hover:text-red-400 border border-zinc-800 hover:border-red-500/20 transition-all cursor-pointer"
+                              className="p-2 rounded-lg bg-gray-50 hover:bg-red-950/20 text-slate-500 hover:text-red-400 border border-gray-100 hover:border-red-500/20 transition-all cursor-pointer"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
                         </div>
 
-                        <div className={`pt-3 border-t flex flex-col gap-1.5 ${isDark ? "border-zinc-900/60" : "border-zinc-100"}`}>
-                          <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>
+                        <div className={`pt-3 border-t flex flex-col gap-1.5 ${"border-zinc-100"}`}>
+                          <span className={`text-[10px] uppercase font-bold tracking-wider ${"text-slate-500"}`}>
                             {lang === "tr" ? "Link Animasyon Efekti:" : "Link Animation Effect:"}
                           </span>
                           <div className="flex flex-wrap gap-1.5">
@@ -2851,16 +2827,14 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   }}
                                   className={`px-2 py-1 rounded-md text-[10px] font-bold border transition-all cursor-pointer flex items-center gap-1.5 ${
                                     isSelected
-                                      ? "bg-purple-600 border-purple-600 text-white shadow-sm"
-                                      : isDark
-                                        ? "bg-zinc-900/50 hover:bg-zinc-800/80 text-zinc-400 border-zinc-800"
-                                        : "bg-zinc-50 hover:bg-zinc-100 text-zinc-650 border-zinc-200"
+                                      ? "bg-teal-500 border-purple-600 text-slate-900 shadow-sm"
+                                      : "bg-zinc-50 hover:bg-zinc-100 text-zinc-650 border-zinc-200"
                                   }`}
                                 >
-                                  {!isUnlocked && <Lock className="h-2.5 w-2.5 text-zinc-500" />}
+                                  {!isUnlocked && <Lock className="h-2.5 w-2.5 text-slate-500" />}
                                   <span>{anim.label}</span>
                                   {anim.tier === "FREE" && anim.giftLabel && (
-                                    <span className="text-[7.5px] font-black tracking-wider uppercase bg-gradient-to-r from-amber-500 to-yellow-400 text-white px-1.5 py-0.2 rounded-full shadow-sm animate-pulse">
+                                    <span className="text-[7.5px] font-black tracking-wider uppercase bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-900 px-1.5 py-0.2 rounded-full shadow-sm animate-pulse">
                                       {anim.giftLabel}
                                     </span>
                                   )}
@@ -2871,28 +2845,28 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         </div>
 
                         {/* Box Style Customizations */}
-                        <div className={`pt-4 border-t flex flex-col gap-3.5 ${isDark ? "border-zinc-900/60" : "border-zinc-100"}`}>
+                        <div className={`pt-4 border-t flex flex-col gap-3.5 ${"border-zinc-100"}`}>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1.5">
-                              <Palette className="h-3.5 w-3.5 text-purple-500" />
-                              <span className={`text-[10px] uppercase font-black tracking-wider ${isDark ? "text-zinc-400" : "text-zinc-655"}`}>
+                              <Palette className="h-3.5 w-3.5 text-teal-500" />
+                              <span className={`text-[10px] uppercase font-black tracking-wider ${"text-zinc-655"}`}>
                                 {lang === "tr" ? "KUTU TASARIM ÖZELLEŞTİRME" : "BOX STYLING CUSTOMIZATION"}
                               </span>
                               {simulatedPlan === "FREE" && initialUser.role !== "ADMIN" && (
-                                <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-purple-100 text-purple-600 uppercase flex items-center gap-0.5 animate-pulse">
+                                <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-purple-100 text-teal-500 uppercase flex items-center gap-0.5 animate-pulse">
                                   <Lock className="h-2 w-2" />
                                   PRO
                                 </span>
                               )}
                             </div>
-                            <span className="text-[9px] text-zinc-500">
+                            <span className="text-[9px] text-slate-500">
                               {lang === "tr" ? "(Starter ve Creator Paketleri İçin)" : "(For Starter & Creator Plans)"}
                             </span>
                           </div>
 
                           {/* 1-Click Preset Themes */}
-                          <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-zinc-950/40 border border-zinc-900/50">
-                            <span className="text-[9px] font-extrabold text-zinc-400 uppercase tracking-wider block">
+                          <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-white border border-gray-100">
+                            <span className="text-[9px] font-extrabold text-slate-500 uppercase tracking-wider block">
                               {lang === "tr" ? "⚡ Tek Tıkla Hazır Temalar" : "⚡ 1-Click Preset Themes"}
                             </span>
                             <div className="flex flex-wrap gap-2 mt-1">
@@ -2958,7 +2932,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   type="button"
                                   disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                   onClick={() => applyPresetTheme(link.id, presetTheme)}
-                                  className="px-2.5 py-1.5 rounded-lg text-[9px] font-black border border-zinc-800 hover:border-purple-500/50 bg-zinc-900 text-zinc-300 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+                                  className="px-2.5 py-1.5 rounded-lg text-[9px] font-black border border-gray-100 hover:border-teal-500/50 bg-gray-50 text-zinc-300 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
                                 >
                                   <span className="w-2 h-2 rounded-full border border-zinc-700 shrink-0" style={{ backgroundColor: presetTheme.bgColor === "transparent" ? "#fff" : presetTheme.bgColor }} />
                                   {presetTheme.name}
@@ -2970,7 +2944,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           {/* Hazır Renk Paleti Kombinasyonları */}
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">
+                              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
                                 🎨 {lang === "tr" ? "Hazır Renk Paleti Şablonları" : "Preset Color Palettes"}
                               </span>
                             </div>
@@ -3021,7 +2995,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                     shadow: link.shadow || "none",
                                     fontWeight: link.fontWeight || "font-bold",
                                   })}
-                                  className="flex items-center gap-2 px-3 py-2 rounded-2xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 hover:border-zinc-700 hover:shadow-lg hover:shadow-zinc-950/20 transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed group"
+                                  className="flex items-center gap-2 px-3 py-2 rounded-2xl border border-gray-100 bg-gray-50 hover:bg-gray-50 hover:border-zinc-700 hover:shadow-lg hover:shadow-zinc-950/20 transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed group"
                                 >
                                   {/* Color circles */}
                                   <div className="flex items-center gap-1 shrink-0">
@@ -3039,7 +3013,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                       style={{ border: `2.5px solid ${pTheme.borderColor}` }}
                                     />
                                   </div>
-                                  <span className="text-[9px] font-black text-zinc-300 group-hover:text-white uppercase tracking-wide whitespace-nowrap">
+                                  <span className="text-[9px] font-black text-zinc-300 group-hover:text-slate-900 uppercase tracking-wide whitespace-nowrap">
                                     {pTheme.name}
                                   </span>
                                 </button>
@@ -3051,8 +3025,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                             {/* Color Selection Blocks */}
                             
                             {/* Background Color Customization */}
-                            <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-zinc-900/40 border border-zinc-800/40">
-                              <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                            <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                                 {lang === "tr" ? "Arka Plan Rengi" : "Bg Color"}
                               </label>
                               <div className="flex items-center gap-2">
@@ -3067,19 +3041,19 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   {link.bgColor === "transparent" && <div className="absolute inset-0 bg-[linear-gradient(45deg,#ccc_25%,transparent_25%),linear-gradient(-45deg,#ccc_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#ccc_75%),linear-gradient(-45deg,transparent_75%,#ccc_75%)] bg-[size:8px_8px] bg-[position:0_0,0_4px,4px_-4px,-4px_0]" />}
                                 </div>
                                 <div className="flex flex-col">
-                                  <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase">{link.bgColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
+                                  <span className="text-[10px] font-mono font-bold text-slate-500 uppercase">{link.bgColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
                                   <button
                                     type="button"
                                     disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                     onClick={() => handleUpdateLinkStyle(link.id, "bgColor", null)}
-                                    className="text-[9px] font-bold text-purple-400 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
+                                    className="text-[9px] font-bold text-teal-500 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
                                   >
                                     {lang === "tr" ? "Sıfırla" : "Reset"}
                                   </button>
                                 </div>
                               </div>
                               {/* Color Quick Presets for Bg */}
-                              <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-zinc-800/40 mt-1">
+                              <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-gray-100 mt-1">
                                 {["transparent", "#000000", "#1e293b", "#3b82f6", "#ef4444", "#10b981", "#facc15", "#a855f7"].map((col) => {
                                   const isSelected = link.bgColor === col;
                                   return (
@@ -3088,7 +3062,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                       type="button"
                                       disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                       onClick={() => handleUpdateLinkStyle(link.id, "bgColor", col)}
-                                      className={`h-5 w-5 rounded-full border hover:scale-110 transition-transform cursor-pointer relative overflow-hidden ${isSelected ? "ring-2 ring-purple-500 ring-offset-1 border-white" : "border-zinc-800"}`}
+                                      className={`h-5 w-5 rounded-full border hover:scale-110 transition-transform cursor-pointer relative overflow-hidden ${isSelected ? "ring-2 ring-purple-500 ring-offset-1 border-white" : "border-gray-100"}`}
                                       style={col !== "transparent" ? { backgroundColor: col } : undefined}
                                       title={col}
                                     >
@@ -3100,8 +3074,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                             </div>
 
                             {/* Text Color Customization */}
-                            <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-zinc-900/40 border border-zinc-800/40">
-                              <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                            <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                                 {lang === "tr" ? "Metin Rengi" : "Text Color"}
                               </label>
                               <div className="flex items-center gap-2">
@@ -3115,19 +3089,19 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   />
                                 </div>
                                 <div className="flex flex-col">
-                                  <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase">{link.textColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
+                                  <span className="text-[10px] font-mono font-bold text-slate-500 uppercase">{link.textColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
                                   <button
                                     type="button"
                                     disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                     onClick={() => handleUpdateLinkStyle(link.id, "textColor", null)}
-                                    className="text-[9px] font-bold text-purple-400 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
+                                    className="text-[9px] font-bold text-teal-500 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
                                   >
                                     {lang === "tr" ? "Sıfırla" : "Reset"}
                                   </button>
                                 </div>
                               </div>
                               {/* Color Quick Presets for Text */}
-                              <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-zinc-800/40 mt-1">
+                              <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-gray-100 mt-1">
                                 {["#ffffff", "#000000", "#6b7280", "#3b82f6", "#ef4444", "#10b981", "#facc15", "#a855f7"].map((col) => {
                                   const isSelected = link.textColor === col;
                                   return (
@@ -3136,7 +3110,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                       type="button"
                                       disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                       onClick={() => handleUpdateLinkStyle(link.id, "textColor", col)}
-                                      className={`h-5 w-5 rounded-full border hover:scale-110 transition-transform cursor-pointer ${isSelected ? "ring-2 ring-purple-500 ring-offset-1 border-white" : "border-zinc-800"}`}
+                                      className={`h-5 w-5 rounded-full border hover:scale-110 transition-transform cursor-pointer ${isSelected ? "ring-2 ring-purple-500 ring-offset-1 border-white" : "border-gray-100"}`}
                                       style={{ backgroundColor: col }}
                                       title={col}
                                     />
@@ -3146,8 +3120,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                             </div>
 
                             {/* Border Color Customization */}
-                            <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-zinc-900/40 border border-zinc-800/40">
-                              <label className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+                            <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                                 {lang === "tr" ? "Kenarlık Rengi" : "Border Color"}
                               </label>
                               <div className="flex items-center gap-2">
@@ -3161,19 +3135,19 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   />
                                 </div>
                                 <div className="flex flex-col">
-                                  <span className="text-[10px] font-mono font-bold text-zinc-400 uppercase">{link.borderColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
+                                  <span className="text-[10px] font-mono font-bold text-slate-500 uppercase">{link.borderColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
                                   <button
                                     type="button"
                                     disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                     onClick={() => handleUpdateLinkStyle(link.id, "borderColor", null)}
-                                    className="text-[9px] font-bold text-purple-400 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
+                                    className="text-[9px] font-bold text-teal-500 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
                                   >
                                     {lang === "tr" ? "Sıfırla" : "Reset"}
                                   </button>
                                 </div>
                               </div>
                               {/* Color Quick Presets for Border */}
-                              <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-zinc-800/40 mt-1">
+                              <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-gray-100 mt-1">
                                 {["#ffffff", "#000000", "#e4e4e7", "#3b82f6", "#ef4444", "#10b981", "#facc15", "#a855f7"].map((col) => {
                                   const isSelected = link.borderColor === col;
                                   return (
@@ -3182,7 +3156,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                       type="button"
                                       disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                       onClick={() => handleUpdateLinkStyle(link.id, "borderColor", col)}
-                                      className={`h-5 w-5 rounded-full border hover:scale-110 transition-transform cursor-pointer ${isSelected ? "ring-2 ring-purple-500 ring-offset-1 border-white" : "border-zinc-800"}`}
+                                      className={`h-5 w-5 rounded-full border hover:scale-110 transition-transform cursor-pointer ${isSelected ? "ring-2 ring-purple-500 ring-offset-1 border-white" : "border-gray-100"}`}
                                       style={{ backgroundColor: col }}
                                       title={col}
                                     />
@@ -3193,7 +3167,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           </div>
 
                           {/* Secondary style controls grid */}
-                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 p-3.5 rounded-xl bg-zinc-900/20 border border-zinc-800/20">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 p-3.5 rounded-xl bg-gray-50 border border-gray-100">
                             {/* Border Style */}
                             <div className="flex flex-col gap-1.5">
                               <label className="text-[9px] font-extrabold text-zinc-450 uppercase tracking-wider">
@@ -3203,7 +3177,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 value={link.borderStyle || "solid"}
                                 disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "borderStyle", e.target.value)}
-                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-purple-500 bg-zinc-900 border-zinc-800 text-white disabled:opacity-50 cursor-pointer"
+                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
                               >
                                 <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
                                 <option value="dashed">{lang === "tr" ? "Kesikli (Dashed)" : "Dashed"}</option>
@@ -3222,7 +3196,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 value={link.borderWidth || "1px"}
                                 disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "borderWidth", e.target.value)}
-                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-purple-500 bg-zinc-900 border-zinc-800 text-white disabled:opacity-50 cursor-pointer"
+                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
                               >
                                 <option value="1px">1px</option>
                                 <option value="2px">2px</option>
@@ -3240,7 +3214,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 value={link.borderRadius || "12px"}
                                 disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "borderRadius", e.target.value)}
-                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-purple-500 bg-zinc-900 border-zinc-800 text-white disabled:opacity-50 cursor-pointer"
+                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
                               >
                                 <option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp (0px)"}</option>
                                 <option value="8px">8px</option>
@@ -3259,7 +3233,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 value={link.shadow || "none"}
                                 disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "shadow", e.target.value)}
-                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-purple-500 bg-zinc-900 border-zinc-800 text-white disabled:opacity-50 cursor-pointer"
+                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
                               >
                                 <option value="none">{lang === "tr" ? "Gölgesiz" : "No Shadow"}</option>
                                 <option value="soft">{lang === "tr" ? "Yumuşak Gölge" : "Soft Shadow"}</option>
@@ -3278,7 +3252,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 value={link.fontWeight || "font-bold"}
                                 disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "fontWeight", e.target.value)}
-                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-purple-500 bg-zinc-900 border-zinc-800 text-white disabled:opacity-50 cursor-pointer"
+                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
                               >
                                 <option value="font-normal">{lang === "tr" ? "Normal" : "Normal"}</option>
                                 <option value="font-medium">{lang === "tr" ? "Orta (Medium)" : "Medium"}</option>
@@ -3302,23 +3276,23 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
             {/* Top Summaries Grids */}
             <div className="grid md:grid-cols-4 gap-6">
               <div className={`p-6 rounded-2xl border flex items-center justify-between ${
-                isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="space-y-1">
-                  <span className="text-xs text-zinc-500 uppercase font-bold tracking-wider block">{t.totalViews}</span>
-                  <div className={`text-3xl font-black ${isDark ? "text-white" : "text-zinc-950"}`}>{totalViews}</div>
+                  <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">{t.totalViews}</span>
+                  <div className={`text-3xl font-black ${"text-zinc-950"}`}>{totalViews}</div>
                 </div>
-                <div className="p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                <div className="p-3 rounded-xl bg-teal-400/10 border border-teal-500/20 text-teal-500">
                   <Eye className="h-5 w-5" />
                 </div>
               </div>
 
               <div className={`p-6 rounded-2xl border flex items-center justify-between ${
-                isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="space-y-1">
-                  <span className="text-xs text-zinc-500 uppercase font-bold tracking-wider block">{t.totalClicks}</span>
-                  <div className={`text-3xl font-black ${isDark ? "text-white" : "text-zinc-950"}`}>{totalClicks}</div>
+                  <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">{t.totalClicks}</span>
+                  <div className={`text-3xl font-black ${"text-zinc-950"}`}>{totalClicks}</div>
                 </div>
                 <div className="p-3 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
                   <MousePointerClick className="h-5 w-5" />
@@ -3326,10 +3300,10 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
               </div>
 
               <div className={`p-6 rounded-2xl border flex items-center justify-between ${
-                isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="space-y-1">
-                  <span className="text-xs text-zinc-500 uppercase font-bold tracking-wider block">Average CTR</span>
+                  <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">Average CTR</span>
                   <div className="text-3xl font-black text-emerald-400">{averageCTR}%</div>
                 </div>
                 <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
@@ -3338,13 +3312,13 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
               </div>
 
               <div className={`p-6 rounded-2xl border flex flex-col justify-center space-y-2 ${
-                isDark ? "bg-zinc-950 border-zinc-900/60" : "bg-white border-zinc-200 shadow-sm"
+                "bg-white border-zinc-200 shadow-sm"
               }`}>
-                <span className="text-xs text-zinc-500 uppercase font-bold tracking-wider block">{lang === "tr" ? "Test Araçları" : "Verification Testing"}</span>
+                <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">{lang === "tr" ? "Test Araçları" : "Verification Testing"}</span>
                 <button
                   onClick={handleMockTraffic}
                   disabled={isPending}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs transition-colors cursor-pointer shadow-[0_0_15px_rgba(168,85,247,0.25)]"
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-extrabold text-xs transition-colors cursor-pointer shadow-[0_0_15px_rgba(45,212,191,0.25)]"
                 >
                   {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
                   {t.simTraffic}
@@ -3354,9 +3328,9 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
             {totalViews === 0 ? (
               <div className={`p-12 text-center rounded-2xl border border-dashed space-y-3 ${
-                isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200"
+                "bg-white border-zinc-200"
               }`}>
-                <div className="text-zinc-500 text-sm font-semibold italic">
+                <div className="text-slate-500 text-sm font-semibold italic">
                   {lang === "tr" ? "Henüz trafik kaydı bulunmuyor. Sayfa linkinizi paylaşarak veya yukarıdaki 'Trafik Simülasyonu Çalıştır' butonuna tıklayarak grafikleri anında inceleyebilirsiniz!" : "No traffic logged yet. Promote your link page or click the 'Simulate Traffic Action' button to see analytics charts instantly!"}
                 </div>
               </div>
@@ -3364,9 +3338,9 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
               <>
                 {/* Chart 1: Daily views & clicks */}
                 <div className={`p-6 rounded-2xl border space-y-4 ${
-                  isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                  "bg-white border-zinc-200 shadow-sm"
                 }`}>
-                  <h3 className={`font-extrabold text-sm uppercase tracking-wider ${isDark ? "text-zinc-400" : "text-zinc-800"}`}>{t.trafficOverTime}</h3>
+                  <h3 className={`font-extrabold text-sm uppercase tracking-wider ${"text-zinc-800"}`}>{t.trafficOverTime}</h3>
                   <div className="h-80 w-full text-xs">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={chartData}>
@@ -3382,7 +3356,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         </defs>
                         <XAxis dataKey="date" stroke="#52525b" fontSize={10} />
                         <YAxis stroke="#52525b" fontSize={10} />
-                        <Tooltip contentStyle={{ backgroundColor: isDark ? "#09090b" : "#ffffff", borderColor: isDark ? "#27272a" : "#e4e4e7", color: isDark ? "#fff" : "#000", borderRadius: "12px" }} />
+                        <Tooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e4e4e7", color: "#000", borderRadius: "12px" }} />
                         <Legend />
                         <Area type="monotone" dataKey="Views" stroke="#a855f7" strokeWidth={2.5} fillOpacity={1} fill="url(#viewsGrad)" />
                         <Area type="monotone" dataKey="Clicks" stroke="#ec4899" strokeWidth={2.5} fillOpacity={1} fill="url(#clicksGrad)" />
@@ -3395,9 +3369,9 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                 <div className="grid md:grid-cols-3 gap-6">
                   {/* Device and Browser splits */}
                   <div className={`p-6 rounded-2xl border space-y-4 flex flex-col justify-between ${
-                    isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                    "bg-white border-zinc-200 shadow-sm"
                   }`}>
-                    <h3 className={`font-extrabold text-xs uppercase tracking-wider ${isDark ? "text-zinc-400" : "text-zinc-800"}`}>{t.devices} & {t.browsers}</h3>
+                    <h3 className={`font-extrabold text-xs uppercase tracking-wider ${"text-zinc-800"}`}>{t.devices} & {t.browsers}</h3>
                     <div className="h-56 flex items-center justify-center text-xs">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
@@ -3414,7 +3388,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                           </Pie>
-                          <Tooltip contentStyle={{ backgroundColor: isDark ? "#09090b" : "#ffffff", borderColor: isDark ? "#27272a" : "#e4e4e7", color: isDark ? "#fff" : "#000" }} />
+                          <Tooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e4e4e7", color: "#000" }} />
                           <Legend verticalAlign="bottom" height={36} />
                         </PieChart>
                       </ResponsiveContainer>
@@ -3423,15 +3397,15 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                   {/* Top Referrals split */}
                   <div className={`p-6 rounded-2xl border space-y-4 ${
-                    isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                    "bg-white border-zinc-200 shadow-sm"
                   }`}>
-                    <h3 className={`font-extrabold text-xs uppercase tracking-wider ${isDark ? "text-zinc-400" : "text-zinc-800"}`}>{t.referrers}</h3>
+                    <h3 className={`font-extrabold text-xs uppercase tracking-wider ${"text-zinc-800"}`}>{t.referrers}</h3>
                     <div className="h-56 text-xs">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={referrerData} layout="vertical">
                           <XAxis type="number" stroke="#52525b" />
                           <YAxis dataKey="name" type="category" stroke="#52525b" width={80} />
-                          <Tooltip contentStyle={{ backgroundColor: isDark ? "#09090b" : "#ffffff", borderColor: isDark ? "#27272a" : "#e4e4e7", color: isDark ? "#fff" : "#000" }} />
+                          <Tooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e4e4e7", color: "#000" }} />
                           <Bar dataKey="value" fill="#a855f7" radius={[0, 4, 4, 0]}>
                             {referrerData.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -3444,9 +3418,9 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                   {/* Geolocation splits */}
                   <div className={`p-6 rounded-2xl border space-y-4 flex flex-col justify-between ${
-                    isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                    "bg-white border-zinc-200 shadow-sm"
                   }`}>
-                    <h3 className={`font-extrabold text-xs uppercase tracking-wider ${isDark ? "text-zinc-400" : "text-zinc-800"}`}>{t.countries}</h3>
+                    <h3 className={`font-extrabold text-xs uppercase tracking-wider ${"text-zinc-800"}`}>{t.countries}</h3>
                     <div className="h-56 flex items-center justify-center text-xs">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
@@ -3462,7 +3436,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                           </Pie>
-                          <Tooltip contentStyle={{ backgroundColor: isDark ? "#09090b" : "#ffffff", borderColor: isDark ? "#27272a" : "#e4e4e7", color: isDark ? "#fff" : "#000" }} />
+                          <Tooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e4e4e7", color: "#000" }} />
                         </PieChart>
                       </ResponsiveContainer>
                     </div>
@@ -3471,13 +3445,13 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                 {/* Table: Links Performance */}
                 <div className={`p-6 rounded-2xl border space-y-4 ${
-                  isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                  "bg-white border-zinc-200 shadow-sm"
                 }`}>
-                  <h3 className={`font-extrabold text-sm uppercase tracking-wider ${isDark ? "text-zinc-400" : "text-zinc-800"}`}>{t.performanceInsights}</h3>
+                  <h3 className={`font-extrabold text-sm uppercase tracking-wider ${"text-zinc-800"}`}>{t.performanceInsights}</h3>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs border-collapse">
                       <thead>
-                        <tr className={`border-b text-zinc-500 ${isDark ? "border-zinc-900" : "border-zinc-200"}`}>
+                        <tr className={`border-b text-slate-500 ${"border-zinc-200"}`}>
                           <th className="py-3 px-4 font-bold">{t.linkTitle}</th>
                           <th className="py-3 px-4 font-bold">{t.linkUrl}</th>
                           <th className="py-3 px-4 font-bold text-center">{lang === "tr" ? "Tıklama Sayısı" : "Click Count"}</th>
@@ -3486,9 +3460,9 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                       <tbody>
                         {links.map((lnk) => (
                           <tr key={lnk.id} className={`border-b hover:bg-zinc-550/10 transition-all ${
-                            isDark ? "border-zinc-900/60" : "border-zinc-100"
+                            "border-zinc-100"
                           }`}>
-                            <td className={`py-3.5 px-4 font-bold ${isDark ? "text-zinc-200" : "text-zinc-800"}`}>
+                            <td className={`py-3.5 px-4 font-bold ${"text-zinc-800"}`}>
                               <div className="flex items-center gap-2">
                                 <div className="h-6 w-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100/50">
                                   {getLinkIconHelper(lnk.type, lnk.url)}
@@ -3496,8 +3470,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 <span>{lnk.title}</span>
                               </div>
                             </td>
-                            <td className="py-3.5 px-4 text-zinc-500 font-mono">{lnk.url}</td>
-                            <td className="py-3.5 px-4 font-extrabold text-purple-400 text-center">{lnk.clicks?.length || 0}</td>
+                            <td className="py-3.5 px-4 text-slate-500 font-mono">{lnk.url}</td>
+                            <td className="py-3.5 px-4 font-extrabold text-teal-500 text-center">{lnk.clicks?.length || 0}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -3553,16 +3527,16 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
             <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
               {/* Top Banner Alert / Quotas */}
               <div className={`p-6 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden ${
-                isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="space-y-2 flex-1 w-full">
                   <div className="flex items-center gap-2.5">
-                    <QrCode className="h-5 w-5 text-purple-400" />
-                    <h2 className={`font-black text-lg ${isDark ? "text-white" : "text-zinc-950"}`}>
+                    <QrCode className="h-5 w-5 text-teal-500" />
+                    <h2 className={`font-black text-lg ${"text-zinc-950"}`}>
                       {lang === "tr" ? "Dinamik QR Kod Stüdyosu" : "Dynamic QR Code Studio"}
                     </h2>
                   </div>
-                  <p className="text-xs text-zinc-500 font-medium">
+                  <p className="text-xs text-slate-500 font-medium">
                     {lang === "tr" 
                       ? "Kreatör profiliniz ve özel şablonlarınız için yüksek çözünürlüklü dynamic QR kodları oluşturun."
                       : "Create custom high-resolution dynamic QR codes for your profiles and template assets."}
@@ -3570,13 +3544,13 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                   {/* Quota Progress Bar */}
                   <div className="space-y-1.5 pt-2 max-w-md">
-                    <div className="flex justify-between items-center text-[10px] font-black uppercase text-zinc-400">
+                    <div className="flex justify-between items-center text-[10px] font-black uppercase text-slate-500">
                       <span>{lang === "tr" ? "QR OLUŞTURMA LİMİTİ" : "QR USAGE LIMIT"}</span>
                       <span>
                         {qrCount} / {qrLimitMax === Infinity ? (lang === "tr" ? "SINIRSIZ" : "UNLIMITED") : `${qrLimitMax}`}
                       </span>
                     </div>
-                    <div className={`w-full h-2 rounded-full overflow-hidden ${isDark ? "bg-zinc-900" : "bg-zinc-100"}`}>
+                    <div className={`w-full h-2 rounded-full overflow-hidden ${"bg-zinc-100"}`}>
                       <div 
                         className="h-full bg-gradient-to-r from-purple-500 to-rose-500 rounded-full transition-all duration-500" 
                         style={{ width: `${Math.min((qrCount / (qrLimitMax === Infinity ? 100 : qrLimitMax)) * 100, 100)}%` }}
@@ -3594,7 +3568,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                       }
                       setQrMode("create");
                     }}
-                    className={`px-5 py-3 rounded-xl font-bold text-xs cursor-pointer transition-all flex items-center gap-2 text-white bg-gradient-to-r from-purple-600 to-rose-600 hover:opacity-90 shadow-md ${
+                    className={`px-5 py-3 rounded-xl font-bold text-xs cursor-pointer transition-all flex items-center gap-2 text-slate-900 bg-gradient-to-r from-purple-600 to-rose-600 hover:opacity-90 shadow-md ${
                       isQuotaReached ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                   >
@@ -3609,16 +3583,16 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                 <>
                   {qrCodes.length === 0 ? (
                     <div className={`p-16 rounded-2xl border text-center flex flex-col items-center gap-4 ${
-                      isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                      "bg-white border-zinc-200 shadow-sm"
                     }`}>
-                      <div className="h-16 w-16 rounded-full bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
-                        <QrCode className="h-8 w-8 text-purple-400" />
+                      <div className="h-16 w-16 rounded-full bg-teal-400/10 flex items-center justify-center border border-teal-500/20">
+                        <QrCode className="h-8 w-8 text-teal-500" />
                       </div>
                       <div className="space-y-1">
-                        <h3 className={`font-black text-sm ${isDark ? "text-white" : "text-zinc-900"}`}>
+                        <h3 className={`font-black text-sm ${"text-zinc-900"}`}>
                           {lang === "tr" ? "Henüz QR Kod Oluşturmadınız" : "No QR Codes Created Yet"}
                         </h3>
-                        <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+                        <p className="text-xs text-slate-500 max-w-sm mx-auto">
                           {lang === "tr" 
                             ? "Yukarıdaki 'Yeni QR Kodu Oluştur' butonuna basarak 16 şablondan birini seçip ilk dinamik QR kodunuzu oluşturabilirsiniz!"
                             : "Click the 'Create New QR Code' button above to select from 16 green templates and generate your first dynamic code!"}
@@ -3634,7 +3608,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           <div 
                             key={qr.id} 
                             className={`p-5 rounded-2xl border flex flex-col justify-between gap-5 relative overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md ${
-                              isDark ? "bg-zinc-950 border-zinc-900 hover:border-zinc-800" : "bg-white border-zinc-200 shadow-sm hover:border-zinc-350"
+                              "bg-white border-zinc-200 shadow-sm hover:border-zinc-350"
                             }`}
                           >
                             <div className="flex items-start justify-between gap-3">
@@ -3643,8 +3617,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   <MetaIcon className="h-2.5 w-2.5" />
                                   {meta.name}
                                 </span>
-                                <h4 className={`font-black text-sm leading-snug ${isDark ? "text-white" : "text-zinc-900"}`}>{qr.name}</h4>
-                                <p className="text-[10px] text-zinc-500 font-semibold">{new Date(qr.createdAt).toLocaleDateString("tr-TR")}</p>
+                                <h4 className={`font-black text-sm leading-snug ${"text-zinc-900"}`}>{qr.name}</h4>
+                                <p className="text-[10px] text-slate-500 font-semibold">{new Date(qr.createdAt).toLocaleDateString("tr-TR")}</p>
                               </div>
 
                               <button
@@ -3716,7 +3690,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   link.click();
                                 }}
                                 className={`flex items-center justify-center gap-1.5 py-2 rounded-xl border font-bold text-[10px] transition-colors cursor-pointer ${
-                                  isDark ? "bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white" : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                  "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                 }`}
                               >
                                 <Download className="h-3 w-3" />
@@ -3731,7 +3705,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   link.click();
                                 }}
                                 className={`flex items-center justify-center gap-1.5 py-2 rounded-xl border font-bold text-[10px] transition-colors cursor-pointer ${
-                                  isDark ? "bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white" : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                  "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                 }`}
                               >
                                 <Download className="h-3 w-3" />
@@ -3757,7 +3731,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         setSelectedTemplate(null);
                       }}
                       className={`px-4 py-2 rounded-full border text-xs font-bold transition-all cursor-pointer ${
-                        isDark ? "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white" : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+                        "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
                       }`}
                     >
                       &larr; {lang === "tr" ? "Listeye Geri Dön" : "Back to List"}
@@ -3774,10 +3748,10 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                   {!selectedTemplate ? (
                     <div className="space-y-4">
                       <div className="border-b pb-2">
-                        <h3 className={`font-black text-sm uppercase tracking-wider ${isDark ? "text-zinc-400" : "text-zinc-800"}`}>
+                        <h3 className={`font-black text-sm uppercase tracking-wider ${"text-zinc-800"}`}>
                           {lang === "tr" ? "Bir Şablon Tipi Seçin" : "Select a Template Type"}
                         </h3>
-                        <p className="text-[10px] text-zinc-500">
+                        <p className="text-[10px] text-slate-500">
                           {lang === "tr" 
                             ? "Kreatör planınıza dahil olan 16 premium şablondan birini seçerek başlayın."
                             : "Start by selecting one of the 16 premium green templates included in your subscription."}
@@ -3803,15 +3777,13 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               }}
                               className={`p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-3 transition-all relative group cursor-pointer ${
                                 unlocked 
-                                  ? isDark 
-                                    ? "bg-zinc-950 border-zinc-900 hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.05)]" 
-                                    : "bg-white border-zinc-200 hover:border-emerald-350 hover:shadow-md"
+                                  ? "bg-white border-zinc-200 hover:border-emerald-350 hover:shadow-md"
                                   : "opacity-40 cursor-not-allowed"
                               }`}
                             >
                               {/* Locked Overlay badge */}
                               {!unlocked && (
-                                <div className="absolute top-2.5 right-2.5 p-1 rounded-md bg-zinc-900 border border-zinc-800 text-zinc-500">
+                                <div className="absolute top-2.5 right-2.5 p-1 rounded-md bg-gray-50 border border-gray-100 text-slate-500">
                                   <Lock className="h-3 w-3" />
                                 </div>
                               )}
@@ -3820,16 +3792,16 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               <div className={`h-12 w-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-105 ${
                                 unlocked 
                                   ? "bg-emerald-50 text-emerald-500" 
-                                  : "bg-zinc-900 text-zinc-500"
+                                  : "bg-gray-50 text-slate-500"
                               }`}>
                                 <Icon className="h-5 w-5" />
                               </div>
 
                               <div className="space-y-0.5">
-                                <h4 className={`font-black text-xs ${isDark ? "text-white" : "text-zinc-900"}`}>
+                                <h4 className={`font-black text-xs ${"text-zinc-900"}`}>
                                   {tmpl.name}
                                 </h4>
-                                <p className="text-[9px] text-zinc-500 font-semibold leading-normal line-clamp-2">
+                                <p className="text-[9px] text-slate-500 font-semibold leading-normal line-clamp-2">
                                   {tmpl.desc}
                                 </p>
                               </div>
@@ -3838,7 +3810,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full select-none ${
                                   tmpl.tier === "STARTER" 
                                     ? "bg-blue-500/10 text-blue-400 border border-blue-500/20" 
-                                    : "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                                    : "bg-teal-400/10 text-teal-500 border border-teal-500/20"
                                 }`}>
                                   {tmpl.tier}
                                 </span>
@@ -3854,7 +3826,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                       {/* Left: Input parameters */}
                       <div className="flex-1 space-y-6">
                         <div className={`p-6 rounded-2xl border space-y-6 ${
-                          isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+                          "bg-white border-zinc-200 shadow-sm"
                         }`}>
                           <div className="border-b pb-3 flex items-center gap-3">
                             <span className="p-2 rounded-lg bg-emerald-50 text-emerald-500">
@@ -3864,10 +3836,10 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               })()}
                             </span>
                             <div className="space-y-0.5">
-                              <h3 className={`font-black text-sm uppercase tracking-wider ${isDark ? "text-white" : "text-zinc-900"}`}>
+                              <h3 className={`font-black text-sm uppercase tracking-wider ${"text-zinc-900"}`}>
                                 {lang === "tr" ? "Şablon Ayrıntılarını Doldurun" : "Fill Template Details"}
                               </h3>
-                              <p className="text-[10px] text-zinc-500">
+                              <p className="text-[10px] text-slate-500">
                                 {lang === "tr" ? "Seçtiğiniz şablon tipine göre aşağıdaki form alanlarını girin." : "Fill the template fields below to automatically encode your custom code."}
                               </p>
                             </div>
@@ -3875,7 +3847,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                           {/* QR General Name */}
                           <div className="space-y-2">
-                            <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>
+                            <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>
                               {lang === "tr" ? "QR Kod İsmi" : "QR Code Label Name"}
                             </label>
                             <input
@@ -3883,8 +3855,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               value={qrName}
                               onChange={(e) => setQrName(e.target.value)}
                               placeholder={lang === "tr" ? "Örn: Portfolyo Linkim" : "e.g., My Portfolio Link"}
-                              className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                              className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                "bg-zinc-50 border-zinc-200 text-zinc-900"
                               }`}
                             />
                           </div>
@@ -3895,38 +3867,38 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           {selectedTemplate === "WIFI" && (
                             <div className="space-y-4 pt-2">
                               <div className="space-y-2">
-                                <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>Network SSID (Ağ Adı)</label>
+                                <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Network SSID (Ağ Adı)</label>
                                 <input
                                   type="text"
                                   value={wifiSsid}
                                   onChange={(e) => setWifiSsid(e.target.value)}
                                   placeholder="e.g. Creator_Guest_Wifi"
-                                  className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                  className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                    "bg-zinc-50 border-zinc-200 text-zinc-900"
                                   }`}
                                 />
                               </div>
 
                               <div className="space-y-2">
-                                <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>Wi-Fi Şifresi</label>
+                                <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Wi-Fi Şifresi</label>
                                 <input
                                   type="password"
                                   value={wifiPassword}
                                   onChange={(e) => setWifiPassword(e.target.value)}
                                   placeholder="••••••••"
-                                  className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                  className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                    "bg-zinc-50 border-zinc-200 text-zinc-900"
                                   }`}
                                 />
                               </div>
 
                               <div className="space-y-2">
-                                <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>Şifreleme Tipi</label>
+                                <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Şifreleme Tipi</label>
                                 <select
                                   value={wifiEncryption}
                                   onChange={(e: any) => setWifiEncryption(e.target.value)}
-                                  className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs font-semibold ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                  className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs font-semibold ${
+                                    "bg-zinc-50 border-zinc-200 text-zinc-900"
                                   }`}
                                 >
                                   <option value="WPA">WPA / WPA2</option>
@@ -3941,26 +3913,26 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           {selectedTemplate === "WHATSAPP" && (
                             <div className="space-y-4 pt-2">
                               <div className="space-y-2">
-                                <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>Telefon Numarası</label>
+                                <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Telefon Numarası</label>
                                 <input
                                   type="text"
                                   value={whatsAppPhone}
                                   onChange={(e) => setWhatsAppPhone(e.target.value)}
                                   placeholder="Örn: +905321234567"
-                                  className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                  className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                    "bg-zinc-50 border-zinc-200 text-zinc-900"
                                   }`}
                                 />
                               </div>
 
                               <div className="space-y-2">
-                                <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>Hazır Mesaj (Seçenekli)</label>
+                                <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Hazır Mesaj (Seçenekli)</label>
                                 <textarea
                                   value={whatsAppMessage}
                                   onChange={(e) => setWhatsAppMessage(e.target.value)}
                                   placeholder={lang === "tr" ? "Örn: Merhaba, beatler hakkında bilgi almak istiyorum." : "e.g. Hi! I'd like to check licensing prices."}
-                                  className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs min-h-[80px] resize-y ${
-                                    isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                  className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs min-h-[80px] resize-y ${
+                                    "bg-zinc-50 border-zinc-200 text-zinc-900"
                                   }`}
                                 />
                               </div>
@@ -3972,26 +3944,26 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                             <div className="space-y-4 pt-2">
                               <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>Tam İsim</label>
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Tam İsim</label>
                                   <input
                                     type="text"
                                     value={vCardName}
                                     onChange={(e) => setVCardName(e.target.value)}
                                     placeholder="Jane Doe"
-                                    className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
                                     }`}
                                   />
                                 </div>
                                 <div className="space-y-2">
-                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>Telefon</label>
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Telefon</label>
                                   <input
                                     type="text"
                                     value={vCardPhone}
                                     onChange={(e) => setVCardPhone(e.target.value)}
                                     placeholder="+90555..."
-                                    className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
                                     }`}
                                   />
                                 </div>
@@ -3999,26 +3971,26 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                               <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>E-posta Adresi</label>
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>E-posta Adresi</label>
                                   <input
                                     type="email"
                                     value={vCardEmail}
                                     onChange={(e) => setVCardEmail(e.target.value)}
                                     placeholder="jane@company.com"
-                                    className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
                                     }`}
                                   />
                                 </div>
                                 <div className="space-y-2">
-                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>İşletme / Kurum</label>
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>İşletme / Kurum</label>
                                   <input
                                     type="text"
                                     value={vCardOrg}
                                     onChange={(e) => setVCardOrg(e.target.value)}
                                     placeholder="Creator Corp"
-                                    className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
                                     }`}
                                   />
                                 </div>
@@ -4026,26 +3998,26 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                               <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>Başlık / Ünvan</label>
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Başlık / Ünvan</label>
                                   <input
                                     type="text"
                                     value={vCardTitle}
                                     onChange={(e) => setVCardTitle(e.target.value)}
                                     placeholder="Lead Producer"
-                                    className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
                                     }`}
                                   />
                                 </div>
                                 <div className="space-y-2">
-                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>İnternet Adresi</label>
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>İnternet Adresi</label>
                                   <input
                                     type="text"
                                     value={vCardUrl}
                                     onChange={(e) => setVCardUrl(e.target.value)}
                                     placeholder="https://example.com"
-                                    className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
                                     }`}
                                   />
                                 </div>
@@ -4056,7 +4028,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           {/* DEFAULT REDIRECT URL INPUT FOR ALL BASIC/URL SHABLONS */}
                           {selectedTemplate !== "WIFI" && selectedTemplate !== "WHATSAPP" && selectedTemplate !== "VCARD" && (
                             <div className="space-y-2 pt-2">
-                              <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>
+                              <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>
                                 {lang === "tr" ? "Bağlantı / Hedef Adresi" : "Destination URL / Asset Target"}
                               </label>
                               <input
@@ -4064,11 +4036,11 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 value={qrValueText}
                                 onChange={(e) => setQrValueText(e.target.value)}
                                 placeholder="https://example.com/asset.pdf"
-                                className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs ${
-                                  isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                  "bg-zinc-50 border-zinc-200 text-zinc-900"
                                 }`}
                               />
-                              <p className="text-[9px] text-zinc-500 font-semibold italic">
+                              <p className="text-[9px] text-slate-500 font-semibold italic">
                                 {lang === "tr"
                                   ? "Dinamik yönlendirme adresi. İstediğiniz zaman güncelleyebilirsiniz."
                                   : "Dynamic target link. Updatable at any time from this dashboard."}
@@ -4077,8 +4049,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           )}
 
                           {/* 2. STYLE CUSTOMIZATIONS SECTION */}
-                          <div className={`space-y-6 border-t pt-6 ${isDark ? "border-zinc-900" : "border-zinc-150"}`}>
-                            <h4 className={`font-black text-xs uppercase tracking-wider ${isDark ? "text-white" : "text-zinc-900"}`}>
+                          <div className={`space-y-6 border-t pt-6 ${"border-zinc-150"}`}>
+                            <h4 className={`font-black text-xs uppercase tracking-wider ${"text-zinc-900"}`}>
                               {lang === "tr" ? "QR Kod Tasarımını Özelleştir" : "Customize QR Code Aesthetics"}
                             </h4>
 
@@ -4086,10 +4058,10 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               {/* FG Color */}
                               <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>
                                     {lang === "tr" ? "Ön Plan Rengi" : "Foreground Color"}
                                   </label>
-                                  {!isPremium && <Lock className="h-3 w-3 text-zinc-500" />}
+                                  {!isPremium && <Lock className="h-3 w-3 text-slate-500" />}
                                 </div>
                                 <div className="flex gap-2">
                                   <input
@@ -4097,15 +4069,15 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                     value={qrFgColor}
                                     onChange={(e) => isPremium && setQrFgColor(e.target.value)}
                                     disabled={!isPremium}
-                                    className="h-10 w-12 rounded-lg bg-zinc-900 border border-zinc-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="h-10 w-12 rounded-lg bg-gray-50 border border-gray-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                                   />
                                   <input
                                     type="text"
                                     value={qrFgColor}
                                     onChange={(e) => isPremium && setQrFgColor(e.target.value)}
                                     disabled={!isPremium}
-                                    className={`flex-1 border rounded-lg px-3 text-xs outline-none focus:border-purple-500 disabled:opacity-50 disabled:cursor-not-allowed ${
-                                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    className={`flex-1 border rounded-lg px-3 text-xs outline-none focus:border-teal-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                      "bg-zinc-100 border-zinc-200 text-zinc-900"
                                     }`}
                                   />
                                 </div>
@@ -4114,10 +4086,10 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               {/* BG Color */}
                               <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>
                                     {lang === "tr" ? "Arka Plan Rengi" : "Background Color"}
                                   </label>
-                                  {!isPremium && <Lock className="h-3 w-3 text-zinc-500" />}
+                                  {!isPremium && <Lock className="h-3 w-3 text-slate-500" />}
                                 </div>
                                 <div className="flex gap-2">
                                   <input
@@ -4125,15 +4097,15 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                     value={qrBgColor}
                                     onChange={(e) => isPremium && setQrBgColor(e.target.value)}
                                     disabled={!isPremium}
-                                    className="h-10 w-12 rounded-lg bg-zinc-900 border border-zinc-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="h-10 w-12 rounded-lg bg-gray-50 border border-gray-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                                   />
                                   <input
                                     type="text"
                                     value={qrBgColor}
                                     onChange={(e) => isPremium && setQrBgColor(e.target.value)}
                                     disabled={!isPremium}
-                                    className={`flex-1 border rounded-lg px-3 text-xs outline-none focus:border-purple-500 disabled:opacity-50 disabled:cursor-not-allowed ${
-                                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    className={`flex-1 border rounded-lg px-3 text-xs outline-none focus:border-teal-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                      "bg-zinc-100 border-zinc-200 text-zinc-900"
                                     }`}
                                   />
                                 </div>
@@ -4142,21 +4114,21 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
                             {/* Watermark Branding overlay checkbox */}
                             <div className={`flex items-center justify-between p-3.5 rounded-xl border ${
-                              isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-50 border-zinc-200 text-zinc-850"
+                              "bg-zinc-50 border-zinc-200 text-zinc-850"
                             }`}>
                               <div className="space-y-0.5">
                                 <div className="text-xs font-black flex items-center gap-1.5">
                                   {lang === "tr" ? "Marka Logosu Yerleşimi" : "Brand Watermark Placement"}
-                                  {!isPremium && <Lock className="h-3 w-3 text-zinc-500" />}
+                                  {!isPremium && <Lock className="h-3 w-3 text-slate-500" />}
                                 </div>
-                                <p className="text-[9px] text-zinc-500 font-semibold">{lang === "tr" ? "QR kodunun tam ortasına küçük bir marka ikonu yerleştirir." : "Place a tiny brand icon exactly inside the center of your generated QR."}</p>
+                                <p className="text-[9px] text-slate-500 font-semibold">{lang === "tr" ? "QR kodunun tam ortasına küçük bir marka ikonu yerleştirir." : "Place a tiny brand icon exactly inside the center of your generated QR."}</p>
                               </div>
                               <button
                                 type="button"
                                 onClick={() => isPremium && setQrIncludeLogo(!qrIncludeLogo)}
                                 disabled={!isPremium}
                                 className={`w-10 h-6 rounded-full p-1 cursor-pointer transition-all flex items-center ${
-                                  qrIncludeLogo ? "bg-emerald-600 justify-end" : "bg-zinc-800 justify-start"
+                                  qrIncludeLogo ? "bg-emerald-600 justify-end" : "bg-gray-50 justify-start"
                                 } disabled:opacity-50 disabled:cursor-not-allowed`}
                               >
                                 <div className="h-4 w-4 rounded-full bg-white shadow-sm" />
@@ -4164,18 +4136,18 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                             </div>
 
                             {!isPremium && (
-                              <div className="p-4 rounded-xl bg-purple-950/20 border border-purple-500/20 flex gap-3 items-start">
-                                <Lock className="h-4 w-4 text-purple-400 shrink-0 mt-0.5" />
+                              <div className="p-4 rounded-xl bg-purple-950/20 border border-teal-500/20 flex gap-3 items-start">
+                                <Lock className="h-4 w-4 text-teal-500 shrink-0 mt-0.5" />
                                 <div className="space-y-1">
                                   <div className="text-xs font-black text-purple-300">
                                     {lang === "tr" ? "Tasarım Özellikleri Kilitli" : "Design Customizations Locked"}
                                   </div>
-                                  <p className="text-[9px] text-zinc-500 leading-normal">
+                                  <p className="text-[9px] text-slate-500 leading-normal">
                                     {lang === "tr"
                                       ? "QR kod renklerini özelleştirmek ve ortasına logo eklemek için STARTER veya CREATOR planına geçiş yapın."
                                       : "Upgrade your subscription package to STARTER or CREATOR to configure custom colors and icons."}
                                   </p>
-                                  <Link href="/dashboard/billing" className="text-[9px] font-black text-purple-400 hover:underline block mt-1">
+                                  <Link href="/dashboard/billing" className="text-[9px] font-black text-teal-500 hover:underline block mt-1">
                                     {lang === "tr" ? "Hemen Yükselt &rarr;" : "Upgrade now &rarr;"}
                                   </Link>
                                 </div>
@@ -4189,7 +4161,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                               type="button"
                               onClick={handleCreateQr}
                               disabled={isPending}
-                              className={`flex-1 py-3 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 transition-opacity shadow-md shadow-emerald-950/10 cursor-pointer flex items-center justify-center gap-2 ${
+                              className={`flex-1 py-3 rounded-xl font-bold text-xs text-slate-900 bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 transition-opacity shadow-md shadow-emerald-950/10 cursor-pointer flex items-center justify-center gap-2 ${
                                 isPending ? "opacity-50 cursor-not-allowed" : ""
                               }`}
                             >
@@ -4212,7 +4184,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 setQrName("");
                               }}
                               className={`px-6 py-3 rounded-xl font-bold text-xs border cursor-pointer ${
-                                isDark ? "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white" : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+                                "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
                               }`}
                             >
                               {lang === "tr" ? "İptal" : "Cancel"}
@@ -4225,14 +4197,14 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                       <div className="w-full lg:w-[320px] shrink-0 sticky top-32 self-start flex flex-col items-center gap-6">
                         <div className="text-center">
                           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[9px] font-black uppercase tracking-wider ${
-                            isDark ? "bg-zinc-950 border-zinc-900 text-zinc-400" : "bg-white border-zinc-200 text-zinc-700 shadow-sm"
+                            "bg-white border-zinc-200 text-zinc-700 shadow-sm"
                           }`}>
                             {lang === "tr" ? "Canlı Önizleme" : "Live Real-Time Preview"}
                           </span>
                         </div>
 
                         <div className={`p-6 rounded-3xl border flex flex-col items-center gap-5 w-full ${
-                          isDark ? "bg-zinc-950 border-zinc-900 shadow-xl shadow-black/20" : "bg-white border-zinc-200 shadow-sm"
+                          "bg-white border-zinc-200 shadow-sm"
                         }`}>
                           <div className="p-4 bg-white rounded-2xl flex items-center justify-center border border-zinc-100 overflow-hidden shadow-sm">
                             <QRCodeSVG
@@ -4257,10 +4229,10 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                           </div>
 
                           <div className="text-center space-y-1 w-full px-2">
-                            <div className={`text-xs font-black truncate ${isDark ? "text-white" : "text-zinc-900"}`}>
+                            <div className={`text-xs font-black truncate ${"text-zinc-900"}`}>
                               {qrName || (lang === "tr" ? "Yeni QR Kod" : "Unnamed QR")}
                             </div>
-                            <p className="text-[9px] text-zinc-500 font-bold leading-normal truncate font-mono">
+                            <p className="text-[9px] text-slate-500 font-bold leading-normal truncate font-mono">
                               {computedQrValue}
                             </p>
                           </div>
@@ -4280,52 +4252,52 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
             
             {/* COLUMN 1: Social SEO Control */}
             <div className={`p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isPremium ? "min-h-[300px]" : ""} ${
-              isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+              "bg-white border-zinc-200 shadow-sm"
             }`}>
               <div className="flex items-center gap-3">
-                <Settings className="h-5 w-5 text-purple-400" />
-                <h2 className={`font-extrabold text-lg ${isDark ? "text-white" : "text-zinc-950"}`}>{t.tabSeo}</h2>
+                <Settings className="h-5 w-5 text-teal-500" />
+                <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{t.tabSeo}</h2>
               </div>
 
-              <form onSubmit={handleSaveSeo} className={`space-y-4 border-t pt-5 ${isDark ? "border-zinc-900" : "border-zinc-150"}`}>
+              <form onSubmit={handleSaveSeo} className={`space-y-4 border-t pt-5 ${"border-zinc-150"}`}>
                 <div className="space-y-1.5">
-                  <label className={`text-xs font-semibold uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>{lang === "tr" ? "Meta Başlık (SEO)" : "Meta Title"}</label>
+                  <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-zinc-550"}`}>{lang === "tr" ? "Meta Başlık (SEO)" : "Meta Title"}</label>
                   <input
                     type="text"
                     value={seoTitle}
                     onChange={(e) => setSeoTitle(e.target.value)}
                     disabled={!isPremium}
                     placeholder={`@${username} | CREATOR.HUB`}
-                    className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs disabled:opacity-50 disabled:cursor-not-allowed ${
-                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs disabled:opacity-50 disabled:cursor-not-allowed ${
+                      "bg-zinc-100 border-zinc-200 text-zinc-900"
                     }`}
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className={`text-xs font-semibold uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>{lang === "tr" ? "Meta Açıklama (SEO)" : "Meta Description"}</label>
+                  <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-zinc-550"}`}>{lang === "tr" ? "Meta Açıklama (SEO)" : "Meta Description"}</label>
                   <textarea
                     value={seoDescription}
                     onChange={(e) => setSeoDescription(e.target.value)}
                     disabled={!isPremium}
                     placeholder={bio || "Welcome to my link page!"}
                     rows={3}
-                    className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs disabled:opacity-50 disabled:cursor-not-allowed ${
-                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs disabled:opacity-50 disabled:cursor-not-allowed ${
+                      "bg-zinc-100 border-zinc-200 text-zinc-900"
                     }`}
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className={`text-xs font-semibold uppercase tracking-wider block ${isDark ? "text-zinc-400" : "text-zinc-550"}`}>{lang === "tr" ? "Arama Kelimeleri" : "Search Keywords"}</label>
+                  <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-zinc-550"}`}>{lang === "tr" ? "Arama Kelimeleri" : "Search Keywords"}</label>
                   <input
                     type="text"
                     value={seoKeywords}
                     onChange={(e) => setSeoKeywords(e.target.value)}
                     disabled={!isPremium}
                     placeholder="beats, developer, portfolio, trap"
-                    className={`w-full px-4 py-3 rounded-xl border focus:border-purple-500/50 outline-none text-xs disabled:opacity-50 disabled:cursor-not-allowed ${
-                      isDark ? "bg-zinc-900 border-zinc-800 text-white" : "bg-zinc-100 border-zinc-200 text-zinc-900"
+                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs disabled:opacity-50 disabled:cursor-not-allowed ${
+                      "bg-zinc-100 border-zinc-200 text-zinc-900"
                     }`}
                   />
                 </div>
@@ -4333,7 +4305,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                 <button
                   type="submit"
                   disabled={!isPremium || isPending}
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:bg-zinc-400 text-white disabled:text-zinc-700 font-extrabold text-xs transition-colors cursor-pointer disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-teal-500 hover:bg-teal-400 disabled:bg-zinc-400 text-slate-900 disabled:text-zinc-700 font-extrabold text-xs transition-colors cursor-pointer disabled:cursor-not-allowed"
                 >
                   {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
                   {lang === "tr" ? "SEO Ayarlarını Kaydet" : "Save SEO Parameters"}
@@ -4343,10 +4315,10 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
               {/* Locked overlay */}
               {!isPremium && (
                 <div className="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-4">
-                  <Lock className="h-10 w-10 text-purple-400" />
+                  <Lock className="h-10 w-10 text-teal-500" />
                   <div className="space-y-1 max-w-xs">
-                    <h3 className="text-sm font-extrabold text-white">{lang === "tr" ? "SEO Özelleştirmeleri Kilitli" : "SEO Customs are Locked"}</h3>
-                    <p className="text-[10px] text-zinc-400 leading-relaxed">
+                    <h3 className="text-sm font-extrabold text-slate-900">{lang === "tr" ? "SEO Özelleştirmeleri Kilitli" : "SEO Customs are Locked"}</h3>
+                    <p className="text-[10px] text-slate-500 leading-relaxed">
                       {lang === "tr" ? "HTML başlık verilerinizi, sosyal medya paylaşım açıklamalarını ve arama motoru dizin anahtar kelimelerini özelleştirmek için premium plana yükseltin!" : "Upgrade to a premium plan to custom define your HTML header metadata, social share descriptions, and search indexing keywords."}
                     </p>
                   </div>
@@ -4357,7 +4329,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         ? "Meta başlık, açıklama ve anahtar kelime özelleştirmeleri gibi gelişmiş arama motoru optimizasyonu ayarlarını kullanmak Premium pakete özeldir."
                         : "Customizing SEO meta title, description and indexing keywords is exclusive to our Premium plans."
                     )}
-                    className="px-4 py-2 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-bold text-[10px] transition-colors cursor-pointer"
+                    className="px-4 py-2 rounded-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold text-[10px] transition-colors cursor-pointer"
                   >
                     {lang === "tr" ? "SEO Özelliklerinin Kilidini Aç" : "Unlock SEO Settings"}
                   </button>
@@ -4367,33 +4339,33 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
             {/* COLUMN 2: Custom Domains Manager */}
             <div className={`p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isCreator ? "min-h-[300px]" : ""} ${
-              isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
+              "bg-white border-zinc-200 shadow-sm"
             }`}>
               <div className="flex items-center gap-3">
                 <Globe className="h-5 w-5 text-emerald-400" />
-                <h2 className={`font-extrabold text-lg ${isDark ? "text-white" : "text-zinc-950"}`}>{lang === "tr" ? "Özel Alan Adı (Domain)" : "Custom Domain Manager"}</h2>
+                <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{lang === "tr" ? "Özel Alan Adı (Domain)" : "Custom Domain Manager"}</h2>
               </div>
 
-              <div className={`space-y-6 border-t pt-5 ${isDark ? "border-zinc-900" : "border-zinc-150"}`}>
+              <div className={`space-y-6 border-t pt-5 ${"border-zinc-150"}`}>
                 <form onSubmit={handleSaveDomain} className="flex gap-2">
                   <div className={`flex-1 flex items-center rounded-xl border px-3 overflow-hidden focus-within:border-emerald-500/50 ${
-                    isDark ? "bg-zinc-900 border-zinc-800" : "bg-zinc-100 border-zinc-200"
+                    "bg-zinc-100 border-zinc-200"
                   }`}>
-                    <span className="text-zinc-500 text-xs">https://</span>
+                    <span className="text-slate-500 text-xs">https://</span>
                     <input
                       type="text"
                       value={customDomain}
                       onChange={(e) => setCustomDomain(e.target.value)}
                       placeholder="links.erdem.com"
                       className={`bg-transparent border-none outline-none py-2.5 text-xs flex-1 ${
-                        isDark ? "text-white" : "text-zinc-900"
+                        "text-zinc-900"
                       }`}
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition-colors cursor-pointer"
+                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-extrabold text-xs transition-colors cursor-pointer"
                   >
                     {lang === "tr" ? "Yapılandır" : "Configure"}
                   </button>
@@ -4402,33 +4374,33 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                 {/* DNS Setup Card */}
                 {initialUser.profile?.customDomain && (
                   <div className={`p-4 rounded-xl border space-y-4 ${
-                    isDark ? "bg-zinc-900/60 border-zinc-800" : "bg-zinc-50 border-zinc-200"
+                    "bg-zinc-50 border-zinc-200"
                   }`}>
                     <div className="flex justify-between items-center text-[10px] font-bold">
-                      <span className={`${isDark ? "text-zinc-400" : "text-zinc-700"}`}>{lang === "tr" ? "DNS Kurulum Talimatları" : "DNS Setup Instructions"}</span>
+                      <span className={`${"text-zinc-700"}`}>{lang === "tr" ? "DNS Kurulum Talimatları" : "DNS Setup Instructions"}</span>
                       <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">DNS Connected</span>
                     </div>
 
-                    <p className="text-[10px] text-zinc-500 leading-relaxed">
+                    <p className="text-[10px] text-slate-500 leading-relaxed">
                       {lang === "tr" ? "Özel alan adınızı profil sayfanıza yönlendirmek için DNS sağlayıcınızda (Cloudflare, GoDaddy, vb.) bir CNAME kaydı oluşturun:" : "To point your custom domain name to our creator grid, create a CNAME record with your DNS provider (Cloudflare, GoDaddy, etc.):"}
                     </p>
 
                     <div className="overflow-x-auto text-[10px] font-mono">
                       <table className="w-full text-left">
                         <thead>
-                          <tr className={`border-b ${isDark ? "text-zinc-650 border-zinc-800" : "text-zinc-500 border-zinc-200"}`}>
+                          <tr className={`border-b ${"text-slate-500 border-zinc-200"}`}>
                             <th className="pb-2">Type</th>
                             <th className="pb-2">Name</th>
                             <th className="pb-2">Target Value</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr className={isDark ? "text-zinc-300" : "text-zinc-800"}>
+                          <tr className={"text-zinc-800"}>
                             <td className="py-2">CNAME</td>
                             <td className="py-2">links</td>
                             <td className="py-2 flex items-center gap-1.5 font-bold text-purple-650">
                               cname.creator.hub
-                              <button onClick={() => navigator.clipboard.writeText("cname.creator.hub")} className="p-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-400 cursor-pointer">
+                              <button onClick={() => navigator.clipboard.writeText("cname.creator.hub")} className="p-1 rounded bg-gray-50 hover:bg-zinc-700 text-slate-500 cursor-pointer">
                                 <Copy className="h-3 w-3" />
                               </button>
                             </td>
@@ -4445,7 +4417,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                 <div className="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-4">
                   <Lock className="h-10 w-10 text-emerald-400" />
                   <div className="space-y-1 max-w-xs">
-                    <h3 className="text-sm font-extrabold text-white">{lang === "tr" ? "Özel Alan Adları Kilitli" : "Custom Domains are Locked"}</h3>
+                    <h3 className="text-sm font-extrabold text-slate-900">{lang === "tr" ? "Özel Alan Adları Kilitli" : "Custom Domains are Locked"}</h3>
                     <p className="text-[10px] text-zinc-450 leading-relaxed">
                       {lang === "tr" ? "Kendi alan adınızı bağlamak, DNS kayıtlarını otomatik eşlemek ve beyaz etiketli (white-label) markalama oluşturmak için CREATOR paketine geçin." : "Upgrade to our CREATOR enterprise package to map dynamic custom domains, bind DNS records, and build white-label branding."}
                     </p>
@@ -4457,7 +4429,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         ? "Kendi özel alan adınızı (cname) bağlamak ve beyaz etiketli (white-label) markalama oluşturmak Creator paketine özeldir."
                         : "Mapping custom domains and utilizing white-label branding requires the CREATOR plan."
                     )}
-                    className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] transition-colors cursor-pointer"
+                    className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-bold text-[10px] transition-colors cursor-pointer"
                   >
                     {lang === "tr" ? "Alan Adı Kilidini Aç" : "Unlock Domains"}
                   </button>

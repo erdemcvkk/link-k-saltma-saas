@@ -12,63 +12,61 @@ export default async function Home() {
     return acc;
   }, {} as Record<string, string>);
 
-  const dbSliderItems = await db.sliderItem.findMany({ orderBy: { createdAt: "asc" } });
-  const serializedSliderItems = dbSliderItems.map((item) => ({
-    id: item.id,
-    title: item.title,
-    imageUrl: item.imageUrl,
-    link: item.link || undefined,
-  }));
-
   const siteTitle = serializedSettings["site_title"] || "CREATOR.HUB";
   const siteLogo = serializedSettings["site_logo"] || "";
-  const heroTitle = serializedSettings["hero_title"] || "ONE LINK FOR YOUR DIGITAL EMPIRE";
-  const heroSubtitle = serializedSettings["hero_subtitle"] || "Craft premium glassmorphic personal hubs, sell beats & presets, host sample packs, and leverage robust real-time analytics.";
-  const accentColor = serializedSettings["accent_color"] || "purple";
-
-  // Map dynamic accent styles for headers and gradients!
-  const getAccentGradient = (color: string) => {
-    switch (color) {
-      case "emerald":
-        return "from-emerald-400 via-teal-500 to-cyan-500";
-      case "pink":
-        return "from-pink-400 via-rose-500 to-red-500";
-      case "cyan":
-        return "from-cyan-400 via-blue-500 to-indigo-500";
-      default: // purple
-        return "from-purple-400 via-fuchsia-500 to-pink-500";
+  const heroTitle = serializedSettings["hero_title"] || "Your home";
+  const heroHighlight = serializedSettings["hero_highlight"] || "on the web";
+  const heroSubtitle = serializedSettings["hero_subtitle"] || "The ultimate platform built for creators who want to stand out. Showcase everything you create, sell, and share - beautifully.";
+  
+  let creatorsData = [];
+  try {
+    if (serializedSettings["creators_data"]) {
+      creatorsData = JSON.parse(serializedSettings["creators_data"]);
+    } else {
+      // Default fallback
+      creatorsData = [
+        { id: "1", name: "Metro Beats", username: "metro_beats", imageUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=256&h=256&fit=crop" },
+        { id: "2", name: "Sarah J.", username: "sarahj", imageUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&fit=crop" },
+        { id: "3", name: "Alex Chen", username: "alexc", imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&fit=crop" },
+        { id: "4", name: "Maria Garcia", username: "mariag", imageUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=256&h=256&fit=crop" }
+      ];
     }
-  };
+  } catch (e) {}
 
-  const getAccentBgClass = (color: string) => {
-    switch (color) {
-      case "emerald":
-        return "bg-emerald-950/20 border-emerald-500/30 text-emerald-400";
-      case "pink":
-        return "bg-pink-950/20 border-pink-500/30 text-pink-400";
-      case "cyan":
-        return "bg-cyan-950/20 border-cyan-500/30 text-cyan-400";
-      default: // purple
-        return "bg-purple-950/20 border-purple-500/30 text-purple-400";
+  let featuresData = [];
+  try {
+    if (serializedSettings["features_data"]) {
+      featuresData = JSON.parse(serializedSettings["features_data"]);
+    } else {
+      // Default fallback
+      featuresData = [
+        {
+          id: "feat-1",
+          title: "Build your page in minutes.",
+          highlightWords: "in minutes.",
+          description: "Drag, drop, and customize. Our intuitive editor makes it easy to create a stunning page that showcases everything you do.",
+          imageUrl: "https://images.unsplash.com/photo-1616469829581-73993eb86b02?q=80&w=800&auto=format&fit=crop",
+          listItems: [
+            { text: "Smart link blocks", icon: "layout" },
+            { text: "Music & video embeds", icon: "component" },
+            { text: "Custom storefronts", icon: "smartphone" }
+          ]
+        },
+        {
+          id: "feat-2",
+          title: "Know your audience. Grow your reach.",
+          highlightWords: "Grow your reach.",
+          description: "See exactly how your page performs. Track views, clicks, and where your traffic comes from—all in real-time.",
+          imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
+          listItems: [
+            { text: "Visitor Analytics", icon: "chart" },
+            { text: "Traffic sources", icon: "target" },
+            { text: "Device breakdown", icon: "smartphone" }
+          ]
+        }
+      ];
     }
-  };
-
-  const getAccentBtnClass = (color: string) => {
-    switch (color) {
-      case "emerald":
-        return "from-emerald-600 via-teal-600 to-cyan-600 shadow-[0_0_30px_rgba(16,185,129,0.3)]";
-      case "pink":
-        return "from-pink-600 via-rose-600 to-red-600 shadow-[0_0_30px_rgba(244,63,94,0.3)]";
-      case "cyan":
-        return "from-cyan-600 via-blue-600 to-indigo-600 shadow-[0_0_30px_rgba(6,182,212,0.3)]";
-      default: // purple
-        return "from-purple-600 via-fuchsia-600 to-pink-600 shadow-[0_0_30px_rgba(219,39,119,0.3)]";
-    }
-  };
-
-  const currentGradient = getAccentGradient(accentColor);
-  const currentBadgeBg = getAccentBgClass(accentColor);
-  const currentBtnBg = getAccentBtnClass(accentColor);
+  } catch (e) {}
 
   return (
     <HomeClient
@@ -76,21 +74,10 @@ export default async function Home() {
       siteTitle={siteTitle}
       siteLogo={siteLogo}
       heroTitle={heroTitle}
+      heroHighlight={heroHighlight}
       heroSubtitle={heroSubtitle}
-      accentColor={accentColor}
-      currentGradient={currentGradient}
-      currentBadgeBg={currentBadgeBg}
-      currentBtnBg={currentBtnBg}
-      paymentLinkStarter={serializedSettings["payment_link_starter"] || ""}
-      paymentLinkCreator={serializedSettings["payment_link_creator"] || ""}
-      paymentLinkPro={serializedSettings["payment_link_pro"] || ""}
-      feature1Title={serializedSettings["feature_1_title"] || ""}
-      feature1Desc={serializedSettings["feature_1_desc"] || ""}
-      feature2Title={serializedSettings["feature_2_title"] || ""}
-      feature2Desc={serializedSettings["feature_2_desc"] || ""}
-      feature3Title={serializedSettings["feature_3_title"] || ""}
-      feature3Desc={serializedSettings["feature_3_desc"] || ""}
-      sliderItems={serializedSliderItems}
+      creatorsData={creatorsData}
+      featuresData={featuresData}
     />
   );
 }

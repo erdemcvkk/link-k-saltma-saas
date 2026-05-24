@@ -1467,201 +1467,104 @@ export default function AdminClient({
               </div>
             )}
 
-            {/* --- HOMEPAGE / SLIDER MANAGEMENT --- */}
+            
+            {/* --- HOMEPAGE MANAGEMENT (Hoo.be Style) --- */}
             {sidebarTab === "homepage" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-xl font-bold">Anasayfa & Slider Yönetimi</h2>
-                  <p className={`text-sm mt-1 ${activeTheme === "dark" ? "text-zinc-400" : "text-zinc-500"}`}>
-                    Mobil önizleme slider resimlerini ve anasayfa özellik kartlarını düzenleyin.
+                  <h2 className="text-xl font-bold">Landing Page Yönetimi (Hoo.be Stili)</h2>
+                  <p className="text-sm mt-1 text-slate-500">
+                    Ana sayfa metinlerini, kayan slider (Creator Carousel) ve özellik bloklarını (Zig-zag) yönetin.
                   </p>
                 </div>
 
-                <div className={`p-6 rounded-xl border ${activeTheme === "dark" ? "bg-zinc-900/50 border-zinc-800" : "bg-white border-zinc-200 shadow-sm"}`}>
-                  <h3 className="text-lg font-semibold mb-4">Telefon Slider Resimleri</h3>
-                  
-                  {/* Yeni Ekleme Formu */}
-                  <div className={`p-4 rounded-lg border mb-6 ${activeTheme === "dark" ? "bg-black border-zinc-800" : "bg-zinc-50 border-zinc-200"}`}>
-                    <h4 className="text-sm font-semibold mb-3">Yeni Resim Ekle</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium">Başlık (Opsiyonel)</label>
-                        <input
-                          type="text"
-                          value={newSliderTitle}
-                          onChange={(e) => setNewSliderTitle(e.target.value)}
-                          className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all ${
-                            activeTheme === "dark"
-                              ? "bg-zinc-900 border-zinc-700 text-white placeholder-zinc-500"
-                              : "bg-white border-zinc-300 text-zinc-900 placeholder-zinc-400"
-                          }`}
-                          placeholder="Örn: Yeni Neon Tema!"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium">Yönlendirme Linki (Opsiyonel)</label>
-                        <input
-                          type="text"
-                          value={newSliderLink}
-                          onChange={(e) => setNewSliderLink(e.target.value)}
-                          className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all ${
-                            activeTheme === "dark"
-                              ? "bg-zinc-900 border-zinc-700 text-white placeholder-zinc-500"
-                              : "bg-white border-zinc-300 text-zinc-900 placeholder-zinc-400"
-                          }`}
-                          placeholder="https://"
-                        />
-                      </div>
-                      <div className="space-y-2 md:col-span-2">
-                        <label className="text-xs font-medium">Görsel (Mobil ekran formatı tavsiye edilir)</label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files[0]) {
-                              setNewSliderFile(e.target.files[0]);
-                            }
-                          }}
-                          className={`w-full px-3 py-2 rounded-lg border text-sm focus:outline-none transition-all ${
-                            activeTheme === "dark"
-                              ? "bg-zinc-900 border-zinc-700 text-white"
-                              : "bg-white border-zinc-300 text-zinc-900"
-                          }`}
-                        />
-                      </div>
+                {/* Hero Section Ayarları */}
+                <div className="p-6 rounded-xl border bg-white border-gray-100 shadow-sm">
+                  <h3 className="text-lg font-semibold mb-4 text-slate-900">Hero (Giriş) Alanı</h3>
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-700">Ana Başlık (Örn: Your home)</label>
+                      <input
+                        type="text"
+                        value={heroTitle}
+                        onChange={(e) => setHeroTitle(e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm"
+                      />
                     </div>
-                    <button
-                      disabled={isUploadingSlider || !newSliderFile}
-                      onClick={async () => {
-                        if (!newSliderFile) return;
-                        setIsUploadingSlider(true);
-                        try {
-                          const formData = new FormData();
-                          formData.append("file", newSliderFile);
-                          // Upload the image first
-                          const res = await fetch("/api/media", {
-                            method: "POST",
-                            body: formData,
-                          });
-                          if (!res.ok) throw new Error("Resim yüklenemedi");
-                          const media = await res.json();
-                          
-                          // Now create the slider item
-                          await addSliderItem(adminUserId, newSliderTitle || "Yeni Ekran", media.url, newSliderLink);
-                          setSuccessMsg("Slider resmi eklendi!");
-                          // Reset form
-                          setNewSliderTitle("");
-                          setNewSliderLink("");
-                          setNewSliderFile(null);
-                          // Needs page reload or we can fetch again, but Next.js router.refresh is easier if we had the router
-                          window.location.reload();
-                        } catch (e: any) {
-                          alert(e.message);
-                        } finally {
-                          setIsUploadingSlider(false);
-                        }
-                      }}
-                      className="mt-4 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-medium text-sm transition-colors flex items-center gap-2 disabled:opacity-50"
-                    >
-                      {isUploadingSlider && <Loader2 className="h-4 w-4 animate-spin" />}
-                      Ekle
-                    </button>
-                  </div>
-
-                  {/* Mevcut Sliderlar */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {sliderItems.map((item) => (
-                      <div key={item.id} className={`relative group rounded-xl overflow-hidden border ${activeTheme === "dark" ? "border-zinc-800" : "border-zinc-200"}`}>
-                        <div className="aspect-[9/18] relative">
-                          <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
-                        </div>
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-3">
-                          <p className="text-white text-xs font-bold truncate mb-2">{item.title}</p>
-                          <button
-                            onClick={async () => {
-                              if (confirm("Silmek istediğinize emin misiniz?")) {
-                                await deleteSliderItem(adminUserId, item.id);
-                                setSliderItems((prev) => prev.filter((i) => i.id !== item.id));
-                              }
-                            }}
-                            className="bg-red-500/20 text-red-400 hover:bg-red-500/40 p-1.5 rounded-lg backdrop-blur-md self-end"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                    {sliderItems.length === 0 && (
-                      <div className="col-span-full py-8 text-center text-sm text-zinc-500">
-                        Hiç resim eklenmemiş. Anasayfada varsayılan statik telefon görünecek.
-                      </div>
-                    )}
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-700">Vurgulu Kelime (Teal Rengi - Örn: on the web)</label>
+                      <input
+                        type="text"
+                        value={settingsMap["hero_highlight"] || "on the web"}
+                        onChange={(e) => setSettingsMap(prev => ({ ...prev, hero_highlight: e.target.value }))}
+                        className="w-full px-3 py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-700">Alt Açıklama (Subtitle)</label>
+                      <textarea
+                        value={heroSubtitle}
+                        onChange={(e) => setHeroSubtitle(e.target.value)}
+                        rows={3}
+                        className="w-full px-3 py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* Özellik Kartları */}
-                <div className={`p-6 rounded-xl border ${activeTheme === "dark" ? "bg-zinc-900/50 border-zinc-800" : "bg-white border-zinc-200 shadow-sm"}`}>
-                  <h3 className="text-lg font-semibold mb-4">Özellik Kartları Metinleri</h3>
-                  
-                  <div className="space-y-6">
-                    {[1, 2, 3].map((num) => (
-                      <div key={`feature_${num}`} className={`p-4 rounded-lg border space-y-3 ${activeTheme === "dark" ? "bg-black/50 border-zinc-800" : "bg-zinc-50 border-zinc-200"}`}>
-                        <h4 className="text-sm font-bold text-purple-500">Kart {num}</h4>
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div className="space-y-1">
-                            <label className="text-xs">Başlık</label>
-                            <input
-                              type="text"
-                              value={featureForm[`feature_${num}_title` as keyof typeof featureForm]}
-                              onChange={(e) => setFeatureForm(prev => ({ ...prev, [`feature_${num}_title`]: e.target.value }))}
-                              className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                                activeTheme === "dark" ? "bg-zinc-900 border-zinc-700 text-white" : "bg-white border-zinc-300 text-zinc-900"
-                              }`}
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <label className="text-xs">Açıklama</label>
-                            <input
-                              type="text"
-                              value={featureForm[`feature_${num}_desc` as keyof typeof featureForm]}
-                              onChange={(e) => setFeatureForm(prev => ({ ...prev, [`feature_${num}_desc`]: e.target.value }))}
-                              className={`w-full px-3 py-2 rounded-lg border text-sm ${
-                                activeTheme === "dark" ? "bg-zinc-900 border-zinc-700 text-white" : "bg-white border-zinc-300 text-zinc-900"
-                              }`}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                    
-                    <button
-                      onClick={async () => {
-                        setIsSavingFeatures(true);
-                        try {
-                          for (const [k, v] of Object.entries(featureForm)) {
-                            await saveGlobalSetting(adminUserId, k, v);
-                          }
-                          setSettingsMap(prev => ({ ...prev, ...featureForm }));
-                          setSuccessMsg("Kart özellikleri kaydedildi.");
-                          setTimeout(() => setSuccessMsg(""), 3000);
-                        } catch (e: any) {
-                          alert(e.message || "Kaydedilemedi");
-                        } finally {
-                          setIsSavingFeatures(false);
-                        }
-                      }}
-                      disabled={isSavingFeatures}
-                      className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-colors flex items-center gap-2"
-                    >
-                      {isSavingFeatures && <Loader2 className="h-4 w-4 animate-spin" />}
-                      Değişiklikleri Kaydet
-                    </button>
-                  </div>
+                {/* Creator Carousel Ayarları */}
+                <div className="p-6 rounded-xl border bg-white border-gray-100 shadow-sm">
+                  <h3 className="text-lg font-semibold mb-4 text-slate-900">Creator Carousel (Yatay Kayan Slider)</h3>
+                  <p className="text-xs text-slate-500 mb-4">Görselleri ve isimleri JSON formatında düzenleyin.</p>
+                  <textarea
+                    value={settingsMap["creators_data"] || ""}
+                    onChange={(e) => setSettingsMap(prev => ({ ...prev, creators_data: e.target.value }))}
+                    rows={8}
+                    placeholder={'[\n  { "id": "1", "name": "Metro Beats", "username": "metro_beats", "imageUrl": "https://..." }\n]'}
+                    className="w-full px-3 py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm font-mono"
+                  />
                 </div>
+
+                {/* Zigzag Features Ayarları */}
+                <div className="p-6 rounded-xl border bg-white border-gray-100 shadow-sm">
+                  <h3 className="text-lg font-semibold mb-4 text-slate-900">Özellik Blokları (Zig-Zag)</h3>
+                  <p className="text-xs text-slate-500 mb-4">Özellikleri JSON formatında düzenleyin.</p>
+                  <textarea
+                    value={settingsMap["features_data"] || ""}
+                    onChange={(e) => setSettingsMap(prev => ({ ...prev, features_data: e.target.value }))}
+                    rows={12}
+                    placeholder={'[\n  { "id": "feat-1", "title": "Build your page", "highlightWords": "in minutes.", "description": "...", "imageUrl": "...", "listItems": [ { "text": "...", "icon": "layout" } ] }\n]'}
+                    className="w-full px-3 py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm font-mono"
+                  />
+                </div>
+
+                <button
+                  onClick={async () => {
+                    setIsSavingFeatures(true);
+                    try {
+                      await saveGlobalSetting(adminUserId, "hero_title", heroTitle);
+                      await saveGlobalSetting(adminUserId, "hero_highlight", settingsMap["hero_highlight"] || "on the web");
+                      await saveGlobalSetting(adminUserId, "hero_subtitle", heroSubtitle);
+                      await saveGlobalSetting(adminUserId, "creators_data", settingsMap["creators_data"] || "");
+                      await saveGlobalSetting(adminUserId, "features_data", settingsMap["features_data"] || "");
+                      
+                      setSuccessMsg("Landing Page ayarları başarıyla kaydedildi!");
+                      setTimeout(() => setSuccessMsg(""), 3000);
+                    } catch (e) {
+                      alert(e.message || "Kaydedilemedi");
+                    } finally {
+                      setIsSavingFeatures(false);
+                    }
+                  }}
+                  disabled={isSavingFeatures}
+                  className="px-6 py-3 rounded-lg bg-teal-500 hover:bg-teal-400 text-white font-bold text-sm transition-colors flex items-center gap-2"
+                >
+                  {isSavingFeatures && <Loader2 className="h-4 w-4 animate-spin" />}
+                  Değişiklikleri Kaydet
+                </button>
               </div>
             )}
-
-            {sidebarTab === "settings" && (
+\n            {sidebarTab === "settings" && (
               /* DETAILED SYSTEM AND BILLING GATEWAY CONFIGS */
               <div className="space-y-8 animate-fadeIn">
                 <div>

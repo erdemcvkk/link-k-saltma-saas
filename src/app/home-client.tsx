@@ -2,31 +2,20 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Slider from "@/components/Slider";
-import { ArrowRight, Sparkles, Shield, BarChart3, Globe, Zap, Music, ShoppingBag, Eye, ExternalLink } from "lucide-react";
+import CreatorCarousel from "@/components/creator-carousel";
+import FeatureZigzag from "@/components/feature-zigzag";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
+import { ArrowRight } from "lucide-react";
 
 interface HomeClientProps {
   userId: string | null;
   siteTitle: string;
   siteLogo: string;
   heroTitle: string;
+  heroHighlight: string;
   heroSubtitle: string;
-  accentColor: string;
-  currentGradient: string;
-  currentBadgeBg: string;
-  currentBtnBg: string;
-  paymentLinkStarter?: string;
-  paymentLinkCreator?: string;
-  paymentLinkPro?: string;
-  // Dynamic feature cards from admin
-  feature1Title?: string;
-  feature1Desc?: string;
-  feature2Title?: string;
-  feature2Desc?: string;
-  feature3Title?: string;
-  feature3Desc?: string;
-  sliderItems?: { id: string; title: string; imageUrl: string; link?: string }[];
+  creatorsData?: any[];
+  featuresData?: any[];
 }
 
 export default function HomeClient({
@@ -34,154 +23,67 @@ export default function HomeClient({
   siteTitle,
   siteLogo,
   heroTitle,
+  heroHighlight,
   heroSubtitle,
-  accentColor,
-  currentGradient,
-  currentBadgeBg,
-  currentBtnBg,
-  paymentLinkStarter,
-  paymentLinkCreator,
-  paymentLinkPro,
-  feature1Title,
-  feature1Desc,
-  feature2Title,
-  feature2Desc,
-  feature3Title,
-  feature3Desc,
-  sliderItems = [],
+  creatorsData = [],
+  featuresData = [],
 }: HomeClientProps) {
-  const [lang, setLang] = useState<"tr" | "en">("en");
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [usernameInput, setUsernameInput] = useState("");
 
-  const handleStateChange = (state: { lang: "tr" | "en"; theme: "dark" | "light" }) => {
-    setLang(state.lang);
-    setTheme(state.theme);
+  const handleCreate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (usernameInput.trim()) {
+      window.location.href = `/sign-up?username=${encodeURIComponent(usernameInput.trim())}`;
+    } else {
+      window.location.href = `/sign-up`;
+    }
   };
-
-  // Translations dictionary
-  const t = {
-    features: lang === "tr" ? "Özellikler" : "Features",
-    showcase: lang === "tr" ? "Keşfet" : "Showcase",
-    pricing: lang === "tr" ? "Fiyatlandırma" : "Pricing",
-    dashboard: lang === "tr" ? "Stüdyo Paneli" : "Dashboard",
-    login: lang === "tr" ? "Giriş Yap" : "Log In",
-    getStarted: lang === "tr" ? "Kayıt Ol" : "Get Started",
-    badgeText: lang === "tr" ? "Yeni Nesil Bio-Link Platformu" : "Next-Generation Bio-Link Platform",
-    defaultHeroTitle: lang === "tr" ? "DİJİTAL İMPARATORLUĞUNUZ İÇİN TEK BİR LİNK" : "ONE LINK FOR YOUR DIGITAL EMPIRE",
-    defaultHeroSubtitle: lang === "tr" 
-      ? "Premium cam efektli kişisel profiller tasarlayın, beat ve presetlerinizi satın, ses kitleri barındırın ve gelişmiş gerçek zamanlı analitikler kullanın. Üreticiler için özel olarak tasarlandı."
-      : "Craft premium glassmorphic personal hubs, sell beats & presets, host sample packs, and leverage robust real-time analytics. Built specifically for hiphop creators and digital designers.",
-    createHubBtn: lang === "tr" ? "Hemen Hub'ını Oluştur" : "Create Your Hub Now",
-    featuresTitle: lang === "tr" ? "KREATÖR EKONOMİSİ İÇİN" : "DESIGNED FOR THE",
-    featuresTitleHighlight: lang === "tr" ? "TASARLANDI" : "CREATOR ECONOMY",
-    feat1Title: lang === "tr" ? "Milisaniyelik Hızlar" : "Instant Load Times",
-    feat1Desc: lang === "tr" 
-      ? "Next.js Sunucu Bileşenleri ile tasarlandı. Sayfalarınız küresel olarak 100ms'nin altında yüklenir, kitlenizi elinizde tutar."
-      : "Engineered with Next.js Server Components. Pages load sub-100ms globally, keeping your audience engaged.",
-    feat2Title: lang === "tr" ? "Premium Özel Temalar" : "Premium Custom Themes",
-    feat2Desc: lang === "tr"
-      ? "Cam efekti (glassmorphism) stilleri, canlı geçişler, animasyonlu sınırlar ve neon parlama efektleriyle ziyaretçilerinizi büyüleyin."
-      : "Dazzle visitors with custom glassmorphism styles, vibrant gradients, animated borders, and neon glow effects.",
-    feat3Title: lang === "tr" ? "Gelişmiş Analitik Raporlama" : "Advanced Analytics",
-    feat3Desc: lang === "tr"
-      ? "Toplam tıklamaları, cihaz tiplerini, tarayıcı bilgilerini, bölgesel demografiyi ve dönüşüm verilerini gerçek zamanlı takip edin."
-      : "Monitor total clicks, device types, browser info, regional demographics, and track dynamic conversion data.",
-    pricingTitle: lang === "tr" ? "ADİL VE KOLAY FİYATLANDIRMA" : "FAIR & SIMPLE PRICING",
-    pricingDesc: lang === "tr" ? "Kişisel markanızı güçlendirmek için en doğru planı seçin" : "Choose the right plan to amplify your personal brand",
-    freePlanTitle: lang === "tr" ? "Ücretsiz" : "Free",
-    freePlanPeriod: lang === "tr" ? "/ sonsuza dek" : "/ forever",
-    freePlanDesc: lang === "tr" ? "Yolculuğunuza başlamak için mükemmel." : "Perfect to start your journey.",
-    freePlanFeat1: lang === "tr" ? "20 Link'e Kadar" : "Up to 20 Links",
-    freePlanFeat2: lang === "tr" ? "Standart Tema" : "Standard Theme",
-    freePlanFeat3: lang === "tr" ? "Temel QR Kod" : "Basic QR Code",
-    starterPlanTitle: lang === "tr" ? "Başlangıç" : "Starter",
-    starterPlanPeriod: lang === "tr" ? "/ aylık" : "/ month",
-    starterPlanDesc: lang === "tr" ? "Büyüyen içerik üreticileri için ideal." : "Ideal for growing content creators.",
-    starterPlanFeat1: lang === "tr" ? "100 Link'e Kadar" : "Up to 100 Links",
-    starterPlanFeat2: lang === "tr" ? "Premium Neon Temalar" : "Premium Neon Themes",
-    starterPlanFeat3: lang === "tr" ? "Gelişmiş Analitikler" : "Advanced Analytics",
-    starterPlanFeat4: lang === "tr" ? "Hareketli Butonlar" : "Animated Buttons",
-    creatorPlanTitle: lang === "tr" ? "Kreatör" : "Creator",
-    creatorPlanPeriod: lang === "tr" ? "/ aylık" : "/ month",
-    creatorPlanDesc: lang === "tr" ? "Yapımcılar ve dijital mağaza sahipleri için en üst düzey paket." : "The ultimate tool for producers & shop owners.",
-    creatorPlanFeat1: lang === "tr" ? "Sınırsız Link Ekranı" : "Unlimited Links",
-    creatorPlanFeat2: lang === "tr" ? "Özel Domain Bağlama" : "Custom Domain",
-    creatorPlanFeat3: lang === "tr" ? "Video Arkaplanlar" : "Video Backgrounds",
-    creatorPlanFeat4: lang === "tr" ? "Dijital Ürün Mağazası" : "Digital Product Store",
-    unlockStarter: lang === "tr" ? "Başlangıç Paketini Aç" : "Unlock Starter",
-    claimCreator: lang === "tr" ? "Kreatör Paketini Al" : "Claim Creator",
-    popularBadge: lang === "tr" ? "Popüler" : "Popular",
-    footerText: lang === "tr" 
-      ? `© ${new Date().getFullYear()} ${siteTitle}. Next.js & SQLite ile Güçlendirildi.`
-      : `© ${new Date().getFullYear()} ${siteTitle}. Powered by Next.js & SQLite.`,
-    footerTerms: lang === "tr" ? "Koşullar" : "Terms",
-    footerPrivacy: lang === "tr" ? "Gizlilik" : "Privacy",
-    footerSupport: lang === "tr" ? "Destek" : "Support",
-  };
-
-  const isDark = theme === "dark";
 
   return (
-    <div className={`relative min-h-screen transition-colors duration-500 overflow-hidden ${
-      isDark ? "bg-black text-white selection:bg-purple-500 selection:text-black" : "bg-zinc-50 text-zinc-900 selection:bg-purple-200"
-    }`}>
-      <GlobalOverlayManager onStateChange={handleStateChange} />
-
-      {/* Dynamic Background Glows */}
-      <div className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] pointer-events-none transition-opacity duration-500 ${
-        isDark ? "bg-purple-900/20 opacity-100" : "bg-purple-400/10 opacity-70"
-      }`} />
-      <div className={`absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] pointer-events-none transition-opacity duration-500 ${
-        isDark ? "bg-fuchsia-900/20 opacity-100" : "bg-fuchsia-400/10 opacity-70"
-      }`} />
+    <div className="relative min-h-screen overflow-hidden bg-white text-slate-900 selection:bg-teal-100 selection:text-teal-900 font-sans">
+      <GlobalOverlayManager />
 
       {/* Header */}
-      <header className={`sticky top-0 z-50 backdrop-blur-md border-b px-6 py-4 transition-colors duration-300 ${
-        isDark ? "border-zinc-900/80 bg-black/50" : "border-zinc-200/80 bg-white/50"
-      }`}>
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-90 transition-opacity">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity">
             {siteLogo ? (
-              <img src={siteLogo} alt={siteTitle} className="h-7 w-auto object-contain" />
+              <img src={siteLogo} alt={siteTitle} className="h-8 w-auto object-contain" />
             ) : (
-              <span className={`text-xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r ${currentGradient}`}>
+              <span className="text-2xl font-extrabold tracking-tight text-slate-900">
                 {siteTitle}
               </span>
             )}
           </Link>
 
-          <nav className={`hidden md:flex items-center space-x-8 text-sm font-medium transition-colors ${
-            isDark ? "text-zinc-400" : "text-zinc-600"
-          }`}>
-            <a href="#features" className={`transition-colors ${isDark ? "hover:text-white" : "hover:text-black"}`}>{t.features}</a>
-            <a href="#showcase" className={`transition-colors ${isDark ? "hover:text-white" : "hover:text-black"}`}>{t.showcase}</a>
-            <a href="#pricing" className={`transition-colors ${isDark ? "hover:text-white" : "hover:text-black"}`}>{t.pricing}</a>
+          <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
+            <a href="#features" className="hover:text-slate-900 transition-colors">Features</a>
+            <a href="#creators" className="hover:text-slate-900 transition-colors">Creators</a>
+            <a href="#pricing" className="hover:text-slate-900 transition-colors">Pricing</a>
           </nav>
 
           <div className="flex items-center space-x-4">
             {userId ? (
               <Link
                 href="/dashboard"
-                className={`flex items-center space-x-2 px-4 py-2 rounded-full bg-gradient-to-r font-semibold text-sm transition-all ${currentBtnBg}`}
+                className="flex items-center space-x-2 px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
               >
-                <span>{t.dashboard}</span>
+                <span>Dashboard</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
             ) : (
               <>
                 <Link
                   href="/sign-in"
-                  className={`text-sm font-semibold transition-colors ${isDark ? "hover:text-purple-400" : "hover:text-purple-600"}`}
+                  className="text-sm font-bold text-slate-900 hover:text-teal-600 transition-colors hidden sm:block"
                 >
-                  {t.login}
+                  Log In
                 </Link>
                 <Link
                   href="/sign-up"
-                  className={`px-5 py-2 rounded-full font-bold text-sm transition-all ${
-                    isDark ? "bg-white text-black hover:bg-zinc-200" : "bg-zinc-900 text-white hover:bg-zinc-800"
-                  }`}
+                  className="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
                 >
-                  {t.getStarted}
+                  Get Started
                 </Link>
               </>
             )}
@@ -190,256 +92,80 @@ export default function HomeClient({
       </header>
 
       {/* Hero Section */}
-      <section className="relative max-w-6xl mx-auto px-6 pt-24 pb-20 text-center">
-        <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-xs font-semibold mb-8 animate-pulse ${
-          isDark ? currentBadgeBg : "bg-purple-50 border-purple-100 text-purple-600"
-        }`}>
-          <Sparkles className="h-3.5 w-3.5" />
-          <span>{t.badgeText}</span>
-        </div>
-
-        <h1 className="text-5xl md:text-8xl font-extrabold tracking-tight mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-500 leading-none">
-          {heroTitle === "ONE LINK FOR YOUR DIGITAL EMPIRE" ? (
-            <>
-              {lang === "tr" ? "DİJİTAL İMPARATORLUĞUNUZ İÇİN" : "ONE LINK FOR YOUR"} <br />
-              <span className={`bg-clip-text text-transparent bg-gradient-to-r ${currentGradient}`}>
-                {lang === "tr" ? "TEK BİR LİNK" : "DIGITAL EMPIRE"}
-              </span>
-            </>
-          ) : (
-            <span className={`bg-clip-text text-transparent bg-gradient-to-r ${currentGradient}`}>
-              {heroTitle}
-            </span>
-          )}
+      <section className="relative pt-40 pb-20 px-6 text-center max-w-5xl mx-auto">
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6">
+          {heroTitle} <br />
+          <span className="text-teal-400 block mt-2">{heroHighlight}</span>
         </h1>
-
-        <p className={`max-w-2xl mx-auto text-lg md:text-xl leading-relaxed mb-12 transition-colors ${
-          isDark ? "text-zinc-400" : "text-zinc-600"
-        }`}>
-          {heroSubtitle === "Craft premium glassmorphic personal hubs, sell beats & presets, host sample packs, and leverage robust real-time analytics."
-            ? t.defaultHeroSubtitle
-            : heroSubtitle}
+        
+        <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
+          {heroSubtitle}
         </p>
 
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-md mx-auto">
-          <Link
-            href="/sign-up"
-            className={`w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r hover:opacity-90 font-extrabold text-base transition-all text-center ${currentBtnBg}`}
-          >
-            {t.createHubBtn}
-          </Link>
-        </div>
-
-        {/* Premium Mobile Mockup / Showcase - Static fallback when no slider items */}
-        {sliderItems.length === 0 && (
-        <div id="showcase" className={`mt-20 relative max-w-xs mx-auto rounded-[3rem] p-4 transition-all duration-300 ${
-          isDark ? "bg-zinc-950 border-4 border-zinc-800 shadow-[0_0_50px_rgba(168,85,247,0.15)]" : "bg-white border-4 border-zinc-200 shadow-xl"
-        } overflow-hidden`}>
-          <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 rounded-b-xl z-20 ${isDark ? "bg-zinc-800" : "bg-zinc-200"}`} />
-          
-          <div className={`relative rounded-[2.5rem] aspect-[9/18] overflow-hidden p-6 flex flex-col justify-between transition-colors ${
-            isDark ? "bg-zinc-900/90" : "bg-zinc-50"
-          }`}>
-            {/* Mockup Profile */}
-            <div className="space-y-4 pt-8 text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 mx-auto border-2 border-white/20 shadow-md flex items-center justify-center">
-                <Music className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <h3 className={`font-bold text-sm ${isDark ? "text-white" : "text-zinc-800"}`}>@metro_beats</h3>
-                <p className="text-zinc-500 text-[10px]">{lang === "tr" ? "Çoklu Platin Plak Beat Üreticisi" : "Multi-Platinum Beat Maker"}</p>
-              </div>
-            </div>
-
-            {/* Mockup Buttons */}
-            <div className="space-y-3 my-auto">
-              <div className={`w-full py-2.5 rounded-xl border text-xs font-semibold hover:bg-white/10 transition-all cursor-pointer backdrop-blur-md flex items-center justify-center gap-2 ${
-                isDark ? "bg-white/5 border-white/10 text-white" : "bg-white border-zinc-200 text-zinc-700 shadow-sm"
-              }`}>
-                <Music className="h-3.5 w-3.5 text-purple-500" />
-                {lang === "tr" ? "Spotify'da Dinle" : "Listen on Spotify"}
-              </div>
-              <div className={`w-full py-2.5 rounded-xl border text-xs font-semibold hover:bg-white/10 transition-all cursor-pointer backdrop-blur-md flex items-center justify-center gap-2 ${
-                isDark ? "bg-white/5 border-white/10 text-white" : "bg-white border-zinc-200 text-zinc-700 shadow-sm"
-              }`}>
-                <ShoppingBag className="h-3.5 w-3.5 text-fuchsia-500" />
-                {lang === "tr" ? "Sound Kit Satın Al ($29.99)" : "Buy Sound Kit ($29.99)"}
-              </div>
-              <div className={`w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600/80 to-fuchsia-600/80 text-xs font-semibold hover:opacity-90 transition-all cursor-pointer flex items-center justify-center gap-2 text-white`}>
-                <Sparkles className="h-3.5 w-3.5" />
-                {lang === "tr" ? "İşbirliği Talepleri" : "Collab Inquiries"}
-              </div>
-            </div>
-
-            {/* Mockup Stats */}
-            <div className={`flex justify-around border-t pt-3 ${isDark ? "text-zinc-500 border-zinc-800/80" : "text-zinc-400 border-zinc-200"}`}>
-              <div className="text-center">
-                <span className={`block text-xs font-bold ${isDark ? "text-white" : "text-zinc-800"}`}>12K</span>
-                <span className="text-[8px] uppercase tracking-wider">{lang === "tr" ? "Tıklama" : "Clicks"}</span>
-              </div>
-              <div className="text-center">
-                <span className={`block text-xs font-bold ${isDark ? "text-white" : "text-zinc-800"}`}>4.2%</span>
-                <span className="text-[8px] uppercase tracking-wider">CTR</span>
-              </div>
-            </div>
+        <form onSubmit={handleCreate} className="max-w-md mx-auto flex flex-col sm:flex-row items-center p-2 bg-white rounded-full border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center flex-1 px-4 py-2 w-full">
+            <span className="text-slate-400 font-medium whitespace-nowrap">link.saas/</span>
+            <input 
+              type="text" 
+              placeholder="yourname"
+              className="w-full bg-transparent border-none outline-none font-bold text-slate-900 placeholder:text-slate-300 ml-1"
+              value={usernameInput}
+              onChange={(e) => setUsernameInput(e.target.value)}
+            />
           </div>
-        </div>
+          <button 
+            type="submit"
+            className="w-full sm:w-auto mt-2 sm:mt-0 px-6 py-3 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors whitespace-nowrap"
+          >
+            Claim your link
+          </button>
+        </form>
+      </section>
+
+      {/* Creators Carousel */}
+      <section id="creators" className="w-full">
+        {creatorsData && creatorsData.length > 0 && (
+          <CreatorCarousel creators={creatorsData} />
         )}
       </section>
 
-        {/* Phone Mockup Slider Carousel */}
-        {sliderItems.length > 0 && <Slider isDark={isDark} initialItems={sliderItems} />}
+      {/* Zigzag Features */}
+      <section id="features" className="w-full">
+        {featuresData && featuresData.length > 0 && (
+          <FeatureZigzag features={featuresData} />
+        )}
+      </section>
 
-      {/* Features Grid */}
-      <section id="features" className={`max-w-6xl mx-auto px-6 py-20 border-t transition-colors ${
-        isDark ? "border-zinc-900" : "border-zinc-200"
-      }`}>
-        <h2 className="text-3xl md:text-5xl font-black text-center mb-16">
-          {t.featuresTitle}{" "}
-          <span className={`bg-clip-text text-transparent bg-gradient-to-r ${currentGradient}`}>
-            {t.featuresTitleHighlight}
-          </span>
-        </h2>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Card 1 */}
-          <div className={`p-8 rounded-2xl border transition-all hover:scale-[1.02] ${
-            isDark ? "bg-zinc-950/50 border-zinc-900/80 hover:border-purple-500/20" : "bg-white border-zinc-200/80 shadow-sm hover:shadow-md"
-          }`}>
-            <Zap className="h-8 w-8 text-purple-500 mb-6 animate-pulse" />
-            <h3 className="text-xl font-bold mb-3">{feature1Title || t.feat1Title}</h3>
-            <p className={`text-sm leading-relaxed ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-              {feature1Desc || t.feat1Desc}
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div className={`p-8 rounded-2xl border transition-all hover:scale-[1.02] ${
-            isDark ? "bg-zinc-950/50 border-zinc-900/80 hover:border-fuchsia-500/20" : "bg-white border-zinc-200/80 shadow-sm hover:shadow-md"
-          }`}>
-            <Sparkles className="h-8 w-8 text-fuchsia-500 mb-6" />
-            <h3 className="text-xl font-bold mb-3">{feature2Title || t.feat2Title}</h3>
-            <p className={`text-sm leading-relaxed ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-              {feature2Desc || t.feat2Desc}
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className={`p-8 rounded-2xl border transition-all hover:scale-[1.02] ${
-            isDark ? "bg-zinc-950/50 border-zinc-900/80 hover:border-pink-500/20" : "bg-white border-zinc-200/80 shadow-sm hover:shadow-md"
-          }`}>
-            <BarChart3 className="h-8 w-8 text-pink-500 mb-6" />
-            <h3 className="text-xl font-bold mb-3">{feature3Title || t.feat3Title}</h3>
-            <p className={`text-sm leading-relaxed ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-              {feature3Desc || t.feat3Desc}
-            </p>
-          </div>
+      {/* Simple CTA Footer */}
+      <section className="py-32 px-6 text-center bg-gray-50 border-t border-gray-100">
+        <div className="max-w-3xl mx-auto bg-white rounded-3xl p-12 shadow-sm border border-gray-100">
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6">
+            Ready to grow your audience?
+          </h2>
+          <p className="text-slate-500 mb-8 max-w-lg mx-auto">
+            Join thousands of creators using our platform to turn followers into fans, customers, and community.
+          </p>
+          <Link
+            href="/sign-up"
+            className="inline-flex items-center space-x-2 px-8 py-4 rounded-full bg-slate-900 text-white font-bold text-base hover:bg-slate-800 transition-colors shadow-sm"
+          >
+            <span>Get started for free</span>
+            <ArrowRight className="h-5 w-5" />
+          </Link>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className={`max-w-6xl mx-auto px-6 py-20 border-t transition-colors ${
-        isDark ? "border-zinc-900" : "border-zinc-200"
-      }`}>
-        <div className="text-center max-w-xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-5xl font-black mb-4">{t.pricingTitle}</h2>
-          <p className={isDark ? "text-zinc-400 text-sm" : "text-zinc-600 text-sm"}>{t.pricingDesc}</p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Free Plan */}
-          <div className={`p-8 rounded-2xl border flex flex-col justify-between ${
-            isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
-          }`}>
-            <div>
-              <h3 className="text-lg font-bold uppercase tracking-wider text-zinc-400 mb-2">{t.freePlanTitle}</h3>
-              <div className="text-4xl font-extrabold mb-4">0₺ <span className="text-sm font-normal text-zinc-500">{t.freePlanPeriod}</span></div>
-              <p className={`text-sm mb-6 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>{t.freePlanDesc}</p>
-              <ul className={`space-y-3 text-sm mb-8 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.freePlanFeat1}</li>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.freePlanFeat2}</li>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.freePlanFeat3}</li>
-              </ul>
-            </div>
-            <Link href="/sign-up" className={`w-full py-3 rounded-full text-center font-bold text-sm transition-colors ${
-              isDark ? "bg-zinc-900 hover:bg-zinc-800 text-white" : "bg-zinc-100 hover:bg-zinc-200 text-zinc-800"
-            }`}>
-              {t.getStarted}
-            </Link>
+      {/* True Footer */}
+      <footer className="py-12 px-6 border-t border-gray-100 text-center text-sm text-slate-500 bg-white">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+          <div className="mb-4 md:mb-0">
+            © {new Date().getFullYear()} {siteTitle}. All rights reserved.
           </div>
-
-          {/* Starter Plan */}
-          <div className={`p-8 rounded-2xl border relative flex flex-col justify-between shadow-sm transition-all duration-300 ${
-            isDark ? "bg-gradient-to-b from-purple-950/20 to-zinc-950 border-purple-500/20" : "bg-white border-purple-500/30 shadow-[0_0_30px_rgba(168,85,247,0.05)]"
-          }`}>
-            <div className="absolute -top-3 right-6 px-3 py-1 rounded-full bg-purple-500 text-black text-[10px] font-black uppercase tracking-wider">
-              {t.popularBadge}
-            </div>
-            <div>
-              <h3 className="text-lg font-bold uppercase tracking-wider text-purple-500 mb-2">{t.starterPlanTitle}</h3>
-              <div className="text-4xl font-extrabold mb-4">99₺ <span className="text-sm font-normal text-zinc-500">{t.starterPlanPeriod}</span></div>
-              <p className={`text-sm mb-6 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>{t.starterPlanDesc}</p>
-              <ul className={`space-y-3 text-sm mb-8 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.starterPlanFeat1}</li>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.starterPlanFeat2}</li>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.starterPlanFeat3}</li>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.starterPlanFeat4}</li>
-              </ul>
-            </div>
-            {paymentLinkStarter ? (
-              <a href={paymentLinkStarter} target="_blank" rel="noopener noreferrer" className="w-full py-3 rounded-full bg-purple-600 hover:bg-purple-500 text-center font-bold text-sm transition-colors text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] flex items-center justify-center gap-1.5">
-                {t.unlockStarter}
-                <ExternalLink className="h-3.5 w-3.5 opacity-60" />
-              </a>
-            ) : (
-            <Link href="/sign-up" className="w-full py-3 rounded-full bg-purple-600 hover:bg-purple-500 text-center font-bold text-sm transition-colors text-white shadow-[0_0_15px_rgba(168,85,247,0.3)]">
-              {t.unlockStarter}
-            </Link>
-            )}
+          <div className="flex space-x-6">
+            <a href="#" className="hover:text-slate-900 transition-colors">Privacy</a>
+            <a href="#" className="hover:text-slate-900 transition-colors">Terms</a>
+            <a href="#" className="hover:text-slate-900 transition-colors">Help</a>
           </div>
-
-          {/* Creator Plan */}
-          <div className={`p-8 rounded-2xl border flex flex-col justify-between ${
-            isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
-          }`}>
-            <div>
-              <h3 className="text-lg font-bold uppercase tracking-wider text-zinc-400 mb-2">{t.creatorPlanTitle}</h3>
-              <div className="text-4xl font-extrabold mb-4">249₺ <span className="text-sm font-normal text-zinc-500">{t.creatorPlanPeriod}</span></div>
-              <p className={`text-sm mb-6 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>{t.creatorPlanDesc}</p>
-              <ul className={`space-y-3 text-sm mb-8 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.creatorPlanFeat1}</li>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.creatorPlanFeat2}</li>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.creatorPlanFeat3}</li>
-                <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.creatorPlanFeat4}</li>
-              </ul>
-            </div>
-            {paymentLinkCreator ? (
-              <a href={paymentLinkCreator} target="_blank" rel="noopener noreferrer" className={`w-full py-3 rounded-full text-center font-bold text-sm transition-colors flex items-center justify-center gap-1.5 ${
-                isDark ? "bg-zinc-900 hover:bg-zinc-800 text-white" : "bg-zinc-100 hover:bg-zinc-200 text-zinc-800"
-              }`}>
-                {t.claimCreator}
-                <ExternalLink className="h-3.5 w-3.5 opacity-60" />
-              </a>
-            ) : (
-            <Link href="/sign-up" className={`w-full py-3 rounded-full text-center font-bold text-sm transition-colors ${
-              isDark ? "bg-zinc-900 hover:bg-zinc-800 text-white" : "bg-zinc-100 hover:bg-zinc-200 text-zinc-800"
-            }`}>
-              {t.claimCreator}
-            </Link>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className={`border-t py-12 px-6 text-center text-xs transition-colors ${
-        isDark ? "border-zinc-900 bg-zinc-950/40 text-zinc-500" : "border-zinc-200 bg-zinc-100/50 text-zinc-500"
-      }`}>
-        <p className="mb-4">{t.footerText}</p>
-        <div className="flex justify-center space-x-6">
-          <a href="#" className={`transition-colors ${isDark ? "hover:text-white" : "hover:text-zinc-800"}`}>{t.footerTerms}</a>
-          <a href="#" className={`transition-colors ${isDark ? "hover:text-white" : "hover:text-zinc-800"}`}>{t.footerPrivacy}</a>
-          <a href="#" className={`transition-colors ${isDark ? "hover:text-white" : "hover:text-zinc-800"}`}>{t.footerSupport}</a>
         </div>
       </footer>
     </div>
