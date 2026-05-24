@@ -8,7 +8,7 @@ interface OverlayManagerProps {
 }
 
 export default function GlobalOverlayManager({ onStateChange }: OverlayManagerProps) {
-  const [lang, setLang] = useState<"tr" | "en">("en");
+  const [lang, setLang] = useState<"tr" | "en">("tr");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [showCookieBanner, setShowCookieBanner] = useState(false);
   const [showLocationToast, setShowLocationToast] = useState(false);
@@ -26,8 +26,9 @@ export default function GlobalOverlayManager({ onStateChange }: OverlayManagerPr
       setLang(storedLang);
       if (onStateChange) onStateChange({ lang: storedLang, theme: "light" });
     } else {
-      // Run smart IP detection
-      detectLanguageAndCountry("light");
+      setLang("tr");
+      localStorage.setItem("lang", "tr");
+      if (onStateChange) onStateChange({ lang: "tr", theme: "light" });
     }
 
     // 3. Show Cookie Banner if not accepted/rejected yet
@@ -50,27 +51,7 @@ export default function GlobalOverlayManager({ onStateChange }: OverlayManagerPr
     }
   }, [lang]);
 
-  const detectLanguageAndCountry = async (currentTheme: "dark" | "light") => {
-    try {
-      const res = await fetch("https://ipapi.co/json/");
-      if (res.ok) {
-        const data = await res.json();
-        const detectedLang = data.country_code === "TR" ? "tr" : "en";
-        setLang(detectedLang);
-        localStorage.setItem("lang", detectedLang);
-        if (onStateChange) onStateChange({ lang: detectedLang, theme: "light" });
-        return;
-      }
-    } catch (e) {
-      console.warn("IP Geolocation API failed, falling back to browser language.");
-    }
 
-    // Fallback to browser language
-    const browserLang = navigator.language.startsWith("tr") ? "tr" : "en";
-    setLang(browserLang);
-    localStorage.setItem("lang", browserLang);
-    if (onStateChange) onStateChange({ lang: browserLang, theme: "light" });
-  };
 
   const handleToggleLang = (selectedLang: "tr" | "en") => {
     setLang(selectedLang);
