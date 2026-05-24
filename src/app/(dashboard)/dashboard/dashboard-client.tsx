@@ -4480,7 +4480,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
       </div>
 
       {/* Floating Upgrade Prompt for FREE tier users */}
-      <FloatingUpgradePrompt currentPlan={simulatedPlan} />
+      <FloatingUpgradePrompt currentPlan={simulatedPlan} globalSettings={globalSettings} />
 
       {/* Upgrade Modal for Locked Features */}
       <UpgradeModal
@@ -4488,6 +4488,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
         onClose={() => setIsUpgradeModalOpen(false)}
         title={upgradeModalTitle}
         description={upgradeModalDesc}
+        globalSettings={globalSettings}
       />
     </div>
   );

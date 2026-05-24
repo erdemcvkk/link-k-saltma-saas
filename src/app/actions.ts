@@ -628,6 +628,16 @@ export async function buyProductSimulated(productId: string) {
 export async function saveGlobalSetting(adminUserId: string, key: string, value: string) {
   await ensureAdmin(adminUserId);
 
+  // Payment link keys are restricted to Super Admin only
+  if (key.startsWith("payment_link_")) {
+    const cookieStore = await cookies();
+    const superAdminSession = cookieStore.get("super-admin-session")?.value;
+    const superAdminToken = process.env.SUPER_ADMIN_TOKEN;
+    if (!superAdminSession || !superAdminToken || superAdminSession !== superAdminToken) {
+      throw new Error("Unauthorized: Only Super Admin can modify payment gateway links.");
+    }
+  }
+
   await db.globalSetting.upsert({
     where: { key },
     update: { value },

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Slider from "@/components/Slider";
-import { ArrowRight, Sparkles, Shield, BarChart3, Globe, Zap, Music, ShoppingBag, Eye } from "lucide-react";
+import { ArrowRight, Sparkles, Shield, BarChart3, Globe, Zap, Music, ShoppingBag, Eye, ExternalLink } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 
 interface HomeClientProps {
@@ -16,6 +16,9 @@ interface HomeClientProps {
   currentGradient: string;
   currentBadgeBg: string;
   currentBtnBg: string;
+  paymentLinkStarter?: string;
+  paymentLinkCreator?: string;
+  paymentLinkPro?: string;
 }
 
 export default function HomeClient({
@@ -28,6 +31,9 @@ export default function HomeClient({
   currentGradient,
   currentBadgeBg,
   currentBtnBg,
+  paymentLinkStarter,
+  paymentLinkCreator,
+  paymentLinkPro,
 }: HomeClientProps) {
   const [lang, setLang] = useState<"tr" | "en">("en");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -362,9 +368,16 @@ export default function HomeClient({
                 <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.starterPlanFeat4}</li>
               </ul>
             </div>
+            {paymentLinkStarter ? (
+              <a href={paymentLinkStarter} target="_blank" rel="noopener noreferrer" className="w-full py-3 rounded-full bg-purple-600 hover:bg-purple-500 text-center font-bold text-sm transition-colors text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] flex items-center justify-center gap-1.5">
+                {t.unlockStarter}
+                <ExternalLink className="h-3.5 w-3.5 opacity-60" />
+              </a>
+            ) : (
             <Link href="/sign-up" className="w-full py-3 rounded-full bg-purple-600 hover:bg-purple-500 text-center font-bold text-sm transition-colors text-white shadow-[0_0_15px_rgba(168,85,247,0.3)]">
               {t.unlockStarter}
             </Link>
+            )}
           </div>
 
           {/* Creator Plan */}
@@ -382,11 +395,20 @@ export default function HomeClient({
                 <li className="flex items-center gap-2"><ArrowRight className="h-3 w-3 text-purple-500" /> {t.creatorPlanFeat4}</li>
               </ul>
             </div>
+            {paymentLinkCreator ? (
+              <a href={paymentLinkCreator} target="_blank" rel="noopener noreferrer" className={`w-full py-3 rounded-full text-center font-bold text-sm transition-colors flex items-center justify-center gap-1.5 ${
+                isDark ? "bg-zinc-900 hover:bg-zinc-800 text-white" : "bg-zinc-100 hover:bg-zinc-200 text-zinc-800"
+              }`}>
+                {t.claimCreator}
+                <ExternalLink className="h-3.5 w-3.5 opacity-60" />
+              </a>
+            ) : (
             <Link href="/sign-up" className={`w-full py-3 rounded-full text-center font-bold text-sm transition-colors ${
               isDark ? "bg-zinc-900 hover:bg-zinc-800 text-white" : "bg-zinc-100 hover:bg-zinc-200 text-zinc-800"
             }`}>
               {t.claimCreator}
             </Link>
+            )}
           </div>
         </div>
       </section>

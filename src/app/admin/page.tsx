@@ -85,6 +85,7 @@ export default async function AdminPage() {
   return (
     <AdminClient
       adminUserId={auth.id}
+      adminRole={auth.role}
       initialUsers={serializedUsers}
       initialSettings={serializedSettings}
       stats={stats}

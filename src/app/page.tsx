@@ -73,6 +73,9 @@ export default async function Home() {
       currentGradient={currentGradient}
       currentBadgeBg={currentBadgeBg}
       currentBtnBg={currentBtnBg}
+      paymentLinkStarter={serializedSettings["payment_link_starter"] || ""}
+      paymentLinkCreator={serializedSettings["payment_link_creator"] || ""}
+      paymentLinkPro={serializedSettings["payment_link_pro"] || ""}
     />
   );
 }

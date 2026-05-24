@@ -48,6 +48,7 @@ type UserItem = {
 
 interface AdminClientProps {
   adminUserId: string;
+  adminRole: string;
   initialUsers: UserItem[];
   initialSettings: Record<string, string>;
   stats: {
@@ -168,7 +169,8 @@ const STANDARD_SETTINGS_METADATA: Record<string, { title: string; desc: string }
   }
 };
 
-export default function AdminClient({ adminUserId, initialUsers, initialSettings, stats, initialFonts }: AdminClientProps) {
+export default function AdminClient({ adminUserId, adminRole, initialUsers, initialSettings, stats, initialFonts }: AdminClientProps) {
+  const isSuperAdmin = adminRole === "SUPER_ADMIN";
   const [users, setUsers] = useState<UserItem[]>(initialUsers);
   const [searchQuery, setSearchQuery] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -1434,11 +1436,13 @@ export default function AdminClient({ adminUserId, initialUsers, initialSettings
                   <p className="text-xs text-zinc-400 font-bold mt-1">{lang === "tr" ? "Fatura ödeme geçitlerini ve görsel marka varlıklarını özelleştirin." : "Configure subscription checkout hooks and branding logotypes."}</p>
                 </div>
 
-                {/* Payment gateway section */}
+                {/* Payment gateway section - SUPER ADMIN ONLY */}
+                {isSuperAdmin ? (
                 <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                   <div className="flex items-center gap-2">
                     <CreditCard className="h-5 w-5 text-rose-500" />
                     <h3 className="font-extrabold text-sm text-zinc-800">{lang === "tr" ? "Üyelik Ödeme Altyapı Bağlantıları" : "Checkout Gateways Configuration"}</h3>
+                    <span className="ml-auto px-2 py-0.5 rounded-full bg-red-50 border border-red-200 text-[9px] font-black text-red-500 uppercase tracking-wide">Süper Admin</span>
                   </div>
                   <form onSubmit={handleSaveSettings} className="grid md:grid-cols-3 gap-6 items-end">
                     <div className="space-y-1.5">
@@ -1482,6 +1486,16 @@ export default function AdminClient({ adminUserId, initialUsers, initialSettings
                     </div>
                   </form>
                 </div>
+                ) : (
+                <div className="p-6 bg-zinc-50 border border-zinc-200 rounded-[24px] shadow-sm space-y-3 opacity-60">
+                  <div className="flex items-center gap-2">
+                    <CreditCard className="h-5 w-5 text-zinc-400" />
+                    <h3 className="font-extrabold text-sm text-zinc-500">{lang === "tr" ? "Üyelik Ödeme Altyapı Bağlantıları" : "Checkout Gateways Configuration"}</h3>
+                    <span className="ml-auto px-2 py-0.5 rounded-full bg-zinc-100 border border-zinc-300 text-[9px] font-black text-zinc-500 uppercase tracking-wide">🔒 Kilitli</span>
+                  </div>
+                  <p className="text-xs text-zinc-400">{lang === "tr" ? "Bu bölüm yalnızca Süper Admin tarafından yönetilebilir. Ödeme geçidi bağlantılarını düzenlemek için Süper Admin girişi yapmanız gerekmektedir." : "This section is restricted to Super Admins only. Please log in as Super Admin to manage payment gateway links."}</p>
+                </div>
+                )}
 
                 {/* Branding section */}
                 <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">

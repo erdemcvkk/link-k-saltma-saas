@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Sparkles, ShieldCheck, Zap, Heart } from "lucide-react";
+import { X, Sparkles, ShieldCheck, Zap, Heart, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 interface UpgradeModalProps {
@@ -8,10 +8,17 @@ interface UpgradeModalProps {
   onClose: () => void;
   title?: string;
   description?: string;
+  globalSettings?: Record<string, string>;
 }
 
-export default function UpgradeModal({ isOpen, onClose, title, description }: UpgradeModalProps) {
+export default function UpgradeModal({ isOpen, onClose, title, description, globalSettings }: UpgradeModalProps) {
   if (!isOpen) return null;
+
+  const starterLink = globalSettings?.["payment_link_starter"];
+  const creatorLink = globalSettings?.["payment_link_creator"];
+  const proLink = globalSettings?.["payment_link_pro"];
+
+  const hasAnyPaymentLink = !!(starterLink || creatorLink || proLink);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -66,23 +73,73 @@ export default function UpgradeModal({ isOpen, onClose, title, description }: Up
           </div>
         </div>
 
-        {/* Upgrade Button */}
-        <div className="mt-6 flex flex-col gap-2">
-          <Link
-            href="/dashboard/billing"
-            onClick={onClose}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-xs tracking-wider transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] flex items-center justify-center gap-1.5"
-          >
-            <Sparkles className="h-4 w-4" />
-            HEMEN PLANLARI İNCELE
-          </Link>
-          <button
-            onClick={onClose}
-            className="w-full py-2.5 rounded-xl bg-transparent border border-zinc-900 hover:bg-zinc-900/50 text-zinc-500 hover:text-zinc-300 font-bold text-xs transition-all cursor-pointer"
-          >
-            Daha Sonra
-          </button>
-        </div>
+        {/* Payment Links - Direct checkout buttons when available */}
+        {hasAnyPaymentLink ? (
+          <div className="mt-6 space-y-2">
+            {starterLink && (
+              <a
+                href={starterLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onClose}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-xs tracking-wider transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] flex items-center justify-center gap-1.5"
+              >
+                <Sparkles className="h-4 w-4" />
+                STARTER PLAN – 99₺/Ay
+                <ExternalLink className="h-3 w-3 ml-1 opacity-60" />
+              </a>
+            )}
+            {creatorLink && (
+              <a
+                href={creatorLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onClose}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs tracking-wider transition-all shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_25px_rgba(99,102,241,0.4)] flex items-center justify-center gap-1.5"
+              >
+                <Sparkles className="h-4 w-4" />
+                CREATOR PLAN – 249₺/Ay
+                <ExternalLink className="h-3 w-3 ml-1 opacity-60" />
+              </a>
+            )}
+            {proLink && (
+              <a
+                href={proLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onClose}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-extrabold text-xs tracking-wider transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_25px_rgba(245,158,11,0.4)] flex items-center justify-center gap-1.5"
+              >
+                <Sparkles className="h-4 w-4" />
+                PRO BUSINESS – 499₺/Ay
+                <ExternalLink className="h-3 w-3 ml-1 opacity-60" />
+              </a>
+            )}
+            <button
+              onClick={onClose}
+              className="w-full py-2.5 rounded-xl bg-transparent border border-zinc-900 hover:bg-zinc-900/50 text-zinc-500 hover:text-zinc-300 font-bold text-xs transition-all cursor-pointer"
+            >
+              Daha Sonra
+            </button>
+          </div>
+        ) : (
+          <div className="mt-6 flex flex-col gap-2">
+            <Link
+              href="/dashboard/billing"
+              onClick={onClose}
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-xs tracking-wider transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] flex items-center justify-center gap-1.5"
+            >
+              <Sparkles className="h-4 w-4" />
+              HEMEN PLANLARI İNCELE
+            </Link>
+            <button
+              onClick={onClose}
+              className="w-full py-2.5 rounded-xl bg-transparent border border-zinc-900 hover:bg-zinc-900/50 text-zinc-500 hover:text-zinc-300 font-bold text-xs transition-all cursor-pointer"
+            >
+              Daha Sonra
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
