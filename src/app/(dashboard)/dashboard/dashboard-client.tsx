@@ -77,6 +77,8 @@ import GlobalOverlayManager from "@/components/global-overlay-manager";
 import VideoPlayer from "@/components/blocks/video-player";
 import BeforeAfterSlider from "@/components/blocks/before-after-slider";
 import AudioPlayer from "@/components/blocks/audio-player";
+import UpgradeModal from "@/components/dashboard/upgrade-modal";
+import FloatingUpgradePrompt from "@/components/dashboard/floating-upgrade-prompt";
 
 
 type LinkClickItem = {
@@ -297,6 +299,16 @@ const getLinkIconHelper = (type?: string, url?: string) => {
 };
 
 export default function DashboardClient({ initialUser, initialLinks, initialPageViews, initialProducts, globalSettings, initialFonts = FONTS_CATALOG, initialQrCodes = [] }: DashboardClientProps) {
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+  const [upgradeModalTitle, setUpgradeModalTitle] = useState("");
+  const [upgradeModalDesc, setUpgradeModalDesc] = useState("");
+
+  const triggerUpgradeModal = (title: string, desc: string) => {
+    setUpgradeModalTitle(title);
+    setUpgradeModalDesc(desc);
+    setIsUpgradeModalOpen(true);
+  };
+
   const [simulatedPlan, setSimulatedPlan] = useState(initialUser.plan);
   const isTemplateUnlocked = (templateTier: string) => {
     const userPlan = simulatedPlan;
@@ -703,6 +715,28 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
   const handleAddLink = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Client-side gating based on simulatedPlan
+    if (simulatedPlan === "FREE" && links.length >= 20) {
+      triggerUpgradeModal(
+        lang === "tr" ? "Link Sınırına Ulaştınız 🔒" : "Link Limit Reached 🔒",
+        lang === "tr" 
+          ? "Ücretsiz planda en fazla 20 link oluşturabilirsiniz. Sınırları kaldırmak için Premium pakete geçin!" 
+          : "Free tier is limited to 20 links. Upgrade your plan to add unlimited links!"
+      );
+      return;
+    }
+
+    if (simulatedPlan === "STARTER" && links.length >= 100) {
+      triggerUpgradeModal(
+        lang === "tr" ? "Link Sınırına Ulaştınız 🔒" : "Link Limit Reached 🔒",
+        lang === "tr" 
+          ? "Starter planında en fazla 100 link oluşturabilirsiniz. Sınırsız link eklemek için Creator pakete geçin!" 
+          : "Starter tier is limited to 100 links. Upgrade your plan to add unlimited links!"
+      );
+      return;
+    }
+
     if (!newTitle) return;
 
     // For BEFORE_AFTER blocks, url is optional, so we can pass "#" if it's empty
@@ -1526,7 +1560,18 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
         </button>
 
         <button
-          onClick={() => setActiveTab("analytics")}
+          onClick={() => {
+            if (simulatedPlan === "FREE") {
+              triggerUpgradeModal(
+                lang === "tr" ? "Gelişmiş Analitik Kilitli 🔒" : "Advanced Analytics Locked 🔒",
+                lang === "tr"
+                  ? "Detaylı trafik analizleri, cihaz/tarayıcı raporları ve coğrafi istatistikler Premium plana özeldir. Hemen yükseltin!"
+                  : "Detailed traffic analytics, device reports and country breakdown are exclusive to our Premium plans. Upgrade now to unlock!"
+              );
+              return;
+            }
+            setActiveTab("analytics");
+          }}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "analytics"
               ? "bg-purple-600 border-purple-500 text-white shadow-sm"
@@ -1537,6 +1582,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
         >
           <TrendingUp className="h-3.5 w-3.5" />
           {t.tabAnalytics}
+          {simulatedPlan === "FREE" && <Lock className="h-3 w-3 text-purple-400 shrink-0" />}
         </button>
 
         <button
@@ -2032,6 +2078,37 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         </button>
                       ))}
                     </div>
+
+                    {/* Locked Custom Upload Button for Free Plan */}
+                    <div className={`mt-2 p-4 rounded-xl border border-dashed flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+                      isDark ? "border-zinc-850 bg-zinc-900/10" : "border-zinc-200 bg-zinc-50/50"
+                    }`}>
+                      <div className="space-y-0.5">
+                        <div className={`flex items-center gap-1.5 text-xs font-extrabold ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>
+                          <Image className="h-3.5 w-3.5" />
+                          {lang === "tr" ? "Kendi Fotoğrafını Yükle" : "Upload Custom Photo"}
+                          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 text-[8px] text-purple-400 uppercase tracking-wide font-black">
+                            <Lock className="h-2 w-2" /> PREMIUM
+                          </span>
+                        </div>
+                        <p className="text-[9px] text-zinc-500 font-semibold">
+                          {lang === "tr" ? "Kendi arka plan görsellerinizi veya videolarınızı yükleyin" : "Upload your own background images or loops"}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => triggerUpgradeModal(
+                          lang === "tr" ? "Özel Arka Plan Kilidi 🔒" : "Custom Background Locked 🔒",
+                          lang === "tr"
+                            ? "Kendi özel resimlerinizi veya videolarınızı arka plan olarak kullanmak Premium pakete özeldir. Hemen yükseltin!"
+                            : "Uploading custom background assets is exclusive to our Premium plans. Upgrade now to unlock!"
+                        )}
+                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-purple-500/30 bg-purple-950/15 hover:bg-purple-900/30 text-purple-400 font-extrabold text-xs transition-all cursor-pointer"
+                      >
+                        <Lock className="h-3.5 w-3.5" />
+                        {lang === "tr" ? "Görsel Yükle" : "Upload Photo"}
+                      </button>
+                    </div>
                   </div>
                 )}
 
@@ -2321,9 +2398,12 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 type="button"
                                 onClick={() => {
                                   if (!unlocked) {
-                                    alert(lang === "tr" 
-                                      ? `Bu şablon ${tmpl.tier} planı gerektiriyor! Lütfen profilinizi yükseltin.` 
-                                      : `This template requires ${tmpl.tier} plan! Please upgrade your subscription.`);
+                                    triggerUpgradeModal(
+                                      lang === "tr" ? "Şablon Kilitli 🔒" : "Template Locked 🔒",
+                                      lang === "tr"
+                                        ? `Bu premium şablon (${tmpl.name}) sadece ${tmpl.tier} ve üzeri paketlerde kullanılabilir. Sınırları kaldırmak için yükseltin!`
+                                        : `This premium template (${tmpl.name}) requires the ${tmpl.tier} plan or higher. Upgrade now to unlock!`
+                                    );
                                     return;
                                   }
                                   setLinkSelectedTemplate(tmpl.id);
@@ -4270,12 +4350,17 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                       {lang === "tr" ? "HTML başlık verilerinizi, sosyal medya paylaşım açıklamalarını ve arama motoru dizin anahtar kelimelerini özelleştirmek için premium plana yükseltin!" : "Upgrade to a premium plan to custom define your HTML header metadata, social share descriptions, and search indexing keywords."}
                     </p>
                   </div>
-                  <Link
-                    href="/dashboard/billing"
-                    className="px-4 py-2 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-bold text-[10px] transition-colors"
+                  <button
+                    onClick={() => triggerUpgradeModal(
+                      lang === "tr" ? "SEO Ayarları Kilitli 🔒" : "SEO Customs Locked 🔒",
+                      lang === "tr"
+                        ? "Meta başlık, açıklama ve anahtar kelime özelleştirmeleri gibi gelişmiş arama motoru optimizasyonu ayarlarını kullanmak Premium pakete özeldir."
+                        : "Customizing SEO meta title, description and indexing keywords is exclusive to our Premium plans."
+                    )}
+                    className="px-4 py-2 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-bold text-[10px] transition-colors cursor-pointer"
                   >
-                    {lang === "tr" ? "SEO Özelliklerini Kilidini Aç" : "Unlock SEO Settings"}
-                  </Link>
+                    {lang === "tr" ? "SEO Özelliklerinin Kilidini Aç" : "Unlock SEO Settings"}
+                  </button>
                 </div>
               )}
             </div>
@@ -4365,12 +4450,17 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                       {lang === "tr" ? "Kendi alan adınızı bağlamak, DNS kayıtlarını otomatik eşlemek ve beyaz etiketli (white-label) markalama oluşturmak için CREATOR paketine geçin." : "Upgrade to our CREATOR enterprise package to map dynamic custom domains, bind DNS records, and build white-label branding."}
                     </p>
                   </div>
-                  <Link
-                    href="/dashboard/billing"
-                    className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] transition-colors"
+                  <button
+                    onClick={() => triggerUpgradeModal(
+                      lang === "tr" ? "Özel Alan Adı Kilitli 🔒" : "Custom Domain Locked 🔒",
+                      lang === "tr"
+                        ? "Kendi özel alan adınızı (cname) bağlamak ve beyaz etiketli (white-label) markalama oluşturmak Creator paketine özeldir."
+                        : "Mapping custom domains and utilizing white-label branding requires the CREATOR plan."
+                    )}
+                    className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] transition-colors cursor-pointer"
                   >
                     {lang === "tr" ? "Alan Adı Kilidini Aç" : "Unlock Domains"}
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>
@@ -4388,6 +4478,17 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
         )}
 
       </div>
+
+      {/* Floating Upgrade Prompt for FREE tier users */}
+      <FloatingUpgradePrompt currentPlan={simulatedPlan} />
+
+      {/* Upgrade Modal for Locked Features */}
+      <UpgradeModal
+        isOpen={isUpgradeModalOpen}
+        onClose={() => setIsUpgradeModalOpen(false)}
+        title={upgradeModalTitle}
+        description={upgradeModalDesc}
+      />
     </div>
   );
 }

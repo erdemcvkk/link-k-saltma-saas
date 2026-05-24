@@ -212,6 +212,31 @@ export async function updateProfile(
     throw new Error('The "Cyberpunk Acid (glow-green)" theme is only available in the CREATOR plan. Please upgrade your plan!');
   }
 
+  // Background and Asset gating validations
+  if (background) {
+    const isBase64Image = background.startsWith("data:image/");
+    const isUploadedImage = background.startsWith("/uploads/");
+    const isBase64Video = background.startsWith("data:video/");
+    
+    if (user.plan === "FREE" && (isBase64Image || isUploadedImage || isBase64Video)) {
+      throw new Error("Özel arka plan resmi yükleme özelliği Premium planlara özeldir. Lütfen planınızı yükseltin!");
+    }
+    
+    if (user.plan === "STARTER" && isBase64Video) {
+      throw new Error("Video arka plan özelliği yalnızca CREATOR planında mevcuttur. Lütfen planınızı yükseltin!");
+    }
+  }
+
+  // Color customization gating validations
+  if (user.plan === "FREE") {
+    if (bioColor && bioColor !== "#888888" && bioColor !== "#888" && bioColor.toLowerCase() !== "rgb(136, 136, 136)") {
+      throw new Error("Biyografi renk özelleştirme özelliği Premium planlara özeldir. Lütfen planınızı yükseltin!");
+    }
+    if (usernameColor && usernameColor !== "#ffffff" && usernameColor !== "#fff" && usernameColor.toLowerCase() !== "rgb(255, 255, 255)") {
+      throw new Error("Kullanıcı adı renk özelleştirme özelliği Premium planlara özeldir. Lütfen planınızı yükseltin!");
+    }
+  }
+
   // Typography gating validation
   if (fontStyle) {
     const fontRecord = await db.managedFont.findFirst({
