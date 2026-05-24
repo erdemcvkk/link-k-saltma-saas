@@ -199,6 +199,15 @@ export default function AdminClient({
   const [newSliderLink, setNewSliderLink] = useState("");
   const [newSliderFile, setNewSliderFile] = useState<File | null>(null);
   const [isUploadingSlider, setIsUploadingSlider] = useState(false);
+  const [isSavingFeatures, setIsSavingFeatures] = useState(false);
+  const [featureForm, setFeatureForm] = useState({
+    feature_1_title: initialSettings["feature_1_title"] || "",
+    feature_1_desc: initialSettings["feature_1_desc"] || "",
+    feature_2_title: initialSettings["feature_2_title"] || "",
+    feature_2_desc: initialSettings["feature_2_desc"] || "",
+    feature_3_title: initialSettings["feature_3_title"] || "",
+    feature_3_desc: initialSettings["feature_3_desc"] || "",
+  });
   const [fontSearchQuery, setFontSearchQuery] = useState("");
   
   // Font Form state
@@ -1603,8 +1612,8 @@ export default function AdminClient({
                             <label className="text-xs">Başlık</label>
                             <input
                               type="text"
-                              value={unsavedSettings[`feature_${num}_title`] ?? (settings[`feature_${num}_title`] || "")}
-                              onChange={(e) => handleSettingChange(`feature_${num}_title`, e.target.value)}
+                              value={featureForm[`feature_${num}_title` as keyof typeof featureForm]}
+                              onChange={(e) => setFeatureForm(prev => ({ ...prev, [`feature_${num}_title`]: e.target.value }))}
                               className={`w-full px-3 py-2 rounded-lg border text-sm ${
                                 activeTheme === "dark" ? "bg-zinc-900 border-zinc-700 text-white" : "bg-white border-zinc-300 text-zinc-900"
                               }`}
@@ -1614,8 +1623,8 @@ export default function AdminClient({
                             <label className="text-xs">Açıklama</label>
                             <input
                               type="text"
-                              value={unsavedSettings[`feature_${num}_desc`] ?? (settings[`feature_${num}_desc`] || "")}
-                              onChange={(e) => handleSettingChange(`feature_${num}_desc`, e.target.value)}
+                              value={featureForm[`feature_${num}_desc` as keyof typeof featureForm]}
+                              onChange={(e) => setFeatureForm(prev => ({ ...prev, [`feature_${num}_desc`]: e.target.value }))}
                               className={`w-full px-3 py-2 rounded-lg border text-sm ${
                                 activeTheme === "dark" ? "bg-zinc-900 border-zinc-700 text-white" : "bg-white border-zinc-300 text-zinc-900"
                               }`}
@@ -1625,32 +1634,28 @@ export default function AdminClient({
                       </div>
                     ))}
                     
-                    {Object.keys(unsavedSettings).some(k => k.startsWith("feature_")) && (
-                      <button
-                        onClick={async () => {
-                          setIsSaving(true);
-                          const featureKeys = Object.keys(unsavedSettings).filter(k => k.startsWith("feature_"));
-                          for (const k of featureKeys) {
-                            await saveGlobalSetting(adminUserId, k, unsavedSettings[k]);
-                            setSettings(prev => ({ ...prev, [k]: unsavedSettings[k] }));
+                    <button
+                      onClick={async () => {
+                        setIsSavingFeatures(true);
+                        try {
+                          for (const [k, v] of Object.entries(featureForm)) {
+                            await saveGlobalSetting(adminUserId, k, v);
                           }
-                          // Remove saved items from unsaved
-                          setUnsavedSettings(prev => {
-                            const next = { ...prev };
-                            featureKeys.forEach(k => delete next[k]);
-                            return next;
-                          });
-                          setIsSaving(false);
+                          setSettingsMap(prev => ({ ...prev, ...featureForm }));
                           setSuccessMsg("Kart özellikleri kaydedildi.");
                           setTimeout(() => setSuccessMsg(""), 3000);
-                        }}
-                        disabled={isSaving}
-                        className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-colors flex items-center gap-2"
-                      >
-                        {isSaving && <Loader2 className="h-4 w-4 animate-spin" />}
-                        Değişiklikleri Kaydet
-                      </button>
-                    )}
+                        } catch (e: any) {
+                          alert(e.message || "Kaydedilemedi");
+                        } finally {
+                          setIsSavingFeatures(false);
+                        }
+                      }}
+                      disabled={isSavingFeatures}
+                      className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition-colors flex items-center gap-2"
+                    >
+                      {isSavingFeatures && <Loader2 className="h-4 w-4 animate-spin" />}
+                      Değişiklikleri Kaydet
+                    </button>
                   </div>
                 </div>
               </div>
