@@ -22,12 +22,7 @@ export default function CreatorCarousel({ creators }: CreatorCarouselProps) {
 
   return (
     <div className="w-full overflow-hidden bg-white py-12 border-b border-gray-100">
-      <div className="text-center mb-8">
-        <p className="text-sm font-semibold text-slate-500 uppercase tracking-widest">
-          Join the platform built for creators who want to stand out
-        </p>
-      </div>
-      
+
       <div className="relative flex overflow-x-hidden group">
         <div className="animate-marquee flex whitespace-nowrap">
           {displayCreators.map((creator, idx) => (
