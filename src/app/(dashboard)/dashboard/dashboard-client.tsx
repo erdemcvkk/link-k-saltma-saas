@@ -71,7 +71,10 @@ import {
   MessageCircle,
   Utensils,
   Smartphone,
-  Wifi
+  Wifi,
+  GripVertical,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import VideoPlayer from "@/components/blocks/video-player";
@@ -420,6 +423,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
   }, [initialUser.plan]);
 
   const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo">("editor");
+  const [activeSubTab, setActiveSubTab] = useState<"links" | "appearance" | "profile">("links");
+  const [expandedLinkCard, setExpandedLinkCard] = useState<string | null>(null);
 
   useEffect(() => {
     setSimulatedPlan(initialUser.plan);
@@ -1626,374 +1631,422 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
           {/* TAB 1: LINKS & THEME EDITOR */}
           {activeTab === "editor" && (
             <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
-              {/* Profile customizer */}
-              <div className={`p-6 rounded-2xl border space-y-6 ${
-                "bg-white border-zinc-200 shadow-sm"
-              }`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <User className="h-5 w-5 text-teal-500" />
-                    <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{t.profileCustomizer}</h2>
-                  </div>
-                  <button
-                    onClick={handleSaveProfile}
-                    disabled={isPending}
-                    className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
-                      "bg-white text-slate-900 hover:bg-gray-50"
-                    }`}
-                  >
-                    {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
-                    {t.saveChanges}
-                  </button>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>{t.usernameLabel}</label>
-                    <div className={`flex items-center rounded-xl border focus-within:border-teal-500/50 overflow-hidden px-3 ${
-                      "bg-zinc-100 border-zinc-200"
-                    }`}>
-                      <span className="text-slate-500 text-sm">hub.com/</span>
-                      <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className={`flex-1 bg-transparent py-2.5 outline-none text-sm ${"text-zinc-900"}`}
-                        placeholder="username"
-                      />
-                    </div>
-                  </div>
-
-                                                      <div className="space-y-2 md:col-span-2">
-                    <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>
-                      {lang === "tr" ? "Profil Fotoğrafı Yükle" : "Upload Profile Photo"}
-                    </label>
-                    <div className={`p-4 rounded-xl border flex items-center gap-4 ${
-                      "bg-zinc-100 border-zinc-200"
-                    }`}>
-                      <div className={`w-14 h-14 rounded-full border flex items-center justify-center overflow-hidden shrink-0 ${
-                        "bg-white border-zinc-300"
-                      }`}>
-                        {avatarUrl ? (
-                          <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" />
-                        ) : (
-                          <User className="h-6 w-6 text-slate-500" />
-                        )}
-                      </div>
-                      <div className="space-y-1.5">
-                        <div className="flex gap-2">
-                          <label className={`px-3.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
-                            "bg-white hover:bg-zinc-55 border-zinc-300 text-zinc-700 shadow-sm"
-                          }`}>
-                            {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
-                            <input
-                              type="file"
-                              accept="image/*"
-                              className="hidden"
-                              onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                  if (file.size > 2.5 * 1024 * 1024) {
-                                    alert(lang === "tr" ? "Lütfen 2.5MB'den küçük bir fotoğraf seçin!" : "Please select an image smaller than 2.5MB!");
-                                    return;
-                                  }
-                                  const reader = new FileReader();
-                                  reader.onload = (event) => {
-                                    if (event.target?.result) {
-                                      setAvatarUrl(event.target.result as string);
-                                    }
-                                  };
-                                  reader.readAsDataURL(file);
-                                }
-                              }}
-                            />
-                          </label>
-                          {avatarUrl && (
-                            <button
-                              type="button"
-                              onClick={() => setAvatarUrl("")}
-                              className={`px-3.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
-                                "bg-red-50 hover:bg-red-100 border-red-200 text-red-600"
-                              }`}
-                            >
-                              {lang === "tr" ? "Kaldır" : "Remove"}
-                            </button>
-                          )}
-                        </div>
-                        <p className="text-[10px] text-slate-500 font-semibold">
-                          {lang === "tr" ? "Maksimum 2.5MB (PNG, JPG). Fotoğraf veri tabanına güvenle işlenecektir." : "Max 2.5MB (PNG, JPG). Image will be safely encrypted."}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-<div className="space-y-2">
-                    <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>{t.bioLabel}</label>
-                    <textarea
-                      value={bio}
-                      onChange={(e) => setBio(e.target.value)}
-                      className={`w-full px-4 py-2.5 rounded-xl border focus:border-teal-500/50 outline-none text-sm ${
-                        "bg-zinc-100 border-zinc-200 text-zinc-900"
-                      }`}
-                      placeholder={t.bioPlaceholder}
-                      rows={2}
-                    />
-                  </div>
-
-                  {/* Custom Colors Palette Selector */}
-                  <div className="space-y-4 md:col-span-2 border-t border-zinc-200/50 pt-4">
-                    <h3 className={`text-xs font-black uppercase tracking-wider ${"text-slate-500"}`}>
-                      {lang === "tr" ? "Kişisel Renk Paletiniz" : "Personal Typography Color Palette"}
-                    </h3>
-                    <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
-                      {lang === "tr" 
-                        ? "@Kullanıcı adı ve Biyografi yazınızın renklerini özgürce seçin. Tüm üyelik planları için tamamen ücretsizdir!" 
-                        : "Select custom colors for your username and bio details. 100% unlocked for all membership tiers!"}
-                    </p>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      {/* Username Color Selector */}
-                      <div className={`p-4 rounded-xl border space-y-3 ${"bg-zinc-50 border-zinc-200"}`}>
-                        <div className="flex justify-between items-center">
-                          <label className={`text-[10px] font-black uppercase ${"text-zinc-650"}`}>
-                            {lang === "tr" ? "@ Kullanıcı Adı Rengi" : "@ Username Text Color"}
-                          </label>
-                          
-                          {/* Color Hex Input & Custom Color Picker */}
-                          <div className="flex items-center gap-1.5">
-                            <input 
-                              type="text" 
-                              value={usernameColor} 
-                              onChange={(e) => setUsernameColor(e.target.value)}
-                              className={`w-16 px-1.5 py-0.5 border border-zinc-300/40 rounded bg-transparent font-mono text-[10px] font-bold text-center ${
-                                "text-zinc-800"
-                              }`}
-                            />
-                            <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 cursor-pointer shrink-0">
-                              <input 
-                                type="color" 
-                                value={usernameColor} 
-                                onChange={(e) => setUsernameColor(e.target.value)}
-                                className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150"
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Fast Select Brand Palette */}
-                        <div className="flex flex-wrap gap-2 pt-1">
-                          {["#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6", "#ef4444"].map((c) => (
-                            <button
-                              key={c}
-                              type="button"
-                              onClick={() => setUsernameColor(c)}
-                              className={`w-6 h-6 rounded-full border border-white/30 shadow-sm transition-transform cursor-pointer hover:scale-110 ${
-                                usernameColor === c ? "ring-2 ring-purple-500 scale-105" : ""
-                              }`}
-                              style={{ backgroundColor: c }}
-                              title={c}
-                            />
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Bio Color Selector */}
-                      <div className={`p-4 rounded-xl border space-y-3 ${"bg-zinc-50 border-zinc-200"}`}>
-                        <div className="flex justify-between items-center">
-                          <label className={`text-[10px] font-black uppercase ${"text-zinc-650"}`}>
-                            {lang === "tr" ? "Biyografi Yazı Rengi" : "Bio Paragraph Color"}
-                          </label>
-
-                          {/* Color Hex Input & Custom Color Picker */}
-                          <div className="flex items-center gap-1.5">
-                            <input 
-                              type="text" 
-                              value={bioColor} 
-                              onChange={(e) => setBioColor(e.target.value)}
-                              className={`w-16 px-1.5 py-0.5 border border-zinc-300/40 rounded bg-transparent font-mono text-[10px] font-bold text-center ${
-                                "text-zinc-800"
-                              }`}
-                            />
-                            <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 cursor-pointer shrink-0">
-                              <input 
-                                type="color" 
-                                value={bioColor} 
-                                onChange={(e) => setBioColor(e.target.value)}
-                                className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150"
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Fast Select Brand Palette */}
-                        <div className="flex flex-wrap gap-2 pt-1">
-                          {["#888888", "#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6"].map((c) => (
-                            <button
-                              key={c}
-                              type="button"
-                              onClick={() => setBioColor(c)}
-                              className={`w-6 h-6 rounded-full border border-white/30 shadow-sm transition-transform cursor-pointer hover:scale-110 ${
-                                bioColor === c ? "ring-2 ring-purple-500 scale-105" : ""
-                              }`}
-                              style={{ backgroundColor: c }}
-                              title={c}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              
+              {/* SUB-TABS NAVIGATION */}
+              <div className="flex gap-2 p-1.5 bg-zinc-100 rounded-2xl border border-zinc-200">
+                <button
+                  type="button"
+                  onClick={() => setActiveSubTab("links")}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                    activeSubTab === "links"
+                      ? "bg-white text-zinc-950 shadow-sm"
+                      : "text-zinc-650 hover:text-zinc-950"
+                  }`}
+                >
+                  <Plus className="h-3.5 w-3.5 text-teal-500" />
+                  {lang === "tr" ? "Linkler" : "Links"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveSubTab("appearance")}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                    activeSubTab === "appearance"
+                      ? "bg-white text-zinc-950 shadow-sm"
+                      : "text-zinc-650 hover:text-zinc-950"
+                  }`}
+                >
+                  <Palette className="h-3.5 w-3.5 text-teal-500" />
+                  {lang === "tr" ? "Görünüm" : "Look"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveSubTab("profile")}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                    activeSubTab === "profile"
+                      ? "bg-white text-zinc-950 shadow-sm"
+                      : "text-zinc-650 hover:text-zinc-950"
+                  }`}
+                >
+                  <User className="h-3.5 w-3.5 text-teal-500" />
+                  {lang === "tr" ? "Profil" : "Profile"}
+                </button>
               </div>
 
-
-              {/* Yazı Tipi Özelleştirici */}
-              <div className={`p-6 rounded-2xl border space-y-6 ${
-                "bg-white border-zinc-200 shadow-sm"
-              }`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Sparkles className="h-5 w-5 text-teal-500" />
-                    <div>
-                      <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>
-                        {lang === "tr" ? "Yazı Tipi Özelleştirici" : "Typography Customizer"}
-                      </h2>
-                      <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
-                        {lang === "tr" 
-                          ? "Kreatör profilinizin ve bağlantı kartlarınızın yazı tipini değiştirin." 
-                          : "Choose custom typography styles for your profile details and link actions."}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleSaveProfile}
-                    disabled={isPending}
-                    className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
-                      "bg-white text-slate-900 hover:bg-gray-50"
-                    }`}
-                  >
-                    {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
-                    {t.saveChanges}
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>
-                      {lang === "tr" ? "Yazı Tipi Seçin" : "Select Typography Style"}
-                    </label>
-                    <select
-                      value={fontStyle}
-                      onChange={(e) => {
-                        const selectedVal = e.target.value;
-                        const selected = initialFonts.find(f => f.value === selectedVal);
-                        if (selected) {
-                          const locked = (selected.tier === "STARTER" && simulatedPlan === "FREE") ||
-                                         (selected.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS");
-                          if (locked) {
-                            setErrorMsg(
-                              lang === "tr"
-                                ? `🔒 "${selected.name}" yazı tipi planınızda kilitlidir. Canlı önizlemede inceleyebilirsiniz, ancak kaydetmek için planınızı yükseltmeniz gerekir!`
-                                : `🔒 "${selected.name}" is locked on your plan. You can view the live preview, but you must upgrade to save changes!`
-                            );
-                            setSuccessMsg("");
-                          } else {
-                            setErrorMsg("");
-                          }
-                          setFontStyle(selectedVal);
-                        }
-                      }}
-                      className={`w-full px-4 py-3 rounded-xl border outline-none text-sm font-bold ${
-                        "bg-zinc-100 border-zinc-200 text-zinc-900"
-                      }`}
-                    >
-                      <optgroup label={lang === "tr" ? "Ücretsiz Yazı Tipleri (FREE)" : "Free Typography Styles (FREE)"}>
-                        {initialFonts.filter(f => f.tier === "FREE").map(f => (
-                          <option key={f.value} value={f.value}>
-                            {f.giftLabel ? `⭐ ${f.name} (${f.giftLabel})` : f.name}
-                          </option>
-                        ))}
-                      </optgroup>
-                      <optgroup label={lang === "tr" ? "Starter Paket Yazı Tipleri (STARTER)" : "Starter Plan Exclusives (STARTER)"}>
-                        {initialFonts.filter(f => f.tier === "STARTER").map(f => {
-                          const isLocked = simulatedPlan === "FREE";
-                          return (
-                            <option key={f.value} value={f.value}>
-                              {isLocked ? "🔒 " : ""}{f.name}
-                            </option>
-                          );
-                        })}
-                      </optgroup>
-                      <optgroup label={lang === "tr" ? "Creator Paket Yazı Tipleri (CREATOR)" : "Creator Deluxe Fonts (CREATOR)"}>
-                        {initialFonts.filter(f => f.tier === "CREATOR").map(f => {
-                          const isLocked = initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS";
-                          return (
-                            <option key={f.value} value={f.value}>
-                              {isLocked ? "🔒 " : ""}{f.name}
-                            </option>
-                          );
-                        })}
-                      </optgroup>
-                    </select>
-                  </div>
-
-                  {/* Canlı Tipografi Önizleme Kartı */}
-                  <div className={`p-4 rounded-xl border space-y-2 text-center transition-all ${
-                    "bg-zinc-50 border-zinc-150"
+              {/* SUB-TAB CONTENT: PROFILE */}
+              {activeSubTab === "profile" && (
+                <div className="w-full space-y-8 animate-in fade-in duration-200">
+                  {/* Profile customizer */}
+                  <div className={`p-8 rounded-2xl border space-y-6 ${
+                    "bg-white border-zinc-200 shadow-sm"
                   }`}>
-                    <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 block">
-                      {lang === "tr" ? "Canlı Yazı Tipi Önizlemesi" : "Typography Live Specimen"}
-                    </span>
-                    <div 
-                      style={{ fontFamily: fontStyle }}
-                      className={`text-xl md:text-2xl py-3 font-bold break-words tracking-tight ${"text-purple-750"}`}
-                    >
-                      Abcde 12345 - {fontStyle} Font Style
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <User className="h-5 w-5 text-teal-500" />
+                        <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{t.profileCustomizer}</h2>
+                      </div>
+                      <button
+                        onClick={handleSaveProfile}
+                        disabled={isPending}
+                        className={`flex items-center gap-1.5 px-4.5 py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
+                          "bg-zinc-900 text-white hover:bg-zinc-800 shadow-md shadow-zinc-950/15"
+                        }`}
+                      >
+                        {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+                        {t.saveChanges}
+                      </button>
                     </div>
-                    <p 
-                      style={{ fontFamily: fontStyle }}
-                      className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed"
-                    >
-                      {lang === "tr"
-                        ? "Hızlı kahverengi tilki tembel köpeğin üstünden atlar. Creator.Hub ile özelleştirilmiş dijital kimliğiniz."
-                        : "The quick brown fox jumps over the lazy dog. Your customized digital identity powered by Creator.Hub."}
-                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>{t.usernameLabel}</label>
+                        <div className={`flex items-center rounded-xl border focus-within:border-teal-500/50 overflow-hidden px-3 ${
+                          "bg-zinc-100 border-zinc-200"
+                        }`}>
+                          <span className="text-slate-500 text-sm">hub.com/</span>
+                          <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className={`flex-1 bg-transparent py-2.5 outline-none text-sm ${"text-zinc-900"}`}
+                            placeholder="username"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 md:col-span-2">
+                        <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>
+                          {lang === "tr" ? "Profil Fotoğrafı Yükle" : "Upload Profile Photo"}
+                        </label>
+                        <div className={`p-5 rounded-xl border flex items-center gap-5 ${
+                          "bg-zinc-100 border-zinc-200"
+                        }`}>
+                          <div className={`w-16 h-16 rounded-full border flex items-center justify-center overflow-hidden shrink-0 ${
+                            "bg-white border-zinc-300 shadow-inner"
+                          }`}>
+                            {avatarUrl ? (
+                              <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" />
+                            ) : (
+                              <User className="h-6 w-6 text-slate-500" />
+                            )}
+                          </div>
+                          <div className="space-y-1.5">
+                            <div className="flex gap-2">
+                              <label className={`px-3.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
+                                "bg-white hover:bg-zinc-55 border-zinc-300 text-zinc-700 shadow-sm"
+                              }`}>
+                                {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      if (file.size > 2.5 * 1024 * 1024) {
+                                        alert(lang === "tr" ? "Lütfen 2.5MB'den küçük bir fotoğraf seçin!" : "Please select an image smaller than 2.5MB!");
+                                        return;
+                                      }
+                                      const reader = new FileReader();
+                                      reader.onload = (event) => {
+                                        if (event.target?.result) {
+                                          setAvatarUrl(event.target.result as string);
+                                        }
+                                      };
+                                      reader.readAsDataURL(file);
+                                    }
+                                  }}
+                                />
+                              </label>
+                              {avatarUrl && (
+                                <button
+                                  type="button"
+                                  onClick={() => setAvatarUrl("")}
+                                  className={`px-3.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
+                                    "bg-red-50 hover:bg-red-100 border-red-200 text-red-600"
+                                  }`}
+                                >
+                                  {lang === "tr" ? "Kaldır" : "Remove"}
+                                </button>
+                              )}
+                            </div>
+                            <p className="text-[10px] text-slate-500 font-semibold">
+                              {lang === "tr" ? "Maksimum 2.5MB (PNG, JPG). Fotoğraf veri tabanına güvenle işlenecektir." : "Max 2.5MB (PNG, JPG). Image will be safely encrypted."}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>{t.bioLabel}</label>
+                        <textarea
+                          value={bio}
+                          onChange={(e) => setBio(e.target.value)}
+                          className={`w-full px-4 py-2.5 rounded-xl border focus:border-teal-500/50 outline-none text-sm ${
+                            "bg-zinc-100 border-zinc-200 text-zinc-900"
+                          }`}
+                          placeholder={t.bioPlaceholder}
+                          rows={2}
+                        />
+                      </div>
+
+                      {/* Custom Colors Palette Selector */}
+                      <div className="space-y-4 md:col-span-2 border-t border-zinc-200/50 pt-5">
+                        <h3 className={`text-xs font-black uppercase tracking-wider ${"text-slate-500"}`}>
+                          {lang === "tr" ? "Kişisel Renk Paletiniz" : "Personal Typography Color Palette"}
+                        </h3>
+                        <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
+                          {lang === "tr" 
+                            ? "@Kullanıcı adı ve Biyografi yazınızın renklerini özgürce seçin. Tüm üyelik planları için tamamen ücretsizdir!" 
+                            : "Select custom colors for your username and bio details. 100% unlocked for all membership tiers!"}
+                        </p>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          {/* Username Color Selector */}
+                          <div className={`p-4 rounded-xl border space-y-3 ${"bg-zinc-50 border-zinc-200"}`}>
+                            <div className="flex justify-between items-center">
+                              <label className={`text-[10px] font-black uppercase ${"text-zinc-650"}`}>
+                                {lang === "tr" ? "@ Kullanıcı Adı Rengi" : "@ Username Text Color"}
+                              </label>
+                              
+                              {/* Color Hex Input & Custom Color Picker */}
+                              <div className="flex items-center gap-1.5">
+                                <input 
+                                  type="text" 
+                                  value={usernameColor} 
+                                  onChange={(e) => setUsernameColor(e.target.value)}
+                                  className={`w-16 px-1.5 py-0.5 border border-zinc-300/40 rounded bg-transparent font-mono text-[10px] font-bold text-center ${
+                                    "text-zinc-800"
+                                  }`}
+                                />
+                                <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 cursor-pointer shrink-0">
+                                  <input 
+                                    type="color" 
+                                    value={usernameColor} 
+                                    onChange={(e) => setUsernameColor(e.target.value)}
+                                    className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Fast Select Brand Palette */}
+                            <div className="flex flex-wrap gap-2 pt-1">
+                              {["#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6", "#ef4444"].map((c) => (
+                                <button
+                                  key={c}
+                                  type="button"
+                                  onClick={() => setUsernameColor(c)}
+                                  className={`w-6.5 h-6.5 rounded-full border border-white/30 shadow-sm transition-transform cursor-pointer hover:scale-110 ${
+                                    usernameColor === c ? "ring-2 ring-purple-500 scale-105" : ""
+                                  }`}
+                                  style={{ backgroundColor: c }}
+                                  title={c}
+                                />
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Bio Color Selector */}
+                          <div className={`p-4 rounded-xl border space-y-3 ${"bg-zinc-50 border-zinc-200"}`}>
+                            <div className="flex justify-between items-center">
+                              <label className={`text-[10px] font-black uppercase ${"text-zinc-650"}`}>
+                                {lang === "tr" ? "Biyografi Yazı Rengi" : "Bio Paragraph Color"}
+                              </label>
+
+                              {/* Color Hex Input & Custom Color Picker */}
+                              <div className="flex items-center gap-1.5">
+                                <input 
+                                  type="text" 
+                                  value={bioColor} 
+                                  onChange={(e) => setBioColor(e.target.value)}
+                                  className={`w-16 px-1.5 py-0.5 border border-zinc-300/40 rounded bg-transparent font-mono text-[10px] font-bold text-center ${
+                                    "text-zinc-800"
+                                  }`}
+                                />
+                                <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 cursor-pointer shrink-0">
+                                  <input 
+                                    type="color" 
+                                    value={bioColor} 
+                                    onChange={(e) => setBioColor(e.target.value)}
+                                    className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Fast Select Brand Palette */}
+                            <div className="flex flex-wrap gap-2 pt-1">
+                              {["#888888", "#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6"].map((c) => (
+                                <button
+                                  key={c}
+                                  type="button"
+                                  onClick={() => setBioColor(c)}
+                                  className={`w-6.5 h-6.5 rounded-full border border-white/30 shadow-sm transition-transform cursor-pointer hover:scale-110 ${
+                                    bioColor === c ? "ring-2 ring-purple-500 scale-105" : ""
+                                  }`}
+                                  style={{ backgroundColor: c }}
+                                  title={c}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                </div>
+              )}
 
-                  {/* Locked Upgrade Alert banner if active font style selected is above tier */}
-                  {(() => {
-                    const activeFont = initialFonts.find(f => f.value === fontStyle);
-                    const locked = activeFont && (
-                      (activeFont.tier === "STARTER" && simulatedPlan === "FREE") ||
-                      (activeFont.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS")
-                    );
-                    if (!locked || !activeFont) return null;
-
-                    return (
-                      <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
-                        <div className="space-y-0.5">
-                          <span className="text-xs font-bold text-amber-400 block uppercase tracking-wider flex items-center gap-1.5">
-                            <Lock className="h-3.5 w-3.5" />
-                            {lang === "tr" ? "Plan Yükseltme Gerekli" : "Membership Upgrade Required"}
-                          </span>
-                          <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
-                            {lang === "tr"
-                              ? `"${activeFont.name}" yazı tipi ${activeFont.tier} paketine özeldir. Canlı simülatörde test edebilirsiniz ancak kaydetmek için planınızı yükseltmeniz gerekir.`
-                              : `"${activeFont.name}" is exclusive to the ${activeFont.tier} plan. You can test it live in simulator, but you must upgrade your plan to save changes.`}
+              {/* SUB-TAB CONTENT: APPEARANCE */}
+              {activeSubTab === "appearance" && (
+                <div className="w-full space-y-8 animate-in fade-in duration-200">
+                  {/* Yazı Tipi Özelleştirici */}
+                  <div className={`p-8 rounded-2xl border space-y-6 ${
+                    "bg-white border-zinc-200 shadow-sm"
+                  }`}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Sparkles className="h-5 w-5 text-teal-500" />
+                        <div>
+                          <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>
+                            {lang === "tr" ? "Yazı Tipi Özelleştirici" : "Typography Customizer"}
+                          </h2>
+                          <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
+                            {lang === "tr" 
+                              ? "Kreatör profilinizin ve bağlantı kartlarınızın yazı tipini değiştirin." 
+                              : "Choose custom typography styles for your profile details and link actions."}
                           </p>
                         </div>
-                        <Link
-                          href="/dashboard/billing"
-                          className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-black font-extrabold text-[10px] uppercase rounded-xl transition-all whitespace-nowrap"
-                        >
-                          {lang === "tr" ? "Şimdi Yükselt" : "Upgrade Now"}
-                        </Link>
                       </div>
-                    );
-                  })()}
-                </div>
-              </div>
+                      <button
+                        type="button"
+                        onClick={handleSaveProfile}
+                        disabled={isPending}
+                        className={`flex items-center gap-1.5 px-4.5 py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
+                          "bg-zinc-900 text-white hover:bg-zinc-800 shadow-md shadow-zinc-950/15"
+                        }`}
+                      >
+                        {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+                        {t.saveChanges}
+                      </button>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>
+                          {lang === "tr" ? "Yazı Tipi Seçin" : "Select Typography Style"}
+                        </label>
+                        <select
+                          value={fontStyle}
+                          onChange={(e) => {
+                            const selectedVal = e.target.value;
+                            const selected = initialFonts.find(f => f.value === selectedVal);
+                            if (selected) {
+                              const locked = (selected.tier === "STARTER" && simulatedPlan === "FREE") ||
+                                             (selected.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS");
+                              if (locked) {
+                                setErrorMsg(
+                                  lang === "tr"
+                                    ? `🔒 "${selected.name}" yazı tipi planınızda kilitlidir. Canlı önizlemede inceleyebilirsiniz, ancak kaydetmek için planınızı yükseltmeniz gerekir!`
+                                    : `🔒 "${selected.name}" is locked on your plan. You can view the live preview, but you must upgrade to save changes!`
+                                );
+                                setSuccessMsg("");
+                              } else {
+                                setErrorMsg("");
+                              }
+                              setFontStyle(selectedVal);
+                            }
+                          }}
+                          className={`w-full px-4 py-3.5 rounded-xl border outline-none text-sm font-bold ${
+                            "bg-zinc-100 border-zinc-200 text-zinc-900"
+                          }`}
+                        >
+                          <optgroup label={lang === "tr" ? "Ücretsiz Yazı Tipleri (FREE)" : "Free Typography Styles (FREE)"}>
+                            {initialFonts.filter(f => f.tier === "FREE").map(f => (
+                              <option key={f.value} value={f.value}>
+                                {f.giftLabel ? `⭐ ${f.name} (${f.giftLabel})` : f.name}
+                              </option>
+                            ))}
+                          </optgroup>
+                          <optgroup label={lang === "tr" ? "Starter Paket Yazı Tipleri (STARTER)" : "Starter Plan Exclusives (STARTER)"}>
+                            {initialFonts.filter(f => f.tier === "STARTER").map(f => {
+                              const isLocked = simulatedPlan === "FREE";
+                              return (
+                                <option key={f.value} value={f.value}>
+                                  {isLocked ? "🔒 " : ""}{f.name}
+                                </option>
+                              );
+                            })}
+                          </optgroup>
+                          <optgroup label={lang === "tr" ? "Creator Paket Yazı Tipleri (CREATOR)" : "Creator Deluxe Fonts (CREATOR)"}>
+                            {initialFonts.filter(f => f.tier === "CREATOR").map(f => {
+                              const isLocked = initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS";
+                              return (
+                                <option key={f.value} value={f.value}>
+                                  {isLocked ? "🔒 " : ""}{f.name}
+                                </option>
+                              );
+                            })}
+                          </optgroup>
+                        </select>
+                      </div>
+
+                      {/* Canlı Tipografi Önizleme Kartı */}
+                      <div className={`p-5 rounded-xl border space-y-2 text-center transition-all ${
+                        "bg-zinc-50 border-zinc-150"
+                      }`}>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 block">
+                          {lang === "tr" ? "Canlı Yazı Tipi Önizlemesi" : "Typography Live Specimen"}
+                        </span>
+                        <div 
+                          style={{ fontFamily: fontStyle }}
+                          className={`text-xl md:text-2xl py-3 font-bold break-words tracking-tight ${"text-purple-750"}`}
+                        >
+                          Abcde 12345 - {fontStyle} Font Style
+                        </div>
+                        <p 
+                          style={{ fontFamily: fontStyle }}
+                          className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed"
+                        >
+                          {lang === "tr"
+                            ? "Hızlı kahverengi tilki tembel köpeğin üstünden atlar. Creator.Hub ile özelleştirilmiş dijital kimliğiniz."
+                            : "The quick brown fox jumps over the lazy dog. Your customized digital identity powered by Creator.Hub."}
+                        </p>
+                      </div>
+
+                      {/* Locked Upgrade Alert banner if active font style selected is above tier */}
+                      {(() => {
+                        const activeFont = initialFonts.find(f => f.value === fontStyle);
+                        const locked = activeFont && (
+                          (activeFont.tier === "STARTER" && simulatedPlan === "FREE") ||
+                          (activeFont.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS")
+                        );
+                        if (!locked || !activeFont) return null;
+
+                        return (
+                          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+                            <div className="space-y-0.5">
+                              <span className="text-xs font-bold text-amber-400 block uppercase tracking-wider flex items-center gap-1.5">
+                                <Lock className="h-3.5 w-3.5" />
+                                {lang === "tr" ? "Plan Yükseltme Gerekli" : "Membership Upgrade Required"}
+                              </span>
+                              <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
+                                {lang === "tr"
+                                  ? `"${activeFont.name}" yazı tipi ${activeFont.tier} paketine özeldir. Canlı simülatörde test edebilirsiniz ancak kaydetmek için planınızı yükseltmeniz gerekir.`
+                                  : `"${activeFont.name}" is exclusive to the ${activeFont.tier} plan. You can test it live in simulator, but you must upgrade your plan to save changes.`}
+                              </p>
+                            </div>
+                            <Link
+                              href="/dashboard/billing"
+                              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-black font-extrabold text-[10px] uppercase rounded-xl transition-all whitespace-nowrap"
+                            >
+                              {lang === "tr" ? "Şimdi Yükselt" : "Upgrade Now"}
+                            </Link>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
 
               {/* Plan Switcher Simulator Bar */}
               <div className={`p-4 rounded-2xl border flex flex-col md:flex-row items-center justify-between gap-4 ${
@@ -2309,7 +2362,11 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                   </div>
                 )}
               </div>
+            </div>
+          )}
 
+          {activeSubTab === "links" && (
+            <div className="w-full space-y-8 animate-in fade-in duration-200">
               {/* Add New Link */}
               {(() => {
                 const LINK_TEMPLATES = [
@@ -2783,16 +2840,22 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                         }`}
                       >
                         <div className="flex items-center justify-between gap-4">
-                          <div className="h-8 w-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100/50 shadow-sm">
-                            {getLinkIconHelper(link.type, link.url)}
-                          </div>
-
-                          <div className="space-y-1 overflow-hidden flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className={`font-bold text-sm truncate ${"text-zinc-900"}`}>{link.title}</span>
-                              {!link.isActive && <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-gray-50 text-slate-500">Draft</span>}
+                          <div
+                            onClick={() => setExpandedLinkCard(expandedLinkCard === link.id ? null : link.id)}
+                            className="flex items-center gap-3 cursor-pointer flex-1 min-w-0 select-none"
+                          >
+                            <GripVertical className="h-4 w-4 text-zinc-400 shrink-0 cursor-grab active:cursor-grabbing" />
+                            <div className="h-8 w-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100/50 shadow-sm">
+                              {getLinkIconHelper(link.type, link.url)}
                             </div>
-                            <span className="text-slate-500 text-xs truncate block">{link.url}</span>
+
+                            <div className="space-y-1 overflow-hidden flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className={`font-bold text-sm truncate ${"text-zinc-900"}`}>{link.title}</span>
+                                {!link.isActive && <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider bg-gray-50 text-slate-500">Draft</span>}
+                              </div>
+                              <span className="text-slate-500 text-xs truncate block">{link.url}</span>
+                            </div>
                           </div>
 
                           <div className="flex items-center gap-3">
@@ -2811,10 +2874,20 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
+
+                            <button
+                              type="button"
+                              onClick={() => setExpandedLinkCard(expandedLinkCard === link.id ? null : link.id)}
+                              className="p-2 rounded-lg bg-gray-50 hover:bg-zinc-200 text-zinc-500 border border-gray-100 transition-all cursor-pointer"
+                            >
+                              {expandedLinkCard === link.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                            </button>
                           </div>
                         </div>
 
-                        <div className={`pt-3 border-t flex flex-col gap-1.5 ${"border-zinc-100"}`}>
+                        {expandedLinkCard === link.id && (
+                          <>
+                            <div className={`pt-3 border-t flex flex-col gap-1.5 ${"border-zinc-100"}`}>
                           <span className={`text-[10px] uppercase font-bold tracking-wider ${"text-slate-500"}`}>
                             {lang === "tr" ? "Link Animasyon Efekti:" : "Link Animation Effect:"}
                           </span>
@@ -3272,13 +3345,17 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))
+                      </>
+                    )}
+                  </div>
+                ))
                   )}
                 </div>
               </div>
             </div>
           )}
+        </div>
+      )}
 
         {/* TAB 2: TRAFFIC ANALYTICS */}
         {activeTab === "analytics" && (
