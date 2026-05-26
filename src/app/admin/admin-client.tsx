@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { adminToggleBanUser, adminChangeUserPlan, adminToggleUserRole, saveGlobalSetting, adminClearCache, adminDeleteGlobalSetting, adminAddFont, adminDeleteFont, adminUpdateFont, addSliderItem, deleteSliderItem } from "@/app/actions";
 import {
   ShieldAlert,
@@ -180,6 +181,7 @@ export default function AdminClient({
   initialSliderItems = [],
 }: AdminClientProps) {
   const isSuperAdmin = adminRole === "SUPER_ADMIN";
+  const router = useRouter();
   const [users, setUsers] = useState<UserItem[]>(initialUsers);
   const [searchQuery, setSearchQuery] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -582,6 +584,7 @@ export default function AdminClient({
           await adminChangeUserPlan(adminUserId, userId, newPlan);
         }
         setPendingPlans({});
+        router.refresh();
         setSuccessMsg(lang === "tr" ? "Kullanıcı üyelik planı değişiklikleri başarıyla kaydedildi." : "User subscription plan changes saved successfully.");
       } catch (err: any) {
         setErrorMsg(err.message || "Failed to save user plan changes");
