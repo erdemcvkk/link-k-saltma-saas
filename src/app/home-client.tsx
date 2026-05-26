@@ -78,6 +78,7 @@ export default function HomeClient({
           <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
             <a href="#analytics" className="hover:text-slate-900 transition-colors">Analizler</a>
             <a href="#pricing" className="hover:text-slate-900 transition-colors">Fiyatlandırma</a>
+            <Link href="/sablonlar" className="hover:text-slate-900 transition-colors">Şablonlar</Link>
           </nav>
 
           <div className="flex items-center space-x-4">

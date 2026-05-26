@@ -30,7 +30,8 @@ import {
   Shield,
   Cookie,
   RefreshCw,
-  Code
+  Code,
+  Layout
 } from "lucide-react";
 import Link from "next/link";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
