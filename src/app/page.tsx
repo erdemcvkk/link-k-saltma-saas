@@ -90,6 +90,8 @@ export default async function Home() {
       paymentLinkStarter={serializedSettings["payment_link_starter"] || ""}
       paymentLinkCreator={serializedSettings["payment_link_creator"] || ""}
       paymentLinkPro={serializedSettings["payment_link_pro"] || ""}
+      priceStarter={serializedSettings["price_starter"] || "150"}
+      priceCreator={serializedSettings["price_creator"] || "450"}
     />
   );
 }

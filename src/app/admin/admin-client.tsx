@@ -242,6 +242,8 @@ export default function AdminClient({
   const [starterLink, setStarterLink] = useState(initialSettings["payment_link_starter"] || "");
   const [creatorLink, setCreatorLink] = useState(initialSettings["payment_link_creator"] || "");
   const [proLink, setProLink] = useState(initialSettings["payment_link_pro"] || "");
+  const [priceStarter, setPriceStarter] = useState(initialSettings["price_starter"] || "150");
+  const [priceCreator, setPriceCreator] = useState(initialSettings["price_creator"] || "450");
 
   // Brand Asset Settings State
   const [siteTitle, setSiteTitle] = useState(initialSettings["site_title"] || "CREATOR.HUB");
@@ -605,7 +607,9 @@ export default function AdminClient({
         await saveGlobalSetting(adminUserId, "payment_link_starter", starterLink);
         await saveGlobalSetting(adminUserId, "payment_link_creator", creatorLink);
         await saveGlobalSetting(adminUserId, "payment_link_pro", proLink);
-        setSuccessMsg(lang === "tr" ? "Global ödeme geçidi bağlantıları başarıyla kaydedildi!" : "Global payment checkout gateway links updated successfully!");
+        await saveGlobalSetting(adminUserId, "price_starter", priceStarter);
+        await saveGlobalSetting(adminUserId, "price_creator", priceCreator);
+        setSuccessMsg(lang === "tr" ? "Global ayarlar ve fiyatlar başarıyla kaydedildi!" : "Global settings and prices updated successfully!");
       } catch (err: any) {
         setErrorMsg(err.message || "Failed to save settings");
       }
@@ -1692,30 +1696,30 @@ export default function AdminClient({
                     <h3 className="font-extrabold text-sm text-zinc-800">{lang === "tr" ? "Üyelik Ödeme Altyapı Bağlantıları" : "Checkout Gateways Configuration"}</h3>
                     <span className="ml-auto px-2 py-0.5 rounded-full bg-red-50 border border-red-200 text-[9px] font-black text-red-500 uppercase tracking-wide">Süper Admin</span>
                   </div>
-                  <form onSubmit={handleSaveSettings} className="grid md:grid-cols-3 gap-6 items-end">
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Starter Plan Ödeme Bağlantısı (99₺/Ay)" : "Starter Plan Checkout URL"}</label>
-                      <input
-                        type="url"
-                        value={starterLink}
-                        onChange={(e) => setStarterLink(e.target.value)}
-                        placeholder="https://shopier.com/starter_pay..."
-                        className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Creator Plan Ödeme Bağlantısı (249₺/Ay)" : "Creator Plan Checkout URL"}</label>
-                      <input
-                        type="url"
-                        value={creatorLink}
-                        onChange={(e) => setCreatorLink(e.target.value)}
-                        placeholder="https://shopier.com/creator_pay..."
-                        className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
-                      />
-                    </div>
-                    <div className="space-y-1.5 flex flex-col gap-2 md:gap-0 md:flex-row md:items-end">
-                      <div className="space-y-1.5 flex-1 mr-0 md:mr-3">
-                        <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Pro Plan Ödeme Bağlantısı (499₺/Ay)" : "Pro Plan Checkout URL"}</label>
+                  <form onSubmit={handleSaveSettings} className="space-y-6">
+                    <div className="grid md:grid-cols-3 gap-6 items-end">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Starter Plan Ödeme Bağlantısı" : "Starter Plan Checkout URL"}</label>
+                        <input
+                          type="url"
+                          value={starterLink}
+                          onChange={(e) => setStarterLink(e.target.value)}
+                          placeholder="https://shopier.com/starter_pay..."
+                          className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Creator Plan Ödeme Bağlantısı" : "Creator Plan Checkout URL"}</label>
+                        <input
+                          type="url"
+                          value={creatorLink}
+                          onChange={(e) => setCreatorLink(e.target.value)}
+                          placeholder="https://shopier.com/creator_pay..."
+                          className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Pro Plan Ödeme Bağlantısı" : "Pro Plan Checkout URL"}</label>
                         <input
                           type="url"
                           value={proLink}
@@ -1724,13 +1728,38 @@ export default function AdminClient({
                           className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
                         />
                       </div>
-                      <button
-                        type="submit"
-                        disabled={isPending}
-                        className="px-5 py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs rounded-xl shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50"
-                      >
-                        {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : (lang === "tr" ? "Kaydet" : "Save")}
-                      </button>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-6 items-end">
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Starter Plan Fiyatı (₺)" : "Starter Plan Price (₺)"}</label>
+                        <input
+                          type="text"
+                          value={priceStarter}
+                          onChange={(e) => setPriceStarter(e.target.value)}
+                          placeholder="150"
+                          className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Creator Plan Fiyatı (₺)" : "Creator Plan Price (₺)"}</label>
+                        <input
+                          type="text"
+                          value={priceCreator}
+                          onChange={(e) => setPriceCreator(e.target.value)}
+                          placeholder="450"
+                          className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
+                        />
+                      </div>
+                      <div className="flex justify-end">
+                        <button
+                          type="submit"
+                          disabled={isPending}
+                          className="w-full px-5 py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs rounded-xl shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                        >
+                          {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : (lang === "tr" ? "Ayarları ve Fiyatları Kaydet" : "Save Settings & Prices")}
+                        </button>
+                      </div>
                     </div>
                   </form>
                 </div>

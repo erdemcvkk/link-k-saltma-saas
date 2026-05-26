@@ -23,6 +23,11 @@ interface BillingClientProps {
 }
 
 export default function BillingClient({ userId, currentPlan, planStartedAt, planExpiresAt, payments, globalSettings }: BillingClientProps) {
+  const priceStarter = globalSettings?.price_starter || "150";
+  const priceCreator = globalSettings?.price_creator || "450";
+  const starterPriceNum = parseInt(priceStarter, 10) || 150;
+  const creatorPriceNum = parseInt(priceCreator, 10) || 450;
+
   const [isPending, startTransition] = useTransition();
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -81,15 +86,15 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 max-w-5xl mx-auto space-y-10">
+    <div className="min-h-screen bg-white text-zinc-900 p-6 max-w-5xl mx-auto space-y-10">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-900 pb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-200 pb-6">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-purple-400 uppercase tracking-widest mb-1.5">
+          <div className="flex items-center gap-2 text-xs font-bold text-neon-blue uppercase tracking-widest mb-1.5">
             <Sparkles className="h-3 w-3" />
             Billing Portal
           </div>
-          <h1 className="text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-fuchsia-500">
+          <h1 className="text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-light-blue">
             PLANS & BILLING
           </h1>
           <p className="text-zinc-500 text-sm">Manage your subscription and billing logs.</p>
@@ -97,7 +102,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
 
         <Link
           href="/dashboard"
-          className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-300 text-xs font-semibold transition-all"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-semibold transition-all shadow-sm"
         >
           <ArrowRight className="h-3.5 w-3.5 rotate-180" />
           Back to Dashboard
@@ -106,25 +111,25 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
 
       {/* Notifications */}
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-red-950/20 border border-red-500/20 text-red-400 text-sm font-semibold">
+        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm font-semibold">
           {errorMsg}
         </div>
       )}
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/20 text-emerald-400 text-sm font-semibold">
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 text-sm font-semibold">
           {successMsg}
         </div>
       )}
 
       {/* Active Subscription Details with Premium Live Countdown */}
       {currentPlan !== "FREE" && planExpiresAt && (
-        <div className="p-6 rounded-2xl bg-zinc-950 border border-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.05)] space-y-4">
+        <div className="p-6 rounded-2xl bg-zinc-50 border border-zinc-200 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <span className="px-2 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-[9px] font-bold text-purple-400 uppercase tracking-wide">
+              <span className="px-2 py-0.5 rounded-full bg-neon-blue/15 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">
                 Aktif Abonelik Süresi
               </span>
-              <h2 className="text-xl font-bold text-white mt-1">
+              <h2 className="text-xl font-bold text-zinc-900 mt-1">
                 {currentPlan} Üyeliğiniz Aktif!
               </h2>
               {planStartedAt && (
@@ -134,11 +139,11 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
               )}
             </div>
             
-            <div className="bg-zinc-900 border border-zinc-800 px-4 py-3 rounded-xl min-w-[240px] text-center sm:text-right">
+            <div className="bg-white border border-zinc-200 px-4 py-3 rounded-xl min-w-[240px] text-center sm:text-right shadow-sm">
               <span className="text-[10px] font-black uppercase text-zinc-500 block mb-1">
                 Kalan Abonelik Süresi (30 Günlük)
               </span>
-              <span className="font-mono text-xs font-bold text-purple-400 animate-pulse">
+              <span className="font-mono text-xs font-bold text-neon-blue animate-pulse">
                 {timeLeft || "Hesaplanıyor..."}
               </span>
             </div>
@@ -149,121 +154,121 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
       {/* Plans Comparison */}
       <div className="grid md:grid-cols-3 gap-8">
         {/* FREE PLAN */}
-        <div className={`p-6 rounded-2xl bg-zinc-950 border transition-all ${
-          currentPlan === "FREE" ? "border-purple-500/40 ring-1 ring-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.05)]" : "border-zinc-900"
+        <div className={`p-6 rounded-2xl bg-white border transition-all ${
+          currentPlan === "FREE" ? "border-neon-blue ring-1 ring-neon-blue/20 shadow-md" : "border-zinc-200"
         } flex flex-col justify-between`}>
           <div>
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">Starter Tier</span>
-              {currentPlan === "FREE" && <span className="px-2 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-[9px] font-bold text-purple-400 uppercase tracking-wide">Active Plan</span>}
+              <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">Free Tier</span>
+              {currentPlan === "FREE" && <span className="px-2 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">Active Plan</span>}
             </div>
-            <h3 className="text-xl font-bold mb-1">FREE</h3>
-            <div className="text-3xl font-black mb-4">0₺ <span className="text-xs font-normal text-zinc-500">/ forever</span></div>
+            <h3 className="text-xl font-bold mb-1 text-zinc-900">FREE</h3>
+            <div className="text-3xl font-black mb-4 text-zinc-900">0₺ <span className="text-xs font-normal text-zinc-400">/ forever</span></div>
             
-            <ul className="space-y-3 text-xs text-zinc-400 border-t border-zinc-900 pt-4 mb-6">
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> Up to 20 Links</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> Default Theme Only</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> Standard QR Code</li>
+            <ul className="space-y-3 text-xs text-zinc-600 border-t border-zinc-100 pt-4 mb-6">
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Up to 20 Links</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Default Theme Only</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Standard QR Code</li>
             </ul>
           </div>
 
           <button
             disabled
-            className="w-full py-2.5 rounded-xl bg-zinc-900 text-zinc-500 font-bold text-xs transition-colors cursor-not-allowed"
+            className="w-full py-2.5 rounded-xl bg-zinc-100 text-zinc-450 font-bold text-xs transition-colors cursor-not-allowed"
           >
             {currentPlan === "FREE" ? "Current Plan" : "Free Plan"}
           </button>
         </div>
 
         {/* STARTER PLAN */}
-        <div className={`p-6 rounded-2xl bg-zinc-950 border transition-all ${
-          currentPlan === "STARTER" ? "border-purple-500 ring-1 ring-purple-500/20 shadow-[0_0_30px_rgba(168,85,247,0.15)]" : "border-zinc-900"
+        <div className={`p-6 rounded-2xl bg-white border transition-all ${
+          currentPlan === "STARTER" ? "border-neon-blue ring-1 ring-neon-blue/20 shadow-md" : "border-zinc-200"
         } flex flex-col justify-between`}>
           <div>
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-purple-400">Popular</span>
-              {currentPlan === "STARTER" && <span className="px-2 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-[9px] font-bold text-purple-400 uppercase tracking-wide">Active Plan</span>}
+              <span className="text-xs font-bold uppercase tracking-wider text-neon-blue">Popular</span>
+              {currentPlan === "STARTER" && <span className="px-2 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">Active Plan</span>}
             </div>
-            <h3 className="text-xl font-bold mb-1">STARTER</h3>
-            <div className="text-3xl font-black mb-4">99₺ <span className="text-xs font-normal text-zinc-500">/ month</span></div>
+            <h3 className="text-xl font-bold mb-1 text-zinc-900">STARTER</h3>
+            <div className="text-3xl font-black mb-4 text-zinc-900">{priceStarter}₺ <span className="text-xs font-normal text-zinc-400">/ month</span></div>
             
-            <ul className="space-y-3 text-xs text-zinc-400 border-t border-zinc-900 pt-4 mb-6">
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> Up to 100 Links</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> Premium Neon Themes</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> Animated Glow Buttons</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> Advanced Analytics</li>
+            <ul className="space-y-3 text-xs text-zinc-600 border-t border-zinc-100 pt-4 mb-6">
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Up to 100 Links</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Premium Neon Themes</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Animated Glow Buttons</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Advanced Analytics</li>
             </ul>
           </div>
 
           {currentPlan === "STARTER" ? (
-            <button disabled className="w-full py-2.5 rounded-xl bg-purple-900/30 border border-purple-500/30 text-purple-300 font-bold text-xs cursor-not-allowed">
+            <button disabled className="w-full py-2.5 rounded-xl bg-neon-blue/10 border border-neon-blue/20 text-neon-blue font-bold text-xs cursor-not-allowed">
               Current Plan
             </button>
           ) : (
             <button
-              onClick={() => handleUpgrade("STARTER", 99)}
+              onClick={() => handleUpgrade("STARTER", starterPriceNum)}
               disabled={isPending}
-              className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs transition-colors shadow-[0_0_15px_rgba(168,85,247,0.25)] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue text-white font-black text-xs transition-opacity hover:opacity-90 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <CreditCard className="h-3.5 w-3.5" />}
-              {globalSettings?.["payment_link_starter"] ? "Secure Stripe/Shopier (99₺)" : "Mock Checkout (99₺)"}
+              {globalSettings?.["payment_link_starter"] ? `Secure Stripe/Shopier (${priceStarter}₺)` : `Mock Checkout (${priceStarter}₺)`}
             </button>
           )}
         </div>
 
         {/* CREATOR PLAN */}
-        <div className={`p-6 rounded-2xl bg-zinc-950 border transition-all ${
-          currentPlan === "CREATOR" ? "border-purple-500 ring-1 ring-purple-500/20 shadow-[0_0_30px_rgba(168,85,247,0.15)]" : "border-zinc-900"
+        <div className={`p-6 rounded-2xl bg-white border transition-all ${
+          currentPlan === "CREATOR" ? "border-neon-blue ring-1 ring-neon-blue/20 shadow-md" : "border-zinc-200"
         } flex flex-col justify-between`}>
           <div>
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">Enterprise</span>
-              {currentPlan === "CREATOR" && <span className="px-2 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-[9px] font-bold text-purple-400 uppercase tracking-wide">Active Plan</span>}
+              <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">Enterprise</span>
+              {currentPlan === "CREATOR" && <span className="px-2 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">Active Plan</span>}
             </div>
-            <h3 className="text-xl font-bold mb-1">CREATOR</h3>
-            <div className="text-3xl font-black mb-4">249₺ <span className="text-xs font-normal text-zinc-500">/ month</span></div>
+            <h3 className="text-xl font-bold mb-1 text-zinc-900">CREATOR</h3>
+            <div className="text-3xl font-black mb-4 text-zinc-900">{priceCreator}₺ <span className="text-xs font-normal text-zinc-400">/ month</span></div>
             
-            <ul className="space-y-3 text-xs text-zinc-400 border-t border-zinc-900 pt-4 mb-6">
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> Unlimited Links</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> All Premium Themes</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> Custom Domain Support</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-purple-400" /> Digital Beat Shop Integration</li>
+            <ul className="space-y-3 text-xs text-zinc-600 border-t border-zinc-100 pt-4 mb-6">
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Unlimited Links</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> All Premium Themes</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Custom Domain Support</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Digital Beat Shop Integration</li>
             </ul>
           </div>
 
           {currentPlan === "CREATOR" ? (
-            <button disabled className="w-full py-2.5 rounded-xl bg-purple-900/30 border border-purple-500/30 text-purple-300 font-bold text-xs cursor-not-allowed">
+            <button disabled className="w-full py-2.5 rounded-xl bg-neon-blue/10 border border-neon-blue/20 text-neon-blue font-bold text-xs cursor-not-allowed">
               Current Plan
             </button>
           ) : (
             <button
-              onClick={() => handleUpgrade("CREATOR", 249)}
+              onClick={() => handleUpgrade("CREATOR", creatorPriceNum)}
               disabled={isPending}
-              className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs transition-colors shadow-[0_0_15px_rgba(168,85,247,0.25)] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue text-white font-black text-xs transition-opacity hover:opacity-90 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <CreditCard className="h-3.5 w-3.5" />}
-              {globalSettings?.["payment_link_creator"] ? "Secure Stripe/Shopier (249₺)" : "Mock Checkout (249₺)"}
+              {globalSettings?.["payment_link_creator"] ? `Secure Stripe/Shopier (${priceCreator}₺)` : `Mock Checkout (${priceCreator}₺)`}
             </button>
           )}
         </div>
       </div>
 
       {/* Transaction History */}
-      <div className="p-6 rounded-2xl bg-zinc-950 border border-zinc-900 space-y-4">
-        <div className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider text-zinc-400">
-          <Receipt className="h-4 w-4" />
+      <div className="p-6 rounded-2xl bg-white border border-zinc-200 shadow-sm space-y-4">
+        <div className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider text-zinc-500">
+          <Receipt className="h-4 w-4 text-zinc-400" />
           Transaction Logs ({payments.length})
         </div>
 
         {payments.length === 0 ? (
-          <div className="p-8 text-center text-xs text-zinc-500 italic border border-dashed border-zinc-800/80 rounded-xl">
+          <div className="p-8 text-center text-xs text-zinc-400 italic border border-dashed border-zinc-200 rounded-xl">
             No mock payments recorded yet. Upgrade your plan to create a transaction log.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-zinc-900 text-zinc-500">
+                <tr className="border-b border-zinc-200 text-zinc-400">
                   <th className="py-3 px-4 font-bold">Transaction ID</th>
                   <th className="py-3 px-4 font-bold">Plan</th>
                   <th className="py-3 px-4 font-bold">Amount</th>
@@ -273,12 +278,12 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
               </thead>
               <tbody>
                 {payments.map((p) => (
-                  <tr key={p.id} className="border-b border-zinc-900/60 hover:bg-zinc-900/20 transition-all">
-                    <td className="py-3 px-4 font-mono text-[10px] text-zinc-400">{p.id}</td>
-                    <td className="py-3 px-4 font-bold text-purple-400">{p.package}</td>
-                    <td className="py-3 px-4 font-bold">{p.amount}₺</td>
+                  <tr key={p.id} className="border-b border-zinc-200/60 hover:bg-zinc-50/50 transition-all">
+                    <td className="py-3 px-4 font-mono text-[10px] text-zinc-500">{p.id}</td>
+                    <td className="py-3 px-4 font-bold text-neon-blue">{p.package}</td>
+                    <td className="py-3 px-4 font-bold text-zinc-800">{p.amount}₺</td>
                     <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-[9px] font-bold text-emerald-400 uppercase tracking-wide border border-emerald-500/30">
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-[9px] font-bold text-emerald-600 uppercase tracking-wide border border-emerald-200">
                         {p.status}
                       </span>
                     </td>

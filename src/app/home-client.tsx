@@ -18,6 +18,8 @@ interface HomeClientProps {
   paymentLinkStarter?: string;
   paymentLinkCreator?: string;
   paymentLinkPro?: string;
+  priceStarter?: string;
+  priceCreator?: string;
 }
 
 export default function HomeClient({
@@ -32,6 +34,8 @@ export default function HomeClient({
   paymentLinkStarter = "",
   paymentLinkCreator = "",
   paymentLinkPro = "",
+  priceStarter = "150",
+  priceCreator = "450",
 }: HomeClientProps) {
   const [usernameInput, setUsernameInput] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -454,7 +458,7 @@ export default function HomeClient({
               </div>
               <div className="mb-6 mt-2">
                 <span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold uppercase tracking-wider rounded-full">Başlangıç</span>
-                <h3 className="text-4xl font-extrabold text-white mt-4">150 ₺ <span className="text-base text-slate-400 font-medium">/ ay</span></h3>
+                <h3 className="text-4xl font-extrabold text-white mt-4">{priceStarter} ₺ <span className="text-base text-slate-400 font-medium">/ ay</span></h3>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-300 text-sm">
@@ -482,7 +486,7 @@ export default function HomeClient({
             <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col">
               <div className="mb-6">
                 <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-full">Üretici</span>
-                <h3 className="text-4xl font-extrabold text-slate-900 mt-4">450 ₺ <span className="text-base text-slate-500 font-medium">/ ay</span></h3>
+                <h3 className="text-4xl font-extrabold text-slate-900 mt-4">{priceCreator} ₺ <span className="text-base text-slate-500 font-medium">/ ay</span></h3>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
