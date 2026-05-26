@@ -69,13 +69,6 @@ export async function checkAndSyncUser() {
       },
       include: { profile: true },
     });
-  } else if (dbUser.clerkUserId === "mock_user_developer_bypass" && (dbUser.plan !== "CREATOR" || dbUser.role !== "ADMIN")) {
-    // Always keep developer mock account upgraded!
-    dbUser = await db.user.update({
-      where: { id: dbUser.id },
-      data: { plan: "CREATOR", role: "ADMIN" },
-      include: { profile: true },
-    });
   } else {
     // Check if subscription has expired
     const checkedUser = await checkAndEnforcePlanExpiration(dbUser);
