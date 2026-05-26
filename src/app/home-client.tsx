@@ -223,34 +223,13 @@ export default function HomeClient({
                   </div>
                 </div>
 
-                {/* 4 Link Analytics Items (Instagram, YouTube, TikTok, Shopier) */}
-                <div className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 mb-3 space-y-2">
-                  <div className="flex items-center gap-2 mb-1">
-                    <BarChart3 className="h-4 w-4 text-teal-500" />
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Bağlantı Tıklamaları</span>
-                  </div>
-                  
-                  <div className="space-y-1.5">
-                    {[
-                      { name: "Instagram Pro", clicks: "14.2K", color: "bg-pink-500" },
-                      { name: "YouTube Video", clicks: "12.8K", color: "bg-red-500" },
-                      { name: "TikTok Akışı", clicks: "9.5K", color: "bg-slate-900" },
-                      { name: "Shopier Mağaza", clicks: "6.0K", color: "bg-blue-500" }
-                    ].map((link, idx) => (
-                      <div key={idx} className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-1.5">
-                          <span className={`w-1.5 h-1.5 rounded-full ${link.color}`}></span>
-                          <span className="font-semibold text-slate-700">{link.name}</span>
-                        </div>
-                        <span className="font-extrabold text-slate-950">{link.clicks}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
                 {/* Animated Bar Chart */}
                 <div className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex-1 flex flex-col justify-end gap-1.5">
-                  <div className="flex items-end justify-between h-20 gap-1 mt-1">
+                  <div className="flex items-center gap-2 mb-auto">
+                    <BarChart3 className="h-4 w-4 text-teal-500" />
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tıklamalar</span>
+                  </div>
+                  <div className="flex items-end justify-between h-36 gap-1.5 mt-4">
                     {[40, 70, 45, 90, 65, 100, 85].map((height, i) => (
                       <div key={i} className="w-full bg-slate-100 rounded-t-md relative overflow-hidden flex-1 group">
                         <div 
@@ -269,19 +248,48 @@ export default function HomeClient({
           </div>
 
           {/* Text Content (Right) */}
-          <div className="text-left order-1 lg:order-2">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-50 text-teal-600 text-xs font-bold uppercase tracking-wider mb-4">
-              <TrendingUp className="h-3.5 w-3.5" />
-              <span>Gelişmiş Analizler</span>
+          <div className="text-left order-1 lg:order-2 space-y-8">
+            <div>
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-50 text-teal-600 text-xs font-bold uppercase tracking-wider mb-4">
+                <TrendingUp className="h-3.5 w-3.5" />
+                <span>Gelişmiş Analizler</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+                Kitlenizi Anlayın.<br/>
+                <span className="text-teal-400">Performansınızı Ölçün.</span>
+              </h2>
+              <p className="text-lg text-slate-500 leading-relaxed mt-4">
+                Bağlantılarınıza kimin, ne zaman ve nereden tıkladığını gerçek zamanlı olarak takip edin. Detaylı istatistiklerle stratejinizi geliştirin ve etkileşiminizi artırın.
+              </p>
             </div>
-            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight mb-6">
-              Kitlenizi Anlayın.<br/>
-              <span className="text-teal-400">Performansınızı Ölçün.</span>
-            </h2>
-            <p className="text-lg text-slate-500 leading-relaxed mb-8">
-              Bağlantılarınıza kimin, ne zaman ve nereden tıkladığını gerçek zamanlı olarak takip edin. Detaylı istatistiklerle stratejinizi geliştirin ve etkileşiminizi artırın.
-            </p>
-            <ul className="space-y-4">
+
+            {/* Link Analysis Statistics Bars */}
+            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4 shadow-inner">
+              <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-1">En Çok Tıklanan Bağlantılar</h3>
+              <div className="space-y-3.5">
+                {[
+                  { name: "Instagram Profil Bağlantısı", clicks: "14.2K", percent: 90, color: "bg-gradient-to-r from-pink-500 to-rose-500" },
+                  { name: "YouTube Yeni Video", clicks: "12.8K", percent: 80, color: "bg-gradient-to-r from-red-500 to-orange-600" },
+                  { name: "TikTok Akış Linki", clicks: "9.5K", percent: 60, color: "bg-gradient-to-r from-slate-800 to-black" },
+                  { name: "Shopier Dijital Mağaza", clicks: "6.0K", percent: 40, color: "bg-gradient-to-r from-blue-500 to-cyan-500" }
+                ].map((link, idx) => (
+                  <div key={idx} className="space-y-1">
+                    <div className="flex justify-between text-xs font-bold text-slate-700">
+                      <span>{link.name}</span>
+                      <span className="text-slate-950">{link.clicks} tıklama</span>
+                    </div>
+                    <div className="w-full h-2.5 bg-slate-200/70 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full ${link.color} rounded-full transition-all duration-1000 ease-out origin-left`}
+                        style={{ width: `${link.percent}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <ul className="space-y-4 pt-2">
               <li className="flex items-center gap-3">
                 <div className="bg-teal-50 p-2 rounded-lg"><Users className="h-5 w-5 text-teal-500" /></div>
                 <span className="text-slate-700 font-semibold text-sm">Ziyaretçi Demografisi</span>
