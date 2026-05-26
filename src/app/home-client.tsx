@@ -155,13 +155,18 @@ export default function HomeClient({
                 <div className="h-4 w-32 bg-slate-200 rounded-full mb-2 animate-pulse-slow"></div>
                 <div className="h-3 w-24 bg-slate-200 rounded-full mb-8 animate-pulse-slow"></div>
 
-                {/* Animated Link Cards – shows up to 4 slider items */}
+                {/* Animated Link Cards – shows up to 4 slider items or default fallback */}
                 <div className="w-full space-y-3">
-                  {sliderItems.slice(0,4).map((item, idx) => (
+                  {(sliderItems.length > 0 ? sliderItems : [
+                    { id: "mock-1", title: "📸 Instagram Hesabım" },
+                    { id: "mock-2", title: "🎵 Yeni Spotify Albümüm" },
+                    { id: "mock-3", title: "🛍️ Shopier Mağazam" },
+                    { id: "mock-4", title: "📺 YouTube Kanalım" }
+                  ]).slice(0, 4).map((item, idx) => (
                     <div key={item.id}
-                         className={`w-full h-12 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center bg-white transition-opacity duration-500 ${idx === 0 ? 'opacity-100' : 'opacity-0'} animate-[slideUp_1s_ease-out_${idx * 0.3}s_forwards]`}
+                         className={`w-full h-12 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center bg-white transition-all hover:scale-[1.02] duration-300 animate-[slideUp_1s_ease-out_${idx * 0.2}s_forwards]`}
                     >
-                      <span className="text-sm font-medium text-slate-800 truncate max-w-full px-2">{item.title}</span>
+                      <span className="text-xs font-bold text-slate-800 truncate max-w-full px-3">{item.title}</span>
                     </div>
                   ))}
                 </div>
