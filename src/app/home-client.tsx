@@ -140,14 +140,14 @@ export default function HomeClient({
             </form>
           </div>
 
-          {/* Hero Phone Mockup with Profile Animation */}
-          <div className="flex justify-center lg:justify-end relative">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-teal-50 rounded-full blur-3xl opacity-50 -z-10" />
-            
-            <div className="relative w-[300px] h-[600px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl border-4 border-slate-900 overflow-hidden">
-              <div className="absolute top-0 inset-x-0 h-6 bg-slate-900 z-20 rounded-b-3xl w-1/2 mx-auto" />
+            {/* Hero Phone Mockup with Profile Animation */}
+            <div className="flex justify-center lg:justify-end relative animate-slide-down">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-teal-50 rounded-full blur-3xl opacity-50 -z-10" />
               
-              <div className="relative w-full h-full bg-gray-50 rounded-[2rem] overflow-hidden flex flex-col items-center pt-16 px-4">
+              <div className="relative w-[300px] h-[600px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl border-4 border-slate-900 overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-6 bg-slate-900 z-20 rounded-b-3xl w-1/2 mx-auto" />
+                
+                <div className="relative w-full h-full bg-gray-50 rounded-[2rem] overflow-hidden flex flex-col items-center pt-16 px-4">
                 {/* Profile Header Animation */}
                 <div className="w-20 h-20 rounded-full bg-slate-200 overflow-hidden border-2 border-white shadow-sm mb-3 animate-pulse-slow">
                   <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&fit=crop" className="w-full h-full object-cover" />
@@ -155,17 +155,15 @@ export default function HomeClient({
                 <div className="h-4 w-32 bg-slate-200 rounded-full mb-2 animate-pulse-slow"></div>
                 <div className="h-3 w-24 bg-slate-200 rounded-full mb-8 animate-pulse-slow"></div>
 
-                {/* Animated Links sliding up */}
+                {/* Animated Link Cards – shows up to 4 slider items */}
                 <div className="w-full space-y-3">
-                  <div className="w-full h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center animate-[slideUp_1s_ease-out_forwards]">
-                    <div className="h-3 w-1/2 bg-slate-200 rounded-full"></div>
-                  </div>
-                  <div className="w-full h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center opacity-0 animate-[slideUp_1s_ease-out_0.3s_forwards]">
-                    <div className="h-3 w-1/3 bg-slate-200 rounded-full"></div>
-                  </div>
-                  <div className="w-full h-12 bg-teal-400 rounded-xl shadow-md flex items-center justify-center opacity-0 animate-[slideUp_1s_ease-out_0.6s_forwards]">
-                    <div className="h-3 w-2/5 bg-teal-900/30 rounded-full"></div>
-                  </div>
+                  {sliderItems.slice(0,4).map((item, idx) => (
+                    <div key={item.id}
+                         className={`w-full h-12 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center bg-white transition-opacity duration-500 ${idx === 0 ? 'opacity-100' : 'opacity-0'} animate-[slideUp_1s_ease-out_${idx * 0.3}s_forwards]`}
+                    >
+                      <span className="text-sm font-medium text-slate-800 truncate max-w-full px-2">{item.title}</span>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Optional overlay from DB */}
