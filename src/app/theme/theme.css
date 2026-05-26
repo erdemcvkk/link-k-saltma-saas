@@ -1,29 +1,29 @@
 /* Premium Theme Styles */
-/* Gradient background for body */
+/* White background for body as requested */
 html, body {
   min-height: 100vh;
-  background: linear-gradient(135deg, hsl(220, 30%, 15%), hsl(260, 30%, 20%));
-  color: hsl(210, 10%, 90%);
+  background: #ffffff;
+  color: #000000;
 }
 
 /* Glassmorphism utility class */
 .glass {
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(60, 60, 250, 0.1);
 }
 
-/* Dark mode overrides */
+/* Dark mode overrides (disabled but kept clean) */
 .dark html, .dark body {
-  background: linear-gradient(135deg, hsl(220, 30%, 10%), hsl(260, 30%, 15%));
-  color: hsl(210, 10%, 95%);
+  background: #ffffff;
+  color: #000000;
 }
 
-/* Primary button style */
+/* Primary button style using the new brand Blue Gradient */
 .btn-primary {
-  background: linear-gradient(45deg, hsl(212, 90%, 55%), hsl(212, 90%, 70%));
+  background: linear-gradient(135deg, #3c3cfa, #4158ff);
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
@@ -31,5 +31,5 @@ html, body {
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(60, 60, 250, 0.25);
 }

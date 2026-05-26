@@ -55,7 +55,7 @@ export default function HomeClient({
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white text-slate-900 selection:bg-teal-100 selection:text-teal-900 font-sans">
+    <div className="relative min-h-screen overflow-hidden bg-white text-slate-900 selection:bg-neon-blue/15 selection:text-neon-blue font-sans">
       <GlobalOverlayManager />
 
       {/* Header */}
@@ -90,7 +90,7 @@ export default function HomeClient({
               <>
                 <Link
                   href="/sign-in"
-                  className="text-sm font-bold text-slate-900 hover:text-teal-600 transition-colors hidden sm:block"
+                  className="text-sm font-bold text-slate-900 hover:text-light-blue transition-colors hidden sm:block"
                 >
                   Giriş Yap
                 </Link>
@@ -113,7 +113,7 @@ export default function HomeClient({
           <div className="text-left">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6">
               {heroTitle} <br />
-              <span className="text-teal-400 block mt-2">{heroHighlight}</span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-light-blue block mt-2">{heroHighlight}</span>
             </h1>
             
             <p className="text-lg md:text-xl text-slate-500 mb-10 leading-relaxed font-medium">
@@ -142,7 +142,7 @@ export default function HomeClient({
 
             {/* Hero Phone Mockup with Profile Animation */}
             <div className="flex justify-center lg:justify-end relative animate-slide-down">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-teal-50 rounded-full blur-3xl opacity-50 -z-10" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-neon-blue/5 rounded-full blur-3xl opacity-50 -z-10" />
               
               <div className="relative w-[300px] h-[600px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl border-4 border-slate-900 overflow-hidden">
                 <div className="absolute top-0 inset-x-0 h-6 bg-slate-900 z-20 rounded-b-3xl w-1/2 mx-auto" />
@@ -214,11 +214,11 @@ export default function HomeClient({
                 {/* Total Views Card */}
                 <div className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 mb-3 transform transition-all hover:scale-105">
                   <div className="flex items-center gap-2 mb-1">
-                    <Users className="h-4 w-4 text-teal-500" />
+                    <Users className="h-4 w-4 text-neon-blue" />
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Toplam Görüntülenme</span>
                   </div>
                   <div className="text-2xl font-black text-slate-900">42.5K</div>
-                  <div className="text-[10px] font-bold text-teal-500 mt-0.5 flex items-center gap-1">
+                  <div className="text-[10px] font-bold text-neon-blue mt-0.5 flex items-center gap-1">
                     <TrendingUp className="h-3 w-3" /> %12 Artış
                   </div>
                 </div>
@@ -226,14 +226,14 @@ export default function HomeClient({
                 {/* Animated Bar Chart */}
                 <div className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex-1 flex flex-col justify-end gap-1.5">
                   <div className="flex items-center gap-2 mb-auto">
-                    <BarChart3 className="h-4 w-4 text-teal-500" />
+                    <BarChart3 className="h-4 w-4 text-neon-blue" />
                     <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tıklamalar</span>
                   </div>
                   <div className="flex items-end justify-between h-36 gap-1.5 mt-4">
                     {[40, 70, 45, 90, 65, 100, 85].map((height, i) => (
                       <div key={i} className="w-full bg-slate-100 rounded-t-md relative overflow-hidden flex-1 group">
                         <div 
-                          className="absolute bottom-0 left-0 w-full bg-teal-400 rounded-t-md transition-all duration-1000 ease-out origin-bottom animate-[growUp_1.5s_ease-out_forwards]"
+                          className="absolute bottom-0 left-0 w-full bg-light-blue rounded-t-md transition-all duration-1000 ease-out origin-bottom animate-[growUp_1.5s_ease-out_forwards]"
                           style={{ height: `${height}%`, animationDelay: `${i * 0.1}s` }}
                         ></div>
                       </div>
@@ -250,33 +250,33 @@ export default function HomeClient({
           {/* Text Content (Right) */}
           <div className="text-left order-1 lg:order-2 space-y-8">
             <div>
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-50 text-teal-600 text-xs font-bold uppercase tracking-wider mb-4">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-neon-blue/5 text-neon-blue text-xs font-bold uppercase tracking-wider mb-4">
                 <TrendingUp className="h-3.5 w-3.5" />
                 <span>Gelişmiş Analizler</span>
               </div>
               <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
                 Kitlenizi Anlayın.<br/>
-                <span className="text-teal-400">Performansınızı Ölçün.</span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-light-blue">Performansınızı Ölçün.</span>
               </h2>
               <p className="text-lg text-slate-500 leading-relaxed mt-4">
                 Bağlantılarınıza kimin, ne zaman ve nereden tıkladığını gerçek zamanlı olarak takip edin. Detaylı istatistiklerle stratejinizi geliştirin ve etkileşiminizi artırın.
               </p>
             </div>
 
-            {/* Green themed high-fidelity analytics layout based on reference image */}
-            <div className="space-y-4 bg-emerald-50/40 p-5 rounded-[2.5rem] border border-emerald-100/50 shadow-inner">
+            {/* High-fidelity analytics layout updated with brand colors */}
+            <div className="space-y-4 bg-neon-blue/5 p-5 rounded-[2.5rem] border border-neon-blue/10 shadow-inner">
               
               {/* Row 1: 3 Column Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 
                 {/* Block 1: Görüntülenme Artışı (Market Size Growth) */}
-                <div className="bg-white p-4 rounded-3xl border border-emerald-100 shadow-sm flex flex-col justify-between">
-                  <div className="bg-emerald-800 text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3">
+                <div className="bg-white p-4 rounded-3xl border border-neon-blue/10 shadow-sm flex flex-col justify-between">
+                  <div className="bg-neon-blue text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3">
                     Görüntülenme Artışı
                   </div>
                   <div className="h-32 flex items-end justify-center relative px-2">
                     {/* Line Chart Graphic representation */}
-                    <svg className="w-full h-full text-emerald-800" viewBox="0 0 100 50">
+                    <svg className="w-full h-full text-neon-blue" viewBox="0 0 100 50">
                       <polyline
                         fill="none"
                         stroke="currentColor"
@@ -296,8 +296,8 @@ export default function HomeClient({
                 </div>
 
                 {/* Block 2: Ziyaretçi Yaş Dağılımı (Consumer Demographics) */}
-                <div className="bg-white p-4 rounded-3xl border border-emerald-100 shadow-sm flex flex-col justify-between items-center text-center">
-                  <div className="bg-emerald-800 text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3 w-full">
+                <div className="bg-white p-4 rounded-3xl border border-neon-blue/10 shadow-sm flex flex-col justify-between items-center text-center">
+                  <div className="bg-neon-blue text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3 w-full">
                     Yaş Dağılımı
                   </div>
                   <div className="relative w-20 h-20 mb-2">
@@ -305,24 +305,24 @@ export default function HomeClient({
                     <svg className="w-full h-full" viewBox="0 0 36 36">
                       <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#e2e8f0" strokeWidth="4" />
                       {/* 35% slice */}
-                      <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#065f46" strokeWidth="4.2" strokeDasharray="35 65" strokeDashoffset="25" />
+                      <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#000000" strokeWidth="4.2" strokeDasharray="35 65" strokeDashoffset="25" />
                       {/* 25% slice */}
-                      <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#047857" strokeWidth="4.2" strokeDasharray="25 75" strokeDashoffset="90" />
+                      <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#3c3cfa" strokeWidth="4.2" strokeDasharray="25 75" strokeDashoffset="90" />
                       {/* 20% slice */}
-                      <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#10b981" strokeWidth="4.2" strokeDasharray="20 80" strokeDashoffset="115" />
+                      <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#4158ff" strokeWidth="4.2" strokeDasharray="20 80" strokeDashoffset="115" />
                     </svg>
                   </div>
                   <div className="w-full grid grid-cols-2 gap-1 text-[9px] font-bold text-slate-600 mt-1">
-                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-emerald-800"></span> %35 (18-24)</div>
-                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-emerald-700"></span> %25 (25-34)</div>
-                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-emerald-500"></span> %20 (35-44)</div>
+                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-true-black"></span> %35 (18-24)</div>
+                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-neon-blue"></span> %25 (25-34)</div>
+                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-light-blue"></span> %20 (35-44)</div>
                     <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-slate-300"></span> %20 Diğer</div>
                   </div>
                 </div>
 
                 {/* Block 3: Tıklama Trendleri (Product Demand Trends) */}
-                <div className="bg-white p-4 rounded-3xl border border-emerald-100 shadow-sm flex flex-col justify-between">
-                  <div className="bg-emerald-800 text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3">
+                <div className="bg-white p-4 rounded-3xl border border-neon-blue/10 shadow-sm flex flex-col justify-between">
+                  <div className="bg-neon-blue text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3">
                     Tıklama Trendleri
                   </div>
                   <div className="h-32 flex items-end justify-between gap-1.5 px-2">
@@ -333,9 +333,9 @@ export default function HomeClient({
                       { height: 40, val: "4K", label: "Shop" }
                     ].map((bar, i) => (
                       <div key={i} className="flex-1 flex flex-col items-center justify-end h-full group">
-                        <span className="text-[8px] font-black text-emerald-800 mb-1 opacity-0 group-hover:opacity-100 transition-opacity">{bar.val}</span>
+                        <span className="text-[8px] font-black text-neon-blue mb-1 opacity-0 group-hover:opacity-100 transition-opacity">{bar.val}</span>
                         <div 
-                          className="w-full bg-emerald-700/80 rounded-t-md transition-all duration-700" 
+                          className="w-full bg-light-blue/80 rounded-t-md transition-all duration-700" 
                           style={{ height: `${bar.height}%` }}
                         />
                         <span className="text-[8px] font-bold text-slate-500 mt-1">{bar.label}</span>
@@ -347,8 +347,8 @@ export default function HomeClient({
               </div>
 
               {/* Row 2: Competitive Market Share style arc meters */}
-              <div className="bg-white p-5 rounded-3xl border border-emerald-100 shadow-sm space-y-4">
-                <div className="bg-emerald-800 text-white text-center py-1 px-4 rounded-full text-[10px] font-bold tracking-wider w-fit mx-auto">
+              <div className="bg-white p-5 rounded-3xl border border-neon-blue/10 shadow-sm space-y-4">
+                <div className="bg-neon-blue text-white text-center py-1 px-4 rounded-full text-[10px] font-bold tracking-wider w-fit mx-auto">
                   Bağlantı Tıklama Oranları
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-3 pt-2 text-center">
@@ -363,7 +363,7 @@ export default function HomeClient({
                       <div className="relative w-16 h-8 overflow-hidden flex items-end justify-center">
                         <svg className="w-16 h-16 absolute -bottom-8" viewBox="0 0 100 100">
                           <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" strokeWidth="12" />
-                          <circle cx="50" cy="50" r="40" fill="transparent" stroke="#047857" strokeWidth="12" 
+                          <circle cx="50" cy="50" r="40" fill="transparent" stroke="#3c3cfa" strokeWidth="12" 
                                   strokeDasharray="251.2" strokeDashoffset={item.offset} strokeLinecap="round" />
                         </svg>
                         <span className="text-xs font-black text-slate-800 z-10">{item.pct}%</span>
@@ -375,7 +375,7 @@ export default function HomeClient({
               </div>
 
               {/* Row 3: Regional Market Growth (Bölgesel Büyüme) */}
-              <div className="bg-white rounded-3xl border border-emerald-100 shadow-sm overflow-hidden divide-y md:divide-y-0 md:divide-x divide-emerald-50 flex flex-col md:flex-row text-center">
+              <div className="bg-white rounded-3xl border border-neon-blue/10 shadow-sm overflow-hidden divide-y md:divide-y-0 md:divide-x divide-slate-100 flex flex-col md:flex-row text-center">
                 {[
                   { region: "Marmara", growth: "%12" },
                   { region: "İç Anadolu", growth: "%8" },
@@ -385,7 +385,7 @@ export default function HomeClient({
                 ].map((reg, idx) => (
                   <div key={idx} className="flex-1 p-3.5">
                     <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{reg.region}</p>
-                    <p className="text-lg font-black text-emerald-800 mt-0.5">{reg.growth}</p>
+                    <p className="text-lg font-black text-neon-blue mt-0.5">{reg.growth}</p>
                   </div>
                 ))}
               </div>
@@ -394,11 +394,11 @@ export default function HomeClient({
 
             <ul className="space-y-4 pt-2">
               <li className="flex items-center gap-3">
-                <div className="bg-teal-50 p-2 rounded-lg"><Users className="h-5 w-5 text-teal-500" /></div>
+                <div className="bg-neon-blue/5 p-2 rounded-lg"><Users className="h-5 w-5 text-neon-blue" /></div>
                 <span className="text-slate-700 font-semibold text-sm">Gerçek Zamanlı Ziyaretçi Demografisi</span>
               </li>
               <li className="flex items-center gap-3">
-                <div className="bg-teal-50 p-2 rounded-lg"><BarChart3 className="h-5 w-5 text-teal-500" /></div>
+                <div className="bg-neon-blue/5 p-2 rounded-lg"><BarChart3 className="h-5 w-5 text-neon-blue" /></div>
                 <span className="text-slate-700 font-semibold text-sm">Gelişmiş Cihaz, Tarayıcı ve Konum Raporları</span>
               </li>
             </ul>
@@ -427,15 +427,15 @@ export default function HomeClient({
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
-                  <CheckCircle2 className="h-5 w-5 text-teal-500 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
                   <span>Temel Bio Link</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
-                  <CheckCircle2 className="h-5 w-5 text-teal-500 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
                   <span>Standart Temalar</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
-                  <CheckCircle2 className="h-5 w-5 text-teal-500 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
                   <span>Standart Analizler</span>
                 </li>
               </ul>
@@ -449,7 +449,7 @@ export default function HomeClient({
 
             {/* STARTER TIER */}
             <div className="bg-slate-900 rounded-3xl p-8 border-2 border-slate-900 shadow-xl flex flex-col relative transform md:-translate-y-4">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-teal-400 text-teal-950 text-xs font-black uppercase tracking-widest rounded-full">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-gradient-to-r from-neon-blue to-light-blue text-white text-xs font-black uppercase tracking-widest rounded-full">
                 En Popüler
               </div>
               <div className="mb-6 mt-2">
@@ -458,21 +458,21 @@ export default function HomeClient({
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-300 text-sm">
-                  <CheckCircle2 className="h-5 w-5 text-teal-400 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
                   <span>Premium Tema ve Yazı Tipleri</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-300 text-sm">
-                  <CheckCircle2 className="h-5 w-5 text-teal-400 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
                   <span>Gelişmiş Analizler</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-300 text-sm">
-                  <CheckCircle2 className="h-5 w-5 text-teal-400 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
                   <span>Özel Renkler</span>
                 </li>
               </ul>
               <a
                 href={paymentLinkStarter || "#"}
-                className="w-full py-3 px-4 rounded-xl bg-teal-400 text-teal-950 font-bold text-center hover:bg-teal-300 transition-colors"
+                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue text-white font-bold text-center hover:opacity-90 transition-opacity"
               >
                 Başlangıç Planına Geç
               </a>
@@ -486,15 +486,15 @@ export default function HomeClient({
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
-                  <CheckCircle2 className="h-5 w-5 text-teal-500 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
                   <span>Tüm Başlangıç Özellikleri</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
-                  <CheckCircle2 className="h-5 w-5 text-teal-500 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
                   <span>E-ticaret Entegrasyonları</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
-                  <CheckCircle2 className="h-5 w-5 text-teal-500 flex-shrink-0" />
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
                   <span>Platform Logosunu Kaldır</span>
                 </li>
               </ul>

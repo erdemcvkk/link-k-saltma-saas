@@ -1468,7 +1468,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
   return (
     <div className={`min-h-screen transition-colors duration-500 p-6 max-w-7xl mx-auto flex flex-col gap-6 ${
-      "bg-zinc-50 text-zinc-900"
+      "bg-white text-zinc-900"
     }`}>
       <GlobalOverlayManager onStateChange={handleStateChange} />
 
@@ -1543,7 +1543,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
           onClick={() => setActiveTab("editor")}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "editor"
-              ? "bg-teal-500 border-teal-500 text-slate-900 shadow-sm"
+              ? "bg-teal-500 border-teal-500 text-white shadow-sm"
               : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
           }`}
         >
@@ -1566,7 +1566,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
           }}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "analytics"
-              ? "bg-teal-500 border-teal-500 text-slate-900 shadow-sm"
+              ? "bg-teal-500 border-teal-500 text-white shadow-sm"
               : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
           }`}
         >
@@ -1579,7 +1579,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
           onClick={() => setActiveTab("qr")}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "qr"
-              ? "bg-teal-500 border-teal-500 text-slate-900 shadow-sm"
+              ? "bg-teal-500 border-teal-500 text-white shadow-sm"
               : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
           }`}
         >
@@ -1591,7 +1591,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
           onClick={() => setActiveTab("seo")}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "seo"
-              ? "bg-teal-500 border-teal-500 text-slate-900 shadow-sm"
+              ? "bg-teal-500 border-teal-500 text-white shadow-sm"
               : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
           }`}
         >
@@ -2827,7 +2827,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                   }}
                                   className={`px-2 py-1 rounded-md text-[10px] font-bold border transition-all cursor-pointer flex items-center gap-1.5 ${
                                     isSelected
-                                      ? "bg-teal-500 border-purple-600 text-slate-900 shadow-sm"
+                                      ? "bg-teal-500 border-light-blue text-white shadow-sm"
                                       : "bg-zinc-50 hover:bg-zinc-100 text-zinc-650 border-zinc-200"
                                   }`}
                                 >
