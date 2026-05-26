@@ -421,6 +421,10 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
 
   const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo">("editor");
 
+  useEffect(() => {
+    setSimulatedPlan(initialUser.plan);
+  }, [initialUser.plan]);
+
   const [links, setLinks] = useState<LinkItem[]>(initialLinks);
   const [bio, setBio] = useState(initialUser.profile?.bio ?? "");
   const [avatarUrl, setAvatarUrl] = useState(initialUser.profile?.avatarUrl ?? "");
@@ -1287,7 +1291,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
   const previewStyles = getThemePreviewStyles(theme);
 
   // Check plan levels
-  const isPremium = initialUser.plan !== "FREE";
+  const isPremium = simulatedPlan !== "FREE";
   const isCreator = simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS";
 
   const renderSimulator = () => {
