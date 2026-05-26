@@ -263,40 +263,130 @@ export default function HomeClient({
               </p>
             </div>
 
-            {/* Link Analysis Statistics Bars */}
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4 shadow-inner">
-              <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider mb-1">En Çok Tıklanan Bağlantılar</h3>
-              <div className="space-y-3.5">
-                {[
-                  { name: "Instagram Profil Bağlantısı", clicks: "14.2K", percent: 90, color: "bg-gradient-to-r from-pink-500 to-rose-500" },
-                  { name: "YouTube Yeni Video", clicks: "12.8K", percent: 80, color: "bg-gradient-to-r from-red-500 to-orange-600" },
-                  { name: "TikTok Akış Linki", clicks: "9.5K", percent: 60, color: "bg-gradient-to-r from-slate-800 to-black" },
-                  { name: "Shopier Dijital Mağaza", clicks: "6.0K", percent: 40, color: "bg-gradient-to-r from-blue-500 to-cyan-500" }
-                ].map((link, idx) => (
-                  <div key={idx} className="space-y-1">
-                    <div className="flex justify-between text-xs font-bold text-slate-700">
-                      <span>{link.name}</span>
-                      <span className="text-slate-950">{link.clicks} tıklama</span>
+            {/* high-fidelity, polished multi-card link analytics dashboard widget */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50/50 p-4 rounded-[2rem] border border-gray-100 shadow-inner">
+              
+              {/* Card 1: En Çok Tıklananlar (Top Links) */}
+              <div className="bg-white p-4 rounded-2xl border border-gray-150/70 shadow-sm flex flex-col justify-between">
+                <h3 className="text-xs font-bold text-slate-800 tracking-tight mb-3">En Çok Tıklananlar</h3>
+                <div className="space-y-2">
+                  {[
+                    { name: "YouTube", handle: "youtube.com/@kanalin", clicks: "6.4K", icon: "🔴" },
+                    { name: "Discord", handle: "discord.gg/sunucun", clicks: "5.1K", icon: "👾" },
+                    { name: "Spotify", handle: "open.spotify.com/artist", clicks: "4.6K", icon: "🟢" },
+                    { name: "Apple Music", handle: "music.apple.com/artist", clicks: "4.0K", icon: "🎵" }
+                  ].map((link, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-[11px] py-0.5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-slate-50 border border-slate-100 text-xs">
+                          {link.icon}
+                        </div>
+                        <div className="truncate max-w-[90px]">
+                          <p className="font-bold text-slate-800 truncate">{link.name}</p>
+                          <p className="text-[9px] text-slate-400 font-medium truncate">{link.handle}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-extrabold text-slate-900 leading-none">{link.clicks}</p>
+                      </div>
                     </div>
-                    <div className="w-full h-2.5 bg-slate-200/70 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full ${link.color} rounded-full transition-all duration-1000 ease-out origin-left`}
-                        style={{ width: `${link.percent}%` }}
-                      />
+                  ))}
+                </div>
+              </div>
+
+              {/* Card 2: Ülkeler (Top Countries) */}
+              <div className="bg-white p-4 rounded-2xl border border-gray-150/70 shadow-sm flex flex-col justify-between">
+                <h3 className="text-xs font-bold text-slate-800 tracking-tight mb-3">En Çok Ziyaret Eden Ülkeler</h3>
+                <div className="space-y-2">
+                  {[
+                    { name: "Türkiye", views: "33.0K", flag: "🇹🇷" },
+                    { name: "Almanya", views: "8.5K", flag: "🇩🇪" },
+                    { name: "ABD", views: "6.4K", flag: "🇺🇸" },
+                    { name: "İngiltere", views: "5.8K", flag: "🇬🇧" }
+                  ].map((country, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-[11px] py-0.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">{country.flag}</span>
+                        <span className="font-bold text-slate-700 truncate max-w-[90px]">{country.name}</span>
+                      </div>
+                      <span className="font-extrabold text-slate-900">{country.views}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Card 3: Trafik Kaynakları (Traffic Sources) */}
+              <div className="bg-white p-4 rounded-2xl border border-gray-150/70 shadow-sm flex flex-col justify-between">
+                <h3 className="text-xs font-bold text-slate-800 tracking-tight mb-3">Trafik Kaynakları</h3>
+                <div className="space-y-2.5">
+                  {[
+                    { name: "Instagram", views: "25.3K", percent: 85, color: "bg-gradient-to-r from-pink-500 to-rose-500" },
+                    { name: "TikTok", views: "15.9K", percent: 55, color: "bg-gradient-to-r from-slate-850 to-slate-950" },
+                    { name: "Google Arama", views: "11.2K", percent: 40, color: "bg-gradient-to-r from-blue-500 to-cyan-500" }
+                  ].map((source, idx) => (
+                    <div key={idx} className="space-y-1">
+                      <div className="flex justify-between text-[10px] font-bold text-slate-700">
+                        <span>{source.name}</span>
+                        <span className="text-slate-900">{source.views}</span>
+                      </div>
+                      <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full ${source.color} rounded-full transition-all duration-1000 ease-out origin-left`}
+                          style={{ width: `${source.percent}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Card 4: Cihazlar (Devices) */}
+              <div className="bg-white p-4 rounded-2xl border border-gray-150/70 shadow-sm flex flex-col justify-between">
+                <h3 className="text-xs font-bold text-slate-800 tracking-tight mb-2">Cihaz Dağılımı</h3>
+                
+                <div className="flex flex-col items-center justify-center py-1">
+                  <div className="relative w-20 h-10 overflow-hidden flex items-end justify-center mb-2">
+                    <svg className="w-20 h-20 absolute -bottom-10" viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" strokeWidth="12" />
+                      <circle cx="50" cy="50" r="40" fill="transparent" stroke="#38bdf8" strokeWidth="12" 
+                              strokeDasharray="251.2" strokeDashoffset="110" strokeLinecap="round" />
+                      <circle cx="50" cy="50" r="40" fill="transparent" stroke="#4f46e5" strokeWidth="12" 
+                              strokeDasharray="251.2" strokeDashoffset="210" strokeLinecap="round" />
+                    </svg>
+                    <div className="text-center z-10">
+                      <p className="text-[11px] font-black text-slate-900 leading-none">71.7K</p>
+                      <p className="text-[7px] font-bold text-slate-400 uppercase mt-0.5">Toplam</p>
                     </div>
                   </div>
-                ))}
+                </div>
+
+                <div className="space-y-1 pt-1.5 border-t border-slate-55">
+                  <div className="flex justify-between text-[10px]">
+                    <div className="flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                      <span className="font-semibold text-slate-500">Mobil</span>
+                    </div>
+                    <span className="font-extrabold text-slate-900">53.1K (%74)</span>
+                  </div>
+                  <div className="flex justify-between text-[10px]">
+                    <div className="flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+                      <span className="font-semibold text-slate-500">PC</span>
+                    </div>
+                    <span className="font-extrabold text-slate-900">18.6K (%26)</span>
+                  </div>
+                </div>
               </div>
             </div>
 
             <ul className="space-y-4 pt-2">
               <li className="flex items-center gap-3">
                 <div className="bg-teal-50 p-2 rounded-lg"><Users className="h-5 w-5 text-teal-500" /></div>
-                <span className="text-slate-700 font-semibold text-sm">Ziyaretçi Demografisi</span>
+                <span className="text-slate-700 font-semibold text-sm">Gerçek Zamanlı Ziyaretçi Demografisi</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="bg-teal-50 p-2 rounded-lg"><BarChart3 className="h-5 w-5 text-teal-500" /></div>
-                <span className="text-slate-700 font-semibold text-sm">Cihaz ve Konum Raporları</span>
+                <span className="text-slate-700 font-semibold text-sm">Gelişmiş Cihaz, Tarayıcı ve Konum Raporları</span>
               </li>
             </ul>
           </div>
