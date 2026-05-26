@@ -2005,20 +2005,26 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                   </p>
                 </div>
                 <div className="flex gap-2">
-                  {["FREE", "STARTER", "CREATOR"].map((p) => (
-                    <button
-                      key={p}
-                      type="button"
-                      onClick={() => setSimulatedPlan(p)}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer select-none ${
-                        simulatedPlan === p
-                          ? "bg-teal-500 border-teal-500 text-slate-900 shadow-md"
-                          : "bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50 shadow-sm"
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  ))}
+                  {["FREE", "STARTER", "CREATOR"]
+                    .filter((p) => {
+                      if (initialUser.plan === "FREE") return p === "FREE";
+                      if (initialUser.plan === "STARTER") return p === "FREE" || p === "STARTER";
+                      return true;
+                    })
+                    .map((p) => (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => setSimulatedPlan(p)}
+                        className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer select-none ${
+                          simulatedPlan === p
+                            ? "bg-teal-500 border-teal-500 text-white shadow-md"
+                            : "bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50 shadow-sm"
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    ))}
                 </div>
               </div>
 
