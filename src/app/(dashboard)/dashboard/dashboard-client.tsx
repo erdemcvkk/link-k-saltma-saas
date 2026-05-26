@@ -20,7 +20,8 @@ import {
   updateQrCode,
   deleteQrCode,
   updateLinkAnimation,
-  updateLinkCustomStyle
+  updateLinkCustomStyle,
+  applyTemplateToProfile
 } from "@/app/actions";
 import {
   ResponsiveContainer,
@@ -171,6 +172,19 @@ interface DashboardClientProps {
   globalSettings?: Record<string, string>;
   initialFonts?: { id?: string; name: string; value: string; tier: string; giftLabel?: string | null }[];
   initialQrCodes?: QrCodeItem[];
+  initialOwnedTemplates?: {
+    id: string;
+    name: string;
+    price: number;
+    category: string;
+    coverUrl: string;
+    bgColor: string;
+    fontStyle: string;
+    buttonStyle: string;
+    isCoded: boolean;
+    customCss?: string | null;
+    configJson?: string | null;
+  }[];
 }
 
 
@@ -301,7 +315,17 @@ const getLinkIconHelper = (type?: string, url?: string) => {
   }
 };
 
-export default function DashboardClient({ initialUser, initialLinks, initialPageViews, initialProducts, globalSettings, initialFonts = FONTS_CATALOG, initialQrCodes = [] }: DashboardClientProps) {
+export default function DashboardClient({
+  initialUser,
+  initialLinks,
+  initialPageViews,
+  initialProducts,
+  globalSettings,
+  initialFonts = FONTS_CATALOG,
+  initialQrCodes = [],
+  initialOwnedTemplates = []
+}: DashboardClientProps) {
+  const [ownedTemplates, setOwnedTemplates] = useState(initialOwnedTemplates);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [upgradeModalTitle, setUpgradeModalTitle] = useState("");
   const [upgradeModalDesc, setUpgradeModalDesc] = useState("");
@@ -422,7 +446,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
     }
   }, [initialUser.plan]);
 
-  const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo">("editor");
+  const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo" | "templates">("editor");
   const [activeSubTab, setActiveSubTab] = useState<"links" | "appearance" | "profile">("links");
   const [expandedLinkCard, setExpandedLinkCard] = useState<string | null>(null);
 
@@ -1596,6 +1620,18 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
         >
           <Globe className="h-3.5 w-3.5" />
           {t.tabSeo}
+        </button>
+
+        <button
+          onClick={() => setActiveTab("templates")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+            activeTab === "templates"
+              ? "bg-teal-500 border-teal-500 text-white shadow-sm"
+              : "bg-white border-zinc-200 text-zinc-650 hover:bg-zinc-100 hover:text-zinc-900"
+          }`}
+        >
+          <Palette className="h-3.5 w-3.5" />
+          {lang === "tr" ? "Şablonlarım" : "My Templates"}
         </button>
 
         </div>
@@ -3330,22 +3366,168 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                                 <option value="font-normal">{lang === "tr" ? "Normal" : "Normal"}</option>
                                 <option value="font-medium">{lang === "tr" ? "Orta (Medium)" : "Medium"}</option>
                                 <option value="font-bold">{lang === "tr" ? "Kalın (Bold)" : "Bold"}</option>
-                                <option value="font-black">{lang === "tr" ? "Ekstra Kalın" : "Extra Bold"}</option>
                               </select>
                             </div>
                           </div>
                         </div>
-                      </>
-                    )}
-                  </div>
-                ))
-                  )}
-                </div>
+                        </>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
               </div>
             </div>
           )}
-        </div>
-      )}
+            </div>
+        )}
+
+          {/* TAB 5: OWNED TEMPLATES (ŞABLONLARIM) */}
+        {activeTab === "templates" && (
+          <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+            <div className={`p-6 rounded-2xl border space-y-6 ${
+              "bg-white border-zinc-200 shadow-sm"
+            }`}>
+              <div className="flex items-center justify-between border-b border-zinc-150 pb-5">
+                <div className="flex items-center gap-3">
+                  <Palette className="h-5 w-5 text-teal-500" />
+                  <div>
+                    <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>
+                      {lang === "tr" ? "Satın Alınan Şablonlarım" : "My Purchased Templates"}
+                    </h2>
+                    <p className="text-xs text-slate-500">
+                      {lang === "tr" 
+                        ? "Satın aldığınız şablonları buradan yönetebilir ve tek tıkla profilinize uygulayabilirsiniz." 
+                        : "Manage and apply your purchased designs directly to your public link profile page."}
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  href="/sablonlar"
+                  className="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 text-xs font-black transition-colors cursor-pointer"
+                >
+                  {lang === "tr" ? "Yeni Şablon Al" : "Browse Showcase"}
+                </Link>
+              </div>
+
+              {ownedTemplates.length === 0 ? (
+                <div className="text-center py-10 space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center mx-auto text-zinc-400">
+                    <Palette className="h-6 w-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold text-zinc-800">
+                      {lang === "tr" ? "Henüz şablon satın almadınız" : "No templates purchased yet"}
+                    </p>
+                    <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                      {lang === "tr" 
+                        ? "Şablon vitrinimizi ziyaret ederek profilinize harika bir görünüm kazandıracak profesyonel temaları inceleyebilirsiniz." 
+                        : "Visit our showcase and pick beautiful themes to upgrade your visual presence."}
+                    </p>
+                  </div>
+                  <Link
+                    href="/sablonlar"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 text-xs font-black transition-colors cursor-pointer"
+                  >
+                    <span>{lang === "tr" ? "Şablon Vitrinine Git" : "Go to Showcase"}</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {ownedTemplates.map((template) => {
+                    const isCurrentlyApplied = background === template.bgColor && fontStyle === template.fontStyle;
+                    return (
+                      <div 
+                        key={template.id} 
+                        className={`p-5 rounded-2xl border transition-all flex flex-col justify-between gap-5 ${
+                          isCurrentlyApplied 
+                            ? "bg-teal-50/20 border-teal-500 shadow-md shadow-teal-500/5" 
+                            : "bg-zinc-50/50 border-zinc-200 hover:border-zinc-300 hover:shadow-sm"
+                        }`}
+                      >
+                        <div className="space-y-3">
+                          {/* Mini design preview card */}
+                          <div 
+                            className="h-28 rounded-xl flex flex-col items-center justify-center p-4 border border-zinc-200/60 relative overflow-hidden shadow-inner"
+                            style={{ background: template.bgColor }}
+                          >
+                            {/* Glass overlay button preview */}
+                            <div 
+                              className={`px-4 py-2 rounded-xl text-[10px] font-bold text-center w-3/4 truncate max-w-xs ${template.buttonStyle}`}
+                            >
+                              {template.name}
+                            </div>
+                            <span className="absolute bottom-2 right-2 text-[9px] font-mono text-zinc-400 bg-black/45 px-2 py-0.5 rounded backdrop-blur-sm">
+                              {template.fontStyle}
+                            </span>
+                          </div>
+
+                          <div className="space-y-1">
+                            <div className="flex items-center justify-between">
+                              <h3 className="font-extrabold text-sm text-zinc-950">
+                                {template.name}
+                              </h3>
+                              <span className="text-[10px] font-bold text-teal-600 bg-teal-50 border border-teal-100 px-2 py-0.5 rounded-full">
+                                {template.category}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-slate-500">
+                              {template.isCoded 
+                                ? (lang === "tr" ? "Özel CSS/Kod Yapısı" : "Custom Encoded Layout") 
+                                : (lang === "tr" ? "Hazır Görsel Düzen" : "Visual Grid Template")}
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          disabled={isCurrentlyApplied || isPending}
+                          onClick={async () => {
+                            try {
+                              setIsPending(true);
+                              const res = await applyTemplateToProfile(initialUser.id, template.id);
+                              if (res.success) {
+                                setBackground(template.bgColor);
+                                if (template.fontStyle) {
+                                  setFontStyle(template.fontStyle);
+                                }
+                                setSuccessMsg(lang === "tr" ? "Şablon başarıyla uygulandı!" : "Template applied successfully!");
+                                setTimeout(() => setSuccessMsg(""), 3000);
+                              }
+                            } catch (e: any) {
+                              setErrorMsg(e.message || "An error occurred");
+                              setTimeout(() => setErrorMsg(""), 4000);
+                            } finally {
+                              setIsPending(false);
+                            }
+                          }}
+                          className={`w-full py-2.5 rounded-xl font-extrabold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
+                            isCurrentlyApplied 
+                              ? "bg-zinc-100 text-zinc-400 border border-zinc-200 cursor-not-allowed" 
+                              : "bg-teal-500 hover:bg-teal-400 text-slate-900"
+                          }`}
+                        >
+                          {isCurrentlyApplied ? (
+                            <>
+                              <Check className="h-3.5 w-3.5" />
+                              <span>{lang === "tr" ? "Aktif Olarak Uygulandı" : "Currently Active"}</span>
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="h-3.5 w-3.5" />
+                              <span>{lang === "tr" ? "Profili Güncelle (Uygula)" : "Apply to Profile"}</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* TAB 2: TRAFFIC ANALYTICS */}
         {activeTab === "analytics" && (
@@ -4513,10 +4695,8 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
                 </div>
               )}
             </div>
-
           </div>
         )}
-
         </div>
 
         {/* RIGHT COLUMN: STICKY SIMULATOR PREVIEW OR INVISIBLE SPACER FOR EXACT ALIGNMENT & PROPORTIONS */}

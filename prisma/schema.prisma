@@ -26,6 +26,7 @@ model User {
   pageViews     PageView[]
   products      Product[]
   qrCodes       QrCode[]
+  purchasedTemplates UserTemplate[]
 }
 
 model Profile {
@@ -115,7 +116,7 @@ model LinkClick {
 model Product {
   id          String   @id @default(uuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
   type        String   // BEAT, PRESET, SAMPLE_PACK, OTHER
   price       Float
@@ -195,10 +196,23 @@ model Template {
   bgColor     String
   fontStyle   String
   buttonStyle String
+  paymentLink String?
   isActive    Boolean  @default(true)
   isCoded     Boolean  @default(false)
   customCss   String?
   configJson  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  users       UserTemplate[]
+}
+
+model UserTemplate {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId String
+  template   Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, templateId])
 }

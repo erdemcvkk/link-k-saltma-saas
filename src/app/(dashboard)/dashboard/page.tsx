@@ -160,6 +160,28 @@ export default async function DashboardPage() {
     giftLabel: f.giftLabel,
   }));
 
+  // Fetch owned templates of this user
+  const ownedTemplates = await db.userTemplate.findMany({
+    where: { userId: user.id },
+    include: {
+      template: true,
+    },
+  });
+
+  const serializedOwnedTemplates = ownedTemplates.map((ot) => ({
+    id: ot.template.id,
+    name: ot.template.name,
+    price: ot.template.price,
+    category: ot.template.category,
+    coverUrl: ot.template.coverUrl,
+    bgColor: ot.template.bgColor,
+    fontStyle: ot.template.fontStyle,
+    buttonStyle: ot.template.buttonStyle,
+    isCoded: ot.template.isCoded,
+    customCss: ot.template.customCss,
+    configJson: ot.template.configJson,
+  }));
+
   return (
     <DashboardClient
       initialUser={serializedUser}
@@ -169,6 +191,7 @@ export default async function DashboardPage() {
       globalSettings={serializedSettings}
       initialFonts={serializedFonts}
       initialQrCodes={serializedQrCodes}
+      initialOwnedTemplates={serializedOwnedTemplates}
     />
   );
 }

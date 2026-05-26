@@ -1017,6 +1017,7 @@ export async function createTemplate(
     bgColor: string;
     fontStyle: string;
     buttonStyle: string;
+    paymentLink?: string;
     isActive: boolean;
     isCoded: boolean;
     customCss?: string;
@@ -1037,6 +1038,7 @@ export async function createTemplate(
       bgColor: data.bgColor || "#09090b",
       fontStyle: data.fontStyle || "Inter",
       buttonStyle: data.buttonStyle || "rounded-xl",
+      paymentLink: data.paymentLink || null,
       isActive: data.isActive !== false,
       isCoded: !!data.isCoded,
       customCss: data.customCss || null,
@@ -1060,6 +1062,7 @@ export async function updateTemplate(
     bgColor?: string;
     fontStyle?: string;
     buttonStyle?: string;
+    paymentLink?: string;
     isActive?: boolean;
     isCoded?: boolean;
     customCss?: string;
@@ -1090,6 +1093,74 @@ export async function deleteTemplate(adminUserId: string, templateId: string) {
 
   revalidatePath("/sablonlar");
   revalidatePath("/admin/templates");
+  return { success: true };
+}
+
+export async function purchaseTemplate(userId: string, templateId: string) {
+  if (!userId || !templateId) {
+    throw new Error("Missing parameters");
+  }
+
+  await db.userTemplate.upsert({
+    where: {
+      userId_templateId: {
+        userId,
+        templateId,
+      },
+    },
+    update: {},
+    create: {
+      userId,
+      templateId,
+    },
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/sablonlar");
+  return { success: true };
+}
+
+export async function applyTemplateToProfile(userId: string, templateId: string) {
+  if (!userId || !templateId) {
+    throw new Error("Missing parameters");
+  }
+
+  const template = await db.template.findUnique({
+    where: { id: templateId }
+  });
+
+  if (!template) {
+    throw new Error("Template not found");
+  }
+
+  // Make sure user owns this template (or it is free)
+  const isFree = template.price === 0;
+  if (!isFree) {
+    const ownership = await db.userTemplate.findUnique({
+      where: {
+        userId_templateId: {
+          userId,
+          templateId
+        }
+      }
+    });
+    if (!ownership) {
+      throw new Error("You do not own this template. Please purchase it first!");
+    }
+  }
+
+  // Apply properties to the user's Profile
+  await db.profile.update({
+    where: { userId },
+    data: {
+      background: template.bgColor,
+      fontStyle: template.fontStyle,
+      theme: template.isCoded ? "custom" : template.category.toLowerCase()
+    }
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/[username]", "page");
   return { success: true };
 }
 
@@ -1213,6 +1284,116 @@ export async function seedTemplates(adminUserId?: string) {
       bgColor: "linear-gradient(135deg, #c084fc 0%, #818cf8 100%)",
       fontStyle: "Inter",
       buttonStyle: "bg-white hover:bg-purple-50 text-indigo-900 rounded-xl shadow-lg",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Cyberpunk Magenta",
+      price: 179.0,
+      category: "Gamer",
+      coverUrl: "https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(to right, #ec4899, #8b5cf6)",
+      fontStyle: "Space Grotesk",
+      buttonStyle: "bg-black/90 hover:bg-black text-pink-400 border border-pink-500 rounded-md",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Sunset Dream",
+      price: 0.0,
+      category: "Genel",
+      coverUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #f97316 0%, #e11d48 100%)",
+      fontStyle: "Outfit",
+      buttonStyle: "bg-white/95 text-red-650 rounded-full hover:bg-white",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Forest Whisper",
+      price: 69.0,
+      category: "Yazar",
+      coverUrl: "https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #064e3b 0%, #15803d 100%)",
+      fontStyle: "Georgia",
+      buttonStyle: "bg-emerald-950 text-emerald-250 border border-emerald-800 rounded-lg",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Electric Blue",
+      price: 159.0,
+      category: "Gamer",
+      coverUrl: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=400&h=300&fit=crop",
+      bgColor: "#0f172a",
+      fontStyle: "Courier New",
+      buttonStyle: "border border-cyan-500 bg-transparent text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.3)]",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Vintage Paper",
+      price: 99.0,
+      category: "Yazar",
+      coverUrl: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?q=80&w=400&h=300&fit=crop",
+      bgColor: "#fcfbf7",
+      fontStyle: "Playfair Display",
+      buttonStyle: "text-slate-800 border border-slate-800 bg-transparent hover:bg-slate-50",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Midnight Purple",
+      price: 219.0,
+      category: "Müzisyen",
+      coverUrl: "https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #3b0764 0%, #1e1b4b 100%)",
+      fontStyle: "Arial",
+      buttonStyle: "bg-gradient-to-r from-fuchsia-600 to-indigo-650 text-white rounded-xl",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Bright Gold",
+      price: 299.0,
+      category: "Kurumsal",
+      coverUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(to right, #fbbf24, #f59e0b)",
+      fontStyle: "Inter",
+      buttonStyle: "bg-slate-950 hover:bg-slate-900 text-amber-400 rounded-full font-bold",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Holographic Glass",
+      price: 189.0,
+      category: "Kreatör",
+      coverUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)",
+      fontStyle: "Syne",
+      buttonStyle: "bg-white/20 hover:bg-white/30 text-white border border-white/20 backdrop-blur-md rounded-2xl",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Tokyo Drift",
+      price: 0.0,
+      category: "Gamer",
+      coverUrl: "https://images.unsplash.com/photo-1547082299-de196ea013d6?q=80&w=400&h=300&fit=crop",
+      bgColor: "#09090b",
+      fontStyle: "Impact",
+      buttonStyle: "bg-red-600 text-white font-extrabold skew-x-3 hover:bg-red-700",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Royal Velvet",
+      price: 249.0,
+      category: "Kurumsal",
+      coverUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #1e1b4b 0%, #311042 100%)",
+      fontStyle: "Lora",
+      buttonStyle: "bg-amber-500 hover:bg-amber-450 text-white rounded-md shadow-lg",
       isActive: true,
       isCoded: false,
     },

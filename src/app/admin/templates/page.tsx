@@ -49,6 +49,7 @@ export default async function AdminTemplatesPage() {
     bgColor: t.bgColor,
     fontStyle: t.fontStyle,
     buttonStyle: t.buttonStyle,
+    paymentLink: t.paymentLink,
     isActive: t.isActive,
     isCoded: t.isCoded,
     customCss: t.customCss,

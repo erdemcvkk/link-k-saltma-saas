@@ -35,6 +35,7 @@ interface Template {
   bgColor: string;
   fontStyle: string;
   buttonStyle: string;
+  paymentLink?: string | null;
   isActive: boolean;
   isCoded: boolean;
   customCss?: string | null;
@@ -56,6 +57,8 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditPriceOpen, setIsEditPriceOpen] = useState<string | null>(null);
   const [newPrice, setNewPrice] = useState("");
+  const [isEditLinkOpen, setIsEditLinkOpen] = useState<string | null>(null);
+  const [newPaymentLink, setNewPaymentLink] = useState("");
 
   // Form states
   const [formMode, setFormMode] = useState<"no-code" | "code">("no-code");
@@ -67,6 +70,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     bgColor: "#09090b",
     fontStyle: "Inter",
     buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
+    paymentLink: "",
     customCss: "",
     configJson: "",
   });
@@ -109,6 +113,24 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
         setNewPrice("");
       } catch (err: any) {
         setErrorMsg(err.message || "Fiyat güncellenirken hata oluştu.");
+      }
+    });
+  };
+
+  const handleUpdatePaymentLink = async (id: string) => {
+    setErrorMsg("");
+    setSuccessMsg("");
+    startTransition(async () => {
+      try {
+        await updateTemplate(adminUserId, id, { paymentLink: newPaymentLink });
+        setTemplates(prev => 
+          prev.map(t => t.id === id ? { ...t, paymentLink: newPaymentLink } : t)
+        );
+        setSuccessMsg("Ödeme linki güncellendi!");
+        setIsEditLinkOpen(null);
+        setNewPaymentLink("");
+      } catch (err: any) {
+        setErrorMsg(err.message || "Ödeme linki güncellenirken hata oluştu.");
       }
     });
   };
@@ -168,6 +190,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
           bgColor: formData.bgColor,
           fontStyle: formData.fontStyle,
           buttonStyle: formData.buttonStyle,
+          paymentLink: formData.paymentLink,
           isActive: true,
           isCoded: formMode === "code",
           customCss: formMode === "code" ? formData.customCss : undefined,
@@ -184,6 +207,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
           bgColor: result.bgColor,
           fontStyle: result.fontStyle,
           buttonStyle: result.buttonStyle,
+          paymentLink: result.paymentLink,
           isActive: result.isActive,
           isCoded: result.isCoded,
           customCss: result.customCss,
@@ -202,6 +226,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
           bgColor: "#09090b",
           fontStyle: "Inter",
           buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
+          paymentLink: "",
           customCss: "",
           configJson: "",
         });
@@ -286,7 +311,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                 <tr className="border-b border-slate-900 text-slate-400 bg-slate-900/40">
                   <th className="py-4 px-6 font-black uppercase tracking-wider">Şablon</th>
                   <th className="py-4 px-6 font-black uppercase tracking-wider">Kategori</th>
-                  <th className="py-4 px-6 font-black uppercase tracking-wider">Fiyat</th>
+                  <th className="py-4 px-6 font-black uppercase tracking-wider">Fiyat & Ödeme Linki</th>
                   <th className="py-4 px-6 font-black uppercase tracking-wider">Tür</th>
                   <th className="py-4 px-6 font-black uppercase tracking-wider">Durum</th>
                   <th className="py-4 px-6 font-black uppercase tracking-wider text-right">İşlemler</th>
@@ -313,8 +338,8 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                       </span>
                     </td>
                     
-                    {/* Price edit */}
-                    <td className="py-4 px-6">
+                    {/* Price & Payment Link edit */}
+                    <td className="py-4 px-6 space-y-2">
                       {isEditPriceOpen === template.id ? (
                         <div className="flex items-center gap-1.5">
                           <input
@@ -322,17 +347,17 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                             value={newPrice}
                             onChange={(e) => setNewPrice(e.target.value)}
                             placeholder="Yeni Fiyat"
-                            className="w-16 px-2 py-1 rounded bg-slate-950 border border-slate-800 text-xs font-semibold focus:outline-none focus:border-neon-blue"
+                            className="w-16 px-2 py-1 rounded bg-slate-950 border border-slate-800 text-xs font-semibold focus:outline-none focus:border-neon-blue text-white"
                           />
                           <button
                             onClick={() => handleUpdatePrice(template.id)}
-                            className="p-1 rounded bg-neon-blue text-white hover:opacity-90"
+                            className="p-1 rounded bg-neon-blue text-white hover:opacity-90 cursor-pointer"
                           >
                             <Check className="h-3 w-3" />
                           </button>
                           <button
                             onClick={() => setIsEditPriceOpen(null)}
-                            className="p-1 rounded bg-slate-800 text-slate-400 hover:text-white"
+                            className="p-1 rounded bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
                           >
                             <X className="h-3 w-3" />
                           </button>
@@ -349,6 +374,50 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                           >
                             Düzenle
                           </button>
+                        </div>
+                      )}
+
+                      {/* Payment Link inline edit */}
+                      {template.price > 0 && (
+                        <div>
+                          {isEditLinkOpen === template.id ? (
+                            <div className="flex items-center gap-1.5">
+                              <input
+                                type="text"
+                                value={newPaymentLink}
+                                onChange={(e) => setNewPaymentLink(e.target.value)}
+                                placeholder="Ödeme Linki (Shopier)"
+                                className="w-32 px-2 py-1 rounded bg-slate-950 border border-slate-800 text-[10px] font-semibold focus:outline-none focus:border-neon-blue text-white"
+                              />
+                              <button
+                                onClick={() => handleUpdatePaymentLink(template.id)}
+                                className="p-1 rounded bg-neon-blue text-white hover:opacity-90 cursor-pointer"
+                              >
+                                <Check className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={() => setIsEditLinkOpen(null)}
+                                className="p-1 rounded bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="text-[10px] text-slate-400 flex items-center gap-2">
+                              <span className="truncate max-w-[120px] inline-block font-mono">
+                                {template.paymentLink ? "Link Tanımlı" : "Link Tanımsız"}
+                              </span>
+                              <button
+                                onClick={() => {
+                                  setIsEditLinkOpen(template.id);
+                                  setNewPaymentLink(template.paymentLink || "");
+                                }}
+                                className="text-neon-blue hover:underline cursor-pointer"
+                              >
+                                Link Düzenle
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </td>
@@ -545,6 +614,18 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                   onChange={(e) => setFormData(prev => ({ ...prev, buttonStyle: e.target.value }))}
                   placeholder="örn: bg-white text-slate-900 border border-pink-200 rounded-full shadow-lg"
                   className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold focus:outline-none focus:border-neon-blue"
+                />
+              </div>
+
+              {/* Payment Link */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Ödeme Linki (Shopier / Stripe vb.)</label>
+                <input
+                  type="url"
+                  value={formData.paymentLink}
+                  onChange={(e) => setFormData(prev => ({ ...prev, paymentLink: e.target.value }))}
+                  placeholder="https://shopier.com/..."
+                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold focus:outline-none focus:border-neon-blue text-white"
                 />
               </div>
 

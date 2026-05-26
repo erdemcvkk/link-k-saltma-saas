@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Search, Eye, ShoppingCart, X, Check, Laptop, Smartphone, ExternalLink } from "lucide-react";
+import { ArrowLeft, Search, Eye, ShoppingCart, X, Check, Laptop, Smartphone, ExternalLink, Sparkles } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
+import { purchaseTemplate } from "@/app/actions";
 
 interface Template {
   id: string;
@@ -14,6 +15,7 @@ interface Template {
   bgColor: string;
   fontStyle: string;
   buttonStyle: string;
+  paymentLink?: string | null;
   isActive: boolean;
   isCoded: boolean;
   customCss?: string | null;
@@ -23,13 +25,17 @@ interface Template {
 
 interface SablonlarClientProps {
   initialTemplates: Template[];
+  userId: string | null;
+  initialOwnedTemplateIds?: string[];
 }
 
-export default function SablonlarClient({ initialTemplates }: SablonlarClientProps) {
+export default function SablonlarClient({ initialTemplates, userId, initialOwnedTemplateIds = [] }: SablonlarClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Tümü");
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [purchaseSuccess, setPurchaseSuccess] = useState(false);
+  const [ownedTemplateIds, setOwnedTemplateIds] = useState<string[]>(initialOwnedTemplateIds);
+  const [isPending, startTransition] = useState(false);
 
   // Extract unique categories
   const categories = ["Tümü", ...Array.from(new Set(initialTemplates.map((t) => t.category)))];
@@ -43,12 +49,34 @@ export default function SablonlarClient({ initialTemplates }: SablonlarClientPro
   });
 
   const handlePurchase = (template: Template) => {
-    // Simulate checkout redirection or success
-    setPurchaseSuccess(true);
-    setTimeout(() => {
-      setPurchaseSuccess(false);
-      setSelectedTemplate(null);
-    }, 2500);
+    if (!userId) {
+      alert("Şablon satın almak veya kullanmak için lütfen giriş yapın.");
+      window.location.href = "/sign-in";
+      return;
+    }
+
+    setIsPending(true);
+    // If there is a payment link, open it in a new window
+    if (template.price > 0 && template.paymentLink) {
+      window.open(template.paymentLink, "_blank");
+    }
+
+    // Register simulated purchase for the user
+    startTransition(async () => {
+      try {
+        await purchaseTemplate(userId, template.id);
+        setOwnedTemplateIds(prev => [...prev, template.id]);
+        setPurchaseSuccess(true);
+        setIsPending(false);
+        setTimeout(() => {
+          setPurchaseSuccess(false);
+          setSelectedTemplate(null);
+        }, 2000);
+      } catch (err) {
+        console.error("Purchase error:", err);
+        setIsPending(false);
+      }
+    });
   };
 
   return (
@@ -299,6 +327,14 @@ export default function SablonlarClient({ initialTemplates }: SablonlarClientPro
                     <Check className="h-5 w-5" />
                     Şablon Hesabınıza Tanımlandı!
                   </div>
+                ) : ownedTemplateIds.includes(selectedTemplate.id) ? (
+                  <Link
+                    href="/dashboard"
+                    className="w-full py-3.5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-750 text-white font-black text-sm tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer text-center"
+                  >
+                    <Check className="h-4 w-4 text-emerald-450" />
+                    Hesabınızda Tanımlı (Panele Git)
+                  </Link>
                 ) : (
                   <button
                     onClick={() => handlePurchase(selectedTemplate)}
