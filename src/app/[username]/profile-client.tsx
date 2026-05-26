@@ -293,9 +293,9 @@ export default function ProfileClient({ username, bio, theme, links, products, a
   };
 
   // Determine background rendering mode
-  const isCustomImg = background?.startsWith("custom-img::");
+  const isCustomImg = background?.startsWith("custom-img::") || background?.startsWith("http://") || background?.startsWith("https://") || background?.startsWith("/");
   const isCustomVideo = background?.startsWith("custom-video::");
-  const customImgUrl = isCustomImg ? background!.replace("custom-img::", "") : null;
+  const customImgUrl = isCustomImg ? (background!.startsWith("custom-img::") ? background!.replace("custom-img::", "") : background) : null;
   const customVideoUrl = isCustomVideo ? background!.replace("custom-video::", "") : null;
   const bgClassName = (!isCustomImg && !isCustomVideo && background) ? background : (!isCustomImg && !isCustomVideo ? currentStyles.bg : "");
 

@@ -1331,9 +1331,9 @@ export default function DashboardClient({
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-50 rounded-b-xl z-20" />
 
           {(() => {
-            const isCustomImg = background?.startsWith("custom-img::");
+            const isCustomImg = background?.startsWith("custom-img::") || background?.startsWith("http://") || background?.startsWith("https://") || background?.startsWith("/");
             const isCustomVideo = background?.startsWith("custom-video::");
-            const customImgUrl = isCustomImg ? background.replace("custom-img::", "") : null;
+            const customImgUrl = isCustomImg ? (background.startsWith("custom-img::") ? background.replace("custom-img::", "") : background) : null;
             const customVideoUrl = isCustomVideo ? background.replace("custom-video::", "") : null;
             const bgClassName = (!isCustomImg && !isCustomVideo && background) ? background : (!isCustomImg && !isCustomVideo ? previewStyles.bg : "");
 
