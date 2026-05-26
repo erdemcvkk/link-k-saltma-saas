@@ -11,13 +11,14 @@
   to { transform: translateY(0); opacity: 1; }
 }
 @keyframes slideDownFromTop {
-  from { transform: translateY(-40px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  0% { transform: translateY(-120px) scale(0.95); opacity: 0; }
+  70% { transform: translateY(10px) scale(1.02); opacity: 0.9; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 @layer utilities {
   .animate-slide-down {
-    animation: slideDownFromTop 0.8s ease-out forwards;
+    animation: slideDownFromTop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
 }
 

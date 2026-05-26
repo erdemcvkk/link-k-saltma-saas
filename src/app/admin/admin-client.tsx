@@ -1512,6 +1512,118 @@ export default function AdminClient({
                   </div>
                 </div>
 
+                {/* Slider Linkleri Yönetimi (Yeni İstek) */}
+                <div className="p-6 rounded-xl border bg-white border-gray-100 shadow-sm space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-900">Slider Bağlantıları (Önizleme Link Kartları)</h3>
+                    <p className="text-xs text-slate-500 mt-1">Giriş sayfasındaki telefonda görünecek örnek link kartlarını yönetin. (En az 3-4 adet olması önerilir)</p>
+                  </div>
+
+                  {/* Yeni Link Ekleme Formu */}
+                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-4">
+                    <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Yeni Örnek Link Kartı Ekle</h4>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-650">Link Başlığı</label>
+                        <input
+                          type="text"
+                          placeholder="Örn: Instagram Hesabım"
+                          value={newSliderTitle}
+                          onChange={(e) => setNewSliderTitle(e.target.value)}
+                          className="w-full px-3 py-1.5 rounded-lg border bg-white border-gray-200 text-slate-900 text-xs"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-bold text-slate-650">Görsel URL</label>
+                        <input
+                          type="text"
+                          placeholder="Örn: https://images.unsplash.com/..."
+                          value={newSliderLink}
+                          onChange={(e) => setNewSliderLink(e.target.value)}
+                          className="w-full px-3 py-1.5 rounded-lg border bg-white border-gray-200 text-slate-900 text-xs"
+                        />
+                      </div>
+                      <div className="flex items-end">
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            if (!newSliderTitle || !newSliderLink) {
+                              alert("Başlık ve Görsel URL alanları zorunludur.");
+                              return;
+                            }
+                            setIsUploadingSlider(true);
+                            try {
+                              const created = await addSliderItem(adminUserId, newSliderTitle, newSliderLink);
+                              setSliderItems(prev => [...prev, {
+                                id: created.id,
+                                title: created.title,
+                                imageUrl: created.imageUrl,
+                                link: created.link || undefined
+                              }]);
+                              setNewSliderTitle("");
+                              setNewSliderLink("");
+                              setSuccessMsg("Yeni slider öğesi başarıyla eklendi!");
+                              setTimeout(() => setSuccessMsg(""), 3000);
+                            } catch (err: any) {
+                              alert(err.message || "Ekleme başarısız oldu.");
+                            } finally {
+                              setIsUploadingSlider(false);
+                            }
+                          }}
+                          disabled={isUploadingSlider}
+                          className="w-full py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg font-bold text-xs cursor-pointer flex items-center justify-center gap-1.5 transition-colors"
+                        >
+                          {isUploadingSlider && <Loader2 className="h-3 w-3 animate-spin" />}
+                          <Plus className="h-3.5 w-3.5" />
+                          Kart Ekle
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mevcut Link Kartları Listesi */}
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Kayıtlı Örnek Link Kartları ({sliderItems.length})</h4>
+                    {sliderItems.length === 0 ? (
+                      <p className="text-xs text-slate-400 italic">Henüz örnek link kartı eklenmemiş.</p>
+                    ) : (
+                      <div className="border border-slate-100 rounded-xl overflow-hidden divide-y divide-slate-100">
+                        {sliderItems.map((item) => (
+                          <div key={item.id} className="p-3 bg-white hover:bg-slate-50 flex items-center justify-between text-xs transition-colors">
+                            <div className="flex items-center gap-3">
+                              {item.imageUrl && (
+                                <img src={item.imageUrl} alt={item.title} className="w-8 h-8 rounded-lg object-cover border" />
+                              )}
+                              <div>
+                                <p className="font-semibold text-slate-800">{item.title}</p>
+                                <p className="text-[10px] text-slate-400 truncate max-w-xs">{item.imageUrl}</p>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                if (!confirm("Bu slider öğesini silmek istediğinize emin misiniz?")) return;
+                                try {
+                                  await deleteSliderItem(adminUserId, item.id);
+                                  setSliderItems(prev => prev.filter(x => x.id !== item.id));
+                                  setSuccessMsg("Slider öğesi başarıyla silindi!");
+                                  setTimeout(() => setSuccessMsg(""), 3000);
+                                } catch (err: any) {
+                                  alert(err.message || "Silme başarısız.");
+                                }
+                              }}
+                              className="p-1.5 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white rounded-lg transition-colors cursor-pointer"
+                              title="Sil"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 {/* Creator Carousel Ayarları */}
                 <div className="p-6 rounded-xl border bg-white border-gray-100 shadow-sm">
                   <h3 className="text-lg font-semibold mb-4 text-slate-900">Creator Carousel (Yatay Kayan Slider)</h3>
