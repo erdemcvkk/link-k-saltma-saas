@@ -40,7 +40,7 @@ export default function SuperAdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4" style={{
+    <div className="min-h-screen bg-black flex items-center justify-center p-4 font-sans" style={{
       background: "radial-gradient(ellipse at top, #1a0000 0%, #0a0a0a 50%, #000000 100%)"
     }}>
       {/* Background glow effect */}

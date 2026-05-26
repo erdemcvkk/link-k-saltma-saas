@@ -777,7 +777,7 @@ export default function AdminClient({
   });
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 md:p-8 transition-colors duration-500 relative overflow-hidden ${
+    <div className={`min-h-screen flex items-center justify-center p-4 md:p-8 transition-colors duration-500 relative overflow-hidden font-sans ${
       isDark 
         ? "bg-zinc-950 text-white" 
         : "bg-[#f5f3ff] bg-[radial-gradient(circle_at_top_left,_#fef08a_0%,_transparent_25%),radial-gradient(circle_at_bottom_right,_#fbcfe8_0%,_transparent_30%),radial-gradient(circle_at_top_right,_#e9d5ff_0%,_transparent_25%)] text-zinc-900"

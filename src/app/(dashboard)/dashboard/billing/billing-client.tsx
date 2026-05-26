@@ -86,7 +86,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
   };
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 p-6 max-w-5xl mx-auto space-y-10">
+    <div className="min-h-screen bg-white text-zinc-900 p-6 max-w-5xl mx-auto space-y-10 font-corporate">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-200 pb-6">
         <div>

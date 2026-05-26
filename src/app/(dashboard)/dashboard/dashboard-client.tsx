@@ -1467,7 +1467,7 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 p-6 max-w-7xl mx-auto flex flex-col gap-6 ${
+    <div className={`min-h-screen transition-colors duration-500 p-6 max-w-7xl mx-auto flex flex-col gap-6 font-corporate ${
       "bg-white text-zinc-900"
     }`}>
       <GlobalOverlayManager onStateChange={handleStateChange} />

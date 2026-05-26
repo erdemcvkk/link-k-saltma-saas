@@ -59,7 +59,7 @@ export default function HomeClient({
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white text-slate-900 selection:bg-neon-blue/15 selection:text-neon-blue font-sans">
+    <div className="relative min-h-screen overflow-hidden bg-white text-slate-900 selection:bg-neon-blue/15 selection:text-neon-blue font-corporate">
       <GlobalOverlayManager />
 
       {/* Header */}
