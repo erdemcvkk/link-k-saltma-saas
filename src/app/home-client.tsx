@@ -76,7 +76,6 @@ export default function HomeClient({
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
-            <a href="#features" className="hover:text-slate-900 transition-colors">Özellikler</a>
             <a href="#analytics" className="hover:text-slate-900 transition-colors">Analizler</a>
             <a href="#pricing" className="hover:text-slate-900 transition-colors">Fiyatlandırma</a>
           </nav>
@@ -192,13 +191,6 @@ export default function HomeClient({
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Zigzag Features */}
-      <section id="features" className="w-full">
-        {featuresData && featuresData.length > 0 && (
-          <FeatureZigzag features={featuresData} />
-        )}
       </section>
 
       {/* Analytics Section (Animated Phone Mockup) */}
