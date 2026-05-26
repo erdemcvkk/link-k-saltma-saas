@@ -1169,8 +1169,10 @@ export async function seedTemplates(adminUserId?: string) {
     await ensureAdmin(adminUserId);
   }
 
-  const count = await db.template.count();
-  if (count > 0) return { success: true, seeded: false, message: "Templates already exist." };
+  const existingTemplates = await db.template.findMany({
+    select: { name: true }
+  });
+  const existingNames = new Set(existingTemplates.map(t => t.name));
 
   const sampleTemplates = [
     {
@@ -1509,12 +1511,17 @@ export async function seedTemplates(adminUserId?: string) {
     },
   ];
 
-  for (const template of sampleTemplates) {
+  const newTemplates = sampleTemplates.filter(t => !existingNames.has(t.name));
+  if (newTemplates.length === 0) {
+    return { success: true, seeded: false, message: "All templates already exist." };
+  }
+
+  for (const template of newTemplates) {
     await db.template.create({
       data: template,
     });
   }
 
   revalidatePath("/sablonlar");
-  return { success: true, seeded: true, count: sampleTemplates.length };
+  return { success: true, seeded: true, count: newTemplates.length };
 }
