@@ -263,120 +263,133 @@ export default function HomeClient({
               </p>
             </div>
 
-            {/* high-fidelity, polished multi-card link analytics dashboard widget */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50/50 p-4 rounded-[2rem] border border-gray-100 shadow-inner">
+            {/* Green themed high-fidelity analytics layout based on reference image */}
+            <div className="space-y-4 bg-emerald-50/40 p-5 rounded-[2.5rem] border border-emerald-100/50 shadow-inner">
               
-              {/* Card 1: En Çok Tıklananlar (Top Links) */}
-              <div className="bg-white p-4 rounded-2xl border border-gray-150/70 shadow-sm flex flex-col justify-between">
-                <h3 className="text-xs font-bold text-slate-800 tracking-tight mb-3">En Çok Tıklananlar</h3>
-                <div className="space-y-2">
-                  {[
-                    { name: "YouTube", handle: "youtube.com/@kanalin", clicks: "6.4K", icon: "🔴" },
-                    { name: "Discord", handle: "discord.gg/sunucun", clicks: "5.1K", icon: "👾" },
-                    { name: "Spotify", handle: "open.spotify.com/artist", clicks: "4.6K", icon: "🟢" },
-                    { name: "Apple Music", handle: "music.apple.com/artist", clicks: "4.0K", icon: "🎵" }
-                  ].map((link, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-[11px] py-0.5">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-lg flex items-center justify-center bg-slate-50 border border-slate-100 text-xs">
-                          {link.icon}
-                        </div>
-                        <div className="truncate max-w-[90px]">
-                          <p className="font-bold text-slate-800 truncate">{link.name}</p>
-                          <p className="text-[9px] text-slate-400 font-medium truncate">{link.handle}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-extrabold text-slate-900 leading-none">{link.clicks}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card 2: Ülkeler (Top Countries) */}
-              <div className="bg-white p-4 rounded-2xl border border-gray-150/70 shadow-sm flex flex-col justify-between">
-                <h3 className="text-xs font-bold text-slate-800 tracking-tight mb-3">En Çok Ziyaret Eden Ülkeler</h3>
-                <div className="space-y-2">
-                  {[
-                    { name: "Türkiye", views: "33.0K", flag: "🇹🇷" },
-                    { name: "Almanya", views: "8.5K", flag: "🇩🇪" },
-                    { name: "ABD", views: "6.4K", flag: "🇺🇸" },
-                    { name: "İngiltere", views: "5.8K", flag: "🇬🇧" }
-                  ].map((country, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-[11px] py-0.5">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">{country.flag}</span>
-                        <span className="font-bold text-slate-700 truncate max-w-[90px]">{country.name}</span>
-                      </div>
-                      <span className="font-extrabold text-slate-900">{country.views}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card 3: Trafik Kaynakları (Traffic Sources) */}
-              <div className="bg-white p-4 rounded-2xl border border-gray-150/70 shadow-sm flex flex-col justify-between">
-                <h3 className="text-xs font-bold text-slate-800 tracking-tight mb-3">Trafik Kaynakları</h3>
-                <div className="space-y-2.5">
-                  {[
-                    { name: "Instagram", views: "25.3K", percent: 85, color: "bg-gradient-to-r from-pink-500 to-rose-500" },
-                    { name: "TikTok", views: "15.9K", percent: 55, color: "bg-gradient-to-r from-slate-850 to-slate-950" },
-                    { name: "Google Arama", views: "11.2K", percent: 40, color: "bg-gradient-to-r from-blue-500 to-cyan-500" }
-                  ].map((source, idx) => (
-                    <div key={idx} className="space-y-1">
-                      <div className="flex justify-between text-[10px] font-bold text-slate-700">
-                        <span>{source.name}</span>
-                        <span className="text-slate-900">{source.views}</span>
-                      </div>
-                      <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full ${source.color} rounded-full transition-all duration-1000 ease-out origin-left`}
-                          style={{ width: `${source.percent}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card 4: Cihazlar (Devices) */}
-              <div className="bg-white p-4 rounded-2xl border border-gray-150/70 shadow-sm flex flex-col justify-between">
-                <h3 className="text-xs font-bold text-slate-800 tracking-tight mb-2">Cihaz Dağılımı</h3>
+              {/* Row 1: 3 Column Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 
-                <div className="flex flex-col items-center justify-center py-1">
-                  <div className="relative w-20 h-10 overflow-hidden flex items-end justify-center mb-2">
-                    <svg className="w-20 h-20 absolute -bottom-10" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" strokeWidth="12" />
-                      <circle cx="50" cy="50" r="40" fill="transparent" stroke="#38bdf8" strokeWidth="12" 
-                              strokeDasharray="251.2" strokeDashoffset="110" strokeLinecap="round" />
-                      <circle cx="50" cy="50" r="40" fill="transparent" stroke="#4f46e5" strokeWidth="12" 
-                              strokeDasharray="251.2" strokeDashoffset="210" strokeLinecap="round" />
+                {/* Block 1: Görüntülenme Artışı (Market Size Growth) */}
+                <div className="bg-white p-4 rounded-3xl border border-emerald-100 shadow-sm flex flex-col justify-between">
+                  <div className="bg-emerald-800 text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3">
+                    Görüntülenme Artışı
+                  </div>
+                  <div className="h-32 flex items-end justify-center relative px-2">
+                    {/* Line Chart Graphic representation */}
+                    <svg className="w-full h-full text-emerald-800" viewBox="0 0 100 50">
+                      <polyline
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        points="10,40 30,20 50,25 70,12 90,5"
+                      />
+                      <circle cx="10" cy="40" r="3.5" fill="currentColor" />
+                      <circle cx="30" cy="20" r="3.5" fill="currentColor" />
+                      <circle cx="50" cy="25" r="3.5" fill="currentColor" />
+                      <circle cx="70" cy="12" r="3.5" fill="currentColor" />
+                      <circle cx="90" cy="5" r="3.5" fill="currentColor" />
                     </svg>
-                    <div className="text-center z-10">
-                      <p className="text-[11px] font-black text-slate-900 leading-none">71.7K</p>
-                      <p className="text-[7px] font-bold text-slate-400 uppercase mt-0.5">Toplam</p>
-                    </div>
+                  </div>
+                  <div className="flex justify-between text-[8px] font-bold text-slate-400 mt-2 px-1">
+                    <span>Sal</span><span>Çar</span><span>Per</span><span>Cum</span><span>Cum</span>
                   </div>
                 </div>
 
-                <div className="space-y-1 pt-1.5 border-t border-slate-55">
-                  <div className="flex justify-between text-[10px]">
-                    <div className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
-                      <span className="font-semibold text-slate-500">Mobil</span>
-                    </div>
-                    <span className="font-extrabold text-slate-900">53.1K (%74)</span>
+                {/* Block 2: Ziyaretçi Yaş Dağılımı (Consumer Demographics) */}
+                <div className="bg-white p-4 rounded-3xl border border-emerald-100 shadow-sm flex flex-col justify-between items-center text-center">
+                  <div className="bg-emerald-800 text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3 w-full">
+                    Yaş Dağılımı
                   </div>
-                  <div className="flex justify-between text-[10px]">
-                    <div className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
-                      <span className="font-semibold text-slate-500">PC</span>
-                    </div>
-                    <span className="font-extrabold text-slate-900">18.6K (%26)</span>
+                  <div className="relative w-20 h-20 mb-2">
+                    {/* Pie Chart SVG representation */}
+                    <svg className="w-full h-full" viewBox="0 0 36 36">
+                      <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#e2e8f0" strokeWidth="4" />
+                      {/* 35% slice */}
+                      <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#065f46" strokeWidth="4.2" strokeDasharray="35 65" strokeDashoffset="25" />
+                      {/* 25% slice */}
+                      <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#047857" strokeWidth="4.2" strokeDasharray="25 75" strokeDashoffset="90" />
+                      {/* 20% slice */}
+                      <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#10b981" strokeWidth="4.2" strokeDasharray="20 80" strokeDashoffset="115" />
+                    </svg>
+                  </div>
+                  <div className="w-full grid grid-cols-2 gap-1 text-[9px] font-bold text-slate-600 mt-1">
+                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-emerald-800"></span> %35 (18-24)</div>
+                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-emerald-700"></span> %25 (25-34)</div>
+                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-emerald-500"></span> %20 (35-44)</div>
+                    <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-slate-300"></span> %20 Diğer</div>
                   </div>
                 </div>
+
+                {/* Block 3: Tıklama Trendleri (Product Demand Trends) */}
+                <div className="bg-white p-4 rounded-3xl border border-emerald-100 shadow-sm flex flex-col justify-between">
+                  <div className="bg-emerald-800 text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3">
+                    Tıklama Trendleri
+                  </div>
+                  <div className="h-32 flex items-end justify-between gap-1.5 px-2">
+                    {[
+                      { height: 60, val: "6K", label: "Ins" },
+                      { height: 90, val: "9K", label: "Yt" },
+                      { height: 50, val: "5K", label: "Tik" },
+                      { height: 40, val: "4K", label: "Shop" }
+                    ].map((bar, i) => (
+                      <div key={i} className="flex-1 flex flex-col items-center justify-end h-full group">
+                        <span className="text-[8px] font-black text-emerald-800 mb-1 opacity-0 group-hover:opacity-100 transition-opacity">{bar.val}</span>
+                        <div 
+                          className="w-full bg-emerald-700/80 rounded-t-md transition-all duration-700" 
+                          style={{ height: `${bar.height}%` }}
+                        />
+                        <span className="text-[8px] font-bold text-slate-500 mt-1">{bar.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
               </div>
+
+              {/* Row 2: Competitive Market Share style arc meters */}
+              <div className="bg-white p-5 rounded-3xl border border-emerald-100 shadow-sm space-y-4">
+                <div className="bg-emerald-800 text-white text-center py-1 px-4 rounded-full text-[10px] font-bold tracking-wider w-fit mx-auto">
+                  Bağlantı Tıklama Oranları
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-3 pt-2 text-center">
+                  {[
+                    { name: "Instagram", pct: 40, offset: 150 },
+                    { name: "YouTube", pct: 25, offset: 190 },
+                    { name: "TikTok", pct: 15, offset: 215 },
+                    { name: "Shopier", pct: 10, offset: 227 },
+                    { name: "Diğer", pct: 10, offset: 227 }
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex flex-col items-center">
+                      <div className="relative w-16 h-8 overflow-hidden flex items-end justify-center">
+                        <svg className="w-16 h-16 absolute -bottom-8" viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" strokeWidth="12" />
+                          <circle cx="50" cy="50" r="40" fill="transparent" stroke="#047857" strokeWidth="12" 
+                                  strokeDasharray="251.2" strokeDashoffset={item.offset} strokeLinecap="round" />
+                        </svg>
+                        <span className="text-xs font-black text-slate-800 z-10">{item.pct}%</span>
+                      </div>
+                      <span className="text-[9px] font-bold text-slate-500 mt-1">{item.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Row 3: Regional Market Growth (Bölgesel Büyüme) */}
+              <div className="bg-white rounded-3xl border border-emerald-100 shadow-sm overflow-hidden divide-y md:divide-y-0 md:divide-x divide-emerald-50 flex flex-col md:flex-row text-center">
+                {[
+                  { region: "Marmara", growth: "%12" },
+                  { region: "İç Anadolu", growth: "%8" },
+                  { region: "Ege", growth: "%15" },
+                  { region: "Akdeniz", growth: "%6" },
+                  { region: "Diğer", growth: "%4" }
+                ].map((reg, idx) => (
+                  <div key={idx} className="flex-1 p-3.5">
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{reg.region}</p>
+                    <p className="text-lg font-black text-emerald-800 mt-0.5">{reg.growth}</p>
+                  </div>
+                ))}
+              </div>
+
             </div>
 
             <ul className="space-y-4 pt-2">
