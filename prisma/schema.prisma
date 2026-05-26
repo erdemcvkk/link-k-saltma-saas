@@ -185,3 +185,20 @@ model AdminUser {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model Template {
+  id          String   @id @default(uuid())
+  name        String
+  price       Float
+  category    String
+  coverUrl    String
+  bgColor     String
+  fontStyle   String
+  buttonStyle String
+  isActive    Boolean  @default(true)
+  isCoded     Boolean  @default(false)
+  customCss   String?
+  configJson  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

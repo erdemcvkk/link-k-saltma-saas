@@ -988,3 +988,242 @@ export async function updateSliderItem(adminUserId: string, itemId: string, titl
   revalidatePath("/admin");
   return item;
 }
+
+// ==========================================
+// TEMPLATE ACTIONS
+// ==========================================
+
+export async function getTemplates() {
+  return await db.template.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getAllTemplatesAdmin(adminUserId: string) {
+  await ensureAdmin(adminUserId);
+  return await db.template.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function createTemplate(
+  adminUserId: string,
+  data: {
+    name: string;
+    price: number;
+    category: string;
+    coverUrl: string;
+    bgColor: string;
+    fontStyle: string;
+    buttonStyle: string;
+    isActive: boolean;
+    isCoded: boolean;
+    customCss?: string;
+    configJson?: string;
+  }
+) {
+  await ensureAdmin(adminUserId);
+  if (!data.name || data.price === undefined || !data.category || !data.coverUrl) {
+    throw new Error("Missing required fields for template creation.");
+  }
+
+  const template = await db.template.create({
+    data: {
+      name: data.name,
+      price: Number(data.price),
+      category: data.category,
+      coverUrl: data.coverUrl,
+      bgColor: data.bgColor || "#09090b",
+      fontStyle: data.fontStyle || "Inter",
+      buttonStyle: data.buttonStyle || "rounded-xl",
+      isActive: data.isActive !== false,
+      isCoded: !!data.isCoded,
+      customCss: data.customCss || null,
+      configJson: data.configJson || null,
+    },
+  });
+
+  revalidatePath("/sablonlar");
+  revalidatePath("/admin/templates");
+  return template;
+}
+
+export async function updateTemplate(
+  adminUserId: string,
+  templateId: string,
+  data: {
+    name?: string;
+    price?: number;
+    category?: string;
+    coverUrl?: string;
+    bgColor?: string;
+    fontStyle?: string;
+    buttonStyle?: string;
+    isActive?: boolean;
+    isCoded?: boolean;
+    customCss?: string;
+    configJson?: string;
+  }
+) {
+  await ensureAdmin(adminUserId);
+  const updateData: any = { ...data };
+  if (data.price !== undefined) {
+    updateData.price = Number(data.price);
+  }
+
+  const template = await db.template.update({
+    where: { id: templateId },
+    data: updateData,
+  });
+
+  revalidatePath("/sablonlar");
+  revalidatePath("/admin/templates");
+  return template;
+}
+
+export async function deleteTemplate(adminUserId: string, templateId: string) {
+  await ensureAdmin(adminUserId);
+  await db.template.delete({
+    where: { id: templateId },
+  });
+
+  revalidatePath("/sablonlar");
+  revalidatePath("/admin/templates");
+  return { success: true };
+}
+
+export async function seedTemplates(adminUserId?: string) {
+  if (adminUserId) {
+    await ensureAdmin(adminUserId);
+  }
+
+  const count = await db.template.count();
+  if (count > 0) return { success: true, seeded: false, message: "Templates already exist." };
+
+  const sampleTemplates = [
+    {
+      name: "Cyberpunk Glow",
+      price: 199.0,
+      category: "Gamer",
+      coverUrl: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #09090b 0%, #1e1b4b 100%)",
+      fontStyle: "Courier New",
+      buttonStyle: "border-2 border-neon-blue bg-transparent text-neon-blue shadow-[0_0_15px_rgba(59,130,246,0.5)]",
+      isActive: true,
+      isCoded: true,
+      customCss: `.profile-card { border: 2px solid #3b82f6; box-shadow: 0 0 20px #3b82f6; }\n.btn-link { text-transform: uppercase; letter-spacing: 0.1em; }`,
+      configJson: `{"accentColor": "#3b82f6", "glowColor": "#a855f7"}`,
+    },
+    {
+      name: "Pastel Dream",
+      price: 99.0,
+      category: "Kreatör",
+      coverUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #fef08a 0%, #fbcfe8 100%)",
+      fontStyle: "Inter",
+      buttonStyle: "bg-white/80 hover:bg-white text-slate-800 rounded-full border border-pink-200 backdrop-blur-sm",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Retro Synth",
+      price: 149.0,
+      category: "Müzisyen",
+      coverUrl: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #180026 0%, #3d0066 100%)",
+      fontStyle: "Impact",
+      buttonStyle: "bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white rounded-lg shadow-lg",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Minimalist Light",
+      price: 0.0,
+      category: "Kurumsal",
+      coverUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=400&h=300&fit=crop",
+      bgColor: "#ffffff",
+      fontStyle: "Arial",
+      buttonStyle: "bg-slate-900 text-white rounded-none hover:bg-slate-800",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Luxury Emerald",
+      price: 249.0,
+      category: "Kreatör",
+      coverUrl: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #022c22 0%, #064e3b 100%)",
+      fontStyle: "Georgia",
+      buttonStyle: "bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl border border-emerald-300",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Dark Neon Pink",
+      price: 129.0,
+      category: "Gamer",
+      coverUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400&h=300&fit=crop",
+      bgColor: "#09090b",
+      fontStyle: "Inter",
+      buttonStyle: "border border-pink-500 bg-black text-pink-500 shadow-[0_0_10px_#ec4899]",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Warm Autumn",
+      price: 79.0,
+      category: "Yazar",
+      coverUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #78350f 0%, #b45309 100%)",
+      fontStyle: "Georgia",
+      buttonStyle: "bg-amber-100 text-amber-900 rounded-2xl hover:bg-amber-50",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Ocean breeze",
+      price: 0.0,
+      category: "Genel",
+      coverUrl: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)",
+      fontStyle: "Inter",
+      buttonStyle: "bg-white text-sky-900 rounded-xl hover:bg-sky-50 shadow-md",
+      isActive: true,
+      isCoded: false,
+    },
+    {
+      name: "Monochrome Pro",
+      price: 199.0,
+      category: "Kurumsal",
+      coverUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=400&h=300&fit=crop",
+      bgColor: "#121212",
+      fontStyle: "Inter",
+      buttonStyle: "border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-white rounded-md",
+      isActive: true,
+      isCoded: true,
+      customCss: `body { background-color: #121212; }\n.link-item { border-radius: 4px; border: 1px solid #333; }`,
+      configJson: `{"themeMode": "dark", "borderColor": "#333"}`,
+    },
+    {
+      name: "Sweet Lavender",
+      price: 89.0,
+      category: "Genel",
+      coverUrl: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?q=80&w=400&h=300&fit=crop",
+      bgColor: "linear-gradient(135deg, #c084fc 0%, #818cf8 100%)",
+      fontStyle: "Inter",
+      buttonStyle: "bg-white hover:bg-purple-50 text-indigo-900 rounded-xl shadow-lg",
+      isActive: true,
+      isCoded: false,
+    },
+  ];
+
+  for (const template of sampleTemplates) {
+    await db.template.create({
+      data: template,
+    });
+  }
+
+  revalidatePath("/sablonlar");
+  return { success: true, seeded: true, count: sampleTemplates.length };
+}

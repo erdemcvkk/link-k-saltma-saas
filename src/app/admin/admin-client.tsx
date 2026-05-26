@@ -930,6 +930,14 @@ export default function AdminClient({
                 <Grid className="h-4 w-4" />
                 {lang === "tr" ? "Animasyon Tasarımcısı" : "Animation Designer"}
               </button>
+
+              <Link
+                href="/admin/templates"
+                className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/50"
+              >
+                <Layout className="h-4 w-4 text-zinc-550" />
+                {lang === "tr" ? "Şablon Yönetimi" : "Template Showcase Settings"}
+              </Link>
             </nav>
           </div>
 
