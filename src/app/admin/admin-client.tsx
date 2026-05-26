@@ -230,6 +230,7 @@ export default function AdminClient({
 
   // Busy/Maintenance mode state
   const [isMaintenanceMode, setIsMaintenanceMode] = useState(false);
+  const [pendingPlans, setPendingPlans] = useState<Record<string, string>>({});
 
   const handleStateChange = (state: { lang: "tr" | "en"; theme: "dark" | "light" }) => {
     setLang(state.lang);
@@ -564,18 +565,25 @@ export default function AdminClient({
     });
   };
 
-  const handleChangePlan = (userId: string, newPlan: string) => {
+  const handlePendingPlanChange = (userId: string, newPlan: string) => {
+    setPendingPlans(prev => ({ ...prev, [userId]: newPlan }));
+    setUsers(users.map((u) => (u.id === userId ? { ...u, plan: newPlan } : u)));
+  };
+
+  const handleSaveUserPlans = () => {
+    if (Object.keys(pendingPlans).length === 0) return;
     setErrorMsg("");
     setSuccessMsg("");
-    setActiveUserMenu(null);
 
     startTransition(async () => {
       try {
-        await adminChangeUserPlan(adminUserId, userId, newPlan);
-        setUsers(users.map((u) => (u.id === userId ? { ...u, plan: newPlan } : u)));
-        setSuccessMsg(lang === "tr" ? `Kullanıcı üyelik planı başarıyla ${newPlan} olarak değiştirildi.` : `User subscription plan overridden to ${newPlan}.`);
+        for (const [userId, newPlan] of Object.entries(pendingPlans)) {
+          await adminChangeUserPlan(adminUserId, userId, newPlan);
+        }
+        setPendingPlans({});
+        setSuccessMsg(lang === "tr" ? "Kullanıcı üyelik planı değişiklikleri başarıyla kaydedildi." : "User subscription plan changes saved successfully.");
       } catch (err: any) {
-        setErrorMsg(err.message || "Failed to change user plan");
+        setErrorMsg(err.message || "Failed to save user plan changes");
       }
     });
   };
@@ -1043,32 +1051,52 @@ export default function AdminClient({
                   </Link>
                 </div>
 
-                {/* Filter tabs */}
-                <div className="flex border-b gap-6 text-xs font-bold text-zinc-400">
-                  <button
-                    onClick={() => setPlanFilter("ALL")}
-                    className={`pb-2.5 relative cursor-pointer ${planFilter === "ALL" ? "text-rose-500 border-b-2 border-rose-500 font-black" : "hover:text-zinc-700"}`}
-                  >
-                    {lang === "tr" ? "Tüm Yaratıcılar" : "All Members"}
-                  </button>
-                  <button
-                    onClick={() => setPlanFilter("FREE")}
-                    className={`pb-2.5 relative cursor-pointer ${planFilter === "FREE" ? "text-rose-500 border-b-2 border-rose-500 font-black" : "hover:text-zinc-700"}`}
-                  >
-                    FREE
-                  </button>
-                  <button
-                    onClick={() => setPlanFilter("STARTER")}
-                    className={`pb-2.5 relative cursor-pointer ${planFilter === "STARTER" ? "text-rose-500 border-b-2 border-rose-500 font-black" : "hover:text-zinc-700"}`}
-                  >
-                    STARTER
-                  </button>
-                  <button
-                    onClick={() => setPlanFilter("CREATOR")}
-                    className={`pb-2.5 relative cursor-pointer ${planFilter === "CREATOR" ? "text-rose-500 border-b-2 border-rose-500 font-black" : "hover:text-zinc-700"}`}
-                  >
-                    CREATOR
-                  </button>
+                {/* Filter tabs and Save Changes button */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-1 gap-4">
+                  <div className="flex gap-6 text-xs font-bold text-zinc-400">
+                    <button
+                      onClick={() => setPlanFilter("ALL")}
+                      className={`pb-2.5 relative cursor-pointer ${planFilter === "ALL" ? "text-rose-500 border-b-2 border-rose-500 font-black" : "hover:text-zinc-700"}`}
+                    >
+                      {lang === "tr" ? "Tüm Yaratıcılar" : "All Members"}
+                    </button>
+                    <button
+                      onClick={() => setPlanFilter("FREE")}
+                      className={`pb-2.5 relative cursor-pointer ${planFilter === "FREE" ? "text-rose-500 border-b-2 border-rose-500 font-black" : "hover:text-zinc-700"}`}
+                    >
+                      FREE
+                    </button>
+                    <button
+                      onClick={() => setPlanFilter("STARTER")}
+                      className={`pb-2.5 relative cursor-pointer ${planFilter === "STARTER" ? "text-rose-500 border-b-2 border-rose-500 font-black" : "hover:text-zinc-700"}`}
+                    >
+                      STARTER
+                    </button>
+                    <button
+                      onClick={() => setPlanFilter("CREATOR")}
+                      className={`pb-2.5 relative cursor-pointer ${planFilter === "CREATOR" ? "text-rose-500 border-b-2 border-rose-500 font-black" : "hover:text-zinc-700"}`}
+                    >
+                      CREATOR
+                    </button>
+                  </div>
+
+                  {Object.keys(pendingPlans).length > 0 && (
+                    <button
+                      onClick={handleSaveUserPlans}
+                      disabled={isPending}
+                      className="flex items-center gap-2 px-5 py-2 rounded-2xl text-xs font-black bg-rose-500 hover:bg-rose-600 text-white shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all animate-bounce"
+                    >
+                      {isPending ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Check className="h-3.5 w-3.5" />
+                      )}
+                      {lang === "tr" ? "Değişiklikleri Kaydet" : "Save Changes"}
+                      <span className="bg-white/20 px-1.5 py-0.5 rounded-full text-[10px]">
+                        {Object.keys(pendingPlans).length}
+                      </span>
+                    </button>
+                  )}
                 </div>
 
                 {/* Spacious elegant table */}
@@ -1136,7 +1164,7 @@ export default function AdminClient({
                               <td className="py-4 px-4">
                                 <select
                                   value={user.plan}
-                                  onChange={(e) => handleChangePlan(user.id, e.target.value)}
+                                  onChange={(e) => handlePendingPlanChange(user.id, e.target.value)}
                                   disabled={isPending}
                                   className="px-2.5 py-1.5 rounded-xl border border-zinc-200 text-xs font-black text-rose-500 outline-none bg-white cursor-pointer hover:border-rose-300 focus:ring-2 focus:ring-rose-500/10 transition-all"
                                 >
