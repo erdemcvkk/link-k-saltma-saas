@@ -726,22 +726,12 @@ export default function DashboardClient({ initialUser, initialLinks, initialPage
     e.preventDefault();
 
     // Client-side gating based on simulatedPlan
-    if (simulatedPlan === "FREE" && links.length >= 20) {
+    if (simulatedPlan === "FREE" && links.length >= 5) {
       triggerUpgradeModal(
         lang === "tr" ? "Link Sınırına Ulaştınız 🔒" : "Link Limit Reached 🔒",
         lang === "tr" 
-          ? "Ücretsiz planda en fazla 20 link oluşturabilirsiniz. Sınırları kaldırmak için Premium pakete geçin!" 
-          : "Free tier is limited to 20 links. Upgrade your plan to add unlimited links!"
-      );
-      return;
-    }
-
-    if (simulatedPlan === "STARTER" && links.length >= 100) {
-      triggerUpgradeModal(
-        lang === "tr" ? "Link Sınırına Ulaştınız 🔒" : "Link Limit Reached 🔒",
-        lang === "tr" 
-          ? "Starter planında en fazla 100 link oluşturabilirsiniz. Sınırsız link eklemek için Creator pakete geçin!" 
-          : "Starter tier is limited to 100 links. Upgrade your plan to add unlimited links!"
+          ? "Ücretsiz planda en fazla 5 link oluşturabilirsiniz. Sınırları kaldırmak için Premium pakete geçin!" 
+          : "Free tier is limited to 5 links. Upgrade your plan to add unlimited links!"
       );
       return;
     }

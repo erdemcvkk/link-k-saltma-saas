@@ -180,6 +180,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       fontStyle={activeUser.profile?.fontStyle ?? "Inter"}
       bioColor={activeUser.profile?.bioColor ?? null}
       usernameColor={activeUser.profile?.usernameColor ?? null}
+      plan={activeUser.plan}
     />
   );
 }

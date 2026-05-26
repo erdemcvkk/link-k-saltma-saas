@@ -73,9 +73,10 @@ interface ProfileClientProps {
   fontStyle: string;
   bioColor?: string | null;
   usernameColor?: string | null;
+  plan?: string | null;
 }
 
-export default function ProfileClient({ username, bio, theme, links, products, avatarUrl, background, fontStyle, bioColor, usernameColor }: ProfileClientProps) {
+export default function ProfileClient({ username, bio, theme, links, products, avatarUrl, background, fontStyle, bioColor, usernameColor, plan }: ProfileClientProps) {
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
@@ -647,11 +648,13 @@ export default function ProfileClient({ username, bio, theme, links, products, a
       )}
 
       {/* Brand Watermark */}
-      <footer className="text-center text-[10px] text-zinc-600 uppercase tracking-widest font-black py-8 relative z-10">
-        <a href="/" className="hover:text-zinc-500 transition-colors">
-          Powered by CREATOR.HUB
-        </a>
-      </footer>
+      {(plan !== "CREATOR" && plan !== "PRO_BUSINESS") && (
+        <footer className="text-center text-[10px] text-zinc-600 uppercase tracking-widest font-black py-8 relative z-10">
+          <a href="/" className="hover:text-zinc-500 transition-colors">
+            Powered by CREATOR.HUB
+          </a>
+        </footer>
+      )}
     </div>
   );
 }

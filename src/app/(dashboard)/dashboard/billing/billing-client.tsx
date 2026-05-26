@@ -169,9 +169,11 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
             <div className="text-3xl font-black mb-4 text-zinc-900">0₺ <span className="text-xs font-normal text-zinc-400">/ forever</span></div>
             
             <ul className="space-y-3 text-xs text-zinc-600 border-t border-zinc-100 pt-4 mb-6">
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Up to 20 Links</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Default Theme Only</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Standard QR Code</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> 1 Adet Aktif Bio Link Sayfası (link.saas/kullaniciadi)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Sınırlı Bağlantı Ekleme (Maksimum 5 Adet)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Standart Hazır Temalar (Temel renk/düzen)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Temel Analizler (Toplam sayfa görüntülenmesi)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Sistem Logosu ("Link.SaaS" ibaresi yer alır)</li>
             </ul>
           </div>
 
@@ -196,10 +198,14 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
             <div className="text-3xl font-black mb-4 text-zinc-900">{priceStarter}₺ <span className="text-xs font-normal text-zinc-400">/ month</span></div>
             
             <ul className="space-y-3 text-xs text-zinc-600 border-t border-zinc-100 pt-4 mb-6">
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Up to 100 Links</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Premium Neon Themes</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Animated Glow Buttons</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Advanced Analytics</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Ücretsiz Plandaki Tüm Özellikler</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Sınırsız Bağlantı (Link) Ekleme</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Premium Temalar ve Yazı Tipleri (Özel Font Kütüphanesi)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Özel Renk ve Düzen Seçenekleri (Buton stilleri, gradient arka planlar)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Gelişmiş Analiz Paneli (Trendler ve Grafikler)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Akıllı İletişim Butonları (WhatsApp, Telegram veya E-posta)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Medya Entegrasyonları (YouTube, Spotify, SoundCloud)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Buton Animasyonları (Hareket Efektleri)</li>
             </ul>
           </div>
 
@@ -232,10 +238,15 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
             <div className="text-3xl font-black mb-4 text-zinc-900">{priceCreator}₺ <span className="text-xs font-normal text-zinc-400">/ month</span></div>
             
             <ul className="space-y-3 text-xs text-zinc-600 border-t border-zinc-100 pt-4 mb-6">
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Unlimited Links</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> All Premium Themes</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Custom Domain Support</li>
-              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Digital Beat Shop Integration</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Başlangıç Planındaki Tüm Özellikler</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Platform Logosunu Kaldırma (Whitelabel / Temiz Sayfa)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> E-ticaret Entegrasyonları (Shopier vitrini ve envanter)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> İletişim ve Veri Toplama Formları (İsim, E-posta toplama)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Pazarlama ve Piksel Entegrasyonları (Facebook Pixel, Google Analytics)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Gelişmiş Kitle Analitiği (Cihaz, konum, tarayıcı demografisi)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Özel SEO ve Favicon Ayarları</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Görsel Galeri / Carousel Kaydırıcı (Resimli Slider)</li>
+              <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Öncelikli Destek (Hızlı teknik destek)</li>
             </ul>
           </div>
 

@@ -69,12 +69,8 @@ export async function addLink(
   });
 
   // Gating check
-  if (user.plan === "FREE" && linkCount >= 20) {
-    throw new Error("FREE plan is limited to 20 links. Please upgrade to STARTER or CREATOR plan to add more links!");
-  }
-
-  if (user.plan === "STARTER" && linkCount >= 100) {
-    throw new Error("STARTER plan is limited to 100 links. Please upgrade to CREATOR plan for unlimited links!");
+  if (user.plan === "FREE" && linkCount >= 5) {
+    throw new Error("FREE plan is limited to 5 links. Please upgrade to STARTER or CREATOR plan to add more links!");
   }
 
   // Template restrictions checks
