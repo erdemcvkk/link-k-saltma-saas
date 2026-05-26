@@ -209,37 +209,58 @@ export default function HomeClient({
               
               <div className="relative w-full h-full bg-gray-50 rounded-[2rem] overflow-hidden flex flex-col p-5 pt-12">
                 <h4 className="text-slate-900 font-extrabold text-lg mb-1">Analizler</h4>
-                <p className="text-slate-500 text-xs font-medium mb-6">Son 7 Günlük Performans</p>
+                <p className="text-slate-500 text-xs font-medium mb-3">Son 7 Günlük Performans</p>
                 
                 {/* Total Views Card */}
-                <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-4 transform transition-all hover:scale-105">
-                  <div className="flex items-center gap-2 mb-2">
+                <div className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 mb-3 transform transition-all hover:scale-105">
+                  <div className="flex items-center gap-2 mb-1">
                     <Users className="h-4 w-4 text-teal-500" />
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Görüntülenme</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Toplam Görüntülenme</span>
                   </div>
-                  <div className="text-3xl font-black text-slate-900">42.5K</div>
-                  <div className="text-xs font-bold text-teal-500 mt-1 flex items-center gap-1">
+                  <div className="text-2xl font-black text-slate-900">42.5K</div>
+                  <div className="text-[10px] font-bold text-teal-500 mt-0.5 flex items-center gap-1">
                     <TrendingUp className="h-3 w-3" /> %12 Artış
                   </div>
                 </div>
 
-                {/* Animated Bar Chart */}
-                <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-1 flex flex-col justify-end gap-2">
-                  <div className="flex items-center gap-2 mb-auto">
+                {/* 4 Link Analytics Items (Instagram, YouTube, TikTok, Shopier) */}
+                <div className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 mb-3 space-y-2">
+                  <div className="flex items-center gap-2 mb-1">
                     <BarChart3 className="h-4 w-4 text-teal-500" />
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tıklamalar</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Bağlantı Tıklamaları</span>
                   </div>
-                  <div className="flex items-end justify-between h-32 gap-1.5 mt-4">
+                  
+                  <div className="space-y-1.5">
+                    {[
+                      { name: "Instagram Pro", clicks: "14.2K", color: "bg-pink-500" },
+                      { name: "YouTube Video", clicks: "12.8K", color: "bg-red-500" },
+                      { name: "TikTok Akışı", clicks: "9.5K", color: "bg-slate-900" },
+                      { name: "Shopier Mağaza", clicks: "6.0K", color: "bg-blue-500" }
+                    ].map((link, idx) => (
+                      <div key={idx} className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`w-1.5 h-1.5 rounded-full ${link.color}`}></span>
+                          <span className="font-semibold text-slate-700">{link.name}</span>
+                        </div>
+                        <span className="font-extrabold text-slate-950">{link.clicks}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Animated Bar Chart */}
+                <div className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex-1 flex flex-col justify-end gap-1.5">
+                  <div className="flex items-end justify-between h-20 gap-1 mt-1">
                     {[40, 70, 45, 90, 65, 100, 85].map((height, i) => (
                       <div key={i} className="w-full bg-slate-100 rounded-t-md relative overflow-hidden flex-1 group">
                         <div 
                           className="absolute bottom-0 left-0 w-full bg-teal-400 rounded-t-md transition-all duration-1000 ease-out origin-bottom animate-[growUp_1.5s_ease-out_forwards]"
-                          style={{ height: `${height}%`, animationDelay: `${i * 0.15}s` }}
+                          style={{ height: `${height}%`, animationDelay: `${i * 0.1}s` }}
                         ></div>
                       </div>
                     ))}
                   </div>
-                  <div className="flex justify-between text-[8px] font-bold text-slate-400 mt-2 px-1">
+                  <div className="flex justify-between text-[7px] font-bold text-slate-400 mt-1 px-1">
                     <span>Pzt</span><span>Sal</span><span>Çar</span><span>Per</span><span>Cum</span><span>Cmt</span><span>Paz</span>
                   </div>
                 </div>
