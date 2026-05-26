@@ -79,6 +79,9 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
       try {
         await upgradeUserPlan(userId, planName, price);
         setSuccessMsg(`Congratulations! You have successfully upgraded to the ${planName} plan!`);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } catch (err: any) {
         setErrorMsg(err.message || "Failed to process payment");
       }
