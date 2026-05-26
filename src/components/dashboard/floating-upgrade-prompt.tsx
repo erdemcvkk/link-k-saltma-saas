@@ -52,7 +52,7 @@ export default function FloatingUpgradePrompt({ currentPlan, globalSettings }: F
             ⚡ Sınırları Kaldır!
           </h4>
           <p className="text-zinc-400 text-[10px] leading-relaxed">
-            Premium'a geçerek sınırsız link, özel neon temalar, gelişmiş analitik ve özel alan adınızı hemen etkinleştirin.
+            Premium'a geçerek sınırsız link, premium neon temalar, gelişmiş analizler ve akıllı iletişim butonlarını hemen etkinleştirin.
           </p>
         </div>
 

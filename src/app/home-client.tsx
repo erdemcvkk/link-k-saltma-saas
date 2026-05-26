@@ -424,15 +424,23 @@ export default function HomeClient({
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
                   <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
-                  <span>Temel Bio Link</span>
+                  <span>1 Adet Aktif Bio Link Sayfası (link.saas/kullaniciadi)</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
                   <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
-                  <span>Standart Temalar</span>
+                  <span>Sınırlı Bağlantı (Link) Ekleme (Maksimum 5 adet link)</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
                   <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
-                  <span>Standart Analizler</span>
+                  <span>Standart Hazır Temalar (Temel renk ve düzen seçenekleri)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-600 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
+                  <span>Temel Analizler (Sadece toplam sayfa görüntülenme sayısı)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-600 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
+                  <span>Sistem Logosu (Sayfa altında "Link.SaaS" ibaresi yer alır)</span>
                 </li>
               </ul>
               <Link
@@ -455,15 +463,35 @@ export default function HomeClient({
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-300 text-sm">
                   <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
-                  <span>Premium Tema ve Yazı Tipleri</span>
+                  <span>Ücretsiz Plandaki Tüm Özellikler</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-300 text-sm">
                   <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
-                  <span>Gelişmiş Analizler</span>
+                  <span>Sınırsız Bağlantı (Link) Ekleme</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-300 text-sm">
                   <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
-                  <span>Özel Renkler</span>
+                  <span>Premium Temalar ve Yazı Tipleri (Özel font kütüphanesi)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-300 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
+                  <span>Özel Renk ve Düzen Seçenekleri (Buton stilleri, gradient arka planlar)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-300 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
+                  <span>Gelişmiş Analiz Paneli (Trendler ve Grafikler)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-300 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
+                  <span>Akıllı İletişim Butonları (WhatsApp, Telegram veya E-posta)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-300 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
+                  <span>Medya Entegrasyonları (YouTube, Spotify, SoundCloud)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-300 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-light-blue flex-shrink-0" />
+                  <span>Buton Animasyonları (Hareket Efektleri)</span>
                 </li>
               </ul>
               <a
@@ -483,15 +511,39 @@ export default function HomeClient({
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
                   <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
-                  <span>Tüm Başlangıç Özellikleri</span>
+                  <span>Başlangıç Planındaki Tüm Özellikler</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
                   <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
-                  <span>E-ticaret Entegrasyonları</span>
+                  <span>Platform Logosunu Kaldırma (Whitelabel)</span>
                 </li>
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
                   <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
-                  <span>Platform Logosunu Kaldır</span>
+                  <span>E-ticaret Entegrasyonları (Shopier vitrini)</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-600 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
+                  <span>İletişim ve Veri Toplama Formları</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-600 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
+                  <span>Pazarlama ve Piksel Entegrasyonları</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-600 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
+                  <span>Gelişmiş Kitle Analitiği</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-600 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
+                  <span>Özel SEO ve Favicon Ayarları</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-600 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
+                  <span>Görsel Galeri / Carousel Kaydırıcı</span>
+                </li>
+                <li className="flex items-center gap-3 text-slate-600 text-sm">
+                  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
+                  <span>Öncelikli Destek</span>
                 </li>
               </ul>
               <a

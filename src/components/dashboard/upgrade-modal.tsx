@@ -65,15 +65,15 @@ export default function UpgradeModal({ isOpen, onClose, title, description, glob
         <div className="mt-5 space-y-2.5 text-left bg-zinc-900/50 border border-zinc-900/80 p-4 rounded-2xl">
           <div className="flex items-center gap-2 text-[10px] text-zinc-300 font-bold">
             <Zap className="h-3.5 w-3.5 text-neon-blue shrink-0" />
-            <span>Sınırsız Link Ekleme & Şablonlar</span>
+            <span>Sınırsız Bağlantı Ekleme, Premium Temalar & Animasyonlar</span>
           </div>
           <div className="flex items-center gap-2 text-[10px] text-zinc-300 font-bold">
             <Heart className="h-3.5 w-3.5 text-neon-blue shrink-0" />
-            <span>Gelişmiş RGB & Neon Temalar</span>
+            <span>Gelişmiş Analiz Paneli & Medya Entegrasyonları</span>
           </div>
           <div className="flex items-center gap-2 text-[10px] text-zinc-300 font-bold">
             <ShieldCheck className="h-3.5 w-3.5 text-neon-blue shrink-0" />
-            <span>Kendi Özel Alan Adınız (Custom Domain)</span>
+            <span>Platform Logosunu Kaldırma (Whitelabel) & Shopier Vitrini</span>
           </div>
         </div>
 
