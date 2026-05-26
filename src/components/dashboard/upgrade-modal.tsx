@@ -20,8 +20,12 @@ export default function UpgradeModal({ isOpen, onClose, title, description, glob
 
   const hasAnyPaymentLink = !!(starterLink || creatorLink || proLink);
 
+  const priceStarter = globalSettings?.["price_starter"] || "150";
+  const priceCreator = globalSettings?.["price_creator"] || "450";
+  const pricePro = globalSettings?.["price_pro"] || "950";
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 font-corporate">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
@@ -29,11 +33,11 @@ export default function UpgradeModal({ isOpen, onClose, title, description, glob
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl bg-zinc-950 border border-purple-500/30 p-6 text-center shadow-[0_0_50px_rgba(168,85,247,0.15)] animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md overflow-hidden rounded-3xl bg-zinc-950 border border-slate-800 p-6 text-center shadow-2xl animate-in fade-in zoom-in-95 duration-200">
         
         {/* Decorative Light Glow */}
-        <div className="absolute -top-16 -left-16 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-fuchsia-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-16 -left-16 w-32 h-32 bg-neon-blue/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-light-blue/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Close Button */}
         <button 
@@ -44,31 +48,31 @@ export default function UpgradeModal({ isOpen, onClose, title, description, glob
         </button>
 
         {/* Premium Icon Header */}
-        <div className="mx-auto w-12 h-12 rounded-full bg-gradient-to-tr from-purple-600 to-fuchsia-500 flex items-center justify-center text-white mb-4 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+        <div className="mx-auto w-12 h-12 rounded-full bg-gradient-to-tr from-neon-blue to-light-blue flex items-center justify-center text-white mb-4 shadow-lg shadow-neon-blue/25">
           <Sparkles className="h-6 w-6 animate-pulse" />
         </div>
 
         {/* Modal Text */}
-        <h3 className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-fuchsia-400 uppercase tracking-wide">
+        <h3 className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-light-blue uppercase tracking-wide">
           {title || "PREMIUM ÖZELLİK"}
         </h3>
         
-        <p className="mt-3 text-zinc-400 text-xs leading-relaxed">
+        <p className="mt-3 text-zinc-400 text-xs leading-relaxed font-semibold">
           {description || "Bu özellik Premium pakete özeldir. Sınırları kaldırarak sınırsız link, özel temalar, gelişmiş analitik ve kendi alan adınızı ekleme fırsatını yakalayın!"}
         </p>
 
         {/* Mini Features List */}
-        <div className="mt-5 space-y-2.5 text-left bg-zinc-900/50 border border-zinc-900 p-4 rounded-2xl">
+        <div className="mt-5 space-y-2.5 text-left bg-zinc-900/50 border border-zinc-900/80 p-4 rounded-2xl">
           <div className="flex items-center gap-2 text-[10px] text-zinc-300 font-bold">
-            <Zap className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+            <Zap className="h-3.5 w-3.5 text-neon-blue shrink-0" />
             <span>Sınırsız Link Ekleme & Şablonlar</span>
           </div>
           <div className="flex items-center gap-2 text-[10px] text-zinc-300 font-bold">
-            <Heart className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+            <Heart className="h-3.5 w-3.5 text-neon-blue shrink-0" />
             <span>Gelişmiş RGB & Neon Temalar</span>
           </div>
           <div className="flex items-center gap-2 text-[10px] text-zinc-300 font-bold">
-            <ShieldCheck className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+            <ShieldCheck className="h-3.5 w-3.5 text-neon-blue shrink-0" />
             <span>Kendi Özel Alan Adınız (Custom Domain)</span>
           </div>
         </div>
@@ -85,7 +89,7 @@ export default function UpgradeModal({ isOpen, onClose, title, description, glob
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-xs tracking-wider transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] flex items-center justify-center gap-1.5"
               >
                 <Sparkles className="h-4 w-4" />
-                STARTER PLAN – 99₺/Ay
+                STARTER PLAN – {priceStarter}₺/Ay
                 <ExternalLink className="h-3 w-3 ml-1 opacity-60" />
               </a>
             )}
@@ -98,7 +102,7 @@ export default function UpgradeModal({ isOpen, onClose, title, description, glob
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs tracking-wider transition-all shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_25px_rgba(99,102,241,0.4)] flex items-center justify-center gap-1.5"
               >
                 <Sparkles className="h-4 w-4" />
-                CREATOR PLAN – 249₺/Ay
+                CREATOR PLAN – {priceCreator}₺/Ay
                 <ExternalLink className="h-3 w-3 ml-1 opacity-60" />
               </a>
             )}
@@ -111,7 +115,7 @@ export default function UpgradeModal({ isOpen, onClose, title, description, glob
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-extrabold text-xs tracking-wider transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_25px_rgba(245,158,11,0.4)] flex items-center justify-center gap-1.5"
               >
                 <Sparkles className="h-4 w-4" />
-                PRO BUSINESS – 499₺/Ay
+                PRO BUSINESS – {pricePro}₺/Ay
                 <ExternalLink className="h-3 w-3 ml-1 opacity-60" />
               </a>
             )}

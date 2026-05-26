@@ -245,6 +245,7 @@ export default function AdminClient({
   const [proLink, setProLink] = useState(initialSettings["payment_link_pro"] || "");
   const [priceStarter, setPriceStarter] = useState(initialSettings["price_starter"] || "150");
   const [priceCreator, setPriceCreator] = useState(initialSettings["price_creator"] || "450");
+  const [pricePro, setPricePro] = useState(initialSettings["price_pro"] || "950");
 
   // Brand Asset Settings State
   const [siteTitle, setSiteTitle] = useState(initialSettings["site_title"] || "CREATOR.HUB");
@@ -617,6 +618,7 @@ export default function AdminClient({
         await saveGlobalSetting(adminUserId, "payment_link_pro", proLink);
         await saveGlobalSetting(adminUserId, "price_starter", priceStarter);
         await saveGlobalSetting(adminUserId, "price_creator", priceCreator);
+        await saveGlobalSetting(adminUserId, "price_pro", pricePro);
         setSuccessMsg(lang === "tr" ? "Global ayarlar ve fiyatlar başarıyla kaydedildi!" : "Global settings and prices updated successfully!");
       } catch (err: any) {
         setErrorMsg(err.message || "Failed to save settings");
@@ -1758,7 +1760,7 @@ export default function AdminClient({
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6 items-end">
+                    <div className="grid md:grid-cols-4 gap-6 items-end">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Starter Plan Fiyatı (₺)" : "Starter Plan Price (₺)"}</label>
                         <input
@@ -1776,6 +1778,16 @@ export default function AdminClient({
                           value={priceCreator}
                           onChange={(e) => setPriceCreator(e.target.value)}
                           placeholder="450"
+                          className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Pro Plan Fiyatı (₺)" : "Pro Plan Price (₺)"}</label>
+                        <input
+                          type="text"
+                          value={pricePro}
+                          onChange={(e) => setPricePro(e.target.value)}
+                          placeholder="950"
                           className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
                         />
                       </div>
