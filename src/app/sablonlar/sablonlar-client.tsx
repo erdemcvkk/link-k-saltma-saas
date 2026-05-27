@@ -35,7 +35,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [purchaseSuccess, setPurchaseSuccess] = useState(false);
   const [ownedTemplateIds, setOwnedTemplateIds] = useState<string[]>(initialOwnedTemplateIds);
-  const [isPending, startTransition] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
   // Simulated Payment Modal States
   const [checkoutTemplate, setCheckoutTemplate] = useState<Template | null>(null);
@@ -45,6 +45,11 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentPending, setPaymentPending] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSelectTemplate = (template: Template | null) => {
+    setSelectedTemplate(template);
+    setErrorMsg("");
+  };
 
   // Extract unique categories
   const categories = ["Tümü", ...Array.from(new Set(initialTemplates.map((t) => t.category)))];
@@ -82,8 +87,9 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
           setPurchaseSuccess(false);
           setSelectedTemplate(null);
         }, 2000);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Free Purchase error:", err);
+        setErrorMsg(err.message || "Şablon tanımlanırken hata oluştu.");
         setIsPending(false);
       }
     };
@@ -243,8 +249,8 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                   </span>
                   
                   <button
-                    onClick={() => setSelectedTemplate(template)}
-                    className="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 hover:text-neon-blue text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                    onClick={() => handleSelectTemplate(template)}
+                    className="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-750 hover:text-neon-blue text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
                   >
                     <Eye className="h-3.5 w-3.5" />
                     Önizle
@@ -260,14 +266,14 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
       {selectedTemplate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/85 backdrop-blur-md" onClick={() => setSelectedTemplate(null)} />
+          <div className="absolute inset-0 bg-black/85 backdrop-blur-md" onClick={() => handleSelectTemplate(null)} />
 
           {/* Modal Container */}
           <div className="relative w-full max-w-4xl bg-slate-950 border border-slate-800 rounded-3xl p-6 overflow-hidden flex flex-col md:flex-row gap-8 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
             
             {/* Close button */}
             <button 
-              onClick={() => setSelectedTemplate(null)} 
+              onClick={() => handleSelectTemplate(null)} 
               className="absolute top-4 right-4 p-1.5 rounded-full bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-all cursor-pointer z-10"
             >
               <X className="h-4 w-4" />
@@ -383,15 +389,28 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                 ) : (
                   <button
                     onClick={() => handlePurchase(selectedTemplate)}
-                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-neon-blue to-light-blue hover:opacity-95 text-white font-black text-sm tracking-wide transition-all shadow-lg shadow-neon-blue/20 flex items-center justify-center gap-2 cursor-pointer"
+                    disabled={isPending}
+                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-neon-blue to-light-blue hover:opacity-95 disabled:opacity-50 text-white font-black text-sm tracking-wide transition-all shadow-lg shadow-neon-blue/20 flex items-center justify-center gap-2 cursor-pointer border-0"
                   >
-                    <ShoppingCart className="h-4 w-4" />
-                    {selectedTemplate.price === 0 ? "Hemen Ücretsiz Kullan" : `${selectedTemplate.name} Satın Al`}
+                    {isPending ? (
+                      <Loader2 className="h-4.5 w-4.5 animate-spin" />
+                    ) : (
+                      <>
+                        <ShoppingCart className="h-4 w-4" />
+                        {selectedTemplate.price === 0 ? "Hemen Ücretsiz Kullan" : `${selectedTemplate.name} Satın Al`}
+                      </>
+                    )}
                   </button>
                 )}
 
+                {errorMsg && (
+                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold text-center">
+                    {errorMsg}
+                  </div>
+                )}
+
                 <button
-                  onClick={() => setSelectedTemplate(null)}
+                  onClick={() => handleSelectTemplate(null)}
                   className="w-full py-2.5 rounded-2xl bg-transparent border border-slate-900 hover:bg-slate-900/30 text-slate-400 hover:text-slate-300 text-xs font-bold transition-all cursor-pointer text-center"
                 >
                   Geri Dön
