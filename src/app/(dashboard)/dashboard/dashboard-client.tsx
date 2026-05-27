@@ -21,7 +21,8 @@ import {
   deleteQrCode,
   updateLinkAnimation,
   updateLinkCustomStyle,
-  applyTemplateToProfile
+  applyTemplateToProfile,
+  updateAllLinksCustomStyle
 } from "@/app/actions";
 import {
   ResponsiveContainer,
@@ -327,6 +328,53 @@ export default function DashboardClient({
 }: DashboardClientProps) {
   const [ownedTemplates, setOwnedTemplates] = useState(initialOwnedTemplates);
   const [customizingTemplateId, setCustomizingTemplateId] = useState<string | null>(null);
+  const [quickLinkTitle, setQuickLinkTitle] = useState("");
+  const [quickLinkUrl, setQuickLinkUrl] = useState("");
+  
+  const [btnBgColor, setBtnBgColor] = useState("");
+  const [btnTextColor, setBtnTextColor] = useState("");
+  const [btnBorderColor, setBtnBorderColor] = useState("");
+  const [btnBorderStyle, setBtnBorderStyle] = useState("solid");
+  const [btnBorderWidth, setBtnBorderWidth] = useState("1px");
+  const [btnBorderRadius, setBtnBorderRadius] = useState("12px");
+  const [btnShadow, setBtnShadow] = useState("none");
+  const [btnFontWeight, setBtnFontWeight] = useState("font-bold");
+
+  useEffect(() => {
+    if (customizingTemplateId) {
+      const template = ownedTemplates.find(t => t.id === customizingTemplateId);
+      if (template) {
+        setBackground(template.bgColor);
+        setFontStyle(template.fontStyle);
+        const firstLink = links[0];
+        setBtnBgColor(firstLink?.bgColor || "");
+        setBtnTextColor(firstLink?.textColor || "");
+        setBtnBorderColor(firstLink?.borderColor || "");
+        setBtnBorderStyle(firstLink?.borderStyle || "solid");
+        setBtnBorderWidth(firstLink?.borderWidth || "1px");
+        setBtnBorderRadius(firstLink?.borderRadius || "12px");
+        setBtnShadow(firstLink?.shadow || "none");
+        setBtnFontWeight(firstLink?.fontWeight || "font-bold");
+      }
+    }
+  }, [customizingTemplateId]);
+
+  useEffect(() => {
+    if (customizingTemplateId) {
+      setLinks(prev => prev.map(l => ({
+        ...l,
+        bgColor: btnBgColor || null,
+        textColor: btnTextColor || null,
+        borderColor: btnBorderColor || null,
+        borderStyle: btnBorderStyle || null,
+        borderWidth: btnBorderWidth || null,
+        borderRadius: btnBorderRadius || null,
+        shadow: btnShadow || null,
+        fontWeight: btnFontWeight || null
+      })));
+    }
+  }, [btnBgColor, btnTextColor, btnBorderColor, btnBorderStyle, btnBorderWidth, btnBorderRadius, btnShadow, btnFontWeight, customizingTemplateId]);
+
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [upgradeModalTitle, setUpgradeModalTitle] = useState("");
   const [upgradeModalDesc, setUpgradeModalDesc] = useState("");
@@ -3601,7 +3649,7 @@ export default function DashboardClient({
                                     type="color"
                                     value={usernameColor || "#ffffff"}
                                     onChange={(e) => setUsernameColor(e.target.value)}
-                                    className="h-7 w-8 rounded border border-zinc-200 cursor-pointer"
+                                    className="h-7 w-8 rounded border border-zinc-200 cursor-pointer animate-none"
                                   />
                                   <input
                                     type="text"
@@ -3621,7 +3669,7 @@ export default function DashboardClient({
                                     type="color"
                                     value={bioColor || "#888888"}
                                     onChange={(e) => setBioColor(e.target.value)}
-                                    className="h-7 w-8 rounded border border-zinc-200 cursor-pointer"
+                                    className="h-7 w-8 rounded border border-zinc-200 cursor-pointer animate-none"
                                   />
                                   <input
                                     type="text"
@@ -3633,8 +3681,262 @@ export default function DashboardClient({
                               </div>
                             </div>
 
+                            {/* --- BUTTON PROPERTIES (Buton Özellikleri) --- */}
+                            <div className="border-t pt-3 mt-1 space-y-3">
+                              <h5 className="text-[10px] font-black text-zinc-800 uppercase tracking-wider">
+                                {lang === "tr" ? "Buton Stil Özellikleri" : "Button Style Features"}
+                              </h5>
+
+                              {/* Button Colors Grid */}
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Buton Arka Planı" : "Button Background"}
+                                  </label>
+                                  <div className="flex gap-1.5">
+                                    <input
+                                      type="color"
+                                      value={btnBgColor || "#ffffff"}
+                                      onChange={(e) => setBtnBgColor(e.target.value)}
+                                      className="h-7 w-7 rounded border border-zinc-200 cursor-pointer animate-none"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={btnBgColor || ""}
+                                      onChange={(e) => setBtnBgColor(e.target.value)}
+                                      className="flex-1 min-w-0 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Buton Yazı Rengi" : "Button Text Color"}
+                                  </label>
+                                  <div className="flex gap-1.5">
+                                    <input
+                                      type="color"
+                                      value={btnTextColor || "#000000"}
+                                      onChange={(e) => setBtnTextColor(e.target.value)}
+                                      className="h-7 w-7 rounded border border-zinc-200 cursor-pointer animate-none"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={btnTextColor || ""}
+                                      onChange={(e) => setBtnTextColor(e.target.value)}
+                                      className="flex-1 min-w-0 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Çerçeve Rengi" : "Border Color"}
+                                  </label>
+                                  <div className="flex gap-1.5">
+                                    <input
+                                      type="color"
+                                      value={btnBorderColor || "#000000"}
+                                      onChange={(e) => setBtnBorderColor(e.target.value)}
+                                      className="h-7 w-7 rounded border border-zinc-200 cursor-pointer animate-none"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={btnBorderColor || ""}
+                                      onChange={(e) => setBtnBorderColor(e.target.value)}
+                                      className="flex-1 min-w-0 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Çerçeve Stili" : "Border Style"}
+                                  </label>
+                                  <select
+                                    value={btnBorderStyle}
+                                    onChange={(e) => setBtnBorderStyle(e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
+                                  >
+                                    <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
+                                    <option value="dashed">{lang === "tr" ? "Kesikli (Dashed)" : "Dashed"}</option>
+                                    <option value="double">{lang === "tr" ? "Çift (Double)" : "Double"}</option>
+                                    <option value="dotted">{lang === "tr" ? "Noktalı (Dotted)" : "Dotted"}</option>
+                                    <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Çerçeve Kalınlığı" : "Border Width"}
+                                  </label>
+                                  <select
+                                    value={btnBorderWidth}
+                                    onChange={(e) => setBtnBorderWidth(e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
+                                  >
+                                    <option value="0px">0px</option>
+                                    <option value="1px">1px</option>
+                                    <option value="2px">2px</option>
+                                    <option value="3px">3px</option>
+                                    <option value="4px">4px</option>
+                                    <option value="5px">5px</option>
+                                  </select>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Köşe Yuvarlaklığı" : "Border Radius"}
+                                  </label>
+                                  <select
+                                    value={btnBorderRadius}
+                                    onChange={(e) => setBtnBorderRadius(e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
+                                  >
+                                    <option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp (0px)"}</option>
+                                    <option value="4px">4px</option>
+                                    <option value="8px">8px</option>
+                                    <option value="12px">12px</option>
+                                    <option value="16px">16px</option>
+                                    <option value="20px">20px</option>
+                                    <option value="24px">24px</option>
+                                    <option value="9999px">{lang === "tr" ? "Yuvarlak (Oval)" : "Round (Oval)"}</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Gölge Efekti" : "Shadow Effect"}
+                                  </label>
+                                  <select
+                                    value={btnShadow}
+                                    onChange={(e) => setBtnShadow(e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
+                                  >
+                                    <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
+                                    <option value="soft">{lang === "tr" ? "Yumuşak (Soft)" : "Soft"}</option>
+                                    <option value="glow-purple">{lang === "tr" ? "Mor Işıma (Glow)" : "Glow Purple"}</option>
+                                    <option value="glow-emerald">{lang === "tr" ? "Yeşil Işıma (Glow)" : "Glow Emerald"}</option>
+                                    <option value="hard-3d">{lang === "tr" ? "Sert 3D (Brutal)" : "Hard 3D"}</option>
+                                  </select>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Yazı Kalınlığı" : "Font Weight"}
+                                  </label>
+                                  <select
+                                    value={btnFontWeight}
+                                    onChange={(e) => setBtnFontWeight(e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
+                                  >
+                                    <option value="font-normal">{lang === "tr" ? "Normal" : "Normal"}</option>
+                                    <option value="font-medium">{lang === "tr" ? "Orta (Medium)" : "Medium"}</option>
+                                    <option value="font-bold">{lang === "tr" ? "Kalın (Bold)" : "Bold"}</option>
+                                    <option value="font-black">{lang === "tr" ? "Çok Kalın (Black)" : "Black"}</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* --- QUICK LINK ADDITION (Hızlı Link Ekleme) --- */}
+                            <div className="border-t pt-3 mt-1 space-y-3">
+                              <h5 className="text-[10px] font-black text-zinc-800 uppercase tracking-wider flex items-center gap-1">
+                                <span>🔗</span>
+                                {lang === "tr" ? "Yeni Link Ekle (Önizleme İçin)" : "Add New Link (For Preview)"}
+                              </h5>
+                              <div className="space-y-2 bg-slate-50 p-2.5 rounded-lg border border-zinc-150">
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div className="space-y-0.5">
+                                    <input
+                                      type="text"
+                                      placeholder={lang === "tr" ? "Link Başlığı" : "Link Title"}
+                                      value={quickLinkTitle}
+                                      onChange={(e) => setQuickLinkTitle(e.target.value)}
+                                      className="w-full px-2.5 py-1.5 rounded border border-zinc-200 text-[10px] text-zinc-900 focus:border-teal-500 outline-none bg-white"
+                                    />
+                                  </div>
+                                  <div className="space-y-0.5">
+                                    <input
+                                      type="text"
+                                      placeholder={lang === "tr" ? "Link URL" : "Link URL"}
+                                      value={quickLinkUrl}
+                                      onChange={(e) => setQuickLinkUrl(e.target.value)}
+                                      className="w-full px-2.5 py-1.5 rounded border border-zinc-200 text-[10px] text-zinc-900 focus:border-teal-500 outline-none bg-white"
+                                    />
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={async () => {
+                                    if (!quickLinkTitle || !quickLinkUrl) return;
+                                    if (simulatedPlan === "FREE" && links.length >= 5) {
+                                      triggerUpgradeModal(
+                                        lang === "tr" ? "Link Sınırına Ulaştınız 🔒" : "Link Limit Reached 🔒",
+                                        lang === "tr" 
+                                          ? "Ücretsiz planda en fazla 5 link oluşturabilirsiniz. Sınırları kaldırmak için Premium pakete geçin!" 
+                                          : "Free tier is limited to 5 links. Upgrade your plan to add unlimited links!"
+                                      );
+                                      return;
+                                    }
+                                    startTransition(async () => {
+                                      try {
+                                        await addLink(
+                                          initialUser.id,
+                                          quickLinkTitle,
+                                          quickLinkUrl,
+                                          "WEBSITE",
+                                          "",
+                                          "TEXT_LINK",
+                                          null
+                                        );
+                                        const tempId = Math.random().toString();
+                                        setLinks([
+                                          ...links,
+                                          {
+                                            id: tempId,
+                                            title: quickLinkTitle,
+                                            url: quickLinkUrl,
+                                            isActive: true,
+                                            type: "WEBSITE",
+                                            clicks: [],
+                                            blockType: "TEXT_LINK",
+                                            metadata: null,
+                                            bgColor: btnBgColor || null,
+                                            textColor: btnTextColor || null,
+                                            borderColor: btnBorderColor || null,
+                                            borderStyle: btnBorderStyle || null,
+                                            borderWidth: btnBorderWidth || null,
+                                            borderRadius: btnBorderRadius || null,
+                                            shadow: btnShadow || null,
+                                            fontWeight: btnFontWeight || null
+                                          }
+                                        ]);
+                                        setQuickLinkTitle("");
+                                        setQuickLinkUrl("");
+                                        setSuccessMsg(lang === "tr" ? "Link başarıyla eklendi!" : "Link added successfully!");
+                                        setTimeout(() => setSuccessMsg(""), 3000);
+                                      } catch (err: any) {
+                                        setErrorMsg(err.message || "Failed to add link");
+                                        setTimeout(() => setErrorMsg(""), 4000);
+                                      }
+                                    });
+                                  }}
+                                  className="w-full py-1.5 rounded bg-zinc-950 hover:bg-zinc-850 text-white text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1 border-none"
+                                >
+                                  <span>{lang === "tr" ? "Listeye Ekle" : "Add to List"}</span>
+                                </button>
+                              </div>
+                            </div>
+
                             {/* Action Buttons */}
-                            <div className="pt-2 flex gap-1.5">
+                            <div className="pt-2 flex gap-1.5 border-t">
                               <button
                                 type="button"
                                 onClick={async () => {
@@ -3652,6 +3954,17 @@ export default function DashboardClient({
                                         bioColor || undefined,
                                         usernameColor || undefined
                                       );
+                                      await updateAllLinksCustomStyle(
+                                        initialUser.id,
+                                        btnBgColor || null,
+                                        btnTextColor || null,
+                                        btnBorderColor || null,
+                                        btnBorderStyle || null,
+                                        btnBorderWidth || null,
+                                        btnBorderRadius || null,
+                                        btnShadow || null,
+                                        btnFontWeight || null
+                                      );
                                       setSuccessMsg(lang === "tr" ? "Özelleştirilmiş tasarım kaydedildi!" : "Custom design saved successfully!");
                                       setCustomizingTemplateId(null);
                                       setTimeout(() => setSuccessMsg(""), 3000);
@@ -3662,7 +3975,7 @@ export default function DashboardClient({
                                   });
                                 }}
                                 disabled={isPending}
-                                className="flex-1 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-900 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
+                                className="flex-1 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-900 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1 border-none"
                               >
                                 <Check className="h-3 w-3" />
                                 <span>{lang === "tr" ? "Kaydet" : "Save"}</span>
@@ -3675,8 +3988,16 @@ export default function DashboardClient({
                                   setFontStyle(template.fontStyle);
                                   setUsernameColor("#ffffff");
                                   setBioColor("#888888");
+                                  setBtnBgColor("");
+                                  setBtnTextColor("");
+                                  setBtnBorderColor("");
+                                  setBtnBorderStyle("solid");
+                                  setBtnBorderWidth("1px");
+                                  setBtnBorderRadius("12px");
+                                  setBtnShadow("none");
+                                  setBtnFontWeight("font-bold");
                                 }}
-                                className="px-2 py-1.5 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-650 text-[9px] font-black cursor-pointer"
+                                className="px-2 py-1.5 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-650 text-[9px] font-black cursor-pointer bg-white"
                               >
                                 {lang === "tr" ? "Sıfırla" : "Reset"}
                               </button>

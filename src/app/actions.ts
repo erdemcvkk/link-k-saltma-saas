@@ -161,6 +161,35 @@ export async function updateLinkCustomStyle(
   revalidatePath("/[username]", "page");
 }
 
+export async function updateAllLinksCustomStyle(
+  userId: string,
+  bgColor: string | null,
+  textColor: string | null,
+  borderColor: string | null,
+  borderStyle: string | null,
+  borderWidth: string | null,
+  borderRadius: string | null,
+  shadow: string | null,
+  fontWeight: string | null
+) {
+  await db.link.updateMany({
+    where: { userId },
+    data: {
+      bgColor,
+      textColor,
+      borderColor,
+      borderStyle,
+      borderWidth,
+      borderRadius,
+      shadow,
+      fontWeight
+    },
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/[username]", "page");
+}
+
 export async function deleteLink(linkId: string) {
   await db.link.delete({
     where: { id: linkId },
