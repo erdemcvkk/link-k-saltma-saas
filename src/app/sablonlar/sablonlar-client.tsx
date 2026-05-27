@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Search, Eye, ShoppingCart, X, Check, Laptop, Smartphone, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowLeft, Search, Eye, ShoppingCart, X, Check, Laptop, Smartphone, ExternalLink, Sparkles, CreditCard, Lock, Loader2 } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import { purchaseTemplate } from "@/app/actions";
 
@@ -37,6 +37,15 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
   const [ownedTemplateIds, setOwnedTemplateIds] = useState<string[]>(initialOwnedTemplateIds);
   const [isPending, startTransition] = useState(false);
 
+  // Simulated Payment Modal States
+  const [checkoutTemplate, setCheckoutTemplate] = useState<Template | null>(null);
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardCvc, setCardCvc] = useState("");
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentPending, setPaymentPending] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
   // Extract unique categories
   const categories = ["Tümü", ...Array.from(new Set(initialTemplates.map((t) => t.category)))];
 
@@ -55,14 +64,15 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
       return;
     }
 
-    setIsPending(true);
-    // If there is a payment link, open it in a new window
-    if (template.price > 0 && template.paymentLink) {
-      window.open(template.paymentLink, "_blank");
+    // If it's a paid template, open the simulated credit card modal instead of direct checkout!
+    if (template.price > 0) {
+      setCheckoutTemplate(template);
+      return;
     }
 
-    // Register simulated purchase for the user
-    startTransition(async () => {
+    setIsPending(true);
+    // Register simulated free template purchase instantly
+    const triggerFreePurchase = async () => {
       try {
         await purchaseTemplate(userId, template.id);
         setOwnedTemplateIds(prev => [...prev, template.id]);
@@ -73,10 +83,45 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
           setSelectedTemplate(null);
         }, 2000);
       } catch (err) {
-        console.error("Purchase error:", err);
+        console.error("Free Purchase error:", err);
         setIsPending(false);
       }
-    });
+    };
+    triggerFreePurchase();
+  };
+
+  const handleCheckoutSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!checkoutTemplate || !userId) return;
+
+    setErrorMsg("");
+    setPaymentPending(true);
+
+    try {
+      // Premium feel simulated payment delay
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      await purchaseTemplate(userId, checkoutTemplate.id);
+      setOwnedTemplateIds(prev => [...prev, checkoutTemplate.id]);
+      
+      setPaymentSuccess(true);
+      setPaymentPending(false);
+      setPurchaseSuccess(true);
+
+      setTimeout(() => {
+        setPaymentSuccess(false);
+        setCheckoutTemplate(null);
+        setSelectedTemplate(null);
+        setPurchaseSuccess(false);
+        // Clear card inputs
+        setCardNumber("");
+        setCardExpiry("");
+        setCardCvc("");
+      }, 2000);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Ödeme işlemi gerçekleştirilemedi.");
+      setPaymentPending(false);
+    }
   };
 
   return (
@@ -354,6 +399,120 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
               </div>
             </div>
             
+          </div>
+        </div>
+      )}
+      {/* 💳 Simulated Checkout Modal */}
+      {checkoutTemplate && (
+        <div className="fixed inset-0 z-55 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-sm rounded-[2rem] bg-zinc-950 border border-zinc-900 shadow-2xl relative overflow-hidden p-6 space-y-6">
+            
+            {/* Header close trigger */}
+            <button
+              onClick={() => setCheckoutTemplate(null)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white cursor-pointer transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            {!paymentSuccess ? (
+              <>
+                <div className="space-y-1">
+                  <span className="text-[10px] text-neon-blue uppercase tracking-wider font-extrabold block">Güvenli Ödeme Geçidi</span>
+                  <h3 className="text-lg font-black text-white leading-tight text-left">{checkoutTemplate.name} Şablonu</h3>
+                  <div className="flex items-center gap-2 pt-1">
+                    <span className="px-2 py-0.5 rounded-full bg-neon-blue/20 text-[9px] font-bold text-neon-blue border border-neon-blue/30">
+                      {checkoutTemplate.category}
+                    </span>
+                    <span className="text-xs font-mono text-zinc-400">Toplam Tutar: <span className="text-emerald-400 font-extrabold">{checkoutTemplate.price} ₺</span></span>
+                  </div>
+                </div>
+
+                {errorMsg && (
+                  <div className="p-3 rounded-lg bg-red-950/20 border border-red-500/20 text-[11px] text-red-400 font-semibold">
+                    {errorMsg}
+                  </div>
+                )}
+
+                <form onSubmit={handleCheckoutSubmit} className="space-y-4 pt-2 text-left">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Kredi Kartı Numarası</label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="4242 4242 4242 4242"
+                        maxLength={19}
+                        value={cardNumber}
+                        onChange={(e) => setCardNumber(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue/50 outline-none text-white text-xs font-mono"
+                        required
+                      />
+                      <CreditCard className="absolute left-3.5 top-3.5 h-4 w-4 text-zinc-500" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Son Kullanma Tarihi</label>
+                      <input
+                        type="text"
+                        placeholder="MM/YY"
+                        maxLength={5}
+                        value={cardExpiry}
+                        onChange={(e) => setCardExpiry(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue/50 outline-none text-white text-xs font-mono"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">CVC</label>
+                      <input
+                        type="password"
+                        placeholder="***"
+                        maxLength={3}
+                        value={cardCvc}
+                        onChange={(e) => setCardCvc(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue/50 outline-none text-white text-xs font-mono"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-[10px] text-zinc-500 border-t border-zinc-900 pt-4">
+                    <Lock className="h-3.5 w-3.5 text-emerald-450" />
+                    <span>Güvenli simüle edilmiş 3D Secure altyapısı.</span>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={paymentPending}
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue hover:opacity-95 disabled:from-zinc-900 disabled:to-zinc-950 text-white disabled:text-zinc-500 font-extrabold text-xs transition-all cursor-pointer flex items-center justify-center gap-2 border-0"
+                  >
+                    {paymentPending ? (
+                      <Loader2 className="h-4.5 w-4.5 animate-spin" />
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4" />
+                        Ödemeyi Tamamla ({checkoutTemplate.price} ₺)
+                      </>
+                    )}
+                  </button>
+                </form>
+              </>
+            ) : (
+              <div className="text-center py-6 space-y-5">
+                <div className="w-14 h-14 rounded-full bg-emerald-950/20 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.15)] animate-bounce">
+                  <Check className="h-7 w-7" />
+                </div>
+
+                <div className="space-y-1">
+                  <h3 className="text-lg font-black text-white">Ödeme Başarıyla Alındı!</h3>
+                  <p className="text-xs text-zinc-500 leading-relaxed">
+                    Simüle edilen transferiniz sisteme işlendi. Satın aldığınız şablon hesabınıza tanımlandı. Panele giderek hemen kullanabilirsiniz!
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
