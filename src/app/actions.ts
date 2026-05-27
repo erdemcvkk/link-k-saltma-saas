@@ -1511,17 +1511,23 @@ export async function seedTemplates(adminUserId?: string) {
     },
   ];
 
-  const newTemplates = sampleTemplates.filter(t => !existingNames.has(t.name));
-  if (newTemplates.length === 0) {
-    return { success: true, seeded: false, message: "All templates already exist." };
-  }
-
-  for (const template of newTemplates) {
-    await db.template.create({
-      data: template,
+  for (const template of sampleTemplates) {
+    const existing = await db.template.findFirst({
+      where: { name: template.name }
     });
+
+    if (existing) {
+      await db.template.update({
+        where: { id: existing.id },
+        data: template,
+      });
+    } else {
+      await db.template.create({
+        data: template,
+      });
+    }
   }
 
   revalidatePath("/sablonlar");
-  return { success: true, seeded: true, count: newTemplates.length };
+  return { success: true, seeded: true, message: "All 30 templates seeded and updated to premium aesthetics successfully." };
 }

@@ -326,6 +326,7 @@ export default function DashboardClient({
   initialOwnedTemplates = []
 }: DashboardClientProps) {
   const [ownedTemplates, setOwnedTemplates] = useState(initialOwnedTemplates);
+  const [customizingTemplateId, setCustomizingTemplateId] = useState<string | null>(null);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [upgradeModalTitle, setUpgradeModalTitle] = useState("");
   const [upgradeModalDesc, setUpgradeModalDesc] = useState("");
@@ -3480,6 +3481,37 @@ export default function DashboardClient({
                           </div>
                         </div>
 
+                        <div className="flex gap-2 w-full">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setBackground(template.bgColor);
+                              setFontStyle(template.fontStyle);
+                              setTheme(template.isCoded ? "custom" : template.category.toLowerCase());
+                              setSuccessMsg(lang === "tr" ? "Şablon canlı simülatörde önizleniyor!" : "Previewing template in simulator!");
+                              setTimeout(() => setSuccessMsg(""), 2000);
+                            }}
+                            className="flex-1 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                            <span>{lang === "tr" ? "Önizle" : "Preview"}</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setBackground(template.bgColor);
+                              setFontStyle(template.fontStyle);
+                              setTheme(template.isCoded ? "custom" : template.category.toLowerCase());
+                              setCustomizingTemplateId(customizingTemplateId === template.id ? null : template.id);
+                            }}
+                            className="flex-1 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
+                          >
+                            <Settings className="h-3.5 w-3.5" />
+                            <span>{lang === "tr" ? "Düzenle" : "Customize"}</span>
+                          </button>
+                        </div>
+
                         <button
                           type="button"
                           disabled={isCurrentlyApplied || isPending}
@@ -3504,7 +3536,7 @@ export default function DashboardClient({
                           className={`w-full py-2.5 rounded-xl font-extrabold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
                             isCurrentlyApplied 
                               ? "bg-zinc-100 text-zinc-400 border border-zinc-200 cursor-not-allowed" 
-                              : "bg-teal-500 hover:bg-teal-400 text-slate-900"
+                              : "bg-teal-500 hover:bg-teal-400 text-slate-900 shadow-md shadow-teal-500/10"
                           }`}
                         >
                           {isCurrentlyApplied ? (
@@ -3519,6 +3551,138 @@ export default function DashboardClient({
                             </>
                           )}
                         </button>
+
+                        {/* INLINE TEMPLATE CUSTOMIZATION CONTROL DRAWER */}
+                        {customizingTemplateId === template.id && (
+                          <div className="w-full p-4 rounded-xl border border-zinc-200 bg-white space-y-4 text-left animate-in fade-in duration-200">
+                            <h4 className="text-xs font-black text-zinc-900 uppercase tracking-wide border-b pb-2 flex items-center gap-1.5">
+                              <Settings className="h-3.5 w-3.5 text-teal-500" />
+                              {lang === "tr" ? "Şablon Tasarımını Özelleştir" : "Customize Template Design"}
+                            </h4>
+                            
+                            {/* Background Input */}
+                            <div className="space-y-1">
+                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
+                                {lang === "tr" ? "Arka Plan (Renk veya Gradyan CSS)" : "Background (CSS Gradient or Color)"}
+                              </label>
+                              <input
+                                type="text"
+                                value={background || ""}
+                                onChange={(e) => setBackground(e.target.value)}
+                                className="w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-teal-500 outline-none"
+                                placeholder="e.g. #ffffff or linear-gradient(...)"
+                              />
+                            </div>
+
+                            {/* Font Select */}
+                            <div className="space-y-1">
+                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
+                                {lang === "tr" ? "Yazı Tipi" : "Typography Style"}
+                              </label>
+                              <select
+                                value={fontStyle}
+                                onChange={(e) => setFontStyle(e.target.value)}
+                                className="w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 focus:border-teal-500 outline-none bg-white"
+                              >
+                                {initialFonts.map((f) => (
+                                  <option key={f.value} value={f.value}>{f.name}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            {/* Colors Grid */}
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="space-y-1">
+                                <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
+                                  {lang === "tr" ? "Kullanıcı Adı Rengi" : "Username Color"}
+                                </label>
+                                <div className="flex gap-2">
+                                  <input
+                                    type="color"
+                                    value={usernameColor || "#ffffff"}
+                                    onChange={(e) => setUsernameColor(e.target.value)}
+                                    className="h-7 w-8 rounded border border-zinc-200 cursor-pointer"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={usernameColor || ""}
+                                    onChange={(e) => setUsernameColor(e.target.value)}
+                                    className="flex-1 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="space-y-1">
+                                <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
+                                  {lang === "tr" ? "Biyografi Rengi" : "Bio Color"}
+                                </label>
+                                <div className="flex gap-2">
+                                  <input
+                                    type="color"
+                                    value={bioColor || "#888888"}
+                                    onChange={(e) => setBioColor(e.target.value)}
+                                    className="h-7 w-8 rounded border border-zinc-200 cursor-pointer"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={bioColor || ""}
+                                    onChange={(e) => setBioColor(e.target.value)}
+                                    className="flex-1 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="pt-2 flex gap-1.5">
+                              <button
+                                type="button"
+                                onClick={async () => {
+                                  startTransition(async () => {
+                                    try {
+                                      await applyTemplateToProfile(initialUser.id, template.id);
+                                      await updateProfile(
+                                        initialUser.id,
+                                        bio,
+                                        template.isCoded ? "custom" : template.category.toLowerCase(),
+                                        username,
+                                        avatarUrl || undefined,
+                                        background || undefined,
+                                        fontStyle || undefined,
+                                        bioColor || undefined,
+                                        usernameColor || undefined
+                                      );
+                                      setSuccessMsg(lang === "tr" ? "Özelleştirilmiş tasarım kaydedildi!" : "Custom design saved successfully!");
+                                      setCustomizingTemplateId(null);
+                                      setTimeout(() => setSuccessMsg(""), 3000);
+                                    } catch (err: any) {
+                                      setErrorMsg(err.message || "Failed to save profile changes");
+                                      setTimeout(() => setErrorMsg(""), 4000);
+                                    }
+                                  });
+                                }}
+                                disabled={isPending}
+                                className="flex-1 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-900 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
+                              >
+                                <Check className="h-3 w-3" />
+                                <span>{lang === "tr" ? "Kaydet" : "Save"}</span>
+                              </button>
+                              
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setBackground(template.bgColor);
+                                  setFontStyle(template.fontStyle);
+                                  setUsernameColor("#ffffff");
+                                  setBioColor("#888888");
+                                }}
+                                className="px-2 py-1.5 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-650 text-[9px] font-black cursor-pointer"
+                              >
+                                {lang === "tr" ? "Sıfırla" : "Reset"}
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -4699,7 +4863,7 @@ export default function DashboardClient({
         </div>
 
         {/* RIGHT COLUMN: STICKY SIMULATOR PREVIEW OR INVISIBLE SPACER FOR EXACT ALIGNMENT & PROPORTIONS */}
-        {activeTab === "editor" ? (
+        {activeTab === "editor" || activeTab === "templates" ? (
           renderSimulator()
         ) : (
           <div className="hidden lg:block w-[360px] shrink-0 sticky top-32 self-start pointer-events-none opacity-0" />
