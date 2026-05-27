@@ -3483,24 +3483,23 @@ export default function DashboardClient({
                         <button
                           type="button"
                           disabled={isCurrentlyApplied || isPending}
-                          onClick={async () => {
-                            try {
-                              setIsPending(true);
-                              const res = await applyTemplateToProfile(initialUser.id, template.id);
-                              if (res.success) {
-                                setBackground(template.bgColor);
-                                if (template.fontStyle) {
-                                  setFontStyle(template.fontStyle);
+                          onClick={() => {
+                            startTransition(async () => {
+                              try {
+                                const res = await applyTemplateToProfile(initialUser.id, template.id);
+                                if (res.success) {
+                                  setBackground(template.bgColor);
+                                  if (template.fontStyle) {
+                                    setFontStyle(template.fontStyle);
+                                  }
+                                  setSuccessMsg(lang === "tr" ? "Şablon başarıyla uygulandı!" : "Template applied successfully!");
+                                  setTimeout(() => setSuccessMsg(""), 3000);
                                 }
-                                setSuccessMsg(lang === "tr" ? "Şablon başarıyla uygulandı!" : "Template applied successfully!");
-                                setTimeout(() => setSuccessMsg(""), 3000);
+                              } catch (e: any) {
+                                setErrorMsg(e.message || "An error occurred");
+                                setTimeout(() => setErrorMsg(""), 4000);
                               }
-                            } catch (e: any) {
-                              setErrorMsg(e.message || "An error occurred");
-                              setTimeout(() => setErrorMsg(""), 4000);
-                            } finally {
-                              setIsPending(false);
-                            }
+                            });
                           }}
                           className={`w-full py-2.5 rounded-xl font-extrabold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
                             isCurrentlyApplied 
