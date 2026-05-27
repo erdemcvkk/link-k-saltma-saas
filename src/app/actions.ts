@@ -104,6 +104,72 @@ export async function addLink(
   });
   const nextOrder = maxOrderLink ? maxOrderLink.order + 1 : 0;
 
+  // Inherit styling from existing links if they exist
+  const existingLink = await db.link.findFirst({
+    where: { userId },
+    select: {
+      bgColor: true,
+      textColor: true,
+      borderColor: true,
+      borderStyle: true,
+      borderWidth: true,
+      borderRadius: true,
+      shadow: true,
+      fontWeight: true,
+      animation: true,
+    }
+  });
+
+  let linkBgColor = null;
+  let linkTextColor = null;
+  let linkBorderColor = null;
+  let linkBorderStyle = null;
+  let linkBorderWidth = null;
+  let linkBorderRadius = null;
+  let linkShadow = null;
+  let linkFontWeight = null;
+  let linkAnimation = animation;
+
+  if (existingLink) {
+    linkBgColor = existingLink.bgColor;
+    linkTextColor = existingLink.textColor;
+    linkBorderColor = existingLink.borderColor;
+    linkBorderStyle = existingLink.borderStyle;
+    linkBorderWidth = existingLink.borderWidth;
+    linkBorderRadius = existingLink.borderRadius;
+    linkShadow = existingLink.shadow;
+    linkFontWeight = existingLink.fontWeight;
+    if (!linkAnimation) linkAnimation = existingLink.animation || "";
+  } else {
+    // If no existing links, query user's profile and check if they have a theme/template.
+    const profile = await db.profile.findUnique({
+      where: { userId },
+      select: { theme: true }
+    });
+    if (profile && profile.theme && profile.theme !== "custom") {
+      const template = await db.template.findFirst({
+        where: {
+          OR: [
+            { category: { equals: profile.theme, mode: 'insensitive' } },
+            { name: { equals: profile.theme, mode: 'insensitive' } }
+          ]
+        }
+      });
+      if (template && template.buttonStyle) {
+        const parsed = parseButtonStyle(template.buttonStyle);
+        linkBgColor = parsed.bgColor;
+        linkTextColor = parsed.textColor;
+        linkBorderColor = parsed.borderColor;
+        linkBorderStyle = parsed.borderStyle;
+        linkBorderWidth = parsed.borderWidth;
+        linkBorderRadius = parsed.borderRadius;
+        linkShadow = parsed.shadow;
+        linkFontWeight = parsed.fontWeight;
+        if (!linkAnimation) linkAnimation = parsed.animation;
+      }
+    }
+  }
+
   await db.link.create({
     data: {
       userId,
@@ -112,9 +178,17 @@ export async function addLink(
       type,
       order: nextOrder,
       isActive: true,
-      animation,
+      animation: linkAnimation,
       blockType,
       metadata,
+      bgColor: linkBgColor,
+      textColor: linkTextColor,
+      borderColor: linkBorderColor,
+      borderStyle: linkBorderStyle,
+      borderWidth: linkBorderWidth,
+      borderRadius: linkBorderRadius,
+      shadow: linkShadow,
+      fontWeight: linkFontWeight,
     },
   });
 
@@ -1188,9 +1262,131 @@ export async function applyTemplateToProfile(userId: string, templateId: string)
     }
   });
 
+  // Apply button styling from template's buttonStyle to all user's links
+  if (template.buttonStyle) {
+    const parsed = parseButtonStyle(template.buttonStyle);
+    await db.link.updateMany({
+      where: { userId },
+      data: {
+        bgColor: parsed.bgColor,
+        textColor: parsed.textColor,
+        borderColor: parsed.borderColor,
+        borderStyle: parsed.borderStyle,
+        borderWidth: parsed.borderWidth,
+        borderRadius: parsed.borderRadius,
+        shadow: parsed.shadow,
+        fontWeight: parsed.fontWeight,
+        animation: parsed.animation || ""
+      }
+    });
+  }
+
   revalidatePath("/dashboard");
   revalidatePath("/[username]", "page");
   return { success: true };
+}
+
+function parseButtonStyle(buttonStyleStr: string) {
+  let bgColor = "";
+  let textColor = "";
+  let borderColor = "";
+  let borderStyle = "solid";
+  let borderWidth = "1px";
+  let borderRadius = "12px";
+  let shadow = "none";
+  let fontWeight = "font-bold";
+  let animation = "";
+
+  const classes = buttonStyleStr.split(" ");
+  for (const cls of classes) {
+    const cleanCls = cls.trim();
+    if (!cleanCls) continue;
+
+    if (cleanCls.startsWith("bg-")) {
+      if (cleanCls === "bg-black/60" || cleanCls === "bg-black/80" || cleanCls === "bg-black/70" || cleanCls === "bg-black/90" || cleanCls === "bg-black") bgColor = "#000000";
+      else if (cleanCls.includes("emerald-500")) bgColor = "#10b981";
+      else if (cleanCls.includes("emerald-950")) bgColor = "#064e3b";
+      else if (cleanCls.includes("slate-950")) bgColor = "#0f172a";
+      else if (cleanCls.includes("amber-500")) bgColor = "#f59e0b";
+      else if (cleanCls.includes("amber-50")) bgColor = "#fef3c7";
+      else if (cleanCls.includes("red-650")) bgColor = "#dc2626";
+      else if (cleanCls.includes("fuchsia-600")) bgColor = "#c084fc";
+      else if (cleanCls.includes("purple-900")) bgColor = "#581c87";
+      else if (cleanCls.includes("stone-900")) bgColor = "#1c1917";
+      else if (cleanCls.includes("sky-50")) bgColor = "#f0f9ff";
+      else if (cleanCls === "bg-white/80" || cleanCls === "bg-white" || cleanCls === "bg-white/30" || cleanCls === "bg-white/40" || cleanCls === "bg-white/90" || cleanCls === "bg-white/95" || cleanCls === "bg-emerald-50") bgColor = "#ffffff";
+      else if (cleanCls === "bg-transparent") bgColor = "transparent";
+    }
+    if (cleanCls.startsWith("text-")) {
+      if (cleanCls.includes("cyan-400") || cleanCls.includes("cyan-300")) textColor = "#22d3ee";
+      else if (cleanCls.includes("pink-700") || cleanCls.includes("pink-450") || cleanCls.includes("pink-400")) textColor = "#f472b6";
+      else if (cleanCls.includes("emerald-100") || cleanCls.includes("emerald-600")) textColor = "#10b981";
+      else if (cleanCls.includes("amber-900")) textColor = "#78350f";
+      else if (cleanCls.includes("stone-800") || cleanCls.includes("stone-950") || cleanCls.includes("zinc-900") || cleanCls.includes("sky-950") || cleanCls.includes("indigo-950") || cleanCls.includes("indigo-900")) textColor = "#1e293b";
+      else if (cleanCls.includes("white")) textColor = "#ffffff";
+    }
+    if (cleanCls.startsWith("border-")) {
+      if (cleanCls.includes("cyan-400")) borderColor = "#22d3ee";
+      else if (cleanCls.includes("pink-200") || cleanCls.includes("pink-500")) borderColor = "#ec4899";
+      else if (cleanCls.includes("emerald-400") || cleanCls.includes("emerald-800")) borderColor = "#10b981";
+      else if (cleanCls.includes("fuchsia-500")) borderColor = "#d946ef";
+      else if (cleanCls.includes("amber-200") || cleanCls.includes("amber-400")) borderColor = "#f59e0b";
+      else if (cleanCls.includes("stone-400") || cleanCls.includes("stone-850")) borderColor = "#78716c";
+      else if (cleanCls.includes("zinc-700") || cleanCls.includes("zinc-200") || cleanCls.includes("zinc-800")) borderColor = "#71717a";
+      else if (cleanCls.includes("purple-500")) borderColor = "#a855f7";
+      else if (cleanCls.includes("white")) borderColor = "#ffffff";
+    }
+    if (cleanCls.startsWith("border-")) {
+      if (cleanCls === "border-2") borderWidth = "2px";
+      else if (cleanCls === "border-4") borderWidth = "4px";
+      else if (cleanCls === "border") borderWidth = "1px";
+    }
+    if (cleanCls.startsWith("rounded-")) {
+      if (cleanCls === "rounded-xl") borderRadius = "12px";
+      else if (cleanCls === "rounded-2xl") borderRadius = "16px";
+      else if (cleanCls === "rounded-3xl") borderRadius = "24px";
+      else if (cleanCls === "rounded-full") borderRadius = "9999px";
+      else if (cleanCls === "rounded-lg") borderRadius = "8px";
+      else if (cleanCls === "rounded-md") borderRadius = "6px";
+      else if (cleanCls === "rounded-sm") borderRadius = "4px";
+      else if (cleanCls === "rounded-none") borderRadius = "0px";
+    }
+    if (cleanCls.startsWith("shadow-")) {
+      if (cleanCls.includes("glow")) {
+        if (cleanCls.includes("purple")) shadow = "glow-purple";
+        else if (cleanCls.includes("emerald")) shadow = "glow-emerald";
+        else shadow = "glow-purple";
+      } else if (cleanCls === "shadow-sm" || cleanCls === "shadow") {
+        shadow = "soft";
+      } else if (cleanCls === "shadow-lg" || cleanCls === "shadow-md" || cleanCls === "shadow-2xl") {
+        shadow = "soft";
+      } else if (cleanCls.includes("brutal") || cleanCls.includes("0px_rgba(0,0,0,1)")) {
+        shadow = "hard-3d";
+      }
+    }
+    if (cleanCls === "font-normal" || cleanCls === "font-medium" || cleanCls === "font-bold" || cleanCls === "font-black" || cleanCls === "font-extrabold") {
+      fontWeight = cleanCls === "font-extrabold" ? "font-black" : cleanCls;
+    }
+  }
+
+  if (!bgColor) {
+    if (buttonStyleStr.includes("bg-gradient")) bgColor = "linear-gradient(to right, #9333ea, #db2777)";
+    else bgColor = "#1f2937";
+  }
+  if (!textColor) textColor = "#ffffff";
+  if (!borderColor) borderColor = "transparent";
+
+  return {
+    bgColor,
+    textColor,
+    borderColor,
+    borderStyle,
+    borderWidth,
+    borderRadius,
+    shadow,
+    fontWeight,
+    animation
+  };
 }
 
 export async function seedTemplates(adminUserId?: string) {

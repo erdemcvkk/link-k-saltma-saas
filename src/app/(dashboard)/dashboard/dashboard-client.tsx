@@ -853,7 +853,15 @@ export default function DashboardClient({
             type: typeParam, 
             clicks: [],
             blockType,
-            metadata: metaString
+            metadata: metaString,
+            bgColor: btnBgColor || null,
+            textColor: btnTextColor || null,
+            borderColor: btnBorderColor || null,
+            borderStyle: btnBorderStyle || null,
+            borderWidth: btnBorderWidth || null,
+            borderRadius: btnBorderRadius || null,
+            shadow: btnShadow || null,
+            fontWeight: btnFontWeight || null
           }
         ]);
         
@@ -3608,6 +3616,57 @@ export default function DashboardClient({
                               {lang === "tr" ? "Şablon Tasarımını Özelleştir" : "Customize Template Design"}
                             </h4>
                             
+                            {/* Profile Image (Avatar) Input */}
+                            <div className="space-y-1.5">
+                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
+                                {lang === "tr" ? "Profil Fotoğrafı" : "Profile Picture"}
+                              </label>
+                              <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-full border border-zinc-200 overflow-hidden bg-slate-50 flex items-center justify-center shrink-0">
+                                  {avatarUrl ? (
+                                    <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <User className="h-5 w-5 text-slate-400" />
+                                  )}
+                                </div>
+                                <div className="flex gap-2">
+                                  <label className="px-3 py-1 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 text-[10px] font-bold transition-all cursor-pointer select-none text-zinc-700 flex items-center justify-center">
+                                    {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      className="hidden"
+                                      onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                          if (file.size > 2.5 * 1024 * 1024) {
+                                            alert(lang === "tr" ? "Lütfen 2.5MB'den küçük bir fotoğraf seçin!" : "Please select an image smaller than 2.5MB!");
+                                            return;
+                                          }
+                                          const reader = new FileReader();
+                                          reader.onload = (event) => {
+                                            if (event.target?.result) {
+                                              setAvatarUrl(event.target.result as string);
+                                            }
+                                          };
+                                          reader.readAsDataURL(file);
+                                        }
+                                      }}
+                                    />
+                                  </label>
+                                  {avatarUrl && (
+                                    <button
+                                      type="button"
+                                      onClick={() => setAvatarUrl("")}
+                                      className="px-3 py-1 rounded-lg border border-red-250 bg-red-50 hover:bg-red-100 text-[10px] font-bold text-red-650 transition-all cursor-pointer select-none"
+                                    >
+                                      {lang === "tr" ? "Kaldır" : "Remove"}
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
                             {/* Background Input */}
                             <div className="space-y-1">
                               <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
