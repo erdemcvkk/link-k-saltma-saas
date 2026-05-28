@@ -1713,7 +1713,7 @@ export async function deleteFeature(id: string) {
 }
 // Addon Settings
 export async function getAddonSettings() {
-  const settings = await prisma.addonSetting.findMany();
+  const settings = await db.addonSetting.findMany();
   const settingsMap: Record<string, string> = {};
   for (const s of settings) {
     settingsMap[s.key] = s.value;
@@ -1722,10 +1722,10 @@ export async function getAddonSettings() {
 }
 
 export async function saveAddonSetting(adminUserId: string, key: string, value: string) {
-  const admin = await prisma.adminUser.findUnique({ where: { id: adminUserId } });
+  const admin = await db.adminUser.findUnique({ where: { id: adminUserId } });
   if (!admin || !admin.isActive) throw new Error("Unauthorized");
   
-  await prisma.addonSetting.upsert({
+  await db.addonSetting.upsert({
     where: { key },
     update: { value },
     create: { key, value }
@@ -1734,16 +1734,16 @@ export async function saveAddonSetting(adminUserId: string, key: string, value: 
 
 // Addon Dummy Products
 export async function getAddonDummyProducts() {
-  return await prisma.addonDummyProduct.findMany({
+  return await db.addonDummyProduct.findMany({
     orderBy: { order: 'asc' }
   });
 }
 
 export async function createAddonDummyProduct(adminUserId: string, data: any) {
-  const admin = await prisma.adminUser.findUnique({ where: { id: adminUserId } });
+  const admin = await db.adminUser.findUnique({ where: { id: adminUserId } });
   if (!admin || !admin.isActive) throw new Error("Unauthorized");
 
-  return await prisma.addonDummyProduct.create({
+  return await db.addonDummyProduct.create({
     data: {
       title: data.title,
       price: data.price,
@@ -1756,10 +1756,10 @@ export async function createAddonDummyProduct(adminUserId: string, data: any) {
 }
 
 export async function updateAddonDummyProduct(adminUserId: string, productId: string, data: any) {
-  const admin = await prisma.adminUser.findUnique({ where: { id: adminUserId } });
+  const admin = await db.adminUser.findUnique({ where: { id: adminUserId } });
   if (!admin || !admin.isActive) throw new Error("Unauthorized");
 
-  return await prisma.addonDummyProduct.update({
+  return await db.addonDummyProduct.update({
     where: { id: productId },
     data: {
       title: data.title,
@@ -1773,10 +1773,10 @@ export async function updateAddonDummyProduct(adminUserId: string, productId: st
 }
 
 export async function deleteAddonDummyProduct(adminUserId: string, productId: string) {
-  const admin = await prisma.adminUser.findUnique({ where: { id: adminUserId } });
+  const admin = await db.adminUser.findUnique({ where: { id: adminUserId } });
   if (!admin || !admin.isActive) throw new Error("Unauthorized");
 
-  await prisma.addonDummyProduct.delete({
+  await db.addonDummyProduct.delete({
     where: { id: productId }
   });
 }
