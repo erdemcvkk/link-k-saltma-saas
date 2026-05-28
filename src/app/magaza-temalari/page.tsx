@@ -7,43 +7,96 @@ export const metadata = {
   title: "Mağaza Temaları Showcase",
 };
 
-const DUMMY_PRODUCTS: DummyProduct[] = [
-  {
-    id: "p1",
-    title: "Karanlık Drill Beat Paketi",
-    type: "Müzik / Beat",
-    price: "499",
-    imageUrl: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=500&q=80",
-  },
-  {
-    id: "p2",
-    title: "Minimalist Notion Şablonu",
-    type: "Dijital Dosya",
-    price: "150",
-    imageUrl: "https://images.unsplash.com/photo-1611224885990-ab7363d1f2a9?w=500&q=80",
-  },
-  {
-    id: "p3",
-    title: "1 Saatlik Danışmanlık",
-    type: "Hizmet",
-    price: "850",
-    imageUrl: "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=500&q=80",
-  },
-  {
-    id: "p4",
-    title: "Lightroom Preset Paketi",
-    type: "Tasarım",
-    price: "200",
-    imageUrl: "https://images.unsplash.com/photo-1554046920-90dcac024a13?w=500&q=80",
-  }
-];
+interface ThemeShowcaseData {
+  id: StoreThemeType;
+  name: string;
+  desc: string;
+  color: string;
+  username: string;
+  bio: string;
+  avatarUrl: string;
+  coverUrl?: string;
+  products: DummyProduct[];
+}
 
-const THEMES: { id: StoreThemeType; name: string; desc: string; color: string }[] = [
-  { id: "dark-drill", name: "Dark Drill / Cyberpunk", desc: "Beatmaker & Oyuncular İçin", color: "bg-red-500" },
-  { id: "glassmorphism", name: "Premium Glassmorphism", desc: "Tasarımcılar & Sanatçılar İçin", color: "bg-purple-500" },
-  { id: "minimalist", name: "Minimalist & Clean", desc: "Yazarlar & Danışmanlar İçin", color: "bg-zinc-800" },
-  { id: "vibrant-pop", name: "Vibrant Creator Pop", desc: "Influencer'lar & Yayıncılar İçin", color: "bg-orange-500" },
-  { id: "classic", name: "Classic E-Commerce", desc: "Fiziksel Ürün Satanlar İçin", color: "bg-blue-500" }
+const THEMES: ThemeShowcaseData[] = [
+  {
+    id: "dark-drill",
+    name: "Dark Drill / Cyberpunk",
+    desc: "Beatmaker & Oyuncular İçin",
+    color: "bg-red-500",
+    username: "@darkbeat_prod",
+    bio: "Müzik Prodüktörü & Tasarımcı",
+    avatarUrl: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=200&q=80",
+    products: [
+      { id: "dd1", title: "Karanlık Drill Beat Paketi", type: "Beat", price: "499", imageUrl: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=500&q=80" },
+      { id: "dd2", title: "808 Bass Loop Kit", type: "Müzik", price: "350", imageUrl: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&q=80" },
+      { id: "dd3", title: "Trap Vocal Preset", type: "Preset", price: "200", imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&q=80" },
+      { id: "dd4", title: "FL Studio Şablon Paketi", type: "Şablon", price: "650", imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&q=80" },
+    ],
+  },
+  {
+    id: "glassmorphism",
+    name: "Premium Glassmorphism",
+    desc: "Tasarımcılar & Sanatçılar İçin",
+    color: "bg-purple-500",
+    username: "@artisan.studio",
+    bio: "Dijital Sanatçı & Fotoğrafçı",
+    avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80",
+    coverUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&q=80",
+    products: [
+      { id: "gm1", title: "Obsidian Lightroom Presetleri", type: "Preset", price: "300", imageUrl: "https://images.unsplash.com/photo-1554046920-90dcac024a13?w=500&q=80" },
+      { id: "gm2", title: "Soyut Sanat Duvar Kağıdı Seti", type: "Tasarım", price: "150", imageUrl: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=500&q=80" },
+      { id: "gm3", title: "Moody Film LUT Paketi", type: "Video", price: "450", imageUrl: "https://images.unsplash.com/photo-1533628635777-112b2239b1c7?w=500&q=80" },
+      { id: "gm4", title: "Minimalist Logo Şablonu", type: "Tasarım", price: "500", imageUrl: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&q=80" },
+    ],
+  },
+  {
+    id: "minimalist",
+    name: "Minimalist & Clean",
+    desc: "Yazarlar & Danışmanlar İçin",
+    color: "bg-zinc-800",
+    username: "@coach.mehmet",
+    bio: "Yazar & Kariyer Danışmanı",
+    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+    products: [
+      { id: "mn1", title: "1 Saatlik Birebir Danışmanlık", type: "Hizmet", price: "850", imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80" },
+      { id: "mn2", title: "Minimalist Notion Şablonu", type: "Şablon", price: "150", imageUrl: "https://images.unsplash.com/photo-1611224885990-ab7363d1f2a9?w=500&q=80" },
+      { id: "mn3", title: "E-Kitap: Üretkenlik Rehberi", type: "E-Kitap", price: "120", imageUrl: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&q=80" },
+      { id: "mn4", title: "Haftalık Planlayıcı PDF", type: "Şablon", price: "75", imageUrl: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=500&q=80" },
+    ],
+  },
+  {
+    id: "vibrant-pop",
+    name: "Vibrant Creator Pop",
+    desc: "Influencer'lar & Yayıncılar İçin",
+    color: "bg-orange-500",
+    username: "@creative.zeynep",
+    bio: "İçerik Üreticisi & YouTuber",
+    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+    products: [
+      { id: "vp1", title: "Video Düzenleme Masterclass'ı", type: "Kurs", price: "750", imageUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=500&q=80" },
+      { id: "vp2", title: "Sosyal Medya İçerik Takvimi", type: "Şablon", price: "200", imageUrl: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80" },
+      { id: "vp3", title: "Canva Tasarım Kit'i", type: "Tasarım", price: "350", imageUrl: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=500&q=80" },
+      { id: "vp4", title: "Podcast Intro Müzikleri", type: "Müzik", price: "180", imageUrl: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=500&q=80" },
+    ],
+  },
+  {
+    id: "classic",
+    name: "Classic E-Commerce",
+    desc: "Güven Odaklı Satıcılar İçin",
+    color: "bg-blue-500",
+    username: "@pixelcraft.design",
+    bio: "Premium Dijital Ürün Mağazası",
+    avatarUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80",
+    coverUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&q=80",
+    products: [
+      { id: "cl1", title: "Premium UX/UI Kit", type: "Tasarım", price: "900", imageUrl: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&q=80" },
+      { id: "cl2", title: "E-Ticaret Figma Şablonu", type: "Şablon", price: "600", imageUrl: "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=500&q=80" },
+      { id: "cl3", title: "İkon Paketi (500+ Adet)", type: "Asset", price: "250", imageUrl: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=500&q=80" },
+      { id: "cl4", title: "Web Sitesi Wireframe Seti", type: "Şablon", price: "400", imageUrl: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=500&q=80" },
+    ],
+  },
 ];
 
 export default function StoreThemesShowcase() {
@@ -58,7 +111,7 @@ export default function StoreThemesShowcase() {
             <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest mt-1">Mini Mağaza Tasarım Konseptleri</p>
           </div>
           <Link href="/admin" className="flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-white transition-colors">
-            <ArrowLeft className="h-4 w-4" /> Admin'e Dön
+            <ArrowLeft className="h-4 w-4" /> Admin&apos;e Dön
           </Link>
         </div>
       </nav>
@@ -81,9 +134,12 @@ export default function StoreThemesShowcase() {
                 <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">
                   <StorefrontPreview 
                     theme={theme.id} 
-                    products={DUMMY_PRODUCTS} 
-                    storeTitle="Sana Özel Vitrin" 
-                    storeCoverUrl="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000"
+                    products={theme.products} 
+                    storeTitle={theme.username}
+                    username={theme.username}
+                    bio={theme.bio}
+                    avatarUrl={theme.avatarUrl}
+                    storeCoverUrl={theme.coverUrl}
                   />
                 </div>
               </div>

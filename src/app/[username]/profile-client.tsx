@@ -419,6 +419,9 @@ export default function ProfileClient({ username, bio, theme, links, products, a
                       }))} 
                       storeTitle={storeTitle || (lang === "tr" ? "Mağazam" : "My Store")}
                       storeCoverUrl={storeCoverUrl || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&q=80"}
+                      avatarUrl={avatarUrl}
+                      username={"@" + username}
+                      bio={bio}
                     />
                   </div>
                 );

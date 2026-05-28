@@ -1,3 +1,7 @@
+const fs = require('fs');
+const path = 'src/components/storefront-preview.tsx';
+
+const content = `
 "use client";
 
 import React, { useState } from "react";
@@ -17,8 +21,8 @@ export type StoreThemeType = "dark-drill" | "glassmorphism" | "minimalist" | "vi
 interface StorefrontPreviewProps {
   theme: StoreThemeType;
   products: DummyProduct[];
-  storeTitle?: string; 
-  storeCoverUrl?: string; 
+  storeTitle?: string; // We'll use this as fallback if no username
+  storeCoverUrl?: string; // Used as banner
   username?: string;
   bio?: string;
   avatarUrl?: string | null;
@@ -33,6 +37,7 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
     setTimeout(() => setClickedItem(null), 300);
   };
 
+  // Theme Engine
   const getThemeStyles = () => {
     switch (theme) {
       case "dark-drill":
@@ -119,19 +124,22 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
   const displayBio = bio || (theme === "dark-drill" ? "Müzik Prodüktörü & Tasarımcı" : 
                             theme === "glassmorphism" ? "Dijital Sanatçı" : 
                             theme === "minimalist" ? "Yazar & Danışman" :
-                            theme === "vibrant-pop" ? "İçerik Üreticisi" : "Güvenilir Satıcı");
+                            theme === "vibrant-pop" ? "İçerik Üreticisi" : "Premium Mağaza");
 
+  // Determine if we should show a banner based on the theme rules
+  // "Premium Glassmorphism" asks for a blurred banner image.
+  // "Minimalist & Clean" explicitly asks for NO banner.
   const shouldShowBanner = theme === "glassmorphism" || theme === "classic";
 
   return (
-    <div className={`relative w-full h-full overflow-y-auto no-scrollbar ${styles.wrapper}`}>
+    <div className={\`relative w-full h-full overflow-y-auto no-scrollbar \${styles.wrapper}\`}>
       {/* Hero Section */}
-      <div className={`sticky top-0 z-10 ${styles.headerBg}`}>
+      <div className={\`sticky top-0 z-10 \${styles.headerBg}\`}>
         {shouldShowBanner && storeCoverUrl && (
           <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
             <img 
               src={storeCoverUrl} 
-              className={`w-full h-full object-cover ${theme === "glassmorphism" ? "blur-md scale-110 opacity-40" : "opacity-30"}`} 
+              className={\`w-full h-full object-cover \${theme === "glassmorphism" ? "blur-md scale-110 opacity-40" : "opacity-30"}\`} 
               alt="Banner" 
             />
             {theme === "glassmorphism" && <div className="absolute inset-0 bg-slate-900/40 mix-blend-multiply" />}
@@ -154,7 +162,7 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
         
         {/* Controls */}
         <div className="px-4 pb-4 flex gap-2 relative z-10">
-          <div className={`flex-1 flex items-center px-3 py-2 gap-2 ${styles.searchBg} transition-all`}>
+          <div className={\`flex-1 flex items-center px-3 py-2 gap-2 \${styles.searchBg} transition-all\`}>
             <Search className="h-4 w-4 opacity-50" />
             <input 
               type="text" 
@@ -165,13 +173,13 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
           <div className="flex gap-1 shrink-0 bg-black/5 rounded-lg p-1">
             <button 
               onClick={() => setLayout("GRID")} 
-              className={`p-1.5 rounded-md ${layout === "GRID" ? "bg-black/10 shadow-sm" : "opacity-50"}`}
+              className={\`p-1.5 rounded-md \${layout === "GRID" ? "bg-black/10 shadow-sm" : "opacity-50"}\`}
             >
               <LayoutGrid className="h-4 w-4" />
             </button>
             <button 
               onClick={() => setLayout("LIST")} 
-              className={`p-1.5 rounded-md ${layout === "LIST" ? "bg-black/10 shadow-sm" : "opacity-50"}`}
+              className={\`p-1.5 rounded-md \${layout === "LIST" ? "bg-black/10 shadow-sm" : "opacity-50"}\`}
             >
               <List className="h-4 w-4" />
             </button>
@@ -180,33 +188,33 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
       </div>
 
       {/* Product Feed */}
-      <div className={`p-4 ${layout === "GRID" ? "grid grid-cols-2 gap-3" : "flex flex-col gap-3"}`}>
+      <div className={\`p-4 \${layout === "GRID" ? "grid grid-cols-2 gap-3" : "flex flex-col gap-3"}\`}>
         {products.map((product) => (
           <div 
             key={product.id}
-            className={`overflow-hidden flex ${layout === "LIST" ? "flex-row items-center gap-4 p-3" : "flex-col"} ${styles.cardBg}`}
+            className={\`overflow-hidden flex \${layout === "LIST" ? "flex-row items-center gap-4 p-3" : "flex-col"} \${styles.cardBg}\`}
           >
             {product.imageUrl && (
-              <div className={`${layout === "LIST" ? "w-16 h-16 shrink-0 rounded-lg" : "w-full h-28"} relative overflow-hidden bg-black/5`}>
+              <div className={\`\${layout === "LIST" ? "w-16 h-16 shrink-0 rounded-lg" : "w-full h-28"} relative overflow-hidden bg-black/5\`}>
                 <img src={product.imageUrl} className="w-full h-full object-cover" alt={product.title} />
               </div>
             )}
-            <div className={`${layout === "LIST" ? "flex-1" : "p-3"} flex flex-col justify-between h-full`}>
+            <div className={\`\${layout === "LIST" ? "flex-1" : "p-3"} flex flex-col justify-between h-full\`}>
               <div>
-                <span className={`px-1.5 py-0.5 text-[8px] uppercase tracking-wider ${styles.badgeClass}`}>
+                <span className={\`px-1.5 py-0.5 text-[8px] uppercase tracking-wider \${styles.badgeClass}\`}>
                   {product.type}
                 </span>
-                <h4 className={`mt-1.5 text-xs leading-tight ${styles.titleColor} ${layout === "LIST" ? "line-clamp-1" : "line-clamp-2"}`}>
+                <h4 className={\`mt-1.5 text-xs leading-tight \${styles.titleColor} \${layout === "LIST" ? "line-clamp-1" : "line-clamp-2"}\`}>
                   {product.title}
                 </h4>
               </div>
-              <div className={`mt-3 flex ${layout === "LIST" ? "flex-row items-center justify-between" : "flex-col items-start"} gap-2`}>
-                <span className={`text-sm ${styles.priceColor}`}>{product.price}₺</span>
+              <div className={\`mt-3 flex \${layout === "LIST" ? "flex-row items-center justify-between" : "flex-col items-start"} gap-2\`}>
+                <span className={\`text-sm \${styles.priceColor}\`}>{product.price}₺</span>
                 <button 
                   onClick={() => handlePurchase(product.id)}
-                  className={`w-full ${layout === "LIST" ? "w-auto px-3" : ""} py-2 text-[10px] flex items-center justify-center gap-1.5 ${styles.btnClass} ${
+                  className={\`w-full \${layout === "LIST" ? "w-auto px-3" : ""} py-2 text-[10px] flex items-center justify-center gap-1.5 \${styles.btnClass} \${
                     clickedItem === product.id ? (theme === "vibrant-pop" ? "" : "scale-95 opacity-80") : ""
-                  }`}
+                  }\`}
                 >
                   <ShoppingBag className="h-3 w-3" />
                   Satın Al
@@ -219,3 +227,10 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
     </div>
   );
 }
+`;
+
+fs.writeFileSync(path, content.trim() + '\\n');
+`;
+
+fs.writeFileSync('rewrite-storefront.js', content);
+console.log('Script written');

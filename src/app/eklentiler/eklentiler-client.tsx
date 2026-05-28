@@ -146,6 +146,18 @@ export default function EklentilerClient() {
                       theme={addon.theme} 
                       products={addon.mockProducts} 
                       storeTitle={addon.name} 
+                      username={"@creator_" + addon.theme.split('-')[0]}
+                      avatarUrl={
+                        addon.theme === "dark-drill" ? "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=200&q=80" :
+                        addon.theme === "glassmorphism" ? "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80" :
+                        addon.theme === "minimalist" ? "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" :
+                        addon.theme === "vibrant-pop" ? "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80" :
+                        "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80"
+                      }
+                      storeCoverUrl={
+                        addon.theme === "glassmorphism" ? "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&q=80" :
+                        addon.theme === "classic" ? "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&q=80" : undefined
+                      }
                     />
                   </div>
                 </div>
