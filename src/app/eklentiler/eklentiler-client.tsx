@@ -235,6 +235,9 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
             const displayProducts = (products && products.length > 0 && addon.id === "MINI_STORE") 
               ? products 
               : addon.mockProducts;
+              
+            // Eğer admin panelinden fiyat güncellendiyse (override) onu kullan
+            const displayPrice = settings?.[`theme_PRICE_${addon.id}`] || addon.price;
             
             return (
               <div key={addon.id} className="snap-center shrink-0 flex flex-col items-center w-[340px]">
@@ -264,7 +267,7 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
 
                 {/* Buy Section */}
                 <div className="w-full bg-zinc-900 rounded-2xl p-4 border border-zinc-800 text-center flex flex-col gap-3">
-                  <div className="text-2xl font-black text-white">₺{addon.price}</div>
+                  <div className="text-2xl font-black text-white">₺{displayPrice}</div>
                   {isPurchased ? (
                     <button disabled className="w-full py-3 rounded-xl bg-green-500/20 text-green-500 font-bold flex items-center justify-center gap-2">
                       <ShoppingBag className="h-4 w-4" /> Satın Alındı
