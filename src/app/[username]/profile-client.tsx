@@ -297,13 +297,20 @@ export default function ProfileClient({ username, bio, theme, links, products, a
   const isCustomVideo = background?.startsWith("custom-video::");
   const customImgUrl = isCustomImg ? (background!.startsWith("custom-img::") ? background!.replace("custom-img::", "") : background) : null;
   const customVideoUrl = isCustomVideo ? background!.replace("custom-video::", "") : null;
-  const bgClassName = (!isCustomImg && !isCustomVideo && background) ? background : (!isCustomImg && !isCustomVideo ? currentStyles.bg : "");
+  
+  const isTailwindBg = background?.includes("bg-") || background?.includes("from-") || background?.includes("to-");
+  const isCssBg = background && !isCustomImg && !isCustomVideo && !isTailwindBg;
+
+  const bgClassName = (background && isTailwindBg && !isCustomImg && !isCustomVideo) 
+    ? background 
+    : (!background && !isCustomImg && !isCustomVideo ? currentStyles.bg : "");
 
   return (
     <div 
       className={`min-h-screen relative flex flex-col justify-between py-20 px-4 transition-all duration-500 ${bgClassName}`}
       style={{
         fontFamily: fontStyle,
+        ...(isCssBg ? { background: background } : {}),
         ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {})
       }}
     >

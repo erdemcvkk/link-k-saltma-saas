@@ -1407,13 +1407,20 @@ export default function DashboardClient({
             const isCustomVideo = background?.startsWith("custom-video::");
             const customImgUrl = isCustomImg ? (background.startsWith("custom-img::") ? background.replace("custom-img::", "") : background) : null;
             const customVideoUrl = isCustomVideo ? background.replace("custom-video::", "") : null;
-            const bgClassName = (!isCustomImg && !isCustomVideo && background) ? background : (!isCustomImg && !isCustomVideo ? previewStyles.bg : "");
+            
+            const isTailwindBg = background?.includes("bg-") || background?.includes("from-") || background?.includes("to-");
+            const isCssBg = background && !isCustomImg && !isCustomVideo && !isTailwindBg;
+
+            const bgClassName = (background && isTailwindBg && !isCustomImg && !isCustomVideo) 
+              ? background 
+              : (!background && !isCustomImg && !isCustomVideo ? previewStyles.bg : "");
 
             return (
               <div 
                 className={`relative rounded-[2.5rem] aspect-[9/18] overflow-hidden p-6 flex flex-col justify-between transition-all duration-300 ${bgClassName}`}
                 style={{
                   fontFamily: fontStyle,
+                  ...(isCssBg ? { background: background } : {}),
                   ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {})
                 }}
               >
