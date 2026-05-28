@@ -5349,68 +5349,6 @@ export default function DashboardClient({
             </div>
           </div>
           )}
-
-          {/* ADDONS TAB CONTENT */}
-          {activeTab === "addons" && (
-            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
-              {addons.length === 0 ? (
-                <div className={`p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
-                  "bg-white border-zinc-200 shadow-sm"
-                }`}>
-                  <div className="h-16 w-16 rounded-3xl bg-rose-50 flex items-center justify-center mb-2">
-                    <Puzzle className="h-8 w-8 text-rose-500" />
-                  </div>
-                  <div className="space-y-2 max-w-md">
-                    <h2 className="text-xl font-black text-slate-900">
-                      {lang === "tr" ? "Henüz Bir Eklentiniz Yok" : "You Don't Have Any Add-ons Yet"}
-                    </h2>
-                    <p className="text-sm text-slate-500 font-medium leading-relaxed">
-                      {lang === "tr" 
-                        ? "Mağazamızdan satın aldığınız tüm premium eklenti ve temalar burada görünecektir. Bu eklentileri buradan kolayca yapılandırabilirsiniz."
-                        : "All premium add-ons and themes you purchase from our store will appear here. You can configure them easily."}
-                    </p>
-                  </div>
-                  <a 
-                    href="/eklentiler" 
-                    target="_blank"
-                    className="px-6 py-3 bg-rose-600 text-white rounded-xl text-sm font-bold hover:bg-rose-500 transition-colors shadow-sm"
-                  >
-                    {lang === "tr" ? "Mağazayı İncele" : "Visit Store"}
-                  </a>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {addons.map(addon => (
-                    <div key={addon.id} className="p-6 rounded-2xl bg-white border border-zinc-200 shadow-sm flex flex-col justify-between h-48">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center border border-zinc-200">
-                            <Puzzle className="h-5 w-5 text-zinc-700" />
-                          </div>
-                          <div>
-                            <h3 className="text-sm font-black text-zinc-900">{addon.addonType}</h3>
-                            <div className="text-[10px] font-bold text-emerald-500 mt-0.5 px-2 py-0.5 rounded-md bg-emerald-50 inline-block border border-emerald-100">
-                              Aktif (Active)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-4 pt-4 border-t border-zinc-100 flex items-center gap-2">
-                        <button 
-                          className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2"
-                        >
-                          <Settings className="h-3.5 w-3.5" />
-                          {lang === "tr" ? "Özellikleri Yönet" : "Manage Features"}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
           {/* STORE TAB CONTENT */}
           {activeTab === "store" && (
             <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
