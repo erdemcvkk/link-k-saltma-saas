@@ -238,14 +238,18 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
               
             // Eğer admin panelinden fiyat güncellendiyse (override) onu kullan
             const displayPrice = settings?.[`theme_PRICE_${addon.id}`] || addon.price;
+            const displayName = settings?.[`theme_NAME_${addon.id}`] || addon.name;
+            const displayDesc = settings?.[`theme_DESC_${addon.id}`] || addon.desc;
             
             return (
               <div key={addon.id} className="snap-center shrink-0 flex flex-col items-center w-[340px]">
                 
-                <div className="text-center mb-6 h-20 flex flex-col items-center justify-end">
-                  <div className={`w-3 h-3 rounded-full mb-3 ${addon.color} animate-pulse`} />
-                  <h2 className="text-xl font-black text-white mb-1">{addon.name}</h2>
-                  <p className="text-sm font-medium text-zinc-400">{addon.desc}</p>
+                <div className="text-center mb-6 px-4">
+                  <div className={`w-3 h-3 rounded-full mb-3 mx-auto ${addon.color} animate-pulse`} />
+                  <h3 className="text-xl font-bold text-white mb-2">{displayName}</h3>
+                  <p className="text-sm text-zinc-400 font-medium leading-relaxed h-[40px] flex items-center justify-center">
+                    {displayDesc}
+                  </p>
                 </div>
 
                 {/* Phone Mockup Frame */}

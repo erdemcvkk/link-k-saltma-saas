@@ -4,9 +4,9 @@ import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import { 
   ArrowLeft, Plus, Trash2, Edit2, Settings, LayoutGrid, CheckCircle, 
-  X, Info, Store, SlidersHorizontal, PackageOpen
+  X, Info, Store, SlidersHorizontal
 } from "lucide-react";
-import { saveAddonSetting, createAddonDummyProduct, updateAddonDummyProduct, deleteAddonDummyProduct } from "../../actions";
+import { saveAddonSetting } from "../../actions";
 import EklentilerClient, { ADDON_TYPES } from "../../eklentiler/eklentiler-client";
 
 interface AddonsClientProps {
@@ -17,7 +17,6 @@ interface AddonsClientProps {
 
 export default function AddonsClient({ adminUserId, initialSettings, initialProducts }: AddonsClientProps) {
   const [settings, setSettings] = useState(initialSettings);
-  const [products, setProducts] = useState(initialProducts);
   const [isPending, startTransition] = useTransition();
   const [msg, setMsg] = useState({ text: "", type: "" });
   const [activeTab, setActiveTab] = useState("themes"); 
@@ -26,7 +25,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({
-    title: "", price: "", imageUrl: "", buttonText: "", order: 0, isActive: true
+    name: "", desc: "", price: ""
   });
 
   const showMsg = (text: string, type: "success" | "error") => {
@@ -47,64 +46,50 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
     });
   };
 
-  const openNewForm = () => {
-    setEditingId(null);
-    setForm({ title: "", price: "", imageUrl: "", buttonText: "Satın Al", order: products.length + 1, isActive: true });
-    setIsFormOpen(true);
-  };
-
   const closeForm = () => {
     setIsFormOpen(false);
     setEditingId(null);
   };
 
-  const handleEdit = (prod: any) => {
-    setEditingId(prod.id);
+  const handleEdit = (addon: any) => {
+    setEditingId(addon.id);
+    const nameKey = `theme_NAME_${addon.id}`;
+    const descKey = `theme_DESC_${addon.id}`;
+    const priceKey = `theme_PRICE_${addon.id}`;
+
     setForm({
-      title: prod.title,
-      price: prod.price.toString(),
-      imageUrl: prod.imageUrl || "",
-      buttonText: prod.buttonText || "",
-      order: prod.order,
-      isActive: prod.isActive
+      name: settings[nameKey] || addon.name,
+      desc: settings[descKey] || addon.desc,
+      price: settings[priceKey] || addon.price.toString()
     });
     setIsFormOpen(true);
   };
 
-  const handleSaveProduct = (e: React.FormEvent) => {
+  const handleSaveTheme = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!editingId) return;
+
     startTransition(async () => {
       try {
-        const payload = {
-          ...form,
-          price: parseFloat(form.price) || 0
-        };
+        const nameKey = `theme_NAME_${editingId}`;
+        const descKey = `theme_DESC_${editingId}`;
+        const priceKey = `theme_PRICE_${editingId}`;
 
-        if (editingId) {
-          const updated = await updateAddonDummyProduct(adminUserId, editingId, payload);
-          setProducts(products.map(p => p.id === editingId ? updated : p));
-          showMsg("Ürün başarıyla güncellendi.", "success");
-        } else {
-          const created = await createAddonDummyProduct(adminUserId, payload);
-          setProducts([...products, created]);
-          showMsg("Yeni dummy ürün eklendi.", "success");
-        }
+        await saveAddonSetting(adminUserId, nameKey, form.name);
+        await saveAddonSetting(adminUserId, descKey, form.desc);
+        await saveAddonSetting(adminUserId, priceKey, form.price);
+
+        setSettings({
+          ...settings,
+          [nameKey]: form.name,
+          [descKey]: form.desc,
+          [priceKey]: form.price
+        });
+
+        showMsg("Tema başarıyla güncellendi.", "success");
         closeForm();
       } catch (err: any) {
-        showMsg("Ürün kaydedilirken bir hata oluştu.", "error");
-      }
-    });
-  };
-
-  const handleDeleteProduct = (id: string) => {
-    if (!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return;
-    startTransition(async () => {
-      try {
-        await deleteAddonDummyProduct(adminUserId, id);
-        setProducts(products.filter(p => p.id !== id));
-        showMsg("Ürün silindi.", "success");
-      } catch (err: any) {
-        showMsg("Ürün silinirken bir hata oluştu.", "error");
+        showMsg("Tema kaydedilirken bir hata oluştu.", "error");
       }
     });
   };
@@ -132,36 +117,28 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
                 <ArrowLeft className="h-4 w-4" /> Admin Paneli
               </Link>
               <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-                <Store className="h-7 w-7 text-rose-500" /> Eklenti Vitrini
+                <Store className="h-7 w-7 text-rose-500" /> Platform Temaları
               </h1>
-              <p className="text-sm text-zinc-400 font-medium mt-2">Vitrin simülatörünü ve dummy verileri yönetin.</p>
+              <p className="text-sm text-zinc-400 font-medium mt-2">Müşterilerinize sunduğunuz temaları ve eklentileri yönetin.</p>
             </div>
           </div>
 
           <div className="flex border-b border-white/5 bg-zinc-900/20">
             <button
               onClick={() => setActiveTab("themes")}
-              className={`flex-1 py-4 text-xs font-bold tracking-wide flex items-center justify-center gap-2 transition-colors ${
+              className={`flex-1 py-4 text-sm font-bold tracking-wide flex items-center justify-center gap-2 transition-colors ${
                 activeTab === "themes" ? "text-rose-500 border-b-2 border-rose-500 bg-rose-500/5" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
-              <Store className="h-4 w-4" /> Temalar (Satılan)
-            </button>
-            <button
-              onClick={() => setActiveTab("products")}
-              className={`flex-1 py-4 text-xs font-bold tracking-wide flex items-center justify-center gap-2 transition-colors ${
-                activeTab === "products" ? "text-rose-500 border-b-2 border-rose-500 bg-rose-500/5" : "text-zinc-500 hover:text-zinc-300"
-              }`}
-            >
-              <PackageOpen className="h-4 w-4" /> Dummy Ürünler
+              <Store className="h-5 w-5" /> Temalar (Satılanlar)
             </button>
             <button
               onClick={() => setActiveTab("config")}
-              className={`flex-1 py-4 text-xs font-bold tracking-wide flex items-center justify-center gap-2 transition-colors ${
+              className={`flex-1 py-4 text-sm font-bold tracking-wide flex items-center justify-center gap-2 transition-colors ${
                 activeTab === "config" ? "text-rose-500 border-b-2 border-rose-500 bg-rose-500/5" : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
-              <SlidersHorizontal className="h-4 w-4" /> Ayarlar
+              <SlidersHorizontal className="h-5 w-5" /> Ayarlar
             </button>
           </div>
 
@@ -171,102 +148,52 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
                 <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-start gap-3">
                   <Info className="h-5 w-5 text-rose-400 shrink-0 mt-0.5" />
                   <p className="text-xs text-rose-200 leading-relaxed font-medium">
-                    Sistemdeki gerçek <strong>10 Premium Tema / Eklenti</strong> ürününüz bunlardır. Satış fiyatlarını buradan güncelleyebilirsiniz. Değişiklikler anında yansır.
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  {ADDON_TYPES.map(addon => {
-                    const priceKey = `theme_PRICE_${addon.id}`;
-                    const currentPrice = settings[priceKey] || addon.price;
-                    return (
-                      <div key={addon.id} className="group p-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-all">
-                        <div className="flex items-center justify-between mb-3">
-                          <div>
-                            <div className="text-sm font-bold text-white flex items-center gap-2">
-                              <div className={`w-3 h-3 rounded-full ${addon.color}`} />
-                              {addon.name}
-                            </div>
-                            <div className="text-xs text-zinc-500 font-medium mt-1">{addon.desc}</div>
-                          </div>
-                        </div>
-                        <div className="flex gap-3">
-                          <input 
-                            type="number" 
-                            defaultValue={currentPrice}
-                            onBlur={(e) => {
-                              if (e.target.value !== currentPrice) {
-                                handleSettingChange(priceKey, e.target.value);
-                              }
-                            }}
-                            className="w-1/3 px-3 py-2 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 outline-none transition-all text-emerald-400 font-bold"
-                            placeholder="Fiyat (₺)"
-                          />
-                          <div className="text-[10px] text-zinc-500 flex items-center flex-1">
-                            Fiyatı değiştirip boşluğa tıklayınca otomatik kaydedilir.
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ) : activeTab === "products" ? (
-              <div className="space-y-6 animate-fadeIn">
-                
-                <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-start gap-3">
-                  <Info className="h-5 w-5 text-indigo-400 shrink-0 mt-0.5" />
-                  <p className="text-xs text-indigo-200 leading-relaxed font-medium">
-                    Buraya eklediğiniz ürünler, yandaki simülatörde <strong>"Dijital Mağaza Modülü"</strong> temasında gösterilir. Vitrin görselleştirmesini zenginleştirmek için kullanılır.
+                    Kullanıcılara sunduğunuz <strong>10 Premium Tema / Eklenti</strong> ürününüz bunlardır. İsimlerini, açıklamalarını ve satış fiyatlarını düzenleyebilirsiniz.
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <LayoutGrid className="h-5 w-5 text-zinc-500" /> Ürün Listesi ({products.length})
+                    <LayoutGrid className="h-5 w-5 text-zinc-500" /> Tema Listesi ({ADDON_TYPES.length})
                   </h3>
-                  <button 
-                    onClick={openNewForm}
-                    className="p-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl transition-colors shadow-lg shadow-rose-500/20"
-                  >
-                    <Plus className="h-5 w-5" />
-                  </button>
                 </div>
 
                 <div className="space-y-3">
-                  {products.length === 0 ? (
-                    <div className="text-center py-10 text-zinc-500 text-sm font-medium border border-dashed border-white/10 rounded-2xl">
-                      Henüz hiç dummy ürün eklenmemiş.
-                    </div>
-                  ) : (
-                    products.sort((a,b) => a.order - b.order).map(prod => (
-                      <div key={prod.id} className="group p-3 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-between hover:border-zinc-700 transition-all hover:shadow-lg">
+                  {ADDON_TYPES.map(addon => {
+                    const nameKey = `theme_NAME_${addon.id}`;
+                    const descKey = `theme_DESC_${addon.id}`;
+                    const priceKey = `theme_PRICE_${addon.id}`;
+                    
+                    const currentName = settings[nameKey] || addon.name;
+                    const currentDesc = settings[descKey] || addon.desc;
+                    const currentPrice = settings[priceKey] || addon.price;
+
+                    return (
+                      <div key={addon.id} className="group p-3 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-between hover:border-zinc-700 transition-all hover:shadow-lg">
                         <div className="flex items-center gap-4">
-                          {prod.imageUrl ? (
-                            <img src={prod.imageUrl} alt={prod.title} className="w-14 h-14 rounded-xl object-cover bg-zinc-800 shadow-sm" />
-                          ) : (
-                            <div className="w-14 h-14 rounded-xl bg-zinc-800 flex items-center justify-center text-zinc-600 font-bold text-xs">Foto</div>
-                          )}
+                          <div className={`w-14 h-14 rounded-xl flex items-center justify-center shadow-sm ${addon.color}`}>
+                            <div className="text-white opacity-80 mix-blend-overlay font-bold text-xl">
+                              {currentName.charAt(0)}
+                            </div>
+                          </div>
                           <div>
-                            <div className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors">{prod.title}</div>
-                            <div className="text-xs text-zinc-400 font-medium mt-1 flex items-center gap-2">
-                              <span className="text-emerald-400 font-bold">{prod.price} ₺</span>
-                              <span className="text-zinc-600">•</span>
-                              <span>Sıra: {prod.order}</span>
+                            <div className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors">{currentName}</div>
+                            <div className="text-xs text-zinc-400 font-medium mt-1 truncate max-w-[200px]">
+                              {currentDesc}
+                            </div>
+                            <div className="text-xs font-bold text-emerald-400 mt-1">
+                              {currentPrice} ₺
                             </div>
                           </div>
                         </div>
                         <div className="flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity pr-2">
-                          <button type="button" onClick={() => handleEdit(prod)} className="p-2.5 rounded-xl bg-zinc-800 hover:bg-white text-zinc-400 hover:text-black transition-colors" title="Düzenle">
+                          <button type="button" onClick={() => handleEdit(addon)} className="p-2.5 rounded-xl bg-zinc-800 hover:bg-white text-zinc-400 hover:text-black transition-colors" title="Düzenle">
                             <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button type="button" onClick={() => handleDeleteProduct(prod.id)} className="p-2.5 rounded-xl bg-zinc-800 hover:bg-red-500 text-zinc-400 hover:text-white transition-colors" title="Sil">
-                            <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                       </div>
-                    ))
-                  )}
+                    );
+                  })}
                 </div>
               </div>
             ) : (
@@ -305,79 +232,42 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
                       <option value="zoom-in">İçeri Büyüyerek (Zoom In)</option>
                     </select>
                   </div>
-
-                  <hr className="border-white/5" />
-
-                  {/* Theme Inheritance Toggle */}
-                  <div className="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-between cursor-pointer hover:border-zinc-700 transition-colors" onClick={() => handleSettingChange("storefront_theme_inheritance", settings["storefront_theme_inheritance"] === "true" ? "false" : "true")}>
-                    <div className="pr-4">
-                      <h4 className="text-sm font-bold text-white">Tema Mirası (Theme Inheritance)</h4>
-                      <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed">Mağaza modülü, profilin ana renklerini ve buton tasarımlarını otomatik olarak miras alsın mı?</p>
-                    </div>
-                    <button
-                      type="button"
-                      className={`w-14 h-7 rounded-full transition-colors relative flex items-center px-1 shrink-0 ${
-                        settings["storefront_theme_inheritance"] === "true" ? "bg-rose-500" : "bg-zinc-700"
-                      }`}
-                    >
-                      <div className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-300 ${
-                        settings["storefront_theme_inheritance"] === "true" ? "translate-x-7" : "translate-x-0"
-                      }`} />
-                    </button>
-                  </div>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Slide-up Form Overlay for Products */}
+          {/* Slide-up Form Overlay for Themes */}
           {isFormOpen && (
             <div className="absolute inset-0 z-20 bg-zinc-950 flex flex-col animate-in slide-in-from-bottom-8 duration-300">
               <div className="p-6 border-b border-white/5 flex items-center justify-between bg-zinc-900">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                  {editingId ? <Edit2 className="h-5 w-5 text-rose-500" /> : <Plus className="h-5 w-5 text-rose-500" />}
-                  {editingId ? "Ürünü Düzenle" : "Yeni Dummy Ürün"}
+                  <Edit2 className="h-5 w-5 text-rose-500" /> Temayı Düzenle
                 </h2>
                 <button type="button" onClick={closeForm} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-full text-zinc-400 hover:text-white transition-colors">
                   <X className="h-5 w-5" />
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto p-6">
-                <form onSubmit={handleSaveProduct} className="space-y-5">
+                <form onSubmit={handleSaveTheme} className="space-y-5">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Ürün Başlığı</label>
-                    <input type="text" placeholder="Örn: Lightroom Preset Paketi" value={form.title} onChange={e => setForm({...form, title: e.target.value})} required className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all" />
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Tema / Eklenti Adı</label>
+                    <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all" />
                   </div>
                   
-                  <div className="flex gap-4">
-                    <div className="space-y-1.5 flex-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Fiyat (₺)</label>
-                      <input type="number" placeholder="0" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all" />
-                    </div>
-                    <div className="space-y-1.5 flex-1">
-                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Sıralama</label>
-                      <input type="number" placeholder="1" value={form.order} onChange={e => setForm({...form, order: parseInt(e.target.value)||0})} className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all" />
-                    </div>
-                  </div>
-
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Görsel URL (İsteğe Bağlı)</label>
-                    <input type="text" placeholder="https://..." value={form.imageUrl} onChange={e => setForm({...form, imageUrl: e.target.value})} className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all" />
-                    {form.imageUrl && (
-                      <div className="mt-3 w-full h-32 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 relative">
-                        <img src={form.imageUrl} alt="Preview" className="w-full h-full object-cover" />
-                      </div>
-                    )}
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Açıklama (Subtitle)</label>
+                    <input type="text" value={form.desc} onChange={e => setForm({...form, desc: e.target.value})} required className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all" />
                   </div>
-
+                  
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Buton Metni</label>
-                    <input type="text" placeholder="Örn: Satın Al" value={form.buttonText} onChange={e => setForm({...form, buttonText: e.target.value})} className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all" />
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Satış Fiyatı (₺)</label>
+                    <input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all" />
                   </div>
 
                   <div className="pt-6 border-t border-white/5 flex gap-3">
                     <button type="submit" disabled={isPending} className="flex-1 py-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-bold transition-colors shadow-lg shadow-rose-500/20 disabled:opacity-50">
-                      {isPending ? "Kaydediliyor..." : (editingId ? "Değişiklikleri Kaydet" : "Ürünü Ekle")}
+                      {isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
                     </button>
                   </div>
                 </form>
@@ -401,7 +291,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-rose-500/10 blur-[120px] rounded-full pointer-events-none" />
             
             <div className="w-[1600px] transform scale-[0.6] lg:scale-[0.8] 2xl:scale-[0.9] origin-center transition-transform duration-500">
-              <EklentilerClient products={products.filter(p => p.isActive)} settings={settings} />
+              <EklentilerClient products={initialProducts.filter(p => p.isActive)} settings={settings} />
             </div>
           </div>
         </div>
