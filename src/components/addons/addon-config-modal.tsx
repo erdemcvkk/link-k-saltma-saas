@@ -20,6 +20,14 @@ interface AddonConfigModalProps {
 
 export default function AddonConfigModal({ addon, products = [], onClose, lang, username }: AddonConfigModalProps) {
   const [isPending, startTransition] = useTransition();
+  const [domain, setDomain] = useState("link-saas.com");
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setDomain(window.location.host);
+    }
+  }, []);
+
   const [configData, setConfigData] = useState<any>(() => {
     try {
       return addon.config ? JSON.parse(addon.config) : {};
@@ -30,6 +38,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   const [isActive, setIsActive] = useState<boolean>(addon.isActive);
 
   const handleFileUpload = async (file: File) => {
+    if (file.size > 4 * 1024 * 1024) {
+      throw new Error(lang === "tr" ? "Dosya boyutu çok büyük (Maks 4MB)!" : "File too large (Max 4MB)!");
+    }
     const formData = new FormData();
     formData.append("file", file);
     const res = await fetch("/api/media", {
@@ -165,15 +176,23 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                 <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Eklenti Linki (Opsiyonel)" : "Addon Link (Optional)"}</label>
                 <div className="flex gap-0 items-center">
                   <span className="px-3 py-3 bg-zinc-100 border border-zinc-200 border-r-0 rounded-l-xl text-sm text-zinc-500 font-medium whitespace-nowrap">
-                    link-saas.com/@{username}/
+                    {domain}/@{username}/
                   </span>
                   <input
                     type="text"
                     value={configData["customSlug"] || ""}
                     onChange={(e) => setConfigData({ ...configData, customSlug: e.target.value })}
                     placeholder={lang === "tr" ? "magazam" : "store"}
-                    className="w-full px-4 py-3 rounded-r-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
+                    className="w-full px-4 py-3 border-y border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
                   />
+                  <a
+                    href={`http://${domain}/@${username}/${configData.customSlug || ""}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-r-xl transition-colors border border-indigo-600 whitespace-nowrap"
+                  >
+                    {lang === "tr" ? "Git" : "Go"}
+                  </a>
                 </div>
               </div>
               
@@ -499,7 +518,10 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                     description: p.description || ""
                   }))}
                   storeTitle={configData.storeTitle || (lang === "tr" ? "Mağazam" : "My Store")}
-                  hideHeader={true}
+                  username={configData.storeUsername}
+                  bio={configData.storeBio}
+                  avatarUrl={configData.storeAvatarUrl}
+                  buyButtonText={configData.buyButtonText}
                 />
               </div>
             </div>
