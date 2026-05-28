@@ -24,6 +24,7 @@ import {
   applyTemplateToProfile,
   updateAllLinksCustomStyle
 } from "@/app/actions";
+import { parseButtonStyle } from "@/lib/parse-button-style";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -346,15 +347,29 @@ export default function DashboardClient({
       if (template) {
         setBackground(template.bgColor);
         setFontStyle(template.fontStyle);
-        const firstLink = links[0];
-        setBtnBgColor(firstLink?.bgColor || "");
-        setBtnTextColor(firstLink?.textColor || "");
-        setBtnBorderColor(firstLink?.borderColor || "");
-        setBtnBorderStyle(firstLink?.borderStyle || "solid");
-        setBtnBorderWidth(firstLink?.borderWidth || "1px");
-        setBtnBorderRadius(firstLink?.borderRadius || "12px");
-        setBtnShadow(firstLink?.shadow || "none");
-        setBtnFontWeight(firstLink?.fontWeight || "font-bold");
+        
+        // Parse button style from template definition as the source of truth
+        if (template.buttonStyle) {
+          const parsed = parseButtonStyle(template.buttonStyle);
+          setBtnBgColor(parsed.bgColor);
+          setBtnTextColor(parsed.textColor);
+          setBtnBorderColor(parsed.borderColor);
+          setBtnBorderStyle(parsed.borderStyle);
+          setBtnBorderWidth(parsed.borderWidth);
+          setBtnBorderRadius(parsed.borderRadius);
+          setBtnShadow(parsed.shadow);
+          setBtnFontWeight(parsed.fontWeight);
+        } else {
+          const firstLink = links[0];
+          setBtnBgColor(firstLink?.bgColor || "");
+          setBtnTextColor(firstLink?.textColor || "");
+          setBtnBorderColor(firstLink?.borderColor || "");
+          setBtnBorderStyle(firstLink?.borderStyle || "solid");
+          setBtnBorderWidth(firstLink?.borderWidth || "1px");
+          setBtnBorderRadius(firstLink?.borderRadius || "12px");
+          setBtnShadow(firstLink?.shadow || "none");
+          setBtnFontWeight(firstLink?.fontWeight || "font-bold");
+        }
       }
     }
   }, [customizingTemplateId]);
@@ -3580,6 +3595,34 @@ export default function DashboardClient({
                                   if (template.fontStyle) {
                                     setFontStyle(template.fontStyle);
                                   }
+                                  setTheme(template.isCoded ? "custom" : template.category.toLowerCase());
+
+                                  // Parse button style and update client-side link states
+                                  if (template.buttonStyle) {
+                                    const parsed = parseButtonStyle(template.buttonStyle);
+                                    setBtnBgColor(parsed.bgColor);
+                                    setBtnTextColor(parsed.textColor);
+                                    setBtnBorderColor(parsed.borderColor);
+                                    setBtnBorderStyle(parsed.borderStyle);
+                                    setBtnBorderWidth(parsed.borderWidth);
+                                    setBtnBorderRadius(parsed.borderRadius);
+                                    setBtnShadow(parsed.shadow);
+                                    setBtnFontWeight(parsed.fontWeight);
+
+                                    // Update all links in state with new template styles
+                                    setLinks(prev => prev.map(l => ({
+                                      ...l,
+                                      bgColor: parsed.bgColor,
+                                      textColor: parsed.textColor,
+                                      borderColor: parsed.borderColor,
+                                      borderStyle: parsed.borderStyle,
+                                      borderWidth: parsed.borderWidth,
+                                      borderRadius: parsed.borderRadius,
+                                      shadow: parsed.shadow,
+                                      fontWeight: parsed.fontWeight
+                                    })));
+                                  }
+
                                   setSuccessMsg(lang === "tr" ? "Şablon başarıyla uygulandı!" : "Template applied successfully!");
                                   setTimeout(() => setSuccessMsg(""), 3000);
                                 }
