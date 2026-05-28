@@ -81,6 +81,7 @@ import {
   Share2,
   Users,
   Mail,
+  Puzzle,
 } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import VideoPlayer from "@/components/blocks/video-player";
@@ -194,7 +195,6 @@ interface DashboardClientProps {
     customCss?: string | null;
     configJson?: string | null;
   }[];
-  initialFeatures?: { key: string; plans: string[] }[];
 }
 
 
@@ -1349,7 +1349,7 @@ export default function DashboardClient({
       case "glow-green":
         return {
           bg: "bg-gradient-to-b from-emerald-950/50 via-zinc-950 to-black",
-          card: "bg-emerald-950/20 border-emerald-500/30 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.1)] hover:border-emerald-400",
+          card: "bg-emerald-950/20 border-emerald-500/30 text-emerald-300 shadow-[0_0_10px_rgba(10,185,129,0.1)] hover:border-emerald-400",
           glowText: "text-emerald-400 font-bold tracking-wide",
           avatarBg: "from-emerald-500 to-teal-500",
         };
@@ -1404,189 +1404,6 @@ export default function DashboardClient({
 
   const isPremium = hasFeature("seo_customization", simulatedPlan !== "FREE") || hasFeature("qr_customization", simulatedPlan !== "FREE");
   const isCreator = hasFeature("custom_domain", simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS");
-
-  const renderSimulator = () => {
-    return (
-      <div className="hidden lg:block w-[360px] shrink-0 sticky top-32 self-start">
-        <div className="text-center mb-4">
-          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${
-            "bg-white border-zinc-200 text-zinc-700 shadow-sm"
-          }`}>
-            <Laptop className="h-3 w-3" />
-            {t.sandboxPreview}
-          </span>
-        </div>
-
-        <div className={`relative mx-auto rounded-[3rem] p-4 border-4 shadow-[0_0_50px_rgba(0,0,0,0.15)] overflow-hidden ${
-          "bg-white border-zinc-200"
-        }`}>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-50 rounded-b-xl z-20" />
-
-          {(() => {
-            const isCustomImg = background?.startsWith("custom-img::") || background?.startsWith("http://") || background?.startsWith("https://") || background?.startsWith("/");
-            const isCustomVideo = background?.startsWith("custom-video::");
-            const customImgUrl = isCustomImg ? (background.startsWith("custom-img::") ? background.replace("custom-img::", "") : background) : null;
-            const customVideoUrl = isCustomVideo ? background.replace("custom-video::", "") : null;
-            
-            const isTailwindBg = background?.includes("bg-") || background?.includes("from-") || background?.includes("to-");
-            const isCssBg = background && !isCustomImg && !isCustomVideo && !isTailwindBg;
-
-            const bgClassName = (background && isTailwindBg && !isCustomImg && !isCustomVideo) 
-              ? background 
-              : (!background && !isCustomImg && !isCustomVideo ? previewStyles.bg : "");
-
-            return (
-              <div 
-                className={`relative rounded-[2.5rem] aspect-[9/18] overflow-hidden p-6 flex flex-col justify-between transition-all duration-300 ${bgClassName}`}
-                style={{
-                  fontFamily: fontStyle,
-                  ...(isCssBg ? { background: background } : {}),
-                  ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {})
-                }}
-              >
-                {customVideoUrl && (
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
-                    src={customVideoUrl}
-                  />
-                )}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none z-[1]" />
-
-                <div className="space-y-4 pt-10 text-center relative z-10">
-                  <div className={`w-20 h-20 rounded-full bg-gradient-to-tr ${previewStyles.avatarBg} mx-auto border-2 border-white/10 flex items-center justify-center overflow-hidden`}>
-                    {avatarUrl ? (
-                      <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                    ) : (
-                      <User className="h-10 w-10 text-slate-900" />
-                    )}
-                  </div>
-                  <div className="space-y-1">
-                    <h3 
-                      style={usernameColor ? { color: usernameColor } : undefined}
-                      className={`text-base font-bold ${previewStyles.glowText}`}
-                    >
-                      @{username || "username"}
-                    </h3>
-                    <p 
-                      style={bioColor ? { color: bioColor } : undefined}
-                      className="text-slate-500 text-xs px-4 truncate max-w-full"
-                    >
-                      {bio || "Enter profile bio details..."}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-3.5 my-auto overflow-y-auto max-h-[250px] relative z-10 px-2 scrollbar-none">
-                  {links.filter((l) => l.isActive).length === 0 ? (
-                    <div className="text-center py-8 text-xs text-zinc-600 border border-dashed border-zinc-500/30 rounded-xl">
-                      No active links published
-                    </div>
-                  ) : (
-                    links
-                      .filter((l) => l.isActive)
-                      .map((link) => {
-                        let blockMeta: any = {};
-                        if (link.metadata) {
-                          try {
-                            blockMeta = JSON.parse(link.metadata);
-                          } catch (e) {}
-                        }
-
-                        const customStyle: React.CSSProperties = {
-                          backgroundColor: link.bgColor || undefined,
-                          color: link.textColor || undefined,
-                          borderColor: link.borderColor || undefined,
-                          borderStyle: link.borderStyle as any || undefined,
-                          borderWidth: link.borderWidth || undefined,
-                          borderRadius: link.borderRadius || undefined,
-                          boxShadow: link.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
-                                   : link.shadow === "glow-emerald" ? "0 0 15px rgba(16,185,129,0.5)"
-                                   : link.shadow === "soft" ? "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
-                                   : link.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
-                                   : undefined,
-                        };
-
-                        const dynamicBlockClass = `${
-                          !link.bgColor ? previewStyles.card : ""
-                        } ${!link.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-xl") : ""} ${link.animation || ""} ${
-                          link.fontWeight === "font-normal" ? "font-normal"
-                          : link.fontWeight === "font-medium" ? "font-medium"
-                          : link.fontWeight === "font-bold" ? "font-bold"
-                          : link.fontWeight === "font-black" ? "font-black"
-                          : "font-bold"
-                        }`;
-
-                        if (link.blockType === "VIDEO_PLAYER") {
-                          return (
-                            <VideoPlayer
-                              key={link.id}
-                              title={link.title}
-                              url={link.url}
-                              isDark={isDark}
-                              boxStyle={customStyle}
-                              className={dynamicBlockClass}
-                            />
-                          );
-                        }
-
-                        if (link.blockType === "BEFORE_AFTER") {
-                          return (
-                            <BeforeAfterSlider
-                              key={link.id}
-                              title={link.title}
-                              beforeImage={blockMeta.beforeImage || ""}
-                              afterImage={blockMeta.afterImage || ""}
-                              isDark={isDark}
-                              boxStyle={customStyle}
-                              className={dynamicBlockClass}
-                            />
-                          );
-                        }
-
-                        if (link.blockType === "AUDIO_PLAYER") {
-                          return (
-                            <AudioPlayer
-                              key={link.id}
-                              title={link.title}
-                              url={link.url}
-                              isDark={isDark}
-                              boxStyle={customStyle}
-                              className={dynamicBlockClass}
-                            />
-                          );
-                        }
-
-                        // Standard text link preview
-                        return (
-                          <div
-                            key={link.id}
-                            style={customStyle}
-                            className={`w-full p-2.5 border text-left text-xs transition-all flex items-center gap-3 backdrop-blur-md cursor-pointer ${dynamicBlockClass}`}
-                          >
-                            <div className="h-6 w-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100/50">
-                              {getLinkIconHelper(link.type, link.url)}
-                            </div>
-                            <span className="truncate flex-1" style={link.textColor ? { color: link.textColor } : undefined}>{link.title}</span>
-                          </div>
-                        );
-                      })
-                  )}
-                </div>
-
-                <div className="text-center text-[9px] text-zinc-600 uppercase tracking-widest font-bold py-4 border-t border-gray-100 relative z-10">
-                  CREATOR.HUB
-                </div>
-              </div>
-            );
-          })()}
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className={`min-h-screen transition-colors duration-500 p-6 max-w-7xl mx-auto flex flex-col gap-6 font-corporate ${
@@ -1733,21 +1550,16 @@ export default function DashboardClient({
           {lang === "tr" ? "Şablonlarım" : "My Templates"}
         </button>
 
-        
         <button
           onClick={() => setActiveTab("addons")}
-          className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "addons"
-              ? "bg-rose-500 text-white shadow-md shadow-rose-500/20"
-              : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/50"
+              ? "bg-rose-500 border-rose-500 text-white shadow-sm"
+              : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
           }`}
         >
-          <div className={`p-2 rounded-xl transition-colors ${
-            activeTab === "addons" ? "bg-white/20" : "bg-zinc-100/80"
-          }`}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3z"/><path d="M3 4h8s-1-1-2-1-2 1-2 1-2-1-2 1-2-1-2 1"/></svg>
-          </div>
-          Eklentilerim
+          <Puzzle className="h-3.5 w-3.5" />
+          {lang === "tr" ? "Eklentilerim" : "My Add-ons"}
         </button>
 
         <button
@@ -5376,6 +5188,67 @@ export default function DashboardClient({
                   {lang === "tr" ? "Eklenti Mağazasını Keşfet" : "Explore Add-on Store"}
                 </a>
               </div>
+            </div>
+          )}
+
+          {/* ADDONS TAB CONTENT */}
+          {activeTab === "addons" && (
+            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+              {addons.length === 0 ? (
+                <div className={`p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
+                  "bg-white border-zinc-200 shadow-sm"
+                }`}>
+                  <div className="h-16 w-16 rounded-3xl bg-rose-50 flex items-center justify-center mb-2">
+                    <Puzzle className="h-8 w-8 text-rose-500" />
+                  </div>
+                  <div className="space-y-2 max-w-md">
+                    <h2 className="text-xl font-black text-slate-900">
+                      {lang === "tr" ? "Henüz Bir Eklentiniz Yok" : "You Don't Have Any Add-ons Yet"}
+                    </h2>
+                    <p className="text-sm text-slate-500 font-medium leading-relaxed">
+                      {lang === "tr" 
+                        ? "Mağazamızdan satın aldığınız tüm premium eklenti ve temalar burada görünecektir. Bu eklentileri buradan kolayca yapılandırabilirsiniz."
+                        : "All premium add-ons and themes you purchase from our store will appear here. You can configure them easily."}
+                    </p>
+                  </div>
+                  <a 
+                    href="/eklentiler" 
+                    target="_blank"
+                    className="px-6 py-3 bg-rose-600 text-white rounded-xl text-sm font-bold hover:bg-rose-500 transition-colors shadow-sm"
+                  >
+                    {lang === "tr" ? "Mağazayı İncele" : "Visit Store"}
+                  </a>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {addons.map(addon => (
+                    <div key={addon.id} className="p-6 rounded-2xl bg-white border border-zinc-200 shadow-sm flex flex-col justify-between h-48">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center border border-zinc-200">
+                            <Puzzle className="h-5 w-5 text-zinc-700" />
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-black text-zinc-900">{addon.addonType}</h3>
+                            <div className="text-[10px] font-bold text-emerald-500 mt-0.5 px-2 py-0.5 rounded-md bg-emerald-50 inline-block border border-emerald-100">
+                              Aktif (Active)
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4 pt-4 border-t border-zinc-100 flex items-center gap-2">
+                        <button 
+                          className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2"
+                        >
+                          <Settings className="h-3.5 w-3.5" />
+                          {lang === "tr" ? "Özellikleri Yönet" : "Manage Features"}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
