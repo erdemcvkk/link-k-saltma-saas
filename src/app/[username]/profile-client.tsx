@@ -401,35 +401,9 @@ export default function ProfileClient({ username, bio, theme, links, products, a
               {lang === "tr" ? "Öne Çıkanlar" : "Highlights"}
             </h3>
             {addons.map(addon => {
-              let parsedConfig = { theme: 'classic' };
-              try { if(addon.config) parsedConfig = JSON.parse(addon.config); } catch(e){}
-              
+              // MINI_STORE is handled as full-screen above, but just in case it wasn't active or we support inline again:
               if (addon.addonType === "MINI_STORE") {
-                return (
-                  <div key={addon.id} id={addon.addonType} className="relative w-full h-[500px] bg-[#f8f9fa] rounded-[2rem] overflow-hidden border border-zinc-200 shadow-xl scroll-mt-24">
-                    <StorefrontPreview 
-                      theme={parsedConfig.theme as any} 
-                      onProductClick={(id) => {
-                        const prod = products.find(p => p.id === id);
-                        if (prod) handleProductClick(prod);
-                      }}
-                      products={products.map(p => ({
-                        id: p.id,
-                        title: p.title,
-                        type: p.type,
-                        price: p.price.toString(),
-                        imageUrl: p.fileUrl,
-                        description: p.description || ""
-                      }))} 
-                      storeTitle={storeTitle || (lang === "tr" ? "Mağazam" : "My Store")}
-                      storeCoverUrl={storeCoverUrl || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&q=80"}
-                      avatarUrl={avatarUrl}
-                      username={"@" + username}
-                      bio={bio}
-                      hideHeader={true}
-                    />
-                  </div>
-                );
+                return null;
               }
 
               // Placeholder for other addons

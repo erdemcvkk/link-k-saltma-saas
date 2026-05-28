@@ -148,9 +148,18 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                 {lang === "tr" ? "Mağaza Genel Ayarları" : "Store Settings"}
               </h4>
               {renderInput("storeTitle", lang === "tr" ? "Mağaza Başlığı" : "Store Title", lang === "tr" ? "Örn: Premium İçeriklerim" : "Store Name")}
+              
+              {/* NEW FIELDS */}
+              {renderInput("storeAvatarUrl", lang === "tr" ? "Profil Fotoğrafı (Görsel URL)" : "Profile Image (URL)", "https://...")}
+              <div className="grid grid-cols-2 gap-3">
+                {renderInput("storeUsername", lang === "tr" ? "Mağaza Kullanıcı Adı" : "Store Username", "@username")}
+                {renderInput("buyButtonText", lang === "tr" ? "Satın Al Butonu Metni" : "Buy Button Text", "Satın Al")}
+              </div>
+              {renderTextarea("storeBio", lang === "tr" ? "Mağaza Açıklaması (Bio)" : "Store Bio", lang === "tr" ? "Yazar & Kariyer Danışmanı" : "Author & Consultant")}
+
               <div className="grid grid-cols-2 gap-3">
                 {renderInput("currency", lang === "tr" ? "Para Birimi" : "Currency", "₺, $, €")}
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Mağaza Teması" : "Store Theme"}</label>
                   <select
                     value={configData["theme"] || "classic"}
@@ -162,9 +171,14 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                     <option value="glassmorphism">Glassmorphism</option>
                     <option value="neo-brutalism">Neo Brutalism</option>
                     <option value="dark-drill">Dark Drill</option>
+                    <option value="organic-earth">Organic Earth</option>
+                    <option value="retro-arcade">Retro Arcade</option>
+                    <option value="dark-academia">Dark Academia</option>
+                    <option value="y2k-holographic">Y2K Holographic</option>
                   </select>
                 </div>
               </div>
+            </div>
             </div>
 
             <div className="space-y-4">
