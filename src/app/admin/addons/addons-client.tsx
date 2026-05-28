@@ -184,8 +184,8 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <button onClick={() => handleEdit(prod)} className="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"><Edit2 className="h-4 w-4" /></button>
-                        <button onClick={() => handleDeleteProduct(prod.id)} className="p-2 rounded-lg hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"><Trash2 className="h-4 w-4" /></button>
+                        <button type="button" onClick={() => handleEdit(prod)} className="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"><Edit2 className="h-4 w-4" /></button>
+                        <button type="button" onClick={() => handleDeleteProduct(prod.id)} className="p-2 rounded-lg hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition-colors"><Trash2 className="h-4 w-4" /></button>
                       </div>
                     </div>
                   ))}
@@ -253,7 +253,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
 
           <div className="flex-1 overflow-y-auto no-scrollbar relative flex items-center justify-center p-8">
             <div className="w-[1200px] transform scale-[0.6] lg:scale-[0.8] origin-center pointer-events-none">
-              <EklentilerClient />
+              <EklentilerClient products={products.filter(p => p.isActive)} settings={settings} />
             </div>
           </div>
         </div>

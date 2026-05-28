@@ -175,7 +175,12 @@ const ADDON_TYPES: AddonTypeData[] = [
   }
 ];
 
-export default function EklentilerClient() {
+interface EklentilerClientProps {
+  products?: DummyProduct[];
+  settings?: Record<string, string>;
+}
+
+export default function EklentilerClient({ products, settings }: EklentilerClientProps = {}) {
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [purchased, setPurchased] = useState<string[]>([]);
 
@@ -226,6 +231,11 @@ export default function EklentilerClient() {
             const isPurchased = purchased.includes(addon.id);
             const isProcessing = purchasing === addon.id;
             
+            // Eğer veritabanından gelen products varsa ve bu MINI_STORE ise (veya hepsi için), ürünleri ez:
+            const displayProducts = (products && products.length > 0 && addon.id === "MINI_STORE") 
+              ? products 
+              : addon.mockProducts;
+            
             return (
               <div key={addon.id} className="snap-center shrink-0 flex flex-col items-center w-[340px]">
                 
@@ -242,7 +252,7 @@ export default function EklentilerClient() {
                   <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">
                     <StorefrontPreview 
                       theme={addon.theme} 
-                      products={addon.mockProducts} 
+                      products={displayProducts} 
                       storeTitle={addon.name}
                       username={addon.username}
                       bio={addon.bio}
