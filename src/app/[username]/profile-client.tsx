@@ -406,9 +406,13 @@ export default function ProfileClient({ username, bio, theme, links, products, a
               
               if (addon.addonType === "MINI_STORE") {
                 return (
-                  <div key={addon.id} className="relative w-full h-[500px] bg-[#f8f9fa] rounded-[2rem] overflow-hidden border border-zinc-200 shadow-xl">
+                  <div key={addon.id} id={addon.addonType} className="relative w-full h-[500px] bg-[#f8f9fa] rounded-[2rem] overflow-hidden border border-zinc-200 shadow-xl scroll-mt-24">
                     <StorefrontPreview 
                       theme={parsedConfig.theme as any} 
+                      onProductClick={(id) => {
+                        const prod = products.find(p => p.id === id);
+                        if (prod) handleProductClick(prod);
+                      }}
                       products={products.map(p => ({
                         id: p.id,
                         title: p.title,
@@ -429,7 +433,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
 
               // Placeholder for other addons
               return (
-                <div key={addon.id} className={`p-6 rounded-[2rem] border ${currentStyles.cardBg} flex flex-col items-center justify-center text-center gap-3`}>
+                <div key={addon.id} id={addon.addonType} className={`p-6 rounded-[2rem] border ${currentStyles.cardBg} flex flex-col items-center justify-center text-center gap-3 scroll-mt-24`}>
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${currentStyles.btnClass}`}>
                     <Zap className="h-6 w-6" />
                   </div>

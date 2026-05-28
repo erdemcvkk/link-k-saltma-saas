@@ -5562,6 +5562,7 @@ export default function DashboardClient({
       {editingAddon && (
         <AddonConfigModal
           addon={editingAddon}
+          products={products}
           onClose={() => setEditingAddon(null)}
           lang={lang}
         />

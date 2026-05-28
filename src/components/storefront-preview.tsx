@@ -24,15 +24,23 @@ interface StorefrontPreviewProps {
   username?: string;
   bio?: string;
   avatarUrl?: string | null;
+  onProductClick?: (id: string) => void;
 }
 
-export default function StorefrontPreview({ theme, products, storeTitle = "Digital Store", storeCoverUrl, username, bio, avatarUrl }: StorefrontPreviewProps) {
+export default function StorefrontPreview({ theme, products, storeTitle = "Digital Store", storeCoverUrl, username, bio, avatarUrl, onProductClick }: StorefrontPreviewProps) {
   const [layout, setLayout] = useState<"GRID" | "LIST">("GRID");
   const [clickedItem, setClickedItem] = useState<string | null>(null);
 
   const handlePurchase = (id: string) => {
     setClickedItem(id);
-    setTimeout(() => setClickedItem(null), 400);
+    if (onProductClick) {
+      setTimeout(() => {
+        setClickedItem(null);
+        onProductClick(id);
+      }, 200);
+    } else {
+      setTimeout(() => setClickedItem(null), 300);
+    }
   };
 
   const getThemeStyles = () => {

@@ -1870,3 +1870,41 @@ export async function saveAddonConfig(addonId: string, configJson: string) {
   revalidatePath("/[username]", "page");
   return updated;
 }
+
+export async function addAddonProduct(title: string, type: string, price: number, description: string, fileUrl: string) {
+  const user = await checkAndSyncUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const product = await db.product.create({
+    data: {
+      userId: user.id,
+      title,
+      type,
+      price,
+      description,
+      fileUrl,
+      isActive: true,
+      salesCount: 0
+    }
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/[username]", "page");
+  return product;
+}
+
+export async function deleteAddonProduct(productId: string) {
+  const user = await checkAndSyncUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const existing = await db.product.findUnique({ where: { id: productId } });
+  if (!existing || existing.userId !== user.id) {
+    throw new Error("Unauthorized");
+  }
+
+  await db.product.delete({ where: { id: productId } });
+  
+  revalidatePath("/dashboard");
+  revalidatePath("/[username]", "page");
+  return true;
+}
