@@ -1,4 +1,5 @@
 import EklentilerClient from "./eklentiler-client";
+import { getAddonSettings, getAddonDummyProducts } from "../actions";
 
 export const metadata = {
   title: "Premium Eklentiler | Link.SaaS",
@@ -8,5 +9,8 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function AddonsPage() {
-  return <EklentilerClient />;
+  const settings = await getAddonSettings();
+  const products = await getAddonDummyProducts();
+  
+  return <EklentilerClient settings={settings} products={products} />;
 }

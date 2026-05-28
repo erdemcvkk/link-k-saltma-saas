@@ -25,7 +25,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({
-    name: "", desc: "", price: ""
+    name: "", desc: "", price: "", paymentUrl: ""
   });
 
   const showMsg = (text: string, type: "success" | "error") => {
@@ -56,11 +56,13 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
     const nameKey = `theme_NAME_${addon.id}`;
     const descKey = `theme_DESC_${addon.id}`;
     const priceKey = `theme_PRICE_${addon.id}`;
+    const paymentKey = `theme_PAYMENT_${addon.id}`;
 
     setForm({
       name: settings[nameKey] || addon.name,
       desc: settings[descKey] || addon.desc,
-      price: settings[priceKey] || addon.price.toString()
+      price: settings[priceKey] || addon.price.toString(),
+      paymentUrl: settings[paymentKey] || ""
     });
     setIsFormOpen(true);
   };
@@ -74,16 +76,19 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
         const nameKey = `theme_NAME_${editingId}`;
         const descKey = `theme_DESC_${editingId}`;
         const priceKey = `theme_PRICE_${editingId}`;
+        const paymentKey = `theme_PAYMENT_${editingId}`;
 
         await saveAddonSetting(adminUserId, nameKey, form.name);
         await saveAddonSetting(adminUserId, descKey, form.desc);
         await saveAddonSetting(adminUserId, priceKey, form.price);
+        await saveAddonSetting(adminUserId, paymentKey, form.paymentUrl);
 
         setSettings({
           ...settings,
           [nameKey]: form.name,
           [descKey]: form.desc,
-          [priceKey]: form.price
+          [priceKey]: form.price,
+          [paymentKey]: form.paymentUrl
         });
 
         showMsg("Tema başarıyla güncellendi.", "success");
@@ -263,6 +268,12 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Satış Fiyatı (₺)</label>
                     <input type="number" value={form.price} onChange={e => setForm({...form, price: e.target.value})} required className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all" />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Ödeme Linki (İsteğe Bağlı)</label>
+                    <input type="url" placeholder="https://buy.stripe.com/..." value={form.paymentUrl} onChange={e => setForm({...form, paymentUrl: e.target.value})} className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all text-emerald-400" />
+                    <p className="text-[10px] text-zinc-500 mt-1">Stripe, Iyzico veya Shopier ödeme linki ekleyebilirsiniz. Boş bırakırsanız sistem simülasyonu çalışır.</p>
                   </div>
 
                   <div className="pt-6 border-t border-white/5 flex gap-3">

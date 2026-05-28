@@ -240,6 +240,7 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
             const displayPrice = settings?.[`theme_PRICE_${addon.id}`] || addon.price;
             const displayName = settings?.[`theme_NAME_${addon.id}`] || addon.name;
             const displayDesc = settings?.[`theme_DESC_${addon.id}`] || addon.desc;
+            const paymentUrl = settings?.[`theme_PAYMENT_${addon.id}`];
             
             return (
               <div key={addon.id} className="snap-center shrink-0 flex flex-col items-center w-[340px]">
@@ -278,7 +279,13 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
                     </button>
                   ) : (
                     <button 
-                      onClick={() => handlePurchase(addon.id)}
+                      onClick={() => {
+                        if (paymentUrl) {
+                          window.location.href = paymentUrl;
+                        } else {
+                          handlePurchase(addon.id);
+                        }
+                      }}
                       disabled={isProcessing}
                       className="w-full py-3 rounded-xl bg-rose-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-rose-500 transition-colors disabled:opacity-50"
                     >
