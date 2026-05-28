@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useTransition, useEffect } from "react";
 import { saveAddonConfig, addAddonProduct, deleteAddonProduct } from "@/app/actions";
 import { X, Loader2, Save, Store, Calendar, FileQuestion, Mail, Heart, Clock, Briefcase, HelpCircle, MapPin, MessageCircle, Trash2, Plus, ShoppingBag } from "lucide-react";
 import StorefrontPreview from "@/components/storefront-preview";
