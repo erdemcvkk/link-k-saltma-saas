@@ -74,9 +74,12 @@ interface ProfileClientProps {
   bioColor?: string | null;
   usernameColor?: string | null;
   plan?: string | null;
+  storeTitle?: string | null;
+  storeCoverUrl?: string | null;
+  storeLayout?: string | null;
 }
 
-export default function ProfileClient({ username, bio, theme, links, products, avatarUrl, background, fontStyle, bioColor, usernameColor, plan }: ProfileClientProps) {
+export default function ProfileClient({ username, bio, theme, links, products, avatarUrl, background, fontStyle, bioColor, usernameColor, plan, storeTitle, storeCoverUrl, storeLayout }: ProfileClientProps) {
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
@@ -490,13 +493,24 @@ export default function ProfileClient({ username, bio, theme, links, products, a
 
         {/* 🛒 Digital Shop Products Grid */}
         {products.length > 0 && (
-          <div className="space-y-4 w-full pt-4">
-            <div className="flex items-center gap-2">
-              <ShoppingBag className={`h-4.5 w-4.5 ${currentStyles.accentColor}`} />
-              <h3 className={`text-xs uppercase tracking-widest font-black ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>{t.shopCatalog}</h3>
+          <div className="space-y-6 w-full pt-6 border-t border-white/10 mt-6">
+            
+            {storeCoverUrl && (
+              <div className="w-full h-32 md:h-48 rounded-[2rem] overflow-hidden mb-4 relative shadow-lg">
+                <img src={storeCoverUrl} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              </div>
+            )}
+
+            <div className="flex flex-col items-center justify-center gap-1 text-center mb-6">
+              <ShoppingBag className={`h-8 w-8 mb-2 ${currentStyles.accentColor}`} />
+              <h3 className={`text-2xl font-black ${isDark ? "text-white" : "text-slate-900"}`}>
+                {storeTitle || (lang === "tr" ? "Mağazam" : "My Store")}
+              </h3>
+              <p className={`text-sm ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>{t.shopCatalog}</p>
             </div>
             
-            <div className="grid grid-cols-1 gap-4">
+            <div className={`grid gap-4 ${storeLayout === "GRID" ? "grid-cols-2 md:grid-cols-2" : "grid-cols-1"}`}>
               {products.map((prod) => (
                 <div
                   key={prod.id}

@@ -181,6 +181,9 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       bioColor={activeUser.profile?.bioColor ?? null}
       usernameColor={activeUser.profile?.usernameColor ?? null}
       plan={activeUser.plan}
+      storeTitle={activeUser.profile?.storeTitle ?? null}
+      storeCoverUrl={activeUser.profile?.storeCoverUrl ?? null}
+      storeLayout={activeUser.profile?.storeLayout ?? "GRID"}
     />
   );
 }

@@ -182,6 +182,15 @@ export default async function DashboardPage() {
     configJson: ot.template.configJson,
   }));
 
+  // Fetch dynamic features and plans
+  const features = await db.feature.findMany({
+    include: { plans: true }
+  });
+  const serializedFeatures = features.map(f => ({
+    key: f.key,
+    plans: f.plans.map(p => p.plan)
+  }));
+
   return (
     <DashboardClient
       initialUser={serializedUser}
@@ -192,6 +201,7 @@ export default async function DashboardPage() {
       initialFonts={serializedFonts}
       initialQrCodes={serializedQrCodes}
       initialOwnedTemplates={serializedOwnedTemplates}
+      initialFeatures={serializedFeatures}
     />
   );
 }

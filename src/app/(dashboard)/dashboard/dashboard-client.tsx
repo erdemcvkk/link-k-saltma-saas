@@ -77,7 +77,10 @@ import {
   Wifi,
   GripVertical,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Share2,
+  Users,
+  Mail,
 } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import VideoPlayer from "@/components/blocks/video-player";
@@ -187,6 +190,7 @@ interface DashboardClientProps {
     customCss?: string | null;
     configJson?: string | null;
   }[];
+  initialFeatures?: { key: string; plans: string[] }[];
 }
 
 
@@ -510,7 +514,7 @@ export default function DashboardClient({
     }
   }, [initialUser.plan]);
 
-  const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo" | "templates">("editor");
+  const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo" | "templates" | "store">("editor");
   const [activeSubTab, setActiveSubTab] = useState<"links" | "appearance" | "profile">("links");
   const [expandedLinkCard, setExpandedLinkCard] = useState<string | null>(null);
 
@@ -570,6 +574,7 @@ export default function DashboardClient({
   // Custom Background Upload State
   const [customBgError, setCustomBgError] = useState<string>("");
 
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   // QR Code Custom States
   const [qrMode, setQrMode] = useState<"catalog" | "create">("catalog");
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
@@ -1381,9 +1386,17 @@ export default function DashboardClient({
 
   const previewStyles = getThemePreviewStyles(theme);
 
-  // Check plan levels
-  const isPremium = simulatedPlan !== "FREE";
-  const isCreator = simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS";
+  // Check dynamic features
+  const hasFeature = (key: string, defaultIfMissing: boolean = false) => {
+    if (initialUser.role === "ADMIN") return true;
+    if (!initialFeatures || initialFeatures.length === 0) return defaultIfMissing;
+    const feature = initialFeatures.find(f => f.key === key);
+    if (!feature) return defaultIfMissing;
+    return feature.plans.includes(simulatedPlan);
+  };
+
+  const isPremium = hasFeature("seo_customization", simulatedPlan !== "FREE") || hasFeature("qr_customization", simulatedPlan !== "FREE");
+  const isCreator = hasFeature("custom_domain", simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS");
 
   const renderSimulator = () => {
     return (
@@ -1713,7 +1726,29 @@ export default function DashboardClient({
           {lang === "tr" ? "Şablonlarım" : "My Templates"}
         </button>
 
-        </div>
+        <button
+          onClick={() => setActiveTab("store")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+            activeTab === "store"
+              ? "bg-indigo-500 border-indigo-500 text-white shadow-sm"
+              : "bg-indigo-50 border-indigo-100 text-indigo-600 hover:bg-indigo-100"
+          }`}
+        >
+          <ShoppingBag className="h-3.5 w-3.5" />
+          {lang === "tr" ? "Mağaza" : "Store"}
+        </button>
+
+        <div className="flex-1" />
+
+        <button
+          onClick={() => setIsShareModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer bg-slate-900 text-white hover:bg-slate-800 border-slate-900 shadow-sm"
+        >
+          <Share2 className="h-3.5 w-3.5" />
+          {lang === "tr" ? "Paylaş & İşbirliği" : "Share & Collaborate"}
+        </button>
+
+      </div>
 
       {/* Global Notifications */}
       {errorMsg && (
@@ -3565,7 +3600,7 @@ export default function DashboardClient({
                             onClick={() => {
                               setBackground(template.bgColor);
                               setFontStyle(template.fontStyle);
-                              setTheme(template.isCoded ? "custom" : template.category.toLowerCase());
+                              setTheme("custom");
                               setSuccessMsg(lang === "tr" ? "Şablon canlı simülatörde önizleniyor!" : "Previewing template in simulator!");
                               setTimeout(() => setSuccessMsg(""), 2000);
                             }}
@@ -3580,7 +3615,7 @@ export default function DashboardClient({
                             onClick={() => {
                               setBackground(template.bgColor);
                               setFontStyle(template.fontStyle);
-                              setTheme(template.isCoded ? "custom" : template.category.toLowerCase());
+                              setTheme("custom");
                               setCustomizingTemplateId(customizingTemplateId === template.id ? null : template.id);
                             }}
                             className="flex-1 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
@@ -3602,7 +3637,7 @@ export default function DashboardClient({
                                   if (template.fontStyle) {
                                     setFontStyle(template.fontStyle);
                                   }
-                                  setTheme(template.isCoded ? "custom" : template.category.toLowerCase());
+                                  setTheme("custom");
 
                                   // Parse button style and update client-side link states
                                   if (template.buttonStyle) {
@@ -4055,7 +4090,7 @@ export default function DashboardClient({
                                       await updateProfile(
                                         initialUser.id,
                                         bio,
-                                        template.isCoded ? "custom" : template.category.toLowerCase(),
+                                        "custom",
                                         username,
                                         avatarUrl || undefined,
                                         background || undefined,
@@ -5289,7 +5324,37 @@ export default function DashboardClient({
               )}
             </div>
           </div>
-        )}
+          )}
+          {/* STORE TAB CONTENT */}
+          {activeTab === "store" && (
+            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+              <div className={`p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
+                "bg-white border-zinc-200 shadow-sm"
+              }`}>
+                <div className="h-16 w-16 rounded-3xl bg-indigo-50 flex items-center justify-center mb-2">
+                  <ShoppingBag className="h-8 w-8 text-indigo-500" />
+                </div>
+                <div className="space-y-2 max-w-md">
+                  <h2 className="text-2xl font-black text-slate-900">
+                    {lang === "tr" ? "Profilinize Güç Katın" : "Power Up Your Profile"}
+                  </h2>
+                  <p className="text-sm text-slate-500 font-medium">
+                    {lang === "tr" 
+                      ? "Premium eklentilerle Link.SaaS profilinizi bir uygulamaya, CRM'e veya dijital bir mağazaya dönüştürün."
+                      : "Turn your Link.SaaS profile into an app, CRM, or digital store with premium add-ons."}
+                  </p>
+                </div>
+                <a 
+                  href="/eklentiler" 
+                  target="_blank"
+                  className="px-6 py-3 bg-indigo-500 text-white rounded-xl text-sm font-bold hover:bg-indigo-400 transition-colors shadow-sm"
+                >
+                  {lang === "tr" ? "Eklenti Mağazasını Keşfet" : "Explore Add-on Store"}
+                </a>
+              </div>
+            </div>
+          )}
+
         </div>
 
         {/* RIGHT COLUMN: STICKY SIMULATOR PREVIEW OR INVISIBLE SPACER FOR EXACT ALIGNMENT & PROPORTIONS */}
@@ -5303,6 +5368,101 @@ export default function DashboardClient({
 
       {/* Floating Upgrade Prompt for FREE tier users */}
       <FloatingUpgradePrompt currentPlan={simulatedPlan} globalSettings={globalSettings} />
+
+      {/* SHARE & COLLABORATE MODAL */}
+      {isShareModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsShareModalOpen(false)} />
+          <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-zinc-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-teal-50 flex items-center justify-center">
+                  <Share2 className="h-5 w-5 text-teal-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-black text-slate-900">{lang === "tr" ? "Paylaş & İşbirliği" : "Share & Collaborate"}</h2>
+                  <p className="text-xs text-slate-500 font-medium">link.saas/@{username}</p>
+                </div>
+              </div>
+              <button onClick={() => setIsShareModalOpen(false)} className="p-2 text-slate-400 hover:bg-slate-100 rounded-full transition-colors cursor-pointer">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-8">
+              {/* Collaborate Section */}
+              <div className="space-y-4">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                  <Users className="h-3.5 w-3.5" />
+                  {lang === "tr" ? "E-Posta İle Davet Et" : "Invite via Email"}
+                </h3>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                    <input 
+                      type="email" 
+                      placeholder={lang === "tr" ? "Alıcı: Davetiye göndermek için e-posta girin." : "To: Enter email to send invite."}
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none text-sm transition-all"
+                    />
+                  </div>
+                  <button className="px-5 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+                    {lang === "tr" ? "Davet Et" : "Invite"}
+                  </button>
+                </div>
+                
+                <div className="pt-2 border-t border-zinc-100">
+                  <h4 className="text-[10px] font-bold text-slate-500 mb-3">{lang === "tr" ? "Paylaşılan Kişiler:" : "Shared with:"}</h4>
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <div className="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 border-2 border-white overflow-hidden">
+                        {avatarUrl ? <img src={avatarUrl} className="w-full h-full object-cover" /> : "S"}
+                      </div>
+                      <div className="absolute -bottom-1 -right-1 h-3.5 w-3.5 bg-emerald-500 border-2 border-white rounded-full"></div>
+                    </div>
+                    <div className="text-xs">
+                      <span className="font-bold text-slate-900 block">{lang === "tr" ? "Sen (Sahip)" : "You (Owner)"}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fast Share Section */}
+              <div className="space-y-4 pt-2">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                  <Share2 className="h-3.5 w-3.5" />
+                  {lang === "tr" ? "Uygulama İle Paylaş" : "Share with Apps"}
+                </h3>
+                <p className="text-xs text-slate-500 mb-3">
+                  {lang === "tr" ? "Profilinizi saniyeler içinde farklı platformlarda paylaşın." : "Share your profile across different platforms in seconds."}
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <button onClick={() => { setIsShareModalOpen(false); setActiveTab("qr"); }} className="flex-1 flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-zinc-200 hover:border-teal-500 hover:bg-teal-50 text-slate-600 hover:text-teal-600 transition-all cursor-pointer">
+                    <QrCode className="h-5 w-5" />
+                    <span className="text-[10px] font-bold">QR Kod</span>
+                  </button>
+                  <a href={`https://wa.me/?text=Check out my profile: https://link.saas/@${username}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-zinc-200 hover:border-green-500 hover:bg-green-50 text-slate-600 hover:text-green-600 transition-all cursor-pointer">
+                    <MessageCircle className="h-5 w-5" />
+                    <span className="text-[10px] font-bold">WhatsApp</span>
+                  </a>
+                  <a href={`https://twitter.com/intent/tweet?url=https://link.saas/@${username}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-zinc-200 hover:border-sky-500 hover:bg-sky-50 text-slate-600 hover:text-sky-600 transition-all cursor-pointer">
+                    <Share2 className="h-5 w-5" />
+                    <span className="text-[10px] font-bold">Twitter</span>
+                  </a>
+                  <a href={`https://www.linkedin.com/shareArticle?mini=true&url=https://link.saas/@${username}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-zinc-200 hover:border-blue-700 hover:bg-blue-50 text-slate-600 hover:text-blue-700 transition-all cursor-pointer">
+                    <Share2 className="h-5 w-5" />
+                    <span className="text-[10px] font-bold">LinkedIn</span>
+                  </a>
+                  <a href={`https://www.facebook.com/sharer/sharer.php?u=https://link.saas/@${username}`} target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-zinc-200 hover:border-indigo-600 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 transition-all cursor-pointer">
+                    <Share2 className="h-5 w-5" />
+                    <span className="text-[10px] font-bold">Facebook</span>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Upgrade Modal for Locked Features */}
       <UpgradeModal

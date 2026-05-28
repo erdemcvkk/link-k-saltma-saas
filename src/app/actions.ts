@@ -1219,6 +1219,9 @@ export async function purchaseTemplate(userId: string, templateId: string) {
     },
   });
 
+  // Apply template immediately after purchasing it
+  await applyTemplateToProfile(userId, templateId);
+
   revalidatePath("/dashboard");
   revalidatePath("/sablonlar");
   return { success: true };
@@ -1259,7 +1262,7 @@ export async function applyTemplateToProfile(userId: string, templateId: string)
     data: {
       background: template.bgColor,
       fontStyle: template.fontStyle,
-      theme: template.isCoded ? "custom" : template.category.toLowerCase()
+      theme: "custom"
     }
   });
 
@@ -1655,4 +1658,56 @@ export async function seedTemplates(adminUserId?: string) {
 
   revalidatePath("/sablonlar");
   return { success: true, seeded: true, message: "All 30 templates seeded and updated to premium aesthetics successfully." };
+}
+
+// FEATURE ACTIONS
+export async function getFeatures() {
+  return await db.feature.findMany({
+    include: {
+      plans: true
+    },
+    orderBy: { createdAt: "desc" }
+  });
+}
+
+export async function createFeature(data: { key: string; title: string; description?: string }, plans: string[]) {
+  const feature = await db.feature.create({
+    data: {
+      key: data.key,
+      title: data.title,
+      description: data.description,
+      plans: {
+        create: plans.map(plan => ({ plan }))
+      }
+    }
+  });
+  revalidatePath("/admin/features");
+  return feature;
+}
+
+export async function updateFeature(id: string, data: { key: string; title: string; description?: string }, plans: string[]) {
+  await db.featurePlan.deleteMany({
+    where: { featureId: id }
+  });
+
+  const feature = await db.feature.update({
+    where: { id },
+    data: {
+      key: data.key,
+      title: data.title,
+      description: data.description,
+      plans: {
+        create: plans.map(plan => ({ plan }))
+      }
+    }
+  });
+  revalidatePath("/admin/features");
+  return feature;
+}
+
+export async function deleteFeature(id: string) {
+  await db.feature.delete({
+    where: { id }
+  });
+  revalidatePath("/admin/features");
 }

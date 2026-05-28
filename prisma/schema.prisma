@@ -27,6 +27,7 @@ model User {
   products      Product[]
   qrCodes       QrCode[]
   purchasedTemplates UserTemplate[]
+  addons        UserAddon[]
 }
 
 model Profile {
@@ -47,6 +48,11 @@ model Profile {
   seoTitle       String?
   seoDescription String?
   seoKeywords    String?
+
+  // Store Customization Fields
+  storeTitle     String?
+  storeCoverUrl  String?
+  storeLayout    String    @default("LIST") // GRID, LIST
 
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -121,7 +127,10 @@ model Product {
   type        String   // BEAT, PRESET, SAMPLE_PACK, OTHER
   price       Float
   description String?
-  fileUrl     String
+  fileUrl     String?  // Made optional for physical/external products
+  imageUrl    String?
+  externalUrl String?
+  buttonText  String?
   isActive    Boolean  @default(true)
   salesCount  Int      @default(0)
   createdAt   DateTime @default(now())
@@ -215,4 +224,33 @@ model UserTemplate {
   createdAt  DateTime @default(now())
 
   @@unique([userId, templateId])
+}
+
+model UserAddon {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  addonType String   // e.g. "MINI_STORE"
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, addonType])
+}
+
+model Feature {
+  id          String   @id @default(uuid())
+  key         String   @unique // e.g. 'custom_domain', 'seo_customization'
+  title       String   
+  description String?
+  plans       FeaturePlan[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FeaturePlan {
+  id        String   @id @default(uuid())
+  featureId String
+  plan      String   // FREE, STARTER, CREATOR, PRO_BUSINESS
+  feature   Feature  @relation(fields: [featureId], references: [id], onDelete: Cascade)
+
+  @@unique([featureId, plan])
 }

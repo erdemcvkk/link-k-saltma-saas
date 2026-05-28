@@ -46,6 +46,26 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
   const [paymentPending, setPaymentPending] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
+  // Handle URL intent
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const intent = urlParams.get("intent");
+      if (intent && intent.startsWith("purchase_")) {
+        const templateId = intent.replace("purchase_", "");
+        const targetTemplate = initialTemplates.find(t => t.id === templateId);
+        if (targetTemplate && userId) {
+          // Remove intent from URL so it doesn't trigger again on reload
+          window.history.replaceState({}, document.title, window.location.pathname);
+          // Small delay to allow UI to render first
+          setTimeout(() => {
+            handlePurchase(targetTemplate);
+          }, 500);
+        }
+      }
+    }
+  }, [initialTemplates, userId]);
+
   const handleSelectTemplate = (template: Template | null) => {
     setSelectedTemplate(template);
     setErrorMsg("");
@@ -65,7 +85,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
   const handlePurchase = (template: Template) => {
     if (!userId) {
       alert("Şablon satın almak veya kullanmak için lütfen giriş yapın.");
-      window.location.href = "/sign-in";
+      window.location.href = `/sign-in?redirect_url=/sablonlar?intent=purchase_${template.id}`;
       return;
     }
 
