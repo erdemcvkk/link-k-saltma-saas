@@ -1848,3 +1848,25 @@ export async function buyAddonAction(addonType: string) {
   revalidatePath("/[username]", "page");
   return res;
 }
+
+export async function saveAddonConfig(addonId: string, configJson: string) {
+  const user = await checkAndSyncUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const addon = await db.userAddon.findUnique({
+    where: { id: addonId }
+  });
+
+  if (!addon || addon.userId !== user.id) {
+    throw new Error("Addon not found or unauthorized");
+  }
+
+  const updated = await db.userAddon.update({
+    where: { id: addonId },
+    data: { config: configJson }
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/[username]", "page");
+  return updated;
+}

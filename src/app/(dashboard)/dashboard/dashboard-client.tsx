@@ -83,6 +83,7 @@ import {
   Mail,
   Puzzle,
 } from "lucide-react";
+import AddonConfigModal from "@/components/addons/addon-config-modal";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import VideoPlayer from "@/components/blocks/video-player";
 import BeforeAfterSlider from "@/components/blocks/before-after-slider";
@@ -522,6 +523,7 @@ export default function DashboardClient({
   }, [initialUser.plan]);
 
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons || []);
+  const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
   const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo" | "templates" | "store" | "addons">("editor");
   const [activeSubTab, setActiveSubTab] = useState<"links" | "appearance" | "profile">("links");
   const [expandedLinkCard, setExpandedLinkCard] = useState<string | null>(null);
@@ -5395,6 +5397,7 @@ export default function DashboardClient({
                       
                       <div className="mt-4 pt-4 border-t border-zinc-100 flex items-center gap-2">
                         <button 
+                          onClick={() => setEditingAddon(addon)}
                           className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2"
                         >
                           <Settings className="h-3.5 w-3.5" />
@@ -5555,6 +5558,14 @@ export default function DashboardClient({
         description={upgradeModalDesc}
         globalSettings={globalSettings}
       />
+
+      {editingAddon && (
+        <AddonConfigModal
+          addon={editingAddon}
+          onClose={() => setEditingAddon(null)}
+          lang={lang}
+        />
+      )}
     </div>
   );
 }
