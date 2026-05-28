@@ -364,7 +364,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
           <div className="space-y-2 w-full">
             <h1 
               style={usernameColor ? { color: usernameColor } : undefined}
-              className={`text-2xl font-black tracking-tight ${currentStyles.glowText}`}
+              className={`text-2xl font-bold ${currentStyles.glowText}`}
             >
               @{username}
             </h1>
@@ -381,9 +381,9 @@ export default function ProfileClient({ username, bio, theme, links, products, a
 
         {/* Links Grid */}
         <div className="space-y-4 w-full">
-          {links.length > 0 && <h3 className={`text-xs uppercase tracking-widest font-black mb-1 ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>{t.socialOutposts}</h3>}
+          {links.length > 0 && <h3 className={`text-xs uppercase tracking-widest font-bold mb-1 ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>{t.socialOutposts}</h3>}
           {links.length === 0 ? (
-            <div className={`text-center py-6 text-xs italic rounded-2xl border border-dashed ${
+            <div className={`text-center py-6 text-xs rounded-2xl border border-dashed ${
               isDark ? "text-zinc-500 bg-zinc-950/20 border-zinc-900" : "text-zinc-600 bg-zinc-100 border-zinc-200"
             }`}>
               {t.noLinks}

@@ -1447,7 +1447,7 @@ export default function DashboardClient({
                   <div className="space-y-1">
                     <h3 
                       style={usernameColor ? { color: usernameColor } : undefined}
-                      className={`text-base font-bold transition-all ${previewStyles.glowText}`}
+                      className={`text-base font-bold ${previewStyles.glowText}`}
                     >
                       @{username || "username"}
                     </h3>
@@ -1462,7 +1462,7 @@ export default function DashboardClient({
 
                 <div className="space-y-3.5 my-auto overflow-y-auto max-h-[250px] relative z-10 px-2 scrollbar-none">
                   {links.filter((l) => l.isActive).length === 0 ? (
-                    <div className="text-center py-8 text-xs text-zinc-600 font-semibold italic border border-dashed border-gray-100 rounded-xl">
+                    <div className="text-center py-8 text-xs text-zinc-600 border border-dashed border-zinc-500/30 rounded-xl">
                       No active links published
                     </div>
                   ) : (
@@ -1557,7 +1557,7 @@ export default function DashboardClient({
                   )}
                 </div>
 
-                <div className="text-center text-[9px] text-zinc-600 uppercase tracking-widest font-black py-4 border-t border-gray-100 relative z-10">
+                <div className="text-center text-[9px] text-zinc-600 uppercase tracking-widest font-bold py-4 border-t border-gray-100 relative z-10">
                   CREATOR.HUB
                 </div>
               </div>
