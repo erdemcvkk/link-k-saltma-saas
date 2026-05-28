@@ -1,4 +1,7 @@
-"use client";
+const fs = require('fs');
+const file = 'src/components/addons/addon-config-modal.tsx';
+
+const content = `"use client";
 
 import React, { useState, useTransition } from "react";
 import { saveAddonConfig, addAddonProduct, deleteAddonProduct } from "@/app/actions";
@@ -320,7 +323,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
           <>
             {renderInput("title", lang === "tr" ? "Portfolyo Başlığı" : "Portfolio Title", lang === "tr" ? "Çalışmalarım" : "My Work")}
             {renderInput("columns", lang === "tr" ? "Sütun Sayısı (1-3)" : "Columns (1-3)", "2", "number")}
-            {renderTextarea("itemsJson", lang === "tr" ? "Portfolyo Verisi (JSON)" : "Portfolio Data (JSON)", "[{\"img\":\"url\", \"title\":\"Proje\"}]")}
+            {renderTextarea("itemsJson", lang === "tr" ? "Portfolyo Verisi (JSON)" : "Portfolio Data (JSON)", "[{\\"img\\":\\"url\\", \\"title\\":\\"Proje\\"}]")}
           </>
         );
       case "FAQ":
@@ -339,7 +342,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
         return (
           <>
             {renderInput("title", lang === "tr" ? "Konum Başlığı" : "Location Title", lang === "tr" ? "Bizi Ziyaret Edin" : "Visit Us")}
-            {renderTextarea("mapEmbedUrl", lang === "tr" ? "Google Haritalar Embed Kodu veya Linki" : "Google Maps Embed URL", "<iframe src=\"...\"></iframe>")}
+            {renderTextarea("mapEmbedUrl", lang === "tr" ? "Google Haritalar Embed Kodu veya Linki" : "Google Maps Embed URL", "<iframe src=\\"...\\"></iframe>")}
           </>
         );
       case "WHATSAPP":
@@ -487,14 +490,14 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
           <div className="flex items-center gap-3 md:gap-5 self-end sm:self-auto">
             {/* Status Toggle */}
             <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-zinc-50 border border-zinc-200/80 shadow-sm cursor-pointer" onClick={() => setIsActive(!isActive)}>
-              <span className={`text-xs uppercase tracking-wider font-bold transition-colors ${isActive ? 'text-emerald-600' : 'text-zinc-400'}`}>
+              <span className={\`text-xs uppercase tracking-wider font-bold transition-colors \${isActive ? 'text-emerald-600' : 'text-zinc-400'}\`}>
                 {isActive ? (lang === "tr" ? "Yayında" : "Published") : (lang === "tr" ? "Taslak" : "Draft")}
               </span>
               <button 
                 type="button"
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 ${isActive ? 'bg-emerald-500 shadow-md shadow-emerald-500/20' : 'bg-zinc-300'}`}
+                className={\`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 \${isActive ? 'bg-emerald-500 shadow-md shadow-emerald-500/20' : 'bg-zinc-300'}\`}
               >
-                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-all duration-300 shadow-sm ${isActive ? 'translate-x-6' : 'translate-x-1'}`} />
+                <span className={\`inline-block h-4 w-4 transform rounded-full bg-white transition-all duration-300 shadow-sm \${isActive ? 'translate-x-6' : 'translate-x-1'}\`} />
               </button>
             </div>
 
@@ -530,7 +533,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
           <div className="hidden lg:flex flex-1 items-center justify-center p-8 relative overflow-hidden bg-zinc-100/50">
             {/* Ambient Background Glow matching the active state */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] blur-[120px] rounded-full transition-colors duration-1000 ${isActive ? 'bg-emerald-500/10' : 'bg-indigo-500/5'}`} />
+              <div className={\`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] blur-[120px] rounded-full transition-colors duration-1000 \${isActive ? 'bg-emerald-500/10' : 'bg-indigo-500/5'}\`} />
             </div>
             
             {/* iPhone Mockup Frame */}
@@ -574,3 +577,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
     </div>
   );
 }
+`;
+
+fs.writeFileSync('src/components/addons/addon-config-modal.tsx', content);
+console.log('Split screen modal implemented!');

@@ -1849,7 +1849,7 @@ export async function buyAddonAction(addonType: string) {
   return res;
 }
 
-export async function saveAddonConfig(addonId: string, configJson: string) {
+export async function saveAddonConfig(addonId: string, configJson: string, isActive?: boolean) {
   const user = await checkAndSyncUser();
   if (!user) throw new Error("Unauthorized");
 
@@ -1863,7 +1863,10 @@ export async function saveAddonConfig(addonId: string, configJson: string) {
 
   const updated = await db.userAddon.update({
     where: { id: addonId },
-    data: { config: configJson }
+    data: { 
+      config: configJson,
+      ...(isActive !== undefined ? { isActive } : {})
+    }
   });
 
   revalidatePath("/dashboard");
