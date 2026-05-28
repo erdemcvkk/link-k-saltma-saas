@@ -68,7 +68,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
       <div className="w-full min-h-screen bg-[#f8f9fa] overflow-hidden">
         <StorefrontPreview 
           theme={parsedConfig.theme as any} 
-          onProductClick={() => {}}
+          onProductClick={undefined}
           products={products.map(p => ({
             id: p.id,
             title: p.title,

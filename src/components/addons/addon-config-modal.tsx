@@ -189,10 +189,20 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                     href={`http://${domain}/@${username}/${configData.customSlug || ""}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-r-xl transition-colors border border-indigo-600 whitespace-nowrap"
+                    className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold transition-colors border border-indigo-600 whitespace-nowrap"
                   >
                     {lang === "tr" ? "Git" : "Go"}
                   </a>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(`http://${domain}/@${username}/${configData.customSlug || ""}`);
+                      alert(lang === "tr" ? "Link kopyalandı!" : "Link copied!");
+                    }}
+                    className="px-4 py-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 text-sm font-bold rounded-r-xl transition-colors border-y border-r border-zinc-300 whitespace-nowrap"
+                  >
+                    {lang === "tr" ? "Kopyala" : "Copy"}
+                  </button>
                 </div>
               </div>
               
