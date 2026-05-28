@@ -1874,7 +1874,7 @@ export async function saveAddonConfig(addonId: string, configJson: string, isAct
   return updated;
 }
 
-export async function addAddonProduct(title: string, type: string, price: number, description: string, fileUrl: string) {
+export async function addAddonProduct(title: string, type: string, price: number, description: string, fileUrl: string, imageUrl?: string) {
   const user = await checkAndSyncUser();
   if (!user) throw new Error("Unauthorized");
 
@@ -1886,6 +1886,7 @@ export async function addAddonProduct(title: string, type: string, price: number
       price,
       description,
       fileUrl,
+      imageUrl,
       isActive: true,
       salesCount: 0
     }

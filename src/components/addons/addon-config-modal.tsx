@@ -195,7 +195,10 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                       <option value="OTHER">Diğer</option>
                     </select>
                   </div>
-                  <input type="text" id="newProdFileUrl" placeholder={lang === "tr" ? "İndirme Linki (Dosya URL)" : "Download Link (File URL)"} className="w-full p-3 rounded-xl border border-indigo-100 bg-white text-sm font-medium focus:border-indigo-500 outline-none" />
+                  <div className="flex gap-2">
+                    <input type="text" id="newProdImageUrl" placeholder={lang === "tr" ? "Ürün Görseli (URL)" : "Product Image (URL)"} className="w-1/2 p-3 rounded-xl border border-indigo-100 bg-white text-sm font-medium focus:border-indigo-500 outline-none" />
+                    <input type="text" id="newProdFileUrl" placeholder={lang === "tr" ? "İndirme Linki (Dosya)" : "Download Link (File)"} className="w-1/2 p-3 rounded-xl border border-indigo-100 bg-white text-sm font-medium focus:border-indigo-500 outline-none" />
+                  </div>
                   <textarea id="newProdDesc" placeholder={lang === "tr" ? "Ürün Açıklaması (Opsiyonel)" : "Description (Optional)"} className="w-full p-3 rounded-xl border border-indigo-100 bg-white text-sm font-medium focus:border-indigo-500 outline-none h-20 resize-none" />
                   <button 
                     type="button"
@@ -204,6 +207,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                       const price = (document.getElementById("newProdPrice") as HTMLInputElement).value;
                       const type = (document.getElementById("newProdType") as HTMLSelectElement).value;
                       const fileUrl = (document.getElementById("newProdFileUrl") as HTMLInputElement).value;
+                      const imageUrl = (document.getElementById("newProdImageUrl") as HTMLInputElement).value;
                       const desc = (document.getElementById("newProdDesc") as HTMLTextAreaElement).value;
                       
                       if(!title || !price || !fileUrl) {
@@ -213,10 +217,11 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                       
                       startTransition(async () => {
                         try {
-                          await addAddonProduct(title, type, Number(price), desc, fileUrl);
+                          await addAddonProduct(title, type, Number(price), desc, fileUrl, imageUrl);
                           (document.getElementById("newProdTitle") as HTMLInputElement).value = "";
                           (document.getElementById("newProdPrice") as HTMLInputElement).value = "";
                           (document.getElementById("newProdFileUrl") as HTMLInputElement).value = "";
+                          (document.getElementById("newProdImageUrl") as HTMLInputElement).value = "";
                           (document.getElementById("newProdDesc") as HTMLTextAreaElement).value = "";
                         } catch(e:any) {
                           alert(e.message);
@@ -238,11 +243,20 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                 ) : (
                   products.map(p => (
                     <div key={p.id} className="flex items-center justify-between p-4 rounded-xl border border-zinc-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-                      <div className="space-y-1.5">
-                        <h6 className="text-sm font-bold text-slate-800">{p.title}</h6>
-                        <div className="flex items-center gap-2 text-[11px] text-zinc-500 font-medium">
-                          <span className="font-mono bg-zinc-100 px-1.5 py-0.5 rounded text-zinc-700">{p.price}₺</span>
-                          <span className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded">{p.type}</span>
+                      <div className="flex items-center gap-3">
+                        {p.imageUrl ? (
+                          <img src={p.imageUrl} alt={p.title} className="w-10 h-10 rounded-lg object-cover bg-zinc-100" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-300">
+                            <ShoppingBag className="w-5 h-5" />
+                          </div>
+                        )}
+                        <div className="space-y-1.5">
+                          <h6 className="text-sm font-bold text-slate-800 line-clamp-1">{p.title}</h6>
+                          <div className="flex items-center gap-2 text-[11px] text-zinc-500 font-medium">
+                            <span className="font-mono bg-zinc-100 px-1.5 py-0.5 rounded text-zinc-700">{p.price}₺</span>
+                            <span className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded">{p.type}</span>
+                          </div>
                         </div>
                       </div>
                       <button 
@@ -375,10 +389,11 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                     title: p.title,
                     type: p.type,
                     price: p.price.toString(),
-                    imageUrl: p.fileUrl,
+                    imageUrl: p.imageUrl || p.fileUrl,
                     description: p.description || ""
                   }))}
                   storeTitle={configData.storeTitle || (lang === "tr" ? "Mağazam" : "My Store")}
+                  hideHeader={true}
                 />
               </div>
             </div>

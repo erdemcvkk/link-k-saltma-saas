@@ -426,6 +426,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
                       avatarUrl={avatarUrl}
                       username={"@" + username}
                       bio={bio}
+                      hideHeader={true}
                     />
                   </div>
                 );

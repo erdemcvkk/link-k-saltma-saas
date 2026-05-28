@@ -25,9 +25,10 @@ interface StorefrontPreviewProps {
   bio?: string;
   avatarUrl?: string | null;
   onProductClick?: (id: string) => void;
+  hideHeader?: boolean;
 }
 
-export default function StorefrontPreview({ theme, products, storeTitle = "Digital Store", storeCoverUrl, username, bio, avatarUrl, onProductClick }: StorefrontPreviewProps) {
+export default function StorefrontPreview({ theme, products, storeTitle = "Digital Store", storeCoverUrl, username, bio, avatarUrl, onProductClick, hideHeader }: StorefrontPreviewProps) {
   const [layout, setLayout] = useState<"GRID" | "LIST">("GRID");
   const [clickedItem, setClickedItem] = useState<string | null>(null);
 
@@ -250,58 +251,90 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
       {styles.extraOverlay && <div className={styles.extraOverlay} />}
 
       {/* Hero Section */}
-      <div className={`sticky top-0 z-10 ${styles.headerBg}`}>
-        {shouldShowBanner && storeCoverUrl && (
-          <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
-            <img
-              src={storeCoverUrl}
-              className={`w-full h-full object-cover ${theme === "glassmorphism" ? "blur-md scale-110 opacity-40" : "opacity-30"}`}
-              alt="Banner"
-            />
-            {theme === "glassmorphism" && <div className="absolute inset-0 bg-slate-900/40 mix-blend-multiply" />}
-          </div>
-        )}
+      {!hideHeader && (
+        <div className={`sticky top-0 z-10 ${styles.headerBg}`}>
+          {shouldShowBanner && storeCoverUrl && (
+            <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
+              <img
+                src={storeCoverUrl}
+                className={`w-full h-full object-cover ${theme === "glassmorphism" ? "blur-md scale-110 opacity-40" : "opacity-30"}`}
+                alt="Banner"
+              />
+              {theme === "glassmorphism" && <div className="absolute inset-0 bg-slate-900/40 mix-blend-multiply" />}
+            </div>
+          )}
 
-        <div className={styles.heroContainer}>
-          <div className={styles.avatarWrapper}>
-            {avatarUrl ? (
-              <img src={avatarUrl} className="w-full h-full object-cover" alt={displayName} />
-            ) : (
-              <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
-                <User className="w-10 h-10 text-zinc-400" />
-              </div>
-            )}
+          <div className={styles.heroContainer}>
+            <div className={styles.avatarWrapper}>
+              {avatarUrl ? (
+                <img src={avatarUrl} className="w-full h-full object-cover" alt={displayName} />
+              ) : (
+                <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
+                  <User className="w-10 h-10 text-zinc-400" />
+                </div>
+              )}
+            </div>
+            <h1 className={styles.nameText}>{displayName}</h1>
+            <p className={styles.bioText}>{displayBio}</p>
           </div>
-          <h1 className={styles.nameText}>{displayName}</h1>
-          <p className={styles.bioText}>{displayBio}</p>
-        </div>
 
-        {/* Controls */}
-        <div className="px-4 pb-4 flex gap-2 relative z-10">
-          <div className={`flex-1 flex items-center px-3 py-2 gap-2 ${styles.searchBg} transition-all`}>
-            <Search className="h-4 w-4 opacity-50" />
-            <input
-              type="text"
-              placeholder="Ürünlerde ara..."
-              className="bg-transparent border-none outline-none w-full text-xs font-medium placeholder:opacity-50"
-            />
-          </div>
-          <div className={`flex gap-1 shrink-0 rounded-lg p-1 ${theme === "neo-brutalism" ? "bg-black/10 border border-black" : theme === "retro-arcade" ? "bg-[#111145] border border-[#00ffc8]/20" : "bg-black/5"}`}>
-            <button
-              onClick={() => setLayout("GRID")}
-              className={`p-1.5 rounded-md ${layout === "GRID" ? (theme === "neo-brutalism" ? "bg-black text-[#caff4a]" : "bg-black/10 shadow-sm") : "opacity-50"}`}
-            >
-              <LayoutGrid className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setLayout("LIST")}
-              className={`p-1.5 rounded-md ${layout === "LIST" ? (theme === "neo-brutalism" ? "bg-black text-[#caff4a]" : "bg-black/10 shadow-sm") : "opacity-50"}`}
-            >
-              <List className="h-4 w-4" />
-            </button>
+          {/* Controls */}
+          <div className="px-4 pb-4 flex gap-2 relative z-10">
+            <div className={`flex-1 flex items-center px-3 py-2 gap-2 ${styles.searchBg} transition-all`}>
+              <Search className="h-4 w-4 opacity-50" />
+              <input
+                type="text"
+                placeholder="Ürünlerde ara..."
+                className="bg-transparent border-none outline-none w-full text-xs font-medium placeholder:opacity-50"
+              />
+            </div>
+            <div className={`flex gap-1 shrink-0 rounded-lg p-1 ${theme === "neo-brutalism" ? "bg-black/10 border border-black" : theme === "retro-arcade" ? "bg-[#111145] border border-[#00ffc8]/20" : "bg-black/5"}`}>
+              <button
+                onClick={() => setLayout("GRID")}
+                className={`p-1.5 rounded-md ${layout === "GRID" ? (theme === "neo-brutalism" ? "bg-black text-[#caff4a]" : "bg-black/10 shadow-sm") : "opacity-50"}`}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setLayout("LIST")}
+                className={`p-1.5 rounded-md ${layout === "LIST" ? (theme === "neo-brutalism" ? "bg-black text-[#caff4a]" : "bg-black/10 shadow-sm") : "opacity-50"}`}
+              >
+                <List className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* When header is hidden, we still want the search controls */}
+      {hideHeader && (
+        <div className={`sticky top-0 z-10 ${styles.headerBg} pt-4`}>
+          <div className="px-4 pb-4 flex gap-2 relative z-10">
+            <div className={`flex-1 flex items-center px-3 py-2 gap-2 ${styles.searchBg} transition-all`}>
+              <Search className="h-4 w-4 opacity-50" />
+              <input
+                type="text"
+                placeholder="Ürünlerde ara..."
+                className="bg-transparent border-none outline-none w-full text-xs font-medium placeholder:opacity-50"
+              />
+            </div>
+            <div className={`flex gap-1 shrink-0 rounded-lg p-1 ${theme === "neo-brutalism" ? "bg-black/10 border border-black" : theme === "retro-arcade" ? "bg-[#111145] border border-[#00ffc8]/20" : "bg-black/5"}`}>
+              <button
+                onClick={() => setLayout("GRID")}
+                className={`p-1.5 rounded-md ${layout === "GRID" ? (theme === "neo-brutalism" ? "bg-black text-[#caff4a]" : "bg-black/10 shadow-sm") : "opacity-50"}`}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setLayout("LIST")}
+                className={`p-1.5 rounded-md ${layout === "LIST" ? (theme === "neo-brutalism" ? "bg-black text-[#caff4a]" : "bg-black/10 shadow-sm") : "opacity-50"}`}
+              >
+                <List className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Product Feed */}
       <div className={`p-4 ${layout === "GRID" ? "grid grid-cols-2 gap-3" : "flex flex-col gap-3"}`}>
