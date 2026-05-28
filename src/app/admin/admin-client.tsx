@@ -937,7 +937,15 @@ export default function AdminClient({
                 className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/50"
               >
                 <Layout className="h-4 w-4 text-zinc-550" />
-                {lang === "tr" ? "Şablon Yönetimi" : "Template Showcase Settings"}
+                {lang === "tr" ? "Şablon Yönetimi" : "Template Settings"}
+              </Link>
+
+              <Link
+                href="/admin/features"
+                className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/50"
+              >
+                <ShieldAlert className="h-4 w-4 text-zinc-550" />
+                {lang === "tr" ? "Özellik & Paket Yönetimi" : "Feature Gating"}
               </Link>
             </nav>
           </div>

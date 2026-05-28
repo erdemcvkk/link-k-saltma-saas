@@ -79,6 +79,10 @@ export default function HomeClient({
             <a href="#analytics" className="hover:text-slate-900 transition-colors">Analizler</a>
             <a href="#pricing" className="hover:text-slate-900 transition-colors">Fiyatlandırma</a>
             <Link href="/sablonlar" className="hover:text-slate-900 transition-colors">Şablonlar</Link>
+            <Link href="/eklentiler" className="hover:text-slate-900 transition-colors flex items-center gap-1">
+              Eklentiler
+              <span className="px-1.5 py-0.5 rounded-md bg-rose-100 text-rose-600 text-[9px] font-black uppercase tracking-wider">Yeni</span>
+            </Link>
           </nav>
 
           <div className="flex items-center space-x-4">
