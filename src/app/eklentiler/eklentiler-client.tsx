@@ -20,7 +20,7 @@ interface AddonTypeData {
   coverUrl?: string;
 }
 
-const ADDON_TYPES: AddonTypeData[] = [
+export const ADDON_TYPES: AddonTypeData[] = [
   // ── Original 5 ──
   { 
     id: "MINI_STORE", 
