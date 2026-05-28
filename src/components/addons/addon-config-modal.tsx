@@ -3,7 +3,6 @@
 import React, { useState, useTransition } from "react";
 import { saveAddonConfig } from "@/app/actions";
 import { X, Loader2, Save, Store, Calendar, FileQuestion, Mail, Heart, Clock, Briefcase, HelpCircle, MapPin, MessageCircle } from "lucide-react";
-import { toast } from "react-hot-toast";
 
 interface AddonConfigModalProps {
   addon: {
@@ -35,10 +34,10 @@ export default function AddonConfigModal({ addon, onClose, lang }: AddonConfigMo
     startTransition(async () => {
       try {
         await saveAddonConfig(addon.id, JSON.stringify(configData));
-        toast.success(lang === "tr" ? "Eklenti ayarları kaydedildi" : "Add-on settings saved");
+        alert(lang === "tr" ? "Eklenti ayarları kaydedildi" : "Add-on settings saved");
         onClose();
       } catch (err: any) {
-        toast.error(err.message || "Error");
+        alert(err.message || "Error");
       }
     });
   };
