@@ -5565,6 +5565,7 @@ export default function DashboardClient({
           products={products}
           onClose={() => setEditingAddon(null)}
           lang={lang}
+          username={user.username}
         />
       )}
     </div>

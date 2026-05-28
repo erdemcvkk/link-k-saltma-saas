@@ -266,14 +266,15 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
         <div className={styles.heroContainer}>
           <div className={styles.avatarWrapper}>
             {avatarUrl ? (
-              <img src={avatarUrl} className="w-full h-full object-cover" alt={displayName} />
+              <img src={avatarUrl} className="w-full h-full object-cover" alt={storeTitle || username || "Avatar"} />
             ) : (
               <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
                 <User className="w-10 h-10 text-zinc-400" />
               </div>
             )}
           </div>
-          <h1 className={styles.nameText}>{displayName}</h1>
+          <h1 className={styles.nameText}>{storeTitle || username || "Digital Store"}</h1>
+          {username && <p className="text-sm opacity-70 font-medium mb-1">{username}</p>}
           <p className={styles.bioText}>{displayBio}</p>
         </div>
 

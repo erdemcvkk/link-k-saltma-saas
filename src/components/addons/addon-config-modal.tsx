@@ -15,9 +15,10 @@ interface AddonConfigModalProps {
   products?: any[];
   onClose: () => void;
   lang: string;
+  username: string;
 }
 
-export default function AddonConfigModal({ addon, products = [], onClose, lang }: AddonConfigModalProps) {
+export default function AddonConfigModal({ addon, products = [], onClose, lang, username }: AddonConfigModalProps) {
   const [isPending, startTransition] = useTransition();
   const [configData, setConfigData] = useState<any>(() => {
     try {
@@ -160,7 +161,21 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                 {lang === "tr" ? "Mağaza Genel Ayarları" : "Store Settings"}
               </h4>
               {renderInput("storeTitle", lang === "tr" ? "Mağaza Başlığı" : "Store Title", lang === "tr" ? "Örn: Premium İçeriklerim" : "Store Name")}
-              {renderInput("customSlug", lang === "tr" ? "Eklenti Linki (Opsiyonel)" : "Addon Link (Optional)", lang === "tr" ? "Örn: magazam (link-saas.com/@isim/magazam)" : "e.g. store")}
+              <div className="space-y-1.5 mb-4">
+                <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Eklenti Linki (Opsiyonel)" : "Addon Link (Optional)"}</label>
+                <div className="flex gap-0 items-center">
+                  <span className="px-3 py-3 bg-zinc-100 border border-zinc-200 border-r-0 rounded-l-xl text-sm text-zinc-500 font-medium whitespace-nowrap">
+                    link-saas.com/@{username}/
+                  </span>
+                  <input
+                    type="text"
+                    value={configData["customSlug"] || ""}
+                    onChange={(e) => setConfigData({ ...configData, customSlug: e.target.value })}
+                    placeholder={lang === "tr" ? "magazam" : "store"}
+                    className="w-full px-4 py-3 rounded-r-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
+                  />
+                </div>
+              </div>
               
               {/* NEW FIELDS */}
               <div className="space-y-1.5 mb-4">
