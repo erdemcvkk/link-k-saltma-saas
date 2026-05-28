@@ -253,7 +253,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
 
           <div className="flex-1 overflow-y-auto no-scrollbar relative flex items-center justify-center p-8">
             <div className="w-[1200px] transform scale-[0.6] lg:scale-[0.8] origin-center pointer-events-none">
-              <EklentilerClient products={products.filter(p => p.isActive)} settings={settings} />
+              <EklentilerClient />
             </div>
           </div>
         </div>
