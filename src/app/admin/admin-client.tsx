@@ -31,7 +31,8 @@ import {
   Cookie,
   RefreshCw,
   Code,
-  Layout
+  Layout,
+  ShoppingBag
 } from "lucide-react";
 import Link from "next/link";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
@@ -946,6 +947,14 @@ export default function AdminClient({
               >
                 <ShieldAlert className="h-4 w-4 text-zinc-550" />
                 {lang === "tr" ? "Özellik & Paket Yönetimi" : "Feature Gating"}
+              </Link>
+
+              <Link
+                href="/admin/addons"
+                className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/50"
+              >
+                <ShoppingBag className="h-4 w-4 text-zinc-550" />
+                {lang === "tr" ? "Eklenti Vitrini & Mağaza" : "Addons & Storefront"}
               </Link>
             </nav>
           </div>

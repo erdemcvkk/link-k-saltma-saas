@@ -86,6 +86,15 @@ export default function ProfileClient({ username, bio, theme, links, products, a
   const [cardCvc, setCardCvc] = useState("");
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const [clickedProductId, setClickedProductId] = useState<string | null>(null);
+  
+  const handleProductClick = (prod: ProductItem) => {
+    setClickedProductId(prod.id);
+    setTimeout(() => {
+      setClickedProductId(null);
+      setSelectedProduct(prod);
+    }, 200);
+  };
   
   const [isPending, startTransition] = useTransition();
   const [errorMsg, setErrorMsg] = useState("");
@@ -511,11 +520,14 @@ export default function ProfileClient({ username, bio, theme, links, products, a
             </div>
             
             <div className={`grid gap-4 ${storeLayout === "GRID" ? "grid-cols-2 md:grid-cols-2" : "grid-cols-1"}`}>
-              {products.map((prod) => (
+              {products.map((prod, idx) => (
                 <div
                   key={prod.id}
-                  onClick={() => setSelectedProduct(prod)}
-                  className={`p-5 rounded-[1.25rem] border backdrop-blur-sm cursor-pointer transition-all hover:-translate-y-0.5 select-none ${currentStyles.cardBg}`}
+                  onClick={() => handleProductClick(prod)}
+                  className={`p-5 rounded-[1.25rem] border backdrop-blur-sm cursor-pointer transition-all duration-500 hover:-translate-y-1 hover:shadow-xl select-none animate-[slideUp_0.5s_ease-out_forwards] ${
+                    clickedProductId === prod.id ? "scale-95 opacity-80" : ""
+                  } ${currentStyles.cardBg}`}
+                  style={{ animationDelay: `${idx * 0.15}s`, opacity: 0 }}
                 >
                   <div className="flex justify-between items-start gap-4">
                     <div className="space-y-1">
@@ -529,9 +541,15 @@ export default function ProfileClient({ username, bio, theme, links, products, a
                       </div>
                       <p className={`text-xs line-clamp-2 pr-4 ${isDark ? "text-zinc-500" : "text-zinc-600"}`}>{prod.description || t.noDesc}</p>
                     </div>
-                    <div className="text-right shrink-0">
+                    <div className="text-right shrink-0 flex flex-col items-end">
                       <span className={`text-sm font-black font-mono block ${currentStyles.accentColor}`}>{prod.price}₺</span>
-                      <span className="text-[9px] text-zinc-500 block font-bold font-mono">{t.downloadGlow}</span>
+                      
+                      <button 
+                        className={`mt-2 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-1 ${currentStyles.btnClass}`}
+                      >
+                        <ShoppingBag className="h-3 w-3" />
+                        Satın Al
+                      </button>
                     </div>
                   </div>
                 </div>
