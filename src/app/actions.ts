@@ -1871,6 +1871,10 @@ export async function saveAddonConfig(addonId: string, configJson: string, isAct
 
   revalidatePath("/dashboard");
   revalidatePath("/[username]", "page");
+  if (user.username) {
+    revalidatePath(`/${user.username}`, "page");
+    revalidatePath(`/${user.username}`, "layout");
+  }
   return updated;
 }
 

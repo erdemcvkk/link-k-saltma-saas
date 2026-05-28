@@ -28,6 +28,18 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
   });
   const [isActive, setIsActive] = useState<boolean>(addon.isActive);
 
+  const handleFileUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("/api/media", {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) throw new Error(lang === "tr" ? "Yükleme başarısız!" : "Upload failed!");
+    const data = await res.json();
+    return data.url;
+  };
+
   const handleSave = () => {
     startTransition(async () => {
       try {
@@ -148,9 +160,38 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                 {lang === "tr" ? "Mağaza Genel Ayarları" : "Store Settings"}
               </h4>
               {renderInput("storeTitle", lang === "tr" ? "Mağaza Başlığı" : "Store Title", lang === "tr" ? "Örn: Premium İçeriklerim" : "Store Name")}
+              {renderInput("customSlug", lang === "tr" ? "Eklenti Linki (Opsiyonel)" : "Addon Link (Optional)", lang === "tr" ? "Örn: magazam (link-saas.com/@isim/magazam)" : "e.g. store")}
               
               {/* NEW FIELDS */}
-              {renderInput("storeAvatarUrl", lang === "tr" ? "Profil Fotoğrafı (Görsel URL)" : "Profile Image (URL)", "https://...")}
+              <div className="space-y-1.5 mb-4">
+                <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Profil Fotoğrafı (URL veya Dosya)" : "Profile Image"}</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={configData["storeAvatarUrl"] || ""}
+                    onChange={(e) => setConfigData({ ...configData, storeAvatarUrl: e.target.value })}
+                    placeholder="https://..."
+                    className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
+                  />
+                  <label className="flex items-center justify-center px-4 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+                    {lang === "tr" ? "Dosya Seç" : "Upload"}
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          try {
+                            const url = await handleFileUpload(file);
+                            setConfigData({ ...configData, storeAvatarUrl: url });
+                          } catch (err: any) { alert(err.message); }
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 {renderInput("storeUsername", lang === "tr" ? "Mağaza Kullanıcı Adı" : "Store Username", "@username")}
                 {renderInput("buyButtonText", lang === "tr" ? "Satın Al Butonu Metni" : "Buy Button Text", "Satın Al")}
@@ -209,8 +250,45 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                     </select>
                   </div>
                   <div className="flex gap-2">
-                    <input type="text" id="newProdImageUrl" placeholder={lang === "tr" ? "Ürün Görseli (URL)" : "Product Image (URL)"} className="w-1/2 p-3 rounded-xl border border-indigo-100 bg-white text-sm font-medium focus:border-indigo-500 outline-none" />
-                    <input type="text" id="newProdFileUrl" placeholder={lang === "tr" ? "İndirme Linki (Dosya)" : "Download Link (File)"} className="w-1/2 p-3 rounded-xl border border-indigo-100 bg-white text-sm font-medium focus:border-indigo-500 outline-none" />
+                    <div className="w-1/2 flex gap-1 relative">
+                      <input type="text" id="newProdImageUrl" placeholder={lang === "tr" ? "Ürün Görseli (URL)" : "Product Image (URL)"} className="w-full p-3 rounded-xl border border-indigo-100 bg-white text-sm font-medium focus:border-indigo-500 outline-none pr-24" />
+                      <label className="absolute right-1 top-1 bottom-1 flex items-center justify-center px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-[11px] font-bold rounded-lg cursor-pointer transition-colors">
+                        {lang === "tr" ? "Dosya Seç" : "Upload"}
+                        <input 
+                          type="file" 
+                          className="hidden" 
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              try {
+                                const url = await handleFileUpload(file);
+                                (document.getElementById("newProdImageUrl") as HTMLInputElement).value = url;
+                              } catch (err: any) { alert(err.message); }
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                    <div className="w-1/2 flex gap-1 relative">
+                      <input type="text" id="newProdFileUrl" placeholder={lang === "tr" ? "İndirme Linki (Dosya)" : "Download Link (File)"} className="w-full p-3 rounded-xl border border-indigo-100 bg-white text-sm font-medium focus:border-indigo-500 outline-none pr-24" />
+                      <label className="absolute right-1 top-1 bottom-1 flex items-center justify-center px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-[11px] font-bold rounded-lg cursor-pointer transition-colors">
+                        {lang === "tr" ? "Dosya Seç" : "Upload"}
+                        <input 
+                          type="file" 
+                          className="hidden" 
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              try {
+                                const url = await handleFileUpload(file);
+                                (document.getElementById("newProdFileUrl") as HTMLInputElement).value = url;
+                              } catch (err: any) { alert(err.message); }
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
                   </div>
                   <textarea id="newProdDesc" placeholder={lang === "tr" ? "Ürün Açıklaması (Opsiyonel)" : "Description (Optional)"} className="w-full p-3 rounded-xl border border-indigo-100 bg-white text-sm font-medium focus:border-indigo-500 outline-none h-20 resize-none" />
                   <button 
