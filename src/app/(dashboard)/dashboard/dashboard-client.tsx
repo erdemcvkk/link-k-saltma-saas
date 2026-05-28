@@ -180,6 +180,7 @@ interface DashboardClientProps {
   globalSettings?: Record<string, string>;
   initialFonts?: { id?: string; name: string; value: string; tier: string; giftLabel?: string | null }[];
   initialQrCodes?: QrCodeItem[];
+  initialFeatures?: any[];
   initialOwnedTemplates?: {
     id: string;
     name: string;
@@ -325,6 +326,7 @@ const getLinkIconHelper = (type?: string, url?: string) => {
 };
 
 export default function DashboardClient({
+  initialAddons,
   initialUser,
   initialLinks,
   initialPageViews,
@@ -332,7 +334,8 @@ export default function DashboardClient({
   globalSettings,
   initialFonts = FONTS_CATALOG,
   initialQrCodes = [],
-  initialOwnedTemplates = []
+  initialOwnedTemplates = [],
+  initialFeatures
 }: DashboardClientProps) {
   const [ownedTemplates, setOwnedTemplates] = useState(initialOwnedTemplates);
   const [customizingTemplateId, setCustomizingTemplateId] = useState<string | null>(null);
