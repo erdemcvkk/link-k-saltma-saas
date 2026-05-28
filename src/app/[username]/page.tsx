@@ -168,6 +168,16 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     salesCount: p.salesCount
   }));
 
+  // Fetch active addons for this user
+  const addons = await db.userAddon.findMany({
+    where: { userId: activeUser.id, isActive: true }
+  });
+  const serializedAddons = addons.map(a => ({
+    id: a.id,
+    addonType: a.addonType,
+    config: a.config
+  }));
+
   return (
     <ProfileClient
       username={activeUser.username!}
@@ -175,6 +185,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       theme={theme}
       links={serializedLinks}
       products={serializedProducts}
+      addons={serializedAddons}
       avatarUrl={activeUser.profile?.avatarUrl ?? null}
       background={activeUser.profile?.background ?? null}
       fontStyle={activeUser.profile?.fontStyle ?? "Inter"}

@@ -191,6 +191,17 @@ export default async function DashboardPage() {
     plans: f.plans.map(p => p.plan)
   }));
 
+  // Fetch user addons
+  const userAddons = await db.userAddon.findMany({
+    where: { userId: user.id }
+  });
+  const serializedAddons = userAddons.map(a => ({
+    id: a.id,
+    addonType: a.addonType,
+    isActive: a.isActive,
+    config: a.config
+  }));
+
   return (
     <DashboardClient
       initialUser={serializedUser}
@@ -202,6 +213,7 @@ export default async function DashboardPage() {
       initialQrCodes={serializedQrCodes}
       initialOwnedTemplates={serializedOwnedTemplates}
       initialFeatures={serializedFeatures}
+      initialAddons={serializedAddons}
     />
   );
 }

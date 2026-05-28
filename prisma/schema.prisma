@@ -230,7 +230,9 @@ model UserAddon {
   id        String   @id @default(uuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  addonType String   // e.g. "MINI_STORE"
+  addonType String   // e.g. "MINI_STORE", "BOOKING", "NEWSLETTER", "QA", "DONATION"
+  isActive  Boolean  @default(true)
+  config    String?  // JSON stringified configuration for the addon (e.g. theme, colors, contents)
   createdAt DateTime @default(now())
   
   @@unique([userId, addonType])

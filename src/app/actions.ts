@@ -1780,3 +1780,63 @@ export async function deleteAddonDummyProduct(adminUserId: string, productId: st
     where: { id: productId }
   });
 }
+
+// User Addon Management
+export async function purchaseAddon(userId: string, addonType: string) {
+  if (!userId) throw new Error("Unauthorized");
+
+  const existing = await db.userAddon.findUnique({
+    where: {
+      userId_addonType: {
+        userId: userId,
+        addonType
+      }
+    }
+  });
+
+  if (existing) return existing;
+
+  let defaultTheme = "classic";
+  if (addonType === "MINI_STORE") defaultTheme = "vibrant-pop";
+  if (addonType === "BOOKING") defaultTheme = "minimalist";
+  if (addonType === "NEWSLETTER") defaultTheme = "glassmorphism";
+  if (addonType === "QA") defaultTheme = "dark-drill";
+  if (addonType === "DONATION") defaultTheme = "classic";
+
+  return await db.userAddon.create({
+    data: {
+      userId: userId,
+      addonType,
+      isActive: true,
+      config: JSON.stringify({ theme: defaultTheme })
+    }
+  });
+}
+
+export async function updateUserAddonConfig(userId: string, addonType: string, config: string) {
+  if (!userId) throw new Error("Unauthorized");
+
+  return await db.userAddon.update({
+    where: {
+      userId_addonType: {
+        userId: userId,
+        addonType
+      }
+    },
+    data: {
+      config
+    }
+  });
+}
+
+import { checkAndSyncUser } from "@/lib/user-sync";
+
+export async function buyAddonAction(addonType: string) {
+  const user = await checkAndSyncUser();
+  if (!user) throw new Error("Unauthorized");
+  
+  const res = await purchaseAddon(user.id, addonType);
+  revalidatePath("/dashboard");
+  revalidatePath("/[username]", "page");
+  return res;
+}
