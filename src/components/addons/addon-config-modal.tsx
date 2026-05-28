@@ -179,7 +179,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang }
                 </div>
               </div>
             </div>
-            </div>
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
