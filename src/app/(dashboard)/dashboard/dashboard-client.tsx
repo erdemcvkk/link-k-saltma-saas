@@ -1331,35 +1331,35 @@ export default function DashboardClient({
         return {
           bg: "bg-gradient-to-b from-purple-950 via-zinc-950 to-black",
           card: "bg-purple-950/20 border-teal-500/30 text-purple-200 shadow-[0_0_10px_rgba(168,85,247,0.1)] hover:border-purple-400",
-          glowText: "text-teal-500 font-extrabold tracking-wide",
+          glowText: "text-teal-500 font-bold tracking-wide",
           avatarBg: "from-purple-500 to-pink-500",
         };
       case "glow-green":
         return {
           bg: "bg-gradient-to-b from-emerald-950/50 via-zinc-950 to-black",
           card: "bg-emerald-950/20 border-emerald-500/30 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.1)] hover:border-emerald-400",
-          glowText: "text-emerald-400 font-extrabold tracking-wide",
+          glowText: "text-emerald-400 font-bold tracking-wide",
           avatarBg: "from-emerald-500 to-teal-500",
         };
       case "pink-retro":
         return {
           bg: "bg-gradient-to-b from-pink-950/50 via-zinc-950 to-black",
           card: "bg-pink-950/20 border-pink-500/30 text-pink-200 shadow-[0_0_10px_rgba(244,63,94,0.1)] hover:border-pink-400",
-          glowText: "text-pink-400 font-extrabold tracking-wide",
+          glowText: "text-pink-400 font-bold tracking-wide",
           avatarBg: "from-pink-500 to-rose-500",
         };
       case "glassmorphism":
         return {
           bg: "bg-slate-950 text-slate-900",
           card: "bg-white/10 border border-white/20 backdrop-blur-md text-slate-900 shadow-lg hover:bg-white/20",
-          glowText: "text-slate-900 font-extrabold tracking-wide drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]",
+          glowText: "text-slate-900 font-bold tracking-wide drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]",
           avatarBg: "from-purple-500/50 to-pink-500/50",
         };
       case "brutalism":
         return {
           bg: "bg-[#facc15] text-black",
-          card: "bg-white border-4 border-black rounded-none shadow-brutal-sm text-black font-extrabold hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all",
-          glowText: "text-black font-black tracking-tighter uppercase",
+          card: "bg-white border-4 border-black rounded-none shadow-brutal-sm text-black font-bold hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all",
+          glowText: "text-black font-bold uppercase",
           avatarBg: "from-zinc-900 to-black",
         };
       case "terminal":
@@ -3079,7 +3079,7 @@ export default function DashboardClient({
                                   borderWidth: "2px",
                                   borderRadius: "9999px",
                                   shadow: "glow-emerald",
-                                  fontWeight: "font-black",
+                                  fontWeight: "font-bold",
                                 },
                                 {
                                   name: lang === "tr" ? "Retro Brutal" : "Retro Brutal",
@@ -3090,7 +3090,7 @@ export default function DashboardClient({
                                   borderWidth: "3px",
                                   borderRadius: "8px",
                                   shadow: "hard-3d",
-                                  fontWeight: "font-black",
+                                  fontWeight: "font-bold",
                                 },
                                 {
                                   name: lang === "tr" ? "Klasik Cam" : "Classic Glass",

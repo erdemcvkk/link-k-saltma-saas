@@ -108,8 +108,8 @@ export default function ProfileClient({ username, bio, theme, links, products, a
             ? "bg-purple-950/10 border-purple-500/20 shadow-[0_0_30px_rgba(168,85,247,0.1)]"
             : "bg-white/80 border-purple-200 shadow-md text-zinc-800",
           glowText: isDark
-            ? "text-purple-400 font-extrabold tracking-wide drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]"
-            : "text-purple-700 font-black tracking-wide",
+            ? "text-purple-400 font-bold tracking-wide drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]"
+            : "text-purple-700 font-bold tracking-wide",
           avatarBg: "from-purple-500 to-pink-500",
           btnClass: isDark
             ? "bg-purple-950/20 border border-purple-500/30 text-purple-200 hover:bg-purple-900/30 hover:border-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.05)]"
@@ -126,8 +126,8 @@ export default function ProfileClient({ username, bio, theme, links, products, a
             ? "bg-emerald-950/10 border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
             : "bg-white/80 border-emerald-200 shadow-md text-zinc-800",
           glowText: isDark
-            ? "text-emerald-400 font-extrabold tracking-wide drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]"
-            : "text-emerald-700 font-black tracking-wide",
+            ? "text-emerald-400 font-bold tracking-wide drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+            : "text-emerald-700 font-bold tracking-wide",
           avatarBg: "from-emerald-500 to-teal-500",
           btnClass: isDark
             ? "bg-emerald-950/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/30 hover:border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.05)]"
@@ -144,8 +144,8 @@ export default function ProfileClient({ username, bio, theme, links, products, a
             ? "bg-pink-950/10 border-pink-500/20 shadow-[0_0_30px_rgba(244,63,94,0.1)]"
             : "bg-white/80 border-pink-200 shadow-md text-zinc-800",
           glowText: isDark
-            ? "text-pink-400 font-extrabold tracking-wide drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]"
-            : "text-pink-700 font-black tracking-wide",
+            ? "text-pink-400 font-bold tracking-wide drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]"
+            : "text-pink-700 font-bold tracking-wide",
           avatarBg: "from-pink-500 to-rose-500",
           btnClass: isDark
             ? "bg-pink-950/20 border border-pink-500/30 text-pink-200 hover:bg-pink-900/30 hover:border-pink-400 shadow-[0_0_15px_rgba(244,63,94,0.05)]"
@@ -157,7 +157,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
         return {
           bg: "bg-slate-950 text-white",
           cardBg: "bg-white/10 border-white/20 backdrop-blur-md shadow-2xl text-white",
-          glowText: "text-white font-extrabold tracking-wide drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]",
+          glowText: "text-white font-bold tracking-wide drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]",
           avatarBg: "from-purple-500/50 to-pink-500/50",
           btnClass: "bg-white/10 border border-white/20 backdrop-blur-md hover:bg-white/20 text-white shadow-lg",
           accentColor: "text-white",
@@ -167,9 +167,9 @@ export default function ProfileClient({ username, bio, theme, links, products, a
         return {
           bg: "bg-[#facc15] text-black",
           cardBg: "bg-white border-4 border-black rounded-none shadow-brutal text-black",
-          glowText: "text-black font-black tracking-tighter uppercase",
+          glowText: "text-black font-bold uppercase",
           avatarBg: "from-zinc-900 to-black",
-          btnClass: "bg-[#ff007f] border-4 border-black rounded-none shadow-brutal-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1 text-black font-extrabold transition-all",
+          btnClass: "bg-[#ff007f] border-4 border-black rounded-none shadow-brutal-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1 text-black font-bold transition-all",
           accentColor: "text-black",
           badgeClass: "bg-[#ff007f] text-black border-2 border-black rounded-none",
         };
