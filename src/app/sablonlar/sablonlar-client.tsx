@@ -274,13 +274,16 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                         )}
 
                         <div className="profile-card flex flex-col items-center w-full text-center relative z-10">
-                          <div className="w-12 h-12 rounded-full bg-slate-800 border-2 border-white/10 shadow-md mb-2 overflow-hidden">
+                          <div className="w-16 h-16 rounded-full bg-slate-800 border-2 border-white/10 shadow-md mb-2.5 overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&fit=crop" className="w-full h-full object-cover" />
                           </div>
-                          <div className="text-xs font-bold text-white mb-4">@kullaniciadi</div>
+                          <div className="text-sm font-bold text-white mb-1">@kullaniciadi</div>
+                          <div className="text-[10px] text-white/70 max-w-[180px] leading-relaxed mb-6">
+                            Bu harika şablonun canlı önizlemesidir. Kendi sayfanızda uygulamak için hemen sahip olun!
+                          </div>
                         </div>
 
-                        <div className="w-full space-y-2.5 z-10">
+                        <div className="w-full space-y-3.5 z-10">
                           {[
                             "📸 Instagram Hesabım",
                             "🎵 Yeni Spotify Albümüm",
@@ -288,14 +291,14 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                           ].map((title, idx) => (
                             <div 
                               key={idx}
-                              className={`btn-link link-item w-full py-2 px-3 text-[10px] font-bold text-center border transition-all ${template.buttonStyle}`}
+                              className={`btn-link link-item w-full py-2.5 px-4 text-xs font-bold text-center border transition-all ${template.buttonStyle}`}
                             >
                               {title}
                             </div>
                           ))}
                         </div>
                         
-                        <div className="absolute bottom-3 text-[8px] text-white/50 tracking-wider z-10">
+                        <div className="absolute bottom-4 text-[9px] text-white/50 tracking-wider z-10">
                           Powered by Link.SaaS
                         </div>
 
