@@ -394,31 +394,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
         </div>
 
         
-        {/* Addons Grid */}
-        {addons.length > 0 && (
-          <div className="space-y-6 w-full">
-            <h3 className={`text-xs uppercase tracking-widest font-bold mb-2 ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>
-              {lang === "tr" ? "Öne Çıkanlar" : "Highlights"}
-            </h3>
-            {addons.map(addon => {
-              // MINI_STORE is handled as full-screen above, but just in case it wasn't active or we support inline again:
-              if (addon.addonType === "MINI_STORE") {
-                return null;
-              }
 
-              // Placeholder for other addons
-              return (
-                <div key={addon.id} id={addon.addonType} className={`p-6 rounded-[2rem] border ${currentStyles.cardBg} flex flex-col items-center justify-center text-center gap-3 scroll-mt-24`}>
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${currentStyles.btnClass}`}>
-                    <Zap className="h-6 w-6" />
-                  </div>
-                  <h4 className={`font-bold ${currentStyles.glowText}`}>{addon.addonType} Modülü</h4>
-                  <p className={`text-xs ${isDark ? "text-zinc-400" : "text-zinc-500"}`}>Bu eklentinin içeriği yapılandırılıyor...</p>
-                </div>
-              );
-            })}
-          </div>
-        )}
 
 
         {/* Links Grid */}
