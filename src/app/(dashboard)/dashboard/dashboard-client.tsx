@@ -344,6 +344,7 @@ export default function DashboardClient({
   const [customizingTemplateId, setCustomizingTemplateId] = useState<string | null>(null);
   const [quickLinkTitle, setQuickLinkTitle] = useState("");
   const [quickLinkUrl, setQuickLinkUrl] = useState("");
+  const [quickLinkIcon, setQuickLinkIcon] = useState("WEBSITE");
   
   const [btnBgColor, setBtnBgColor] = useState("");
   const [btnTextColor, setBtnTextColor] = useState("");
@@ -4090,6 +4091,37 @@ export default function DashboardClient({
                                     />
                                   </div>
                                 </div>
+                                <div className="pt-2 pb-2">
+                                  <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-2">
+                                    {lang === "tr" ? "İkon Seçimi" : "Icon Selection"}
+                                  </label>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {[
+                                      { id: "WEBSITE", icon: Globe },
+                                      { id: "INSTAGRAM", icon: InstagramIcon },
+                                      { id: "WHATSAPP", icon: MessageCircle },
+                                      { id: "TIKTOK", icon: TiktokIcon },
+                                      { id: "PINTEREST", icon: PinterestIcon },
+                                      { id: "YOUTUBE", icon: YoutubeIcon },
+                                      { id: "X", icon: TwitterIcon },
+                                      { id: "REDDIT", icon: MessageCircle },
+                                      { id: "LINKEDIN", icon: LinkedinIcon },
+                                    ].map(iconOption => (
+                                      <button
+                                        key={iconOption.id}
+                                        type="button"
+                                        onClick={() => setQuickLinkIcon(iconOption.id)}
+                                        className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${
+                                          quickLinkIcon === iconOption.id 
+                                            ? "bg-emerald-500 text-white shadow-md" 
+                                            : "bg-white border border-zinc-200 text-zinc-600 hover:bg-zinc-100"
+                                        }`}
+                                      >
+                                        <iconOption.icon className="h-3.5 w-3.5" />
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
                                 <button
                                   type="button"
                                   onClick={async () => {
@@ -4109,7 +4141,7 @@ export default function DashboardClient({
                                           initialUser.id,
                                           quickLinkTitle,
                                           quickLinkUrl,
-                                          "WEBSITE",
+                                          quickLinkIcon,
                                           "",
                                           "TEXT_LINK",
                                           null
@@ -4122,7 +4154,7 @@ export default function DashboardClient({
                                             title: quickLinkTitle,
                                             url: quickLinkUrl,
                                             isActive: true,
-                                            type: "WEBSITE",
+                                            type: quickLinkIcon,
                                             clicks: [],
                                             blockType: "TEXT_LINK",
                                             metadata: null,
@@ -4138,6 +4170,7 @@ export default function DashboardClient({
                                         ]);
                                         setQuickLinkTitle("");
                                         setQuickLinkUrl("");
+                                        setQuickLinkIcon("WEBSITE");
                                         setSuccessMsg(lang === "tr" ? "Link başarıyla eklendi!" : "Link added successfully!");
                                         setTimeout(() => setSuccessMsg(""), 3000);
                                       } catch (err: any) {

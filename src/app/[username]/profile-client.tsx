@@ -339,7 +339,8 @@ export default function ProfileClient({ username, bio, theme, links, products, a
 
   return (
     <div 
-      className={`min-h-screen relative flex flex-col justify-between py-20 px-4 transition-all duration-500 ${bgClassName}`}
+      id="profile-wrapper"
+      className={`min-h-screen relative overflow-hidden flex flex-col justify-between py-20 px-4 transition-all duration-500 ${bgClassName}`}
       style={{
         fontFamily: fontStyle,
         ...(isCssBg ? { background: background } : {}),
@@ -351,7 +352,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
       {customCss && (
         <style dangerouslySetInnerHTML={{ 
           __html: customCss
-            .replace(/body/g, `#mobile-container`)
+            .replace(/body/g, `#profile-wrapper`)
             .replace(/\.profile-card/g, `#mobile-container .profile-card`)
             .replace(/\.btn-link/g, `#mobile-container .btn-link`)
             .replace(/\.link-item/g, `#mobile-container .link-item`)
