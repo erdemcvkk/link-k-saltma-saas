@@ -540,7 +540,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                           return;
                         }
                         
-                        await addProduct({ title, price, type, imageUrl, fileUrl, description, isActive: true });
+                        await addAddonProduct(title, type, price, description, fileUrl, imageUrl);
                         alert(lang === "tr" ? "Ürün eklendi!" : "Product added!");
                         window.location.reload();
                       } catch (err: any) {
@@ -584,7 +584,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                       <button 
                         onClick={async () => {
                           if (confirm(lang === "tr" ? "Bu ürünü silmek istediğinize emin misiniz?" : "Are you sure?")) {
-                            await deleteProduct(p.id);
+                            await deleteAddonProduct(p.id);
                             window.location.reload();
                           }
                         }}
