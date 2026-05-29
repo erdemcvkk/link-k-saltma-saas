@@ -538,6 +538,7 @@ export default function DashboardClient({
   const [bio, setBio] = useState(initialUser.profile?.bio ?? "");
   const [avatarUrl, setAvatarUrl] = useState(initialUser.profile?.avatarUrl ?? "");
   const [background, setBackground] = useState(initialUser.profile?.background ?? "");
+  const [activeTemplateCss, setActiveTemplateCss] = useState<string | null>(initialUser.profile?.theme ? initialOwnedTemplates.find(t => t.name === initialUser.profile?.theme)?.customCss || null : null);
   const [theme, setTheme] = useState(initialUser.profile?.theme ?? "dark");
   const [fontStyle, setFontStyle] = useState(initialUser.profile?.fontStyle ?? "Inter");
   const [bioColor, setBioColor] = useState(initialUser.profile?.bioColor ?? "#888888");
@@ -1354,7 +1355,7 @@ export default function DashboardClient({
       case "glow-green":
         return {
           bg: "bg-gradient-to-b from-emerald-950/50 via-zinc-950 to-black",
-          card: "bg-emerald-950/20 border-emerald-500/30 text-emerald-300 shadow-[0_0_10px_rgba(16,185,129,0.1)] hover:border-emerald-400",
+          card: "bg-emerald-950/20 border-emerald-500/30 text-emerald-300 shadow-[0_0_10px_rgba(10,185,129,0.1)] hover:border-emerald-400",
           glowText: "text-emerald-400 font-bold tracking-wide",
           avatarBg: "from-emerald-500 to-teal-500",
         };
@@ -1442,6 +1443,7 @@ export default function DashboardClient({
 
             return (
               <div 
+                id="sandbox-preview"
                 className={`relative rounded-[2.5rem] aspect-[9/18] overflow-hidden p-6 flex flex-col justify-between transition-all duration-300 ${bgClassName}`}
                 style={{
                   fontFamily: fontStyle,
@@ -1449,6 +1451,15 @@ export default function DashboardClient({
                   ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {})
                 }}
               >
+                {activeTemplateCss && (
+                  <style dangerouslySetInnerHTML={{ 
+                    __html: activeTemplateCss
+                      .replace(/body/g, `#sandbox-preview`)
+                      .replace(/\.profile-card/g, `#sandbox-preview .profile-card`)
+                      .replace(/\.btn-link/g, `#sandbox-preview .btn-link`)
+                      .replace(/\.link-item/g, `#sandbox-preview .link-item`)
+                  }} />
+                )}
                 {customVideoUrl && (
                   <video
                     autoPlay
@@ -1509,7 +1520,7 @@ export default function DashboardClient({
                           borderWidth: link.borderWidth || undefined,
                           borderRadius: link.borderRadius || undefined,
                           boxShadow: link.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
-                                   : link.shadow === "glow-emerald" ? "0 0 15px rgba(16,185,129,0.5)"
+                                   : link.shadow === "glow-emerald" ? "0 0 15px rgba(10,185,129,0.5)"
                                    : link.shadow === "soft" ? "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
                                    : link.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
                                    : undefined,
@@ -3625,6 +3636,7 @@ export default function DashboardClient({
                             onClick={() => {
                               setBackground(template.bgColor);
                               setFontStyle(template.fontStyle);
+                              setActiveTemplateCss(template.isCoded ? (template.customCss || null) : null);
                               setTheme("custom");
                               setSuccessMsg(lang === "tr" ? "Şablon canlı simülatörde önizleniyor!" : "Previewing template in simulator!");
                               setTimeout(() => setSuccessMsg(""), 2000);
@@ -3640,6 +3652,7 @@ export default function DashboardClient({
                             onClick={() => {
                               setBackground(template.bgColor);
                               setFontStyle(template.fontStyle);
+                              setActiveTemplateCss(template.isCoded ? (template.customCss || null) : null);
                               setTheme("custom");
                               setCustomizingTemplateId(customizingTemplateId === template.id ? null : template.id);
                             }}
@@ -4155,6 +4168,7 @@ export default function DashboardClient({
                                 onClick={() => {
                                   setBackground(template.bgColor);
                                   setFontStyle(template.fontStyle);
+                                  setActiveTemplateCss(template.isCoded ? (template.customCss || null) : null);
                                   setUsernameColor("#ffffff");
                                   setBioColor("#888888");
                                   setBtnBgColor("");

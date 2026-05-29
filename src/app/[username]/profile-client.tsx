@@ -81,7 +81,7 @@ interface ProfileClientProps {
   storeLayout?: string | null;
 }
 
-export default function ProfileClient({ username, bio, theme, links, products, addons = [], avatarUrl, background, fontStyle, bioColor, usernameColor, plan, storeTitle, storeCoverUrl, storeLayout }: ProfileClientProps) {
+export default function ProfileClient({ username, bio, theme, links, products, addons = [], avatarUrl, background, fontStyle, bioColor, usernameColor, plan, storeTitle, storeCoverUrl, storeLayout, customCss }: ProfileClientProps) {
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");

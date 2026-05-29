@@ -139,6 +139,16 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const theme = activeUser.profile?.theme ?? "dark";
   const bio = activeUser.profile?.bio ?? "";
 
+  let customCss = null;
+  if (theme) {
+    const template = await db.template.findFirst({
+      where: { name: theme }
+    });
+    if (template && template.isCoded) {
+      customCss = template.customCss;
+    }
+  }
+
   // Serialize models for standard client prop constraints
   const serializedLinks = activeUser.links.map((l: any) => ({
     id: l.id,
@@ -197,6 +207,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       storeTitle={activeUser.profile?.storeTitle ?? null}
       storeCoverUrl={activeUser.profile?.storeCoverUrl ?? null}
       storeLayout={activeUser.profile?.storeLayout ?? "GRID"}
+      customCss={customCss}
     />
   );
 }
