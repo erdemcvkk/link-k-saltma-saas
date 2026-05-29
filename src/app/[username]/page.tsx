@@ -191,18 +191,19 @@ export default async function PublicProfilePage({ params, searchParams }: { para
     if (previewMatch) activeTemplate = previewMatch.template;
   }
 
-  if (activeTemplate && activeTemplate.isCoded && activeTemplate.customCss) {
+  if (activeTemplate) {
     customCss = activeTemplate.customCss;
   } else {
     customCss = activeUser.profile?.customCss ?? null;
     
     // Fallback for legacy profiles that didn't copy the customCss
     if (!customCss && theme && theme !== "custom") {
-      const template = await db.template.findFirst({
+      // NOTE: We await the db call, but it's okay because this is an async function
+      const templateRecord = await db.template.findFirst({
         where: { name: theme }
       });
-      if (template && template.isCoded) {
-        customCss = template.customCss;
+      if (templateRecord) {
+        customCss = templateRecord.customCss;
       }
     }
   }
