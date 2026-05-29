@@ -330,6 +330,10 @@ export default function ProfileClient({ username, bio, theme, links, products, a
     >
       <GlobalOverlayManager onStateChange={handleStateChange} />
 
+      {customCss && (
+        <style dangerouslySetInnerHTML={{ __html: customCss }} />
+      )}
+
       {/* Advanced Theme Overlays */}
       {theme === "glassmorphism" && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
