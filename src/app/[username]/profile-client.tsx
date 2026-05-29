@@ -390,9 +390,6 @@ export default function ProfileClient({ username, bio, theme, links, products, a
         />
       )}
 
-      {/* Decorative Grid Overlays */}
-      <div className={`absolute inset-0 bg-[linear-gradient(to_right,#80808007_1px,transparent_1px),linear-gradient(to_bottom,#80808007_1px,transparent_1px)] bg-[size:24px_36px] pointer-events-none z-[1]`} />
-
       <main id="mobile-container" className="max-w-md w-full mx-auto space-y-10 relative z-10 flex-1 flex flex-col justify-center overflow-x-hidden">
         {/* Profile Card */}
         <div className={`profile-card p-8 rounded-[2.5rem] border text-center backdrop-blur-md flex flex-col items-center gap-6 ${currentStyles.cardBg}`}>
