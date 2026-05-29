@@ -77,6 +77,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
       case "RETRO": return "retro-arcade";
       case "ACADEMIA": return "dark-academia";
       case "Y2K": return "y2k-holographic";
+      case "PREMIUM_CREATOR": return "premium-creator";
       default: return "classic";
     }
   };
@@ -88,7 +89,8 @@ export default async function AddonPage({ params }: { params: Promise<{ username
       matchingAddon.addonType === "ORGANIC" || 
       matchingAddon.addonType === "RETRO" || 
       matchingAddon.addonType === "ACADEMIA" || 
-      matchingAddon.addonType === "Y2K") {
+      matchingAddon.addonType === "Y2K" ||
+      matchingAddon.addonType === "PREMIUM_CREATOR") {
     const products = await db.product.findMany({
       where: { userId: user.id, isActive: true },
       orderBy: { createdAt: "desc" },

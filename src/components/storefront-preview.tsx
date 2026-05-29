@@ -14,7 +14,7 @@ export interface DummyProduct {
 
 export type StoreThemeType =
   | "dark-drill" | "glassmorphism" | "minimalist" | "vibrant-pop" | "classic"
-  | "neo-brutalism" | "organic-earth" | "retro-arcade" | "dark-academia" | "y2k-holographic";
+  | "neo-brutalism" | "organic-earth" | "retro-arcade" | "dark-academia" | "y2k-holographic" | "premium-creator";
 
 interface StorefrontPreviewProps {
   theme: StoreThemeType;
@@ -230,6 +230,23 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
           priceColor: "text-[#ff6ec7] font-extrabold text-lg",
           btnClass: "bg-gradient-to-r from-[#ff6ec7] to-[#7873f5] text-white hover:opacity-90 rounded-full font-bold transition-all shadow-lg shadow-[#ff6ec7]/20",
           badgeClass: "bg-[#ff6ec7]/10 text-[#ff6ec7] border border-[#ff6ec7]/20 rounded-full",
+          extraOverlay: null,
+        };
+      case "premium-creator":
+        return {
+          wrapper: "bg-[#fdfdfd] text-zinc-900",
+          wrapperFont: "'Inter', sans-serif",
+          headerBg: "bg-white/80 backdrop-blur-xl border-b border-zinc-100",
+          heroContainer: "flex flex-col items-center justify-center pt-12 pb-8 px-4 text-center",
+          avatarWrapper: "w-[120px] h-[120px] mb-5 rounded-full overflow-hidden border border-zinc-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] bg-white p-1",
+          nameText: "text-zinc-900 font-bold tracking-tight text-2xl",
+          bioText: "text-zinc-500 text-sm mt-2 max-w-[280px] font-medium leading-relaxed",
+          searchBg: "bg-white border border-zinc-200 focus-within:border-zinc-300 focus-within:shadow-[0_4px_20px_rgb(0,0,0,0.03)] rounded-2xl shadow-sm transition-all",
+          cardBg: "bg-white border border-zinc-100/80 rounded-[20px] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-0.5 transition-all duration-300",
+          titleColor: "text-zinc-800 font-semibold tracking-tight text-lg",
+          priceColor: "text-zinc-900 font-semibold text-lg",
+          btnClass: "bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl font-medium transition-colors shadow-[0_4px_14px_0_rgb(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)]",
+          badgeClass: "bg-zinc-100 text-zinc-600 border-none rounded-lg text-[10px] uppercase font-bold tracking-wider",
           extraOverlay: null,
         };
       case "classic":

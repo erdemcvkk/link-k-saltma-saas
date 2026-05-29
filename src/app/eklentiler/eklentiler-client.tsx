@@ -172,6 +172,21 @@ export const ADDON_TYPES: AddonTypeData[] = [
       { id: "y1", title: "2000'ler Nostalji Filtreleri", type: "Filtre", price: "200", imageUrl: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=500&q=80" },
       { id: "y2", title: "Holografik Sticker Paketi", type: "Tasarım", price: "120", imageUrl: "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?w=500&q=80" },
     ]
+  },
+  {
+    id: "PREMIUM_CREATOR",
+    name: "Premium Creator Vitrini",
+    desc: "Dijital ürünlerinizi en zarif ve lüks şekilde sunun.",
+    color: "bg-zinc-900",
+    theme: "premium-creator",
+    price: "899",
+    username: "@kreator",
+    bio: "Premium Beatmaker & Eğitmen",
+    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
+    mockProducts: [
+      { id: "pc1", title: "Mastering Eğitimi (Video)", type: "Eğitim", price: "450", imageUrl: "https://images.unsplash.com/photo-1516280440503-66f837ce5b97?w=500&q=80" },
+      { id: "pc2", title: "Özel Lo-Fi Beat Paketi", type: "Beat", price: "300", imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&q=80" },
+    ]
   }
 ];
 
