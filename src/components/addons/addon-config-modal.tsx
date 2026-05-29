@@ -549,8 +549,13 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                         }
                         
                         await addAddonProduct(title, type, price, description, fileUrl, imageUrl);
+                        (document.getElementById("newProdTitle") as HTMLInputElement).value = "";
+                        (document.getElementById("newProdPrice") as HTMLInputElement).value = "";
+                        (document.getElementById("newProdImageUrl") as HTMLInputElement).value = "";
+                        (document.getElementById("newProdFileUrl") as HTMLInputElement).value = "";
+                        (document.getElementById("newProdDesc") as HTMLTextAreaElement).value = "";
                         showAlert(lang === "tr" ? "Ürün eklendi!" : "Product added!");
-                        window.location.reload();
+                        router.refresh();
                       } catch (err: any) {
                         showAlert(err.message);
                       } finally {
