@@ -1,106 +1,214 @@
 const fs = require('fs');
-const file = 'src/app/(dashboard)/dashboard/dashboard-client.tsx';
-let content = fs.readFileSync(file, 'utf8');
+let code = fs.readFileSync('src/components/addons/addon-config-modal.tsx', 'utf-8');
 
-// 1. Add Puzzle icon
-content = content.replace('Users,\n  Mail,\n} from', 'Users,\n  Mail,\n  Puzzle,\n} from');
-
-// 2. Fix the button
-const badButton = `<button
-          onClick={() => setActiveTab("addons")}
-          className={\`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all \${
-            activeTab === "addons"
-              ? "bg-rose-500 text-white shadow-md shadow-rose-500/20"
-              : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/50"
-          }\`}
-        >
-          <div className={\`p-2 rounded-xl transition-colors \${
-            activeTab === "addons" ? "bg-white/20" : "bg-zinc-100/80"
-          }\`}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3z"/><path d="M3 4h8s-1-1-2-1-2 1-2 1-2-1-2 1-2-1-2 1"/></svg>
-          </div>
-          Eklentilerim
-        </button>`;
-
-const goodButton = `<button
-          onClick={() => setActiveTab("addons")}
-          className={\`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer \${
-            activeTab === "addons"
-              ? "bg-rose-500 border-rose-500 text-white shadow-sm"
-              : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
-          }\`}
-        >
-          <Puzzle className="h-3.5 w-3.5" />
-          {lang === "tr" ? "Eklentilerim" : "My Add-ons"}
-        </button>`;
-
-content = content.replace(badButton, goodButton);
-
-// 3. Add the addons tab content
-const addonsContent = `
-          {/* ADDONS TAB CONTENT */}
-          {activeTab === "addons" && (
-            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
-              {addons.length === 0 ? (
-                <div className={\`p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] \${
-                  "bg-white border-zinc-200 shadow-sm"
-                }\`}>
-                  <div className="h-16 w-16 rounded-3xl bg-rose-50 flex items-center justify-center mb-2">
-                    <Puzzle className="h-8 w-8 text-rose-500" />
-                  </div>
-                  <div className="space-y-2 max-w-md">
-                    <h2 className="text-xl font-black text-slate-900">
-                      {lang === "tr" ? "Henüz Bir Eklentiniz Yok" : "You Don't Have Any Add-ons Yet"}
-                    </h2>
-                    <p className="text-sm text-slate-500 font-medium leading-relaxed">
-                      {lang === "tr" 
-                        ? "Mağazamızdan satın aldığınız tüm premium eklenti ve temalar burada görünecektir. Bu eklentileri buradan kolayca yapılandırabilirsiniz."
-                        : "All premium add-ons and themes you purchase from our store will appear here. You can configure them easily."}
-                    </p>
-                  </div>
-                  <a 
-                    href="/eklentiler" 
-                    target="_blank"
-                    className="px-6 py-3 bg-rose-600 text-white rounded-xl text-sm font-bold hover:bg-rose-500 transition-colors shadow-sm"
-                  >
-                    {lang === "tr" ? "Mağazayı İncele" : "Visit Store"}
-                  </a>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {addons.map(addon => (
-                    <div key={addon.id} className="p-6 rounded-2xl bg-white border border-zinc-200 shadow-sm flex flex-col justify-between h-48">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center border border-zinc-200">
-                            <Puzzle className="h-5 w-5 text-zinc-700" />
-                          </div>
-                          <div>
-                            <h3 className="text-sm font-black text-zinc-900">{addon.addonType}</h3>
-                            <div className="text-[10px] font-bold text-emerald-500 mt-0.5 px-2 py-0.5 rounded-md bg-emerald-50 inline-block border border-emerald-100">
-                              Aktif (Active)
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-4 pt-4 border-t border-zinc-100 flex items-center gap-2">
-                        <button 
-                          className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2"
-                        >
-                          <Settings className="h-3.5 w-3.5" />
-                          {lang === "tr" ? "Özellikleri Yönet" : "Manage Features"}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+const imageUploadHelper = `
+  const renderImageUpload = (key: string, label: string) => (
+    <div className="space-y-1.5 mb-4">
+      <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{label}</label>
+      <div className="flex items-center gap-3">
+        {configData[key] && (
+          <img src={configData[key]} alt="Preview" className="w-12 h-12 rounded-lg object-cover bg-zinc-100" />
+        )}
+        <div className="flex-1 relative">
+          <input
+            type="text"
+            value={configData[key] || ""}
+            onChange={(e) => setConfigData({ ...configData, [key]: e.target.value })}
+            placeholder="https://..."
+            className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none pr-24"
+          />
+          <label className="absolute right-1 top-1 bottom-1 flex items-center justify-center px-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-lg cursor-pointer transition-colors">
+            {lang === "tr" ? "Dosya Seç" : "Upload"}
+            <input 
+              type="file" 
+              className="hidden" 
+              accept="image/*"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  try {
+                    const url = await handleFileUpload(file);
+                    setConfigData({ ...configData, [key]: url });
+                  } catch (err: any) { alert(err.message); }
+                }
+              }}
+            />
+          </label>
+        </div>
+      </div>
+    </div>
+  );
 `;
 
-content = content.replace('          {/* STORE TAB CONTENT */}', addonsContent + '\n          {/* STORE TAB CONTENT */}');
+if (!code.includes("renderImageUpload")) {
+  code = code.replace(
+    `  const renderTextarea = (key: string, label: string, placeholder: string) => (`,
+    imageUploadHelper + `\n  const renderTextarea = (key: string, label: string, placeholder: string) => (`
+  );
+}
 
-fs.writeFileSync(file, content);
-console.log('Script completed');
+const bookingConfig = `      case "BOOKING":
+        return (
+          <>
+            {renderImageUpload("avatarUrl", lang === "tr" ? "Profil Fotoğrafı" : "Profile Photo")}
+            {renderInput("title", lang === "tr" ? "Başlık" : "Title", lang === "tr" ? "Birebir Görüşme Ayarla" : "Book a 1:1 call")}
+            {renderTextarea("description", lang === "tr" ? "Açıklama" : "Description", lang === "tr" ? "Sizinle tanışmak için sabırsızlanıyorum." : "Looking forward to meeting you.")}
+            {renderInput("calendarLink", lang === "tr" ? "Takvim/Randevu Linki (Calendly vb.)" : "Calendar Link", "https://calendly.com/yourname")}
+            {renderInput("buttonText", lang === "tr" ? "Buton Yazısı" : "Button Text", lang === "tr" ? "Takvimi Görüntüle" : "View Calendar")}
+          </>
+        );`;
+
+const qaConfig = `      case "QA":
+        return (
+          <>
+            {renderImageUpload("avatarUrl", lang === "tr" ? "Profil Fotoğrafı" : "Profile Photo")}
+            {renderInput("boxTitle", lang === "tr" ? "Soru Kutusu Başlığı" : "Box Title", lang === "tr" ? "Bana Soru Sor!" : "Ask me anything!")}
+            {renderTextarea("welcomeMessage", lang === "tr" ? "Hoş Geldin Mesajı" : "Welcome Message", lang === "tr" ? "Sorularınızı anonim olarak sorabilirsiniz." : "Ask anonymously.")}
+            {renderInput("placeholderText", lang === "tr" ? "Kutu İçi Yer Tutucu Metin" : "Input Placeholder", lang === "tr" ? "Sorunuzu buraya yazın..." : "Type your question...")}
+            {renderInput("buttonText", lang === "tr" ? "Buton Yazısı" : "Button Text", lang === "tr" ? "Gönder" : "Send")}
+            <div className="flex items-center gap-2 mt-4">
+              <input type="checkbox" id="allowAnonymous" className="rounded" checked={configData.allowAnonymous ?? true} onChange={(e) => setConfigData({ ...configData, allowAnonymous: e.target.checked })} />
+              <label htmlFor="allowAnonymous" className="text-sm font-medium text-slate-700">
+                {lang === "tr" ? "Anonim sorulara izin ver" : "Allow anonymous questions"}
+              </label>
+            </div>
+          </>
+        );`;
+        
+const newsletterConfig = `      case "NEWSLETTER":
+        return (
+          <>
+            {renderImageUpload("avatarUrl", lang === "tr" ? "Profil Fotoğrafı" : "Profile Photo")}
+            {renderInput("title", lang === "tr" ? "Başlık" : "Title", lang === "tr" ? "Haftalık Bülten" : "Weekly Newsletter")}
+            {renderTextarea("incentiveMsg", lang === "tr" ? "Teşvik Mesajı" : "Incentive Message", lang === "tr" ? "Spam yok, sadece kaliteli içerik." : "No spam, just good content.")}
+            {renderInput("serviceUrl", lang === "tr" ? "Mailchimp/Revue Abonelik Linki" : "Newsletter URL", "https://mailchimp.com/...")}
+            {renderInput("buttonText", lang === "tr" ? "Buton Yazısı" : "Subscribe Button Text", lang === "tr" ? "Abone Ol" : "Subscribe")}
+          </>
+        );`;
+        
+const donationConfig = `      case "DONATION":
+        return (
+          <>
+            {renderImageUpload("avatarUrl", lang === "tr" ? "Profil Fotoğrafı" : "Profile Photo")}
+            {renderInput("title", lang === "tr" ? "Başlık" : "Title", lang === "tr" ? "Bana Kahve Ismarla" : "Buy me a coffee")}
+            {renderTextarea("thankYouMsg", lang === "tr" ? "Açıklama / Teşekkür Mesajı" : "Description / Thank You", lang === "tr" ? "Desteğiniz için teşekkürler!" : "Thank you for your support!")}
+            {renderInput("platformUrl", lang === "tr" ? "Bağış Platformu Linki (Örn: Patreon)" : "Donation URL", "https://patreon.com/yourname")}
+            {renderInput("buttonText", lang === "tr" ? "Buton Yazısı" : "Button Text", lang === "tr" ? "Destek Ol" : "Support Me")}
+          </>
+        );`;
+
+// Split the file into inputs block and preview block based on renderLivePreview function
+const parts = code.split("const renderLivePreview = () => {");
+let inputsPart = parts[0];
+let previewPart = "const renderLivePreview = () => {" + parts[1];
+
+inputsPart = inputsPart.replace(/case "BOOKING":[\s\S]*?(?=case "QA":)/, bookingConfig + "\n");
+inputsPart = inputsPart.replace(/case "QA":[\s\S]*?(?=case "NEWSLETTER":|case "COUNTDOWN":)/, qaConfig + "\n");
+inputsPart = inputsPart.replace(/case "NEWSLETTER":[\s\S]*?(?=case "DONATION":)/, newsletterConfig + "\n");
+inputsPart = inputsPart.replace(/case "DONATION":[\s\S]*?(?=case "COUNTDOWN":)/, donationConfig + "\n");
+
+// Replace live previews
+
+const bookingPreview = `      case "BOOKING":
+        return (
+          <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-6">
+            <div className="w-full p-6 bg-white rounded-3xl border border-zinc-200 shadow-lg flex flex-col items-center text-center space-y-4 transition-all">
+              {configData.avatarUrl ? (
+                <img src={configData.avatarUrl} className="w-16 h-16 rounded-full object-cover shadow-md" alt="Profile" />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center">
+                  <Calendar className="h-8 w-8" />
+                </div>
+              )}
+              <div>
+                <h3 className="font-bold text-lg text-slate-800">{configData.title || (lang === "tr" ? "Birebir Görüşme Ayarla" : "Book a 1:1 call")}</h3>
+                <p className="text-sm text-slate-500 mt-1">{configData.description || (lang === "tr" ? "Sizinle tanışmak için sabırsızlanıyorum." : "Looking forward to meeting you.")}</p>
+              </div>
+              <div className="w-full py-3 mt-2 rounded-xl bg-slate-900 text-white font-bold text-sm shadow-md cursor-pointer hover:bg-slate-800 transition-colors">
+                {configData.buttonText || (lang === "tr" ? "Takvimi Görüntüle" : "View Calendar")}
+              </div>
+            </div>
+          </div>
+        );`;
+        
+const qaPreview = `      case "QA":
+        return (
+          <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-6">
+            <div className="w-full p-6 bg-white rounded-3xl border border-zinc-200 shadow-lg flex flex-col space-y-4 transition-all">
+              <div className="flex items-center gap-3">
+                {configData.avatarUrl ? (
+                  <img src={configData.avatarUrl} className="w-12 h-12 rounded-full object-cover shrink-0 shadow-sm" alt="Profile" />
+                ) : (
+                  <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+                    <FileQuestion className="h-6 w-6" />
+                  </div>
+                )}
+                <h3 className="font-bold text-slate-800">{configData.boxTitle || (lang === "tr" ? "Bana Soru Sor!" : "Ask me anything!")}</h3>
+              </div>
+              <p className="text-sm text-slate-500 bg-amber-50/50 p-3 rounded-xl border border-amber-100">
+                {configData.welcomeMessage || (lang === "tr" ? "Sorularınızı anonim olarak sorabilirsiniz." : "Ask anonymously.")}
+              </p>
+              <div className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-3 h-24">
+                <span className="text-xs text-zinc-400">{configData.placeholderText || (lang === "tr" ? "Sorunuzu buraya yazın..." : "Type your question...")}</span>
+              </div>
+              <div className="w-full py-3 rounded-xl bg-slate-900 text-white text-center font-bold text-sm shadow-md cursor-pointer hover:bg-slate-800 transition-colors">
+                {configData.buttonText || (lang === "tr" ? "Gönder" : "Send")}
+              </div>
+            </div>
+          </div>
+        );`;
+        
+const newsletterPreview = `      case "NEWSLETTER":
+        return (
+          <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-6">
+            <div className="w-full p-6 bg-white rounded-3xl border border-zinc-200 shadow-lg flex flex-col items-center text-center space-y-4 transition-all">
+              {configData.avatarUrl ? (
+                <img src={configData.avatarUrl} className="w-16 h-16 rounded-full object-cover shadow-sm" alt="Profile" />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center">
+                  <Mail className="h-8 w-8" />
+                </div>
+              )}
+              <div>
+                <h3 className="font-bold text-lg text-slate-800">{configData.title || (lang === "tr" ? "Haftalık Bülten" : "Weekly Newsletter")}</h3>
+                <p className="text-sm text-slate-500 mt-1">{configData.incentiveMsg || (lang === "tr" ? "Spam yok, sadece kaliteli içerik." : "No spam, just good content.")}</p>
+              </div>
+              <div className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-3 flex justify-start items-center">
+                <span className="text-xs text-zinc-400">E-posta adresiniz...</span>
+              </div>
+              <div className="w-full py-3 mt-2 rounded-xl bg-slate-900 text-white font-bold text-sm shadow-md cursor-pointer hover:bg-slate-800 transition-colors">
+                {configData.buttonText || (lang === "tr" ? "Abone Ol" : "Subscribe")}
+              </div>
+            </div>
+          </div>
+        );`;
+        
+const donationPreview = `      case "DONATION":
+        return (
+          <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-6">
+            <div className="w-full p-6 bg-white rounded-3xl border border-zinc-200 shadow-lg flex flex-col items-center text-center space-y-4 transition-all">
+              {configData.avatarUrl ? (
+                <img src={configData.avatarUrl} className="w-16 h-16 rounded-full object-cover shadow-sm" alt="Profile" />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center">
+                  <Heart className="h-8 w-8" />
+                </div>
+              )}
+              <div>
+                <h3 className="font-bold text-lg text-slate-800">{configData.title || (lang === "tr" ? "Bana Kahve Ismarla" : "Buy me a coffee")}</h3>
+                <p className="text-sm text-slate-500 mt-1">{configData.thankYouMsg || (lang === "tr" ? "Desteğiniz için teşekkürler!" : "Thank you for your support!")}</p>
+              </div>
+              <div className="w-full py-3 mt-2 rounded-xl bg-slate-900 text-white font-bold text-sm shadow-md cursor-pointer hover:bg-slate-800 transition-colors">
+                {configData.buttonText || (lang === "tr" ? "Destek Ol" : "Support Me")}
+              </div>
+            </div>
+          </div>
+        );`;
+
+previewPart = previewPart.replace(/case "BOOKING":[\s\S]*?(?=case "QA":)/, bookingPreview + "\n");
+previewPart = previewPart.replace(/case "QA":[\s\S]*?(?=case "FAQ":)/, qaPreview + "\n");
+previewPart = previewPart.replace(/case "NEWSLETTER":[\s\S]*?(?=case "DONATION":)/, newsletterPreview + "\n");
+previewPart = previewPart.replace(/case "DONATION":[\s\S]*?(?=case "COUNTDOWN":)/, donationPreview + "\n");
+
+fs.writeFileSync('src/components/addons/addon-config-modal.tsx', inputsPart + previewPart, 'utf-8');
+console.log("Successfully patched AddonConfigModal.tsx");
