@@ -55,10 +55,25 @@ export default async function AddonPage({ params }: { params: Promise<{ username
     notFound();
   }
 
+    const getDefaultTheme = (type: string) => {
+    switch (type) {
+      case "NEO_BRUTAL": return "neo-brutalism";
+      case "ORGANIC": return "organic-earth";
+      case "RETRO": return "retro-arcade";
+      case "ACADEMIA": return "dark-academia";
+      case "Y2K": return "y2k-holographic";
+      default: return "classic";
+    }
+  };
   let parsedConfig: any = { theme: 'classic' };
   try { if (matchingAddon.config) parsedConfig = JSON.parse(matchingAddon.config); } catch (e) {}
 
-  if (matchingAddon.addonType === "MINI_STORE") {
+  if (matchingAddon.addonType === "MINI_STORE" || 
+      matchingAddon.addonType === "NEO_BRUTAL" || 
+      matchingAddon.addonType === "ORGANIC" || 
+      matchingAddon.addonType === "RETRO" || 
+      matchingAddon.addonType === "ACADEMIA" || 
+      matchingAddon.addonType === "Y2K") {
     const products = await db.product.findMany({
       where: { userId: user.id, isActive: true },
       orderBy: { createdAt: "desc" },
@@ -67,7 +82,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
     return (
       <div className="w-full min-h-screen bg-[#f8f9fa] overflow-hidden">
         <StorefrontPreview 
-          theme={parsedConfig.theme as any} 
+          theme={parsedConfig.theme || getDefaultTheme(matchingAddon.addonType)} 
           onProductClick={undefined}
           products={products.map(p => ({
             id: p.id,

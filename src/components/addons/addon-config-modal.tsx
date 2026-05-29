@@ -28,6 +28,16 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     }
   }, []);
 
+    const getDefaultTheme = (type: string) => {
+    switch (type) {
+      case "NEO_BRUTAL": return "neo-brutalism";
+      case "ORGANIC": return "organic-earth";
+      case "RETRO": return "retro-arcade";
+      case "ACADEMIA": return "dark-academia";
+      case "Y2K": return "y2k-holographic";
+      default: return "classic";
+    }
+  };
   const [configData, setConfigData] = useState<any>(() => {
     try {
       return addon.config ? JSON.parse(addon.config) : {};
@@ -199,7 +209,12 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
 
   const getAddonDetails = () => {
     switch (addon.addonType) {
-      case "MINI_STORE": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
+      case "MINI_STORE":
+      case "NEO_BRUTAL":
+      case "ORGANIC":
+      case "RETRO":
+      case "ACADEMIA":
+      case "Y2K": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
             case "BOOKING":
         return (
           <>
@@ -260,6 +275,11 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
   const renderFields = () => {
     switch (addon.addonType) {
       case "MINI_STORE":
+      case "NEO_BRUTAL":
+      case "ORGANIC":
+      case "RETRO":
+      case "ACADEMIA":
+      case "Y2K":
         return (
           <>
             <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
@@ -607,6 +627,11 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
   const renderLivePreview = () => {
     switch (addon.addonType) {
       case "MINI_STORE":
+      case "NEO_BRUTAL":
+      case "ORGANIC":
+      case "RETRO":
+      case "ACADEMIA":
+      case "Y2K":
         return (
           <div className="w-full h-full bg-[#f8f9fa] overflow-hidden flex flex-col">
             {/* Mock Header to give it a profile feel */}
@@ -614,7 +639,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
             <div className="px-4 pb-12 w-full flex-1">
               <div className="w-full bg-white rounded-[2rem] overflow-hidden border border-zinc-200 shadow-xl pb-6">
                 <StorefrontPreview 
-                  theme={configData.theme || "classic"} 
+                  theme={configData.theme || getDefaultTheme(addon.addonType)} 
                   products={products.map(p => ({
                     id: p.id,
                     title: p.title,
