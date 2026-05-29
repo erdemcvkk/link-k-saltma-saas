@@ -155,7 +155,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
   let activeTemplate = activeUser.ownedTemplates?.find(ot => ot.isActive)?.template;
   
   if (previewTemplateId) {
-    const previewMatch = activeUser.ownedTemplates?.find(ot => ot.template.id === previewTemplateId);
+    const previewMatch = activeUser.ownedTemplates?.find((ot: any) => ot.template?.id === previewTemplateId);
     if (previewMatch) activeTemplate = previewMatch.template;
   }
 
@@ -179,7 +179,8 @@ export default async function PublicProfilePage({ params, searchParams }: { para
   // Map links, and optionally override button styles if a template is active
   const parseButtonStyle = (styleStr: string) => {
     try {
-      return JSON.parse(styleStr);
+      const parsed = JSON.parse(styleStr);
+      return (parsed && typeof parsed === "object") ? parsed : {};
     } catch {
       return {};
     }
