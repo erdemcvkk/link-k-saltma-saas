@@ -1899,7 +1899,7 @@ export async function saveAddonConfig(addonId: string, configJson: string, isAct
       console.error("Revalidation error:", revErr);
     }
 
-    return { success: true, data: updated };
+    return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message || "Unknown server error during saveAddonConfig" };
   }
