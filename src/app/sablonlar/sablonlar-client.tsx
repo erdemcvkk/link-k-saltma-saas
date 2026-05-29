@@ -36,6 +36,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
   const [purchaseSuccess, setPurchaseSuccess] = useState(false);
   const [ownedTemplateIds, setOwnedTemplateIds] = useState<string[]>(initialOwnedTemplateIds);
   const [isPending, setIsPending] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(12);
 
   // Simulated Payment Modal States
   const [checkoutTemplate, setCheckoutTemplate] = useState<Template | null>(null);
@@ -151,58 +152,59 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white font-corporate relative overflow-hidden pb-16">
+    <div className="min-h-screen bg-zinc-950 text-white font-sans relative overflow-hidden pb-16">
       <GlobalOverlayManager />
       
       {/* Decorative Glow Elements */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-neon-blue/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
-      <header className="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2 text-zinc-400 hover:text-white transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            <span className="text-sm font-semibold">Ana Sayfaya Dön</span>
+      <nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-[1800px] mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="font-black text-xl tracking-tighter text-white">
+            Link.SaaS
           </Link>
-          <div className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-light-blue tracking-tight">
-            ŞABLON VİTRİNİ
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard" className="text-sm font-bold text-zinc-400 hover:text-white">
+              Dashboard'a Dön
+            </Link>
           </div>
-          <Link 
-            href="/dashboard" 
-            className="px-4 py-2 rounded-full bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-bold transition-all"
-          >
-            Yönetim Paneli
-          </Link>
         </div>
-      </header>
+      </nav>
 
       {/* Hero Header */}
-      <div className="max-w-7xl mx-auto px-6 pt-12 pb-6 text-center">
-        <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-          Bio Link Sayfanızı <br />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-light-blue">
-            Profesyonel Şablonlarla Süsleyin
-          </span>
-        </h1>
-        <p className="text-slate-400 max-w-xl mx-auto text-sm mt-3 font-medium">
-          Kreatörler, müzisyenler ve gamerlar için tasarlanmış şık şablonları inceleyin, canlı önizleyin ve anında profilinizde uygulayın.
-        </p>
+      <div className="max-w-[1800px] mx-auto px-6 pt-16 pb-6">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 text-rose-500 font-bold text-sm mb-6">
+            <Sparkles className="h-4 w-4" />
+            <span>Premium Şablon Vitrini</span>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
+            Sayfanıza <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">Güç Katın</span>
+          </h1>
+          <p className="text-lg text-zinc-400 font-medium">
+            Kreatörler, müzisyenler ve gamerlar için tasarlanmış şık şablonları inceleyin, anında profilinizde uygulayın.
+          </p>
+        </div>
       </div>
 
       {/* Search and Filters Section */}
-      <div className="max-w-7xl mx-auto px-6 py-6 space-y-6">
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-slate-900/40 p-4 rounded-3xl border border-slate-900 backdrop-blur-sm">
+      <div className="max-w-[1800px] mx-auto px-6 py-6 space-y-12">
+        <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-zinc-900/40 p-4 rounded-3xl border border-zinc-800 backdrop-blur-sm max-w-5xl mx-auto">
           {/* Categories Tab */}
           <div className="flex flex-wrap gap-2 justify-center md:justify-start w-full md:w-auto">
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                onClick={() => {
+                  setSelectedCategory(cat);
+                  setVisibleCount(12); // Reset on category change
+                }}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   selectedCategory === cat
-                    ? "bg-gradient-to-r from-neon-blue to-light-blue text-white shadow-md shadow-neon-blue/20"
-                    : "bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white"
+                    ? "bg-gradient-to-r from-rose-500 to-orange-500 text-white shadow-md shadow-rose-500/20"
+                    : "bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white"
                 }`}
               >
                 {cat}
@@ -212,73 +214,97 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
 
           {/* Search bar */}
           <div className="relative w-full md:w-72">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
               <Search className="h-4 w-4" />
             </span>
             <input
               type="text"
               placeholder="Şablon ara..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-full bg-slate-950 border border-slate-800 text-sm font-semibold focus:outline-none focus:border-neon-blue text-white placeholder-slate-500 transition-colors"
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setVisibleCount(12); // Reset on search
+              }}
+              className="w-full pl-10 pr-4 py-2 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white placeholder-zinc-500 transition-colors"
             />
           </div>
         </div>
 
         {/* Templates Grid */}
         {filteredTemplates.length === 0 ? (
-          <div className="text-center py-20 bg-slate-900/20 border border-dashed border-slate-900 rounded-3xl">
-            <p className="text-slate-500 text-sm font-semibold">Aradığınız kriterlere uygun şablon bulunamadı.</p>
+          <div className="text-center py-20 bg-zinc-900/20 border border-dashed border-zinc-800 rounded-3xl max-w-5xl mx-auto">
+            <p className="text-zinc-500 text-sm font-semibold">Aradığınız kriterlere uygun şablon bulunamadı.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredTemplates.map((template) => (
-              <div 
-                key={template.id} 
-                className="group bg-slate-900/30 border border-slate-900 hover:border-slate-800 rounded-3xl p-4 transition-all hover:scale-[1.02] shadow-lg flex flex-col justify-between"
-              >
-                <div>
-                  {/* Template Cover */}
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-950 border border-slate-900">
-                    <img 
-                      src={template.coverUrl} 
-                      alt={template.name} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                    />
-                    <div className="absolute top-3 left-3 bg-slate-950/80 border border-slate-800 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-neon-blue">
-                      {template.category}
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
+              {filteredTemplates.slice(0, visibleCount).map((template) => {
+                const isPurchased = ownedTemplateIds.includes(template.id);
+                return (
+                  <div key={template.id} className="flex flex-col items-center">
+                    <div className="text-center mb-4 px-2">
+                      <h3 className="text-lg font-bold text-white mb-1">{template.name}</h3>
+                      <p className="text-xs text-zinc-400 font-medium">{template.category}</p>
                     </div>
-                    {template.isCoded && (
-                      <div className="absolute top-3 right-3 bg-purple-950/80 border border-purple-800 px-2 py-0.5 rounded-full text-[9px] font-bold text-purple-300">
-                        CODED
+
+                    {/* Phone Mockup Frame */}
+                    <div 
+                      className="relative w-full aspect-[9/19] max-h-[600px] bg-zinc-900 rounded-[2.5rem] p-2.5 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-4 cursor-pointer" 
+                      onClick={() => handleSelectTemplate(template)}
+                    >
+                      <div className="absolute top-0 inset-x-0 h-5 bg-zinc-900 z-20 rounded-b-2xl w-[40%] mx-auto shadow-sm" />
+                      <div className="relative w-full h-full bg-zinc-950 rounded-[1.5rem] overflow-hidden">
+                        <img 
+                          src={template.coverUrl} 
+                          alt={template.name} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                        />
+                        {template.isCoded && (
+                          <div className="absolute top-6 right-3 bg-purple-500/90 px-2 py-0.5 rounded-full text-[9px] font-bold text-white z-30">
+                            KODLANMIŞ
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-30">
+                          <div className="px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full text-white text-sm font-bold flex items-center gap-2">
+                            <Eye className="h-4 w-4" /> İncele
+                          </div>
+                        </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
 
-                  {/* Title & Info */}
-                  <div className="mt-4">
-                    <h3 className="font-extrabold text-base text-white group-hover:text-neon-blue transition-colors">
-                      {template.name}
-                    </h3>
+                    {/* Action Section */}
+                    <div className="w-full bg-zinc-900 rounded-2xl p-3 border border-zinc-800 text-center flex flex-col gap-2">
+                      <div className="text-xl font-black text-white">{template.price === 0 ? "Ücretsiz" : `₺${template.price}`}</div>
+                      {isPurchased ? (
+                        <button disabled className="w-full py-2.5 rounded-xl bg-green-500/20 text-green-500 font-bold flex items-center justify-center gap-2 text-sm">
+                          <Check className="h-4 w-4" /> Tanımlı
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={() => handlePurchase(template)}
+                          disabled={isPending}
+                          className="w-full py-2.5 rounded-xl bg-rose-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-rose-500 transition-colors disabled:opacity-50 text-sm"
+                        >
+                          {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-4 w-4" />} Satın Al
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
+                );
+              })}
+            </div>
 
-                <div className="mt-4 flex items-center justify-between gap-2 border-t border-slate-900/60 pt-3">
-                  <span className="font-black text-sm text-slate-300">
-                    {template.price === 0 ? "Ücretsiz" : `${template.price} ₺`}
-                  </span>
-                  
-                  <button
-                    onClick={() => handleSelectTemplate(template)}
-                    className="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-750 hover:text-neon-blue text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
-                  >
-                    <Eye className="h-3.5 w-3.5" />
-                    Önizle
-                  </button>
-                </div>
+            {visibleCount < filteredTemplates.length && (
+              <div className="flex justify-center pt-8">
+                <button
+                  onClick={() => setVisibleCount(prev => prev + 4)}
+                  className="px-8 py-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800 text-white font-bold transition-all flex items-center gap-2"
+                >
+                  Devamını Gör
+                </button>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
 
