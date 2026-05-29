@@ -38,8 +38,8 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   const [isActive, setIsActive] = useState<boolean>(addon.isActive);
 
   const handleFileUpload = async (file: File) => {
-    if (file.size > 4 * 1024 * 1024) {
-      throw new Error(lang === "tr" ? "Dosya boyutu çok büyük (Maks 4MB)!" : "File too large (Max 4MB)!");
+    if (file.size > 2 * 1024 * 1024) {
+      throw new Error(lang === "tr" ? "Dosya boyutu çok büyük (Maks 2MB)!" : "File too large (Max 2MB)!");
     }
     const formData = new FormData();
     formData.append("file", file);
@@ -47,7 +47,13 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       method: "POST",
       body: formData,
     });
-    if (!res.ok) throw new Error(lang === "tr" ? "Yükleme başarısız!" : "Upload failed!");
+    
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      const serverMsg = errorData?.error ? ` (${errorData.error})` : "";
+      throw new Error((lang === "tr" ? "Yükleme başarısız!" : "Upload failed!") + serverMsg);
+    }
+    
     const data = await res.json();
     return data.url;
   };
