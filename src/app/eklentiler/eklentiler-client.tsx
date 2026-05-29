@@ -183,6 +183,7 @@ interface EklentilerClientProps {
 export default function EklentilerClient({ products, settings }: EklentilerClientProps = {}) {
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [purchased, setPurchased] = useState<string[]>([]);
+  const [visibleCount, setVisibleCount] = useState(12);
 
   const handlePurchase = async (addonType: string) => {
     setPurchasing(addonType);
@@ -226,8 +227,8 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
           </p>
         </div>
 
-        <div className="flex overflow-x-auto pb-12 gap-10 snap-x snap-mandatory no-scrollbar">
-          {ADDON_TYPES.map((addon) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 pb-12">
+          {ADDON_TYPES.slice(0, visibleCount).map((addon) => {
             const isPurchased = purchased.includes(addon.id);
             const isProcessing = purchasing === addon.id;
             
@@ -243,7 +244,7 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
             const paymentUrl = settings?.[`theme_PAYMENT_${addon.id}`];
             
             return (
-              <div key={addon.id} className="snap-center shrink-0 flex flex-col items-center w-[340px]">
+              <div key={addon.id} className="flex flex-col items-center">
                 
                 <div className="text-center mb-6 px-4">
                   <div className={`w-3 h-3 rounded-full mb-3 mx-auto ${addon.color} animate-pulse`} />
@@ -254,8 +255,8 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
                 </div>
 
                 {/* Phone Mockup Frame */}
-                <div className="relative w-full h-[680px] bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6">
-                  <div className="absolute top-0 inset-x-0 h-7 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
+                <div className="relative w-full aspect-[9/19] max-h-[600px] bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6">
+                  <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
                   
                   <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">
                     <StorefrontPreview 
@@ -299,6 +300,17 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
             );
           })}
         </div>
+
+        {visibleCount < ADDON_TYPES.length && (
+          <div className="flex justify-center pt-4 pb-8">
+            <button
+              onClick={() => setVisibleCount(prev => prev + 4)}
+              className="px-8 py-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800 text-white font-bold transition-all flex items-center gap-2"
+            >
+              Devamını Gör
+            </button>
+          </div>
+        )}
       </main>
     </div>
   );
