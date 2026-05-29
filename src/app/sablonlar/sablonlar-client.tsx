@@ -273,15 +273,31 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                           }} />
                         )}
 
-                        <div className="profile-card flex flex-col items-center w-full text-center relative z-10">
-                          <div className="w-16 h-16 rounded-full bg-slate-800 border-2 border-white/10 shadow-md mb-2.5 overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&fit=crop" className="w-full h-full object-cover" />
-                          </div>
-                          <div className="text-sm font-bold text-white mb-1">@kullaniciadi</div>
-                          <div className="text-[10px] text-white/70 max-w-[180px] leading-relaxed mb-6">
-                            Bu harika şablonun canlı önizlemesidir. Kendi sayfanızda uygulamak için hemen sahip olun!
-                          </div>
-                        </div>
+                        {(() => {
+                          const lightTemplates = [
+                            "Minimalist Light",
+                            "Pastel Dream",
+                            "Abstract Fluid",
+                            "Vintage Paper",
+                            "Vintage Journal",
+                            "Holographic Glass"
+                          ];
+                          const isLight = lightTemplates.includes(template.name);
+                          const titleColor = isLight ? "text-slate-900" : "text-white";
+                          const bioColor = isLight ? "text-slate-600" : "text-white/70";
+
+                          return (
+                            <div className="profile-card flex flex-col items-center w-full text-center relative z-10">
+                              <div className="w-16 h-16 rounded-full bg-slate-800 border-2 border-white/10 shadow-md mb-2.5 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&fit=crop" className="w-full h-full object-cover" />
+                              </div>
+                              <div className={`text-sm font-bold mb-1 ${titleColor}`}>@kullaniciadi</div>
+                              <div className={`text-[10px] max-w-[180px] leading-relaxed mb-6 ${bioColor}`}>
+                                Bu harika şablonun canlı önizlemesidir. Kendi sayfanızda uygulamak için hemen sahip olun!
+                              </div>
+                            </div>
+                          );
+                        })()}
 
                         <div className="w-full space-y-3.5 z-10">
                           {[
@@ -389,15 +405,31 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                   )}
 
                   {/* Profile Elements */}
-                  <div className="profile-card flex flex-col items-center w-full text-center">
-                    <div className="w-16 h-16 rounded-full bg-slate-800 border-2 border-white/10 shadow-md mb-2.5 overflow-hidden">
-                      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&fit=crop" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="text-sm font-bold text-white mb-1">@kullaniciadi</div>
-                    <div className="text-[10px] text-white/70 max-w-[180px] leading-relaxed mb-6">
-                      Bu harika şablonun canlı önizlemesidir. Kendi sayfanızda uygulamak için hemen sahip olun!
-                    </div>
-                  </div>
+                  {(() => {
+                    const lightTemplates = [
+                      "Minimalist Light",
+                      "Pastel Dream",
+                      "Abstract Fluid",
+                      "Vintage Paper",
+                      "Vintage Journal",
+                      "Holographic Glass"
+                    ];
+                    const isLight = lightTemplates.includes(selectedTemplate.name);
+                    const titleColor = isLight ? "text-slate-900" : "text-white";
+                    const bioColor = isLight ? "text-slate-600" : "text-white/70";
+
+                    return (
+                      <div className="profile-card flex flex-col items-center w-full text-center">
+                        <div className="w-16 h-16 rounded-full bg-slate-800 border-2 border-white/10 shadow-md mb-2.5 overflow-hidden">
+                          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&fit=crop" className="w-full h-full object-cover" />
+                        </div>
+                        <div className={`text-sm font-bold mb-1 ${titleColor}`}>@kullaniciadi</div>
+                        <div className={`text-[10px] max-w-[180px] leading-relaxed mb-6 ${bioColor}`}>
+                          Bu harika şablonun canlı önizlemesidir. Kendi sayfanızda uygulamak için hemen sahip olun!
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Dummy styled links */}
                   <div className="w-full space-y-3.5 z-10">

@@ -15,29 +15,6 @@
   --font-corporate: "Plus Jakarta Sans", sans-serif;
   --font-serif-display: "Playfair Display", serif;
 
-  --color-teal-50: rgba(60, 60, 250, 0.05);
-  --color-teal-100: rgba(60, 60, 250, 0.1);
-  --color-teal-200: rgba(60, 60, 250, 0.2);
-  --color-teal-300: #4158ff;
-  --color-teal-400: #4158ff;
-  --color-teal-500: #3c3cfa;
-  --color-teal-600: #3c3cfa;
-  --color-teal-700: #000000;
-  --color-teal-800: #000000;
-  --color-teal-900: #000000;
-  --color-teal-950: #000000;
-
-  --color-emerald-50: rgba(60, 60, 250, 0.05);
-  --color-emerald-100: rgba(60, 60, 250, 0.1);
-  --color-emerald-200: rgba(60, 60, 250, 0.2);
-  --color-emerald-300: #4158ff;
-  --color-emerald-400: #4158ff;
-  --color-emerald-500: #3c3cfa;
-  --color-emerald-600: #3c3cfa;
-  --color-emerald-700: #4158ff;
-  --color-emerald-800: #3c3cfa;
-  --color-emerald-900: #000000;
-  --color-emerald-950: #000000;
 }
 
 @keyframes slideUp {
