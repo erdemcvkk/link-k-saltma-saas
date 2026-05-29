@@ -49,8 +49,10 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
 
 import ProfileClient from "./profile-client";
 
-export default async function PublicProfilePage({ params }: { params: Promise<{ username: string }> }) {
+export default async function PublicProfilePage({ params, searchParams }: { params: Promise<{ username: string }>, searchParams?: Promise<{ previewTemplate?: string }> }) {
   const { username } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const previewTemplateId = resolvedSearchParams.previewTemplate;
   const cleanUsername = username.replace("%40", "").replace(/^@/, "");
 
   // Search for the user
@@ -67,7 +69,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         orderBy: { order: "asc" },
       },
       ownedTemplates: {
-        where: { isActive: true },
         include: { template: true }
       },
       ownedAddons: {
@@ -151,7 +152,12 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   // Priority 3: Custom Profile CSS (Kullanıcının Oluşturduğu)
   
   let customCss = null;
-  const activeTemplate = activeUser.ownedTemplates?.[0]?.template;
+  let activeTemplate = activeUser.ownedTemplates?.find(ot => ot.isActive)?.template;
+  
+  if (previewTemplateId) {
+    const previewMatch = activeUser.ownedTemplates?.find(ot => ot.template.id === previewTemplateId);
+    if (previewMatch) activeTemplate = previewMatch.template;
+  }
 
   if (activeTemplate && activeTemplate.isCoded && activeTemplate.customCss) {
     customCss = activeTemplate.customCss;

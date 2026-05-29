@@ -3805,17 +3805,22 @@ export default function DashboardClient({
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-zinc-50 border border-zinc-200 rounded-xl p-4 gap-4">
                 <div className="space-y-1">
                   <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block">
-                    {lang === "tr" ? "Profil Bağlantınız" : "Your Profile Link"}
+                    {lang === "tr" ? "Şablon Önizleme Bağlantısı" : "Template Preview Link"}
                   </span>
                   <div className="text-sm font-bold text-zinc-800 flex items-center gap-1.5">
                     <Globe className="h-4 w-4 text-teal-500" />
-                    creator.hub/{initialUser.username}
+                    {initialUser.profile?.customDomain ? initialUser.profile.customDomain : `hub.com/${initialUser.username}`}
+                    {customizingTemplateId ? "?preview=..." : ""}
                   </div>
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(`https://creator.hub/${initialUser.username}`);
+                      const baseUrl = initialUser.profile?.customDomain 
+                        ? `https://${initialUser.profile.customDomain}`
+                        : `${window.location.protocol}//${window.location.host}/${initialUser.username}`;
+                      const url = customizingTemplateId ? `${baseUrl}?previewTemplate=${customizingTemplateId}` : baseUrl;
+                      navigator.clipboard.writeText(url);
                       setSuccessMsg(lang === "tr" ? "Bağlantı kopyalandı!" : "Link copied!");
                       setTimeout(() => setSuccessMsg(""), 2000);
                     }}
@@ -3824,14 +3829,19 @@ export default function DashboardClient({
                     <Copy className="h-3.5 w-3.5" />
                     {lang === "tr" ? "Kopyala" : "Copy"}
                   </button>
-                  <Link
-                    href={`/${initialUser.username}`}
-                    target="_blank"
+                  <button
+                    onClick={() => {
+                      const baseUrl = initialUser.profile?.customDomain 
+                        ? `https://${initialUser.profile.customDomain}`
+                        : `${window.location.protocol}//${window.location.host}/${initialUser.username}`;
+                      const url = customizingTemplateId ? `${baseUrl}?previewTemplate=${customizingTemplateId}` : baseUrl;
+                      window.open(url, "_blank");
+                    }}
                     className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-400 border border-teal-600/10 text-xs font-bold text-zinc-900 transition-colors cursor-pointer"
                   >
-                    <span>{lang === "tr" ? "Git" : "Visit"}</span>
+                    <span>{lang === "tr" ? "Önizle" : "Preview"}</span>
                     <ExternalLink className="h-3.5 w-3.5" />
-                  </Link>
+                  </button>
                 </div>
               </div>
 
