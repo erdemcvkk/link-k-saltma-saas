@@ -21,7 +21,7 @@ export async function checkAndEnforcePlanExpiration(user: { id: string; plan: st
         purchasedTemplates: {
           include: { template: true }
         },
-        ownedAddons: {
+        addons: {
           where: { isActive: true }
         }
       },

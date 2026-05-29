@@ -73,7 +73,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
       purchasedTemplates: {
         include: { template: true }
       },
-      ownedAddons: {
+      addons: {
         where: { isActive: true }
       }
     },
@@ -94,7 +94,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
             purchasedTemplates: {
               include: { template: true }
             },
-            ownedAddons: {
+            addons: {
               where: { isActive: true }
             }
           }
