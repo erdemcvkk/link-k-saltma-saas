@@ -253,14 +253,54 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                       onClick={() => handleSelectTemplate(template)}
                     >
                       <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
-                      <div className="relative w-full h-full bg-zinc-950 rounded-[1.5rem] overflow-hidden">
-                        <img 
-                          src={template.coverUrl} 
-                          alt={template.name} 
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                        />
+                      <div 
+                        id={`preview-${template.id}`}
+                        className="relative w-full h-full bg-zinc-950 rounded-[1.5rem] overflow-hidden flex flex-col items-center pt-8 px-3"
+                        style={{
+                          background: template.bgColor.includes("gradient") ? undefined : template.bgColor,
+                          backgroundImage: template.bgColor.includes("gradient") ? template.bgColor : undefined,
+                          fontFamily: template.fontStyle,
+                        }}
+                      >
+                        {/* CSS scoping logic */}
+                        {template.isCoded && template.customCss && (
+                          <style dangerouslySetInnerHTML={{ 
+                            __html: template.customCss
+                              .replace(/body/g, `#preview-${template.id}`)
+                              .replace(/\.profile-card/g, `#preview-${template.id} .profile-card`)
+                              .replace(/\.btn-link/g, `#preview-${template.id} .btn-link`)
+                              .replace(/\.link-item/g, `#preview-${template.id} .link-item`)
+                          }} />
+                        )}
+
+                        <div className="profile-card flex flex-col items-center w-full text-center relative z-10">
+                          <div className="w-12 h-12 rounded-full bg-slate-800 border-2 border-white/10 shadow-md mb-2 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&fit=crop" className="w-full h-full object-cover" />
+                          </div>
+                          <div className="text-xs font-bold text-white mb-4">@kullaniciadi</div>
+                        </div>
+
+                        <div className="w-full space-y-2.5 z-10">
+                          {[
+                            "📸 Instagram Hesabım",
+                            "🎵 Yeni Spotify Albümüm",
+                            "🛍️ Mağaza Vitrinim"
+                          ].map((title, idx) => (
+                            <div 
+                              key={idx}
+                              className={`btn-link link-item w-full py-2 px-3 text-[10px] font-bold text-center border transition-all ${template.buttonStyle}`}
+                            >
+                              {title}
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="absolute bottom-3 text-[8px] text-white/50 tracking-wider z-10">
+                          Powered by Link.SaaS
+                        </div>
+
                         {template.isCoded && (
-                          <div className="absolute top-6 right-3 bg-purple-500/90 px-2 py-0.5 rounded-full text-[9px] font-bold text-white z-30">
+                          <div className="absolute top-6 right-3 bg-purple-500/90 px-2 py-0.5 rounded-full text-[9px] font-bold text-white z-30 pointer-events-none">
                             KODLANMIŞ
                           </div>
                         )}
