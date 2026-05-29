@@ -70,7 +70,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
         where: { isActive: true },
         orderBy: { order: "asc" },
       },
-      ownedTemplates: {
+      purchasedTemplates: {
         include: { template: true }
       },
       ownedAddons: {
@@ -91,7 +91,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
               where: { isActive: true },
               orderBy: { order: "asc" },
             },
-            ownedTemplates: {
+            purchasedTemplates: {
               include: { template: true }
             },
             ownedAddons: {
@@ -183,11 +183,11 @@ export default async function PublicProfilePage({ params, searchParams }: { para
   // Priority 3: Custom Profile CSS (Kullanıcının Oluşturduğu)
   
   let customCss = null;
-  let activeTemplate = activeUser.ownedTemplates?.find((ot: any) => ot.isActive)?.template;
+  let activeTemplate = activeUser.purchasedTemplates?.find((ot: any) => ot.isActive)?.template;
   
   if (previewTemplateId || forcedTemplateId) {
     const targetId = forcedTemplateId || previewTemplateId;
-    const previewMatch = activeUser.ownedTemplates?.find((ot: any) => ot.template?.id === targetId);
+    const previewMatch = activeUser.purchasedTemplates?.find((ot: any) => ot.template?.id === targetId);
     if (previewMatch) activeTemplate = previewMatch.template;
   }
 
