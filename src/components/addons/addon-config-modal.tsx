@@ -65,32 +65,13 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
 
   const handleFileUpload = async (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
+      if (file.size > 2 * 1024 * 1024) {
+        return reject(new Error("Dosya boyutu 2MB'den büyük olamaz. Lütfen daha küçük bir dosya seçin."));
+      }
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target?.result as string;
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          let { width, height } = img;
-          const MAX_SIZE = 800;
-          if (width > height && width > MAX_SIZE) {
-            height *= MAX_SIZE / width;
-            width = MAX_SIZE;
-          } else if (height > MAX_SIZE) {
-            width *= MAX_SIZE / height;
-            height = MAX_SIZE;
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          if (!ctx) return reject("Canvas error");
-          ctx.drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL("image/jpeg", 0.7));
-        };
-        img.onerror = () => reject("Image load error");
-      };
-      reader.onerror = () => reject("File read error");
+      reader.onload = (event) => resolve(event.target?.result as string);
+      reader.onerror = () => reject(new Error("Dosya okuma hatası"));
     });
   };
 
