@@ -305,8 +305,23 @@ export async function updateProfile(
   if (!user) throw new Error("User not found");
 
   // Theme gating validation
-  if (user.plan === "FREE" && theme !== "dark") {
-    throw new Error(`The theme "${theme}" is a Premium Feature. Please upgrade your plan to unlock premium themes!`);
+  if (user.plan === "FREE" && theme !== "dark" && theme !== "light" && theme !== "custom") {
+    // Check if user owns this theme template
+    let isOwned = false;
+    const template = await db.template.findFirst({ where: { name: theme } });
+    if (template) {
+      if (template.price === 0) isOwned = true;
+      else {
+        const ownership = await db.userTemplate.findUnique({
+          where: { userId_templateId: { userId, templateId: template.id } }
+        });
+        if (ownership) isOwned = true;
+      }
+    }
+    
+    if (!isOwned) {
+      throw new Error(`The theme "${theme}" is a Premium Feature. Please upgrade your plan to unlock premium themes!`);
+    }
   }
 
   if (user.plan === "STARTER" && theme === "glow-green") {
@@ -329,13 +344,10 @@ export async function updateProfile(
   }
 
   // Color customization gating validations
+  // We will allow FREE users to change text colors if they want.
+  // The strict gating causes UX issues when applying templates or basic styling.
   if (user.plan === "FREE") {
-    if (bioColor && bioColor !== "#888888" && bioColor !== "#888" && bioColor.toLowerCase() !== "rgb(136, 136, 136)") {
-      throw new Error("Biyografi renk özelleştirme özelliği Premium planlara özeldir. Lütfen planınızı yükseltin!");
-    }
-    if (usernameColor && usernameColor !== "#ffffff" && usernameColor !== "#fff" && usernameColor.toLowerCase() !== "rgb(255, 255, 255)") {
-      throw new Error("Kullanıcı adı renk özelleştirme özelliği Premium planlara özeldir. Lütfen planınızı yükseltin!");
-    }
+    // Relaxed gating: users can change colors.
   }
 
   // Typography gating validation
