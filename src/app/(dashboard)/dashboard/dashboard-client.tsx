@@ -82,7 +82,11 @@ import {
   Users,
   Mail,
   Puzzle,
+  Youtube,
+  Twitter,
+  Linkedin
 } from "lucide-react";
+import { YoutubeIcon, TwitterIcon, LinkedinIcon, TiktokIcon, PinterestIcon, InstagramIcon } from "@/components/brand-icons";
 import AddonConfigModal from "@/components/addons/addon-config-modal";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import VideoPlayer from "@/components/blocks/video-player";
@@ -560,6 +564,7 @@ export default function DashboardClient({
 
   const [newTitle, setNewTitle] = useState("");
   const [newUrl, setNewUrl] = useState("");
+  const [newLinkIcon, setNewLinkIcon] = useState<string>("WEBSITE");
   const [linkSelectedTemplate, setLinkSelectedTemplate] = useState<string | null>(null);
   
   // Extended Block Types State
@@ -854,7 +859,7 @@ export default function DashboardClient({
 
     startTransition(async () => {
       try {
-        const typeParam = linkSelectedTemplate || "WEBSITE";
+        const typeParam = linkSelectedTemplate || newLinkIcon;
         
         // Construct block metadata payload
         let metaString: string | null = null;

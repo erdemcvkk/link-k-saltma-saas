@@ -27,6 +27,7 @@ import {
   Percent,
   Wifi
 } from "lucide-react";
+import { YoutubeIcon, TwitterIcon, LinkedinIcon, TiktokIcon, PinterestIcon, InstagramIcon } from "@/components/brand-icons";
 import StorefrontPreview from "@/components/storefront-preview";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import VideoPlayer from "@/components/blocks/video-player";
@@ -216,9 +217,26 @@ export default function ProfileClient({ username, bio, theme, links, products, a
   const getLinkIcon = (type?: string, url?: string) => {
     switch (type) {
       case "WEBSITE":
-      case "FACEBOOK":
-      case "INSTAGRAM":
         return <Globe className="h-5 w-5" />;
+      case "FACEBOOK":
+        return <Globe className="h-5 w-5" />;
+      case "INSTAGRAM":
+        return <InstagramIcon className="h-5 w-5" />;
+      case "WHATSAPP":
+        return <MessageCircle className="h-5 w-5" />;
+      case "YOUTUBE":
+        return <YoutubeIcon className="h-5 w-5" />;
+      case "TWITTER":
+      case "X":
+        return <TwitterIcon className="h-5 w-5" />;
+      case "LINKEDIN":
+        return <LinkedinIcon className="h-5 w-5" />;
+      case "REDDIT":
+        return <MessageCircle className="h-5 w-5" />;
+      case "PINTEREST":
+        return <PinterestIcon className="h-5 w-5" />;
+      case "TIKTOK":
+        return <TiktokIcon className="h-5 w-5" />;
       case "PDF":
         return <FileText className="h-5 w-5" />;
       case "LINK_LIST":
@@ -331,7 +349,13 @@ export default function ProfileClient({ username, bio, theme, links, products, a
       <GlobalOverlayManager onStateChange={handleStateChange} />
 
       {customCss && (
-        <style dangerouslySetInnerHTML={{ __html: customCss }} />
+        <style dangerouslySetInnerHTML={{ 
+          __html: customCss
+            .replace(/body/g, `#mobile-container`)
+            .replace(/\.profile-card/g, `#mobile-container .profile-card`)
+            .replace(/\.btn-link/g, `#mobile-container .btn-link`)
+            .replace(/\.link-item/g, `#mobile-container .link-item`)
+        }} />
       )}
 
       {/* Advanced Theme Overlays */}
@@ -368,7 +392,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
       {/* Decorative Grid Overlays */}
       <div className={`absolute inset-0 bg-[linear-gradient(to_right,#80808007_1px,transparent_1px),linear-gradient(to_bottom,#80808007_1px,transparent_1px)] bg-[size:24px_36px] pointer-events-none z-[1]`} />
 
-      <main className="max-w-md w-full mx-auto space-y-10 relative z-10 flex-1 flex flex-col justify-center">
+      <main id="mobile-container" className="max-w-md w-full mx-auto space-y-10 relative z-10 flex-1 flex flex-col justify-center overflow-x-hidden">
         {/* Profile Card */}
         <div className={`p-8 rounded-[2.5rem] border text-center backdrop-blur-md flex flex-col items-center gap-6 ${currentStyles.cardBg}`}>
           <div className={`w-24 h-24 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/10 shadow-lg flex items-center justify-center overflow-hidden`}>
