@@ -12,10 +12,20 @@ export async function checkAndEnforcePlanExpiration(user: { id: string; plan: st
         planStartedAt: null,
         planExpiresAt: null,
       },
-      include: { profile: true },
+      include: {
+        profile: true,
+        links: {
+          where: { isActive: true },
+          orderBy: { order: "asc" },
+        },
+        ownedTemplates: {
+          include: { template: true }
+        },
+        ownedAddons: {
+          where: { isActive: true }
+        }
+      },
     });
-
-    revalidatePath("/admin");
     revalidatePath("/dashboard");
     revalidatePath("/");
     

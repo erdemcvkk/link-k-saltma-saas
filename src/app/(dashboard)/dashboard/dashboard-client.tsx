@@ -1897,7 +1897,7 @@ export default function DashboardClient({
                         <div className={`flex items-center rounded-xl border focus-within:border-teal-500/50 overflow-hidden px-3 ${
                           "bg-zinc-100 border-zinc-200"
                         }`}>
-                          <span className="text-slate-500 text-sm">hub.com/</span>
+                          <span className="text-slate-500 text-sm">link-saas.vercel.app/</span>
                           <input
                             type="text"
                             value={username}
@@ -3809,7 +3809,7 @@ export default function DashboardClient({
                   </span>
                   <div className="text-sm font-bold text-zinc-800 flex items-center gap-1.5">
                     <Globe className="h-4 w-4 text-teal-500" />
-                    {initialUser.profile?.customDomain ? initialUser.profile.customDomain : `hub.com/${initialUser.username}`}
+                    {initialUser.profile?.customDomain ? initialUser.profile.customDomain : `link-saas.vercel.app/${initialUser.username}`}
                     {customizingTemplateId ? "?preview=..." : ""}
                   </div>
                 </div>
