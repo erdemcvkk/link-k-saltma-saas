@@ -1073,7 +1073,7 @@ export default function DashboardClient({
 
     startTransition(async () => {
       try {
-        await updateProfile(initialUser.id, bio, theme, username, avatarUrl, background, fontStyle, bioColor, usernameColor);
+        await updateProfile(initialUser.id, bio, theme, username, avatarUrl, background, fontStyle, bioColor, usernameColor, activeTemplateCss);
         setSuccessMsg(lang === "tr" ? "Profil ayarlarınız başarıyla kaydedildi!" : "Profile saved successfully!");
       } catch (err: any) {
         setErrorMsg(err.message || "Failed to save profile");
@@ -1666,7 +1666,41 @@ export default function DashboardClient({
 
           {/* Logout Button */}
           <SignOutButton>
-            <button
+            
+                          <div className="pt-2 pb-1">
+                            <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-2">
+                              {lang === "tr" ? "İkon Seçimi" : "Icon Selection"}
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                              {[
+                                { id: "WEBSITE", label: "Web", icon: Globe },
+                                { id: "INSTAGRAM", label: "Instagram", icon: InstagramIcon },
+                                { id: "WHATSAPP", label: "WhatsApp", icon: MessageCircle },
+                                { id: "TIKTOK", label: "TikTok", icon: TiktokIcon },
+                                { id: "PINTEREST", label: "Pinterest", icon: PinterestIcon },
+                                { id: "YOUTUBE", label: "YouTube", icon: YoutubeIcon },
+                                { id: "X", label: "X", icon: TwitterIcon },
+                                { id: "REDDIT", label: "Reddit", icon: MessageCircle },
+                                { id: "LINKEDIN", label: "LinkedIn", icon: LinkedinIcon },
+                              ].map(iconOption => (
+                                <button
+                                  key={iconOption.id}
+                                  type="button"
+                                  onClick={() => setNewLinkIcon(iconOption.id)}
+                                  className={`px-3 py-2 rounded-xl flex items-center gap-1.5 text-xs font-bold transition-all ${
+                                    newLinkIcon === iconOption.id 
+                                      ? "bg-emerald-500 text-white shadow-md" 
+                                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                  }`}
+                                >
+                                  <iconOption.icon className="h-4 w-4" />
+                                  {iconOption.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                        <button
               className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-all ${
                 "bg-red-50 border-red-200 hover:bg-red-100 text-red-600 shadow-sm"
               }`}
