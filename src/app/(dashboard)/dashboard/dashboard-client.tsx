@@ -3637,7 +3637,7 @@ export default function DashboardClient({
                               setBackground(template.bgColor);
                               setFontStyle(template.fontStyle);
                               setActiveTemplateCss(template.isCoded ? (template.customCss || null) : null);
-                              setTheme("custom");
+                              setTheme(template.name);
                               setSuccessMsg(lang === "tr" ? "Şablon canlı simülatörde önizleniyor!" : "Previewing template in simulator!");
                               setTimeout(() => setSuccessMsg(""), 2000);
                             }}
@@ -3653,7 +3653,7 @@ export default function DashboardClient({
                               setBackground(template.bgColor);
                               setFontStyle(template.fontStyle);
                               setActiveTemplateCss(template.isCoded ? (template.customCss || null) : null);
-                              setTheme("custom");
+                              setTheme(template.name);
                               setCustomizingTemplateId(customizingTemplateId === template.id ? null : template.id);
                             }}
                             className="flex-1 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
@@ -3675,7 +3675,7 @@ export default function DashboardClient({
                                   if (template.fontStyle) {
                                     setFontStyle(template.fontStyle);
                                   }
-                                  setTheme("custom");
+                                  setTheme(template.name);
 
                                   // Parse button style and update client-side link states
                                   if (template.buttonStyle) {

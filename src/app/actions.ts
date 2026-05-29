@@ -1262,7 +1262,7 @@ export async function applyTemplateToProfile(userId: string, templateId: string)
     data: {
       background: template.bgColor,
       fontStyle: template.fontStyle,
-      theme: "custom"
+      theme: template.name
     }
   });
 
