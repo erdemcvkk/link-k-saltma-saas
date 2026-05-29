@@ -21,6 +21,7 @@ interface AddonConfigModalProps {
 
 export default function AddonConfigModal({ addon, products = [], onClose, lang, username }: AddonConfigModalProps) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [dialog, setDialog] = useState({ isOpen: false, type: "alert", message: "", onConfirm: null });
 
