@@ -46,6 +46,22 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     }
   });
   const [isActive, setIsActive] = useState<boolean>(addon.isActive);
+  const getDefaultSlug = (type: string) => {
+    if (!type) return "store";
+    if (type === "MINI_STORE") return "store";
+    if (type === "NEO_BRUTAL") return "neo-brutal";
+    if (type === "ORGANIC") return "organic";
+    if (type === "RETRO") return "retro";
+    if (type === "ACADEMIA") return "academia";
+    if (type === "Y2K") return "y2k";
+    if (type === "BOOKING") return "booking";
+    if (type === "NEWSLETTER") return "newsletter";
+    if (type === "QA") return "qa";
+    if (type === "DONATION") return "donation";
+    return type.toLowerCase();
+  };
+  const activeSlug = configData.customSlug || getDefaultSlug(addon?.addonType);
+
 
   const handleFileUpload = async (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -298,11 +314,11 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                     type="text"
                     value={configData["customSlug"] || ""}
                     onChange={(e) => setConfigData({ ...configData, customSlug: e.target.value })}
-                    placeholder={lang === "tr" ? "magazam" : "store"}
+                    placeholder={getDefaultSlug(addon?.addonType)}
                     className="w-full px-4 py-3 border-y border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
                   />
                   <a
-                    href={`http://${domain}/@${username}/${configData.customSlug || ""}`}
+                    href={`http://${domain}/@${username}/${activeSlug}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold transition-colors border border-indigo-600 whitespace-nowrap"
@@ -312,7 +328,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                   <button
                     type="button"
                     onClick={() => {
-                      navigator.clipboard.writeText(`http://${domain}/@${username}/${configData.customSlug || ""}`);
+                      navigator.clipboard.writeText(`http://${domain}/@${username}/${activeSlug}`);
                       alert(lang === "tr" ? "Link kopyalandı!" : "Link copied!");
                     }}
                     className="px-4 py-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 text-sm font-bold rounded-r-xl transition-colors border-y border-r border-zinc-300 whitespace-nowrap"
