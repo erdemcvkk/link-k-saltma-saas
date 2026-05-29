@@ -66,6 +66,14 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         where: { isActive: true },
         orderBy: { order: "asc" },
       },
+      ownedTemplates: {
+        where: { isActive: true },
+        include: { template: true }
+      },
+      ownedAddons: {
+        where: { isActive: true },
+        include: { addon: true }
+      }
     },
   });
 
@@ -139,14 +147,29 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const theme = activeUser.profile?.theme ?? "dark";
   const bio = activeUser.profile?.bio ?? "";
 
-  let customCss = activeUser.profile?.customCss ?? null;
-  if (!customCss && theme && theme !== "custom") {
+  // Priority 1: Active Template (Şablon)
+  // Priority 2: Active Addon (Eklenti)
+  // Priority 3: Custom Profile CSS (Kullanıcının Oluşturduğu)
+  
+  let customCss = null;
+  const activeTemplate = activeUser.ownedTemplates?.[0]?.template;
+  const activeAddon = activeUser.ownedAddons?.[0]?.addon;
+
+  if (activeTemplate && activeTemplate.isCoded && activeTemplate.customCss) {
+    customCss = activeTemplate.customCss;
+  } else if (activeAddon && activeAddon.customCss) {
+    customCss = activeAddon.customCss;
+  } else {
+    customCss = activeUser.profile?.customCss ?? null;
+    
     // Fallback for legacy profiles that didn't copy the customCss
-    const template = await db.template.findFirst({
-      where: { name: theme }
-    });
-    if (template && template.isCoded) {
-      customCss = template.customCss;
+    if (!customCss && theme && theme !== "custom") {
+      const template = await db.template.findFirst({
+        where: { name: theme }
+      });
+      if (template && template.isCoded) {
+        customCss = template.customCss;
+      }
     }
   }
 

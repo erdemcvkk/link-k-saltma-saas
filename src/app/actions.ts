@@ -509,6 +509,49 @@ export async function saveCustomDomain(userId: string, domain: string) {
   revalidatePath("/[username]", "page");
 }
 
+export async function toggleUserTemplateActive(userId: string, templateId: string, isActive: boolean) {
+  if (!userId || !templateId) {
+    throw new Error("Missing parameters");
+  }
+
+  // Deactivate all other templates for this user if we are activating
+  if (isActive) {
+    await db.userTemplate.updateMany({
+      where: { userId, id: { not: templateId } },
+      data: { isActive: false }
+    });
+  }
+
+  // Update the specific template
+  const updated = await db.userTemplate.update({
+    where: {
+      userId_templateId: {
+        userId,
+        templateId
+      }
+    },
+    data: { isActive },
+    include: { template: true }
+  });
+
+  // If activating, apply the template settings to the profile
+  if (isActive && updated.template) {
+    await applyTemplateToProfile(userId, templateId);
+  } else if (!isActive) {
+    // If deactivating, revert profile to a default theme state
+    await db.profile.update({
+      where: { userId },
+      data: {
+        theme: "dark",
+        customCss: null
+      }
+    });
+  }
+
+  revalidatePath("/dashboard");
+  return { success: true, isActive: updated.isActive };
+}
+
 // Generate 30 days of highly realistic visitor & click data
 export async function generateMockTraffic(userId: string) {
   // Clear existing mock data first

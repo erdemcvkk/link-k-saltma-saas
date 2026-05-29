@@ -221,6 +221,7 @@ model UserTemplate {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   templateId String
   template   Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  isActive   Boolean  @default(false)
   createdAt  DateTime @default(now())
 
   @@unique([userId, templateId])

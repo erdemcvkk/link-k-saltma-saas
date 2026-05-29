@@ -22,7 +22,8 @@ import {
   updateLinkAnimation,
   updateLinkCustomStyle,
   applyTemplateToProfile,
-  updateAllLinksCustomStyle
+  updateAllLinksCustomStyle,
+  toggleUserTemplateActive
 } from "@/app/actions";
 import { parseButtonStyle } from "@/lib/parse-button-style";
 import {
@@ -346,14 +347,15 @@ export default function DashboardClient({
   const [quickLinkUrl, setQuickLinkUrl] = useState("");
   const [quickLinkIcon, setQuickLinkIcon] = useState("WEBSITE");
   
-  const [btnBgColor, setBtnBgColor] = useState("");
-  const [btnTextColor, setBtnTextColor] = useState("");
-  const [btnBorderColor, setBtnBorderColor] = useState("");
-  const [btnBorderStyle, setBtnBorderStyle] = useState("solid");
-  const [btnBorderWidth, setBtnBorderWidth] = useState("1px");
-  const [btnBorderRadius, setBtnBorderRadius] = useState("12px");
-  const [btnShadow, setBtnShadow] = useState("none");
-  const [btnFontWeight, setBtnFontWeight] = useState("font-bold");
+  const firstLink = initialUser.links?.[0];
+  const [btnBgColor, setBtnBgColor] = useState(firstLink?.bgColor || "");
+  const [btnTextColor, setBtnTextColor] = useState(firstLink?.textColor || "");
+  const [btnBorderColor, setBtnBorderColor] = useState(firstLink?.borderColor || "");
+  const [btnBorderStyle, setBtnBorderStyle] = useState(firstLink?.borderStyle || "solid");
+  const [btnBorderWidth, setBtnBorderWidth] = useState(firstLink?.borderWidth || "1px");
+  const [btnBorderRadius, setBtnBorderRadius] = useState(firstLink?.borderRadius || "12px");
+  const [btnShadow, setBtnShadow] = useState(firstLink?.shadow || "none");
+  const [btnFontWeight, setBtnFontWeight] = useState(firstLink?.fontWeight || "font-bold");
 
   useEffect(() => {
     if (customizingTemplateId) {
@@ -1073,6 +1075,17 @@ export default function DashboardClient({
     startTransition(async () => {
       try {
         await updateProfile(initialUser.id, bio, theme, username, avatarUrl, background, fontStyle, bioColor, usernameColor, activeTemplateCss);
+        await updateAllLinksCustomStyle(
+          initialUser.id,
+          btnBgColor || null,
+          btnTextColor || null,
+          btnBorderColor || null,
+          btnBorderStyle || null,
+          btnBorderWidth || null,
+          btnBorderRadius || null,
+          btnShadow || null,
+          btnFontWeight || null
+        );
         setSuccessMsg(lang === "tr" ? "Profil ayarlarınız başarıyla kaydedildi!" : "Profile saved successfully!");
       } catch (err: any) {
         setErrorMsg(err.message || "Failed to save profile");
@@ -2536,7 +2549,196 @@ export default function DashboardClient({
                       </div>
                     </div>
 
-                    <p className="text-[9px] text-teal-500 font-extrabold italic text-right">
+                    {/* --- GLOBAL BUTTON PROPERTIES (Global Buton Özellikleri) --- */}
+                    <div className={`p-8 rounded-2xl border space-y-6 ${
+                      "bg-white border-zinc-200 shadow-sm"
+                    }`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <MousePointerClick className="h-5 w-5 text-teal-500" />
+                          <div>
+                            <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>
+                              {lang === "tr" ? "Buton Stil Özellikleri" : "Global Button Styles"}
+                            </h2>
+                            <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
+                              {lang === "tr" 
+                                ? "Bağlantı kartlarınızın varsayılan görünümünü belirleyin." 
+                                : "Set the default appearance for all your link cards."}
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleSaveProfile}
+                          disabled={isPending}
+                          className={`flex items-center gap-1.5 px-4.5 py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
+                            "bg-zinc-900 text-white hover:bg-zinc-800 shadow-md shadow-zinc-950/15"
+                          }`}
+                        >
+                          {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+                          {t.saveChanges}
+                        </button>
+                      </div>
+
+                      {/* Button Colors Grid */}
+                      <div className="grid md:grid-cols-2 gap-5">
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                            {lang === "tr" ? "Buton Arka Planı" : "Button Background"}
+                          </label>
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={btnBgColor || "#ffffff"}
+                              onChange={(e) => setBtnBgColor(e.target.value)}
+                              className="h-10 w-12 rounded-xl border border-zinc-200 cursor-pointer animate-none"
+                            />
+                            <input
+                              type="text"
+                              value={btnBgColor || ""}
+                              onChange={(e) => setBtnBgColor(e.target.value)}
+                              className="flex-1 px-3 border border-zinc-200 rounded-xl text-sm font-mono text-zinc-800 focus:border-teal-500 outline-none"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                            {lang === "tr" ? "Buton Yazı Rengi" : "Button Text Color"}
+                          </label>
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={btnTextColor || "#000000"}
+                              onChange={(e) => setBtnTextColor(e.target.value)}
+                              className="h-10 w-12 rounded-xl border border-zinc-200 cursor-pointer animate-none"
+                            />
+                            <input
+                              type="text"
+                              value={btnTextColor || ""}
+                              onChange={(e) => setBtnTextColor(e.target.value)}
+                              className="flex-1 px-3 border border-zinc-200 rounded-xl text-sm font-mono text-zinc-800 focus:border-teal-500 outline-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-5">
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                            {lang === "tr" ? "Çerçeve Rengi" : "Border Color"}
+                          </label>
+                          <div className="flex gap-2">
+                            <input
+                              type="color"
+                              value={btnBorderColor || "#000000"}
+                              onChange={(e) => setBtnBorderColor(e.target.value)}
+                              className="h-10 w-12 rounded-xl border border-zinc-200 cursor-pointer animate-none"
+                            />
+                            <input
+                              type="text"
+                              value={btnBorderColor || ""}
+                              onChange={(e) => setBtnBorderColor(e.target.value)}
+                              className="flex-1 px-3 border border-zinc-200 rounded-xl text-sm font-mono text-zinc-800 focus:border-teal-500 outline-none"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                            {lang === "tr" ? "Çerçeve Stili" : "Border Style"}
+                          </label>
+                          <select
+                            value={btnBorderStyle}
+                            onChange={(e) => setBtnBorderStyle(e.target.value)}
+                            className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
+                          >
+                            <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
+                            <option value="dashed">{lang === "tr" ? "Kesikli (Dashed)" : "Dashed"}</option>
+                            <option value="double">{lang === "tr" ? "Çift (Double)" : "Double"}</option>
+                            <option value="dotted">{lang === "tr" ? "Noktalı (Dotted)" : "Dotted"}</option>
+                            <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-5">
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                            {lang === "tr" ? "Çerçeve Kalınlığı" : "Border Width"}
+                          </label>
+                          <select
+                            value={btnBorderWidth}
+                            onChange={(e) => setBtnBorderWidth(e.target.value)}
+                            className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
+                          >
+                            <option value="0px">0px</option>
+                            <option value="1px">1px</option>
+                            <option value="2px">2px</option>
+                            <option value="3px">3px</option>
+                            <option value="4px">4px</option>
+                            <option value="5px">5px</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                            {lang === "tr" ? "Köşe Yuvarlaklığı" : "Border Radius"}
+                          </label>
+                          <select
+                            value={btnBorderRadius}
+                            onChange={(e) => setBtnBorderRadius(e.target.value)}
+                            className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
+                          >
+                            <option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp (0px)"}</option>
+                            <option value="4px">4px</option>
+                            <option value="8px">8px</option>
+                            <option value="12px">12px</option>
+                            <option value="16px">16px</option>
+                            <option value="20px">20px</option>
+                            <option value="24px">24px</option>
+                            <option value="9999px">{lang === "tr" ? "Yuvarlak (Oval)" : "Round (Oval)"}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-5">
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                            {lang === "tr" ? "Gölge Efekti" : "Shadow Effect"}
+                          </label>
+                          <select
+                            value={btnShadow}
+                            onChange={(e) => setBtnShadow(e.target.value)}
+                            className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
+                          >
+                            <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
+                            <option value="soft">{lang === "tr" ? "Yumuşak (Soft)" : "Soft"}</option>
+                            <option value="glow-purple">{lang === "tr" ? "Mor Işıma (Glow)" : "Glow Purple"}</option>
+                            <option value="glow-emerald">{lang === "tr" ? "Yeşil Işıma (Glow)" : "Glow Emerald"}</option>
+                            <option value="hard-3d">{lang === "tr" ? "Sert 3D (Brutal)" : "Hard 3D"}</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                            {lang === "tr" ? "Yazı Kalınlığı" : "Font Weight"}
+                          </label>
+                          <select
+                            value={btnFontWeight}
+                            onChange={(e) => setBtnFontWeight(e.target.value)}
+                            className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
+                          >
+                            <option value="font-normal">{lang === "tr" ? "Normal" : "Normal"}</option>
+                            <option value="font-medium">{lang === "tr" ? "Orta (Medium)" : "Medium"}</option>
+                            <option value="font-bold">{lang === "tr" ? "Kalın (Bold)" : "Bold"}</option>
+                            <option value="font-black">{lang === "tr" ? "Çok Kalın (Black)" : "Black"}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-[9px] text-teal-500 font-extrabold italic text-right mt-4">
                       {lang === "tr" ? "+ Dahası Çok Yakında! (Creator Hub Plus)" : "+ More Premium Layouts Coming Soon!"}
                     </p>
                   </div>
@@ -3597,6 +3799,40 @@ export default function DashboardClient({
                 </Link>
               </div>
 
+              {/* Profile Link Header */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-zinc-50 border border-zinc-200 rounded-xl p-4 gap-4">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block">
+                    {lang === "tr" ? "Profil Bağlantınız" : "Your Profile Link"}
+                  </span>
+                  <div className="text-sm font-bold text-zinc-800 flex items-center gap-1.5">
+                    <Globe className="h-4 w-4 text-teal-500" />
+                    creator.hub/{initialUser.username}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(`https://creator.hub/${initialUser.username}`);
+                      setSuccessMsg(lang === "tr" ? "Bağlantı kopyalandı!" : "Link copied!");
+                      setTimeout(() => setSuccessMsg(""), 2000);
+                    }}
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-white border border-zinc-200 hover:bg-zinc-50 text-xs font-bold text-zinc-700 transition-colors cursor-pointer"
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                    {lang === "tr" ? "Kopyala" : "Copy"}
+                  </button>
+                  <Link
+                    href={`/${initialUser.username}`}
+                    target="_blank"
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-400 border border-teal-600/10 text-xs font-bold text-zinc-900 transition-colors cursor-pointer"
+                  >
+                    <span>{lang === "tr" ? "Git" : "Visit"}</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </div>
+
               {ownedTemplates.length === 0 ? (
                 <div className="text-center py-10 space-y-4">
                   <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center mx-auto text-zinc-400">
@@ -3700,73 +3936,63 @@ export default function DashboardClient({
                           </button>
                         </div>
 
-                        <button
-                          type="button"
-                          disabled={isCurrentlyApplied || isPending}
-                          onClick={() => {
-                            startTransition(async () => {
-                              try {
-                                const res = await applyTemplateToProfile(initialUser.id, template.id);
-                                if (res.success) {
-                                  setBackground(template.bgColor);
-                                  if (template.fontStyle) {
-                                    setFontStyle(template.fontStyle);
+                        <div className="flex items-center justify-between p-3 rounded-xl bg-zinc-50/50 border border-zinc-100">
+                          <span className="text-xs font-extrabold text-zinc-700">
+                            {lang === "tr" ? "Şablon Durumu" : "Template Status"}
+                          </span>
+                          <button
+                            type="button"
+                            disabled={isPending}
+                            onClick={() => {
+                              startTransition(async () => {
+                                try {
+                                  // Find the UserTemplate relation to toggle it
+                                  const userTemplateRecord = initialUser.ownedTemplates?.find((ut: any) => ut.templateId === template.id);
+                                  const currentActiveStatus = userTemplateRecord?.isActive || false;
+                                  
+                                  const res = await toggleUserTemplateActive(initialUser.id, template.id, !currentActiveStatus);
+                                  if (res.success) {
+                                    if (res.isActive) {
+                                      setBackground(template.bgColor);
+                                      if (template.fontStyle) setFontStyle(template.fontStyle);
+                                      setTheme(template.name);
+                                      if (template.buttonStyle) {
+                                        const parsed = parseButtonStyle(template.buttonStyle);
+                                        setBtnBgColor(parsed.bgColor);
+                                        setBtnTextColor(parsed.textColor);
+                                        setBtnBorderColor(parsed.borderColor);
+                                        setBtnBorderStyle(parsed.borderStyle);
+                                        setBtnBorderWidth(parsed.borderWidth);
+                                        setBtnBorderRadius(parsed.borderRadius);
+                                        setBtnShadow(parsed.shadow);
+                                        setBtnFontWeight(parsed.fontWeight);
+                                        setLinks(prev => prev.map(l => ({
+                                          ...l, ...parsed
+                                        })));
+                                      }
+                                      setSuccessMsg(lang === "tr" ? "Şablon başarıyla aktifleştirildi!" : "Template activated!");
+                                    } else {
+                                      setSuccessMsg(lang === "tr" ? "Şablon taslağa alındı." : "Template moved to draft.");
+                                    }
+                                    setTimeout(() => setSuccessMsg(""), 3000);
                                   }
-                                  setTheme(template.name);
-
-                                  // Parse button style and update client-side link states
-                                  if (template.buttonStyle) {
-                                    const parsed = parseButtonStyle(template.buttonStyle);
-                                    setBtnBgColor(parsed.bgColor);
-                                    setBtnTextColor(parsed.textColor);
-                                    setBtnBorderColor(parsed.borderColor);
-                                    setBtnBorderStyle(parsed.borderStyle);
-                                    setBtnBorderWidth(parsed.borderWidth);
-                                    setBtnBorderRadius(parsed.borderRadius);
-                                    setBtnShadow(parsed.shadow);
-                                    setBtnFontWeight(parsed.fontWeight);
-
-                                    // Update all links in state with new template styles
-                                    setLinks(prev => prev.map(l => ({
-                                      ...l,
-                                      bgColor: parsed.bgColor,
-                                      textColor: parsed.textColor,
-                                      borderColor: parsed.borderColor,
-                                      borderStyle: parsed.borderStyle,
-                                      borderWidth: parsed.borderWidth,
-                                      borderRadius: parsed.borderRadius,
-                                      shadow: parsed.shadow,
-                                      fontWeight: parsed.fontWeight
-                                    })));
-                                  }
-
-                                  setSuccessMsg(lang === "tr" ? "Şablon başarıyla uygulandı!" : "Template applied successfully!");
-                                  setTimeout(() => setSuccessMsg(""), 3000);
+                                } catch (e: any) {
+                                  setErrorMsg(e.message || "An error occurred");
+                                  setTimeout(() => setErrorMsg(""), 4000);
                                 }
-                              } catch (e: any) {
-                                setErrorMsg(e.message || "An error occurred");
-                                setTimeout(() => setErrorMsg(""), 4000);
-                              }
-                            });
-                          }}
-                          className={`w-full py-2.5 rounded-xl font-extrabold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
-                            isCurrentlyApplied 
-                              ? "bg-zinc-100 text-zinc-400 border border-zinc-200 cursor-not-allowed" 
-                              : "bg-teal-500 hover:bg-teal-400 text-slate-900 shadow-md shadow-teal-500/10"
-                          }`}
-                        >
-                          {isCurrentlyApplied ? (
-                            <>
-                              <Check className="h-3.5 w-3.5" />
-                              <span>{lang === "tr" ? "Aktif Olarak Uygulandı" : "Currently Active"}</span>
-                            </>
-                          ) : (
-                            <>
-                              <Sparkles className="h-3.5 w-3.5" />
-                              <span>{lang === "tr" ? "Profili Güncelle (Uygula)" : "Apply to Profile"}</span>
-                            </>
-                          )}
-                        </button>
+                              });
+                            }}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
+                              (initialUser.ownedTemplates?.find((ut: any) => ut.templateId === template.id)?.isActive) ? 'bg-teal-500' : 'bg-zinc-300'
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                (initialUser.ownedTemplates?.find((ut: any) => ut.templateId === template.id)?.isActive) ? 'translate-x-6' : 'translate-x-1'
+                              }`}
+                            />
+                          </button>
+                        </div>
 
                         {/* INLINE TEMPLATE CUSTOMIZATION CONTROL DRAWER */}
                         {customizingTemplateId === template.id && (
