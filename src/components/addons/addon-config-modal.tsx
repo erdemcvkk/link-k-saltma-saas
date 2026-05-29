@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useTransition, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { saveAddonConfig, addAddonProduct, deleteAddonProduct } from "@/app/actions";
 import { X, Loader2, Save, Store, Calendar, FileQuestion, Mail, Heart, Clock, Briefcase, HelpCircle, MapPin, MessageCircle, Trash2, Plus, ShoppingBag } from "lucide-react";
 import StorefrontPreview from "@/components/storefront-preview";
@@ -19,7 +20,13 @@ interface AddonConfigModalProps {
 }
 
 export default function AddonConfigModal({ addon, products = [], onClose, lang, username }: AddonConfigModalProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [dialog, setDialog] = useState({ isOpen: false, type: "alert", message: "", onConfirm: null });
+
+  const showAlert = (message) => setDialog({ isOpen: true, type: "alert", message });
+  const showConfirm = (message, onConfirm) => setDialog({ isOpen: true, type: "confirm", message, onConfirm });
+  const closeDialog = () => setDialog({ isOpen: false, type: "alert", message: "" });
   const [domain, setDomain] = useState("link-saas.com");
   
   useEffect(() => {
@@ -79,9 +86,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     startTransition(async () => {
       try {
         await saveAddonConfig(addon.id, JSON.stringify(configData), isActive);
-        alert(lang === "tr" ? "Ayarlar başarıyla kaydedildi!" : "Settings saved!");
+        showAlert(lang === "tr" ? "Ayarlar başarıyla kaydedildi!" : "Settings saved!");
       } catch (err: any) {
-        alert(err.message || "Error");
+        showAlert(err.message || "Error");
       }
     });
   };
@@ -127,7 +134,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                   try {
                     const url = await handleFileUpload(file);
                     setConfigData({ ...configData, [key]: url });
-                  } catch (err: any) { alert(err.message); }
+                  } catch (err: any) { showAlert(err.message); }
                 }
               }}
             />
@@ -300,7 +307,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
               type="button"
               onClick={() => {
                 navigator.clipboard.writeText(`http://${domain}/@${username}/${activeSlug}`);
-                alert(lang === "tr" ? "Link kopyalandı!" : "Link copied!");
+                showAlert(lang === "tr" ? "Link kopyalandı!" : "Link copied!");
               }}
               className="px-4 py-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 text-sm font-bold rounded-r-xl transition-colors border-y border-r border-zinc-300 whitespace-nowrap"
             >
@@ -331,7 +338,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                     try {
                       const url = await handleFileUpload(file);
                       setConfigData({ ...configData, avatarUrl: url });
-                    } catch (err: any) { alert(err.message); }
+                    } catch (err: any) { showAlert(err.message); }
                   }
                 }}
               />
@@ -384,7 +391,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                     type="button"
                     onClick={() => {
                       navigator.clipboard.writeText(`http://${domain}/@${username}/${activeSlug}`);
-                      alert(lang === "tr" ? "Link kopyalandı!" : "Link copied!");
+                      showAlert(lang === "tr" ? "Link kopyalandı!" : "Link copied!");
                     }}
                     className="px-4 py-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 text-sm font-bold rounded-r-xl transition-colors border-y border-r border-zinc-300 whitespace-nowrap"
                   >
@@ -415,7 +422,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                           try {
                             const url = await handleFileUpload(file);
                             setConfigData({ ...configData, storeAvatarUrl: url });
-                          } catch (err: any) { alert(err.message); }
+                          } catch (err: any) { showAlert(err.message); }
                         }
                       }}
                     />
@@ -495,7 +502,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                               try {
                                 const url = await handleFileUpload(file);
                                 (document.getElementById("newProdImageUrl") as HTMLInputElement).value = url;
-                              } catch (err: any) { alert(err.message); }
+                              } catch (err: any) { showAlert(err.message); }
                             }
                           }}
                         />
@@ -515,7 +522,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                               try {
                                 const url = await handleFileUpload(file);
                                 (document.getElementById("newProdFileUrl") as HTMLInputElement).value = url;
-                              } catch (err: any) { alert(err.message); }
+                              } catch (err: any) { showAlert(err.message); }
                             }
                           }}
                         />
@@ -536,15 +543,15 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                         const description = (document.getElementById("newProdDesc") as HTMLTextAreaElement).value;
                         
                         if (!title || isNaN(price)) {
-                          alert(lang === "tr" ? "Lütfen başlık ve geçerli bir fiyat girin" : "Please enter title and valid price");
+                          showAlert(lang === "tr" ? "Lütfen başlık ve geçerli bir fiyat girin" : "Please enter title and valid price");
                           return;
                         }
                         
                         await addAddonProduct(title, type, price, description, fileUrl, imageUrl);
-                        alert(lang === "tr" ? "Ürün eklendi!" : "Product added!");
+                        showAlert(lang === "tr" ? "Ürün eklendi!" : "Product added!");
                         window.location.reload();
                       } catch (err: any) {
-                        alert(err.message);
+                        showAlert(err.message);
                       } finally {
                         setIsLoading(false);
                       }
@@ -583,10 +590,10 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                       </div>
                       <button 
                         onClick={async () => {
-                          if (confirm(lang === "tr" ? "Bu ürünü silmek istediğinize emin misiniz?" : "Are you sure?")) {
+                          showConfirm(lang === "tr" ? "Bu ürünü silmek istediğinize emin misiniz?" : "Are you sure?", async () => {
                             await deleteAddonProduct(p.id);
-                            window.location.reload();
-                          }
+                            router.refresh();
+                          });
                         }}
                         className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                       >
@@ -949,6 +956,39 @@ case "FAQ":
           
         </div>
       </div>
-    </div>
+    
+      {/* Custom Alert/Confirm Dialog */}
+      {dialog.isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+          <div className="bg-white rounded-[2rem] shadow-2xl p-8 max-w-sm w-full transform transition-all animate-in fade-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-black text-slate-800 mb-3 text-center">
+              {domain} {lang === "tr" ? "mesajı" : "says"}
+            </h3>
+            <p className="text-slate-600 font-medium text-center mb-8">{dialog.message}</p>
+            <div className="flex items-center justify-center gap-3">
+              <button
+                onClick={() => {
+                  if (dialog.type === "confirm" && dialog.onConfirm) {
+                    dialog.onConfirm();
+                  }
+                  closeDialog();
+                }}
+                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-2xl transition-all shadow-md shadow-indigo-600/20"
+              >
+                {lang === "tr" ? "Tamam" : "OK"}
+              </button>
+              {dialog.type === "confirm" && (
+                <button
+                  onClick={closeDialog}
+                  className="px-6 py-3 bg-red-50 hover:bg-red-100 text-red-600 text-sm font-bold rounded-2xl transition-all"
+                >
+                  {lang === "tr" ? "İptal" : "Cancel"}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+</div>
   );
 }
