@@ -169,6 +169,8 @@ export default async function DashboardPage() {
   });
 
   const serializedOwnedTemplates = ownedTemplates.map((ot) => ({
+    userTemplateId: ot.id,
+    isActive: ot.isActive,
     id: ot.template.id,
     name: ot.template.name,
     price: ot.template.price,

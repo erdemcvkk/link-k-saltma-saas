@@ -186,6 +186,8 @@ interface DashboardClientProps {
   initialQrCodes?: QrCodeItem[];
   initialFeatures?: any[];
   initialOwnedTemplates?: {
+    userTemplateId: string;
+    isActive: boolean;
     id: string;
     name: string;
     price: number;
@@ -3946,12 +3948,18 @@ export default function DashboardClient({
                             onClick={() => {
                               startTransition(async () => {
                                 try {
-                                  // Find the UserTemplate relation to toggle it
-                                  const userTemplateRecord = initialUser.ownedTemplates?.find((ut: any) => ut.templateId === template.id);
+                                  // Find the UserTemplate relation to toggle it from local state
+                                  const userTemplateRecord = ownedTemplates.find((ut: any) => ut.id === template.id);
                                   const currentActiveStatus = userTemplateRecord?.isActive || false;
                                   
                                   const res = await toggleUserTemplateActive(initialUser.id, template.id, !currentActiveStatus);
                                   if (res.success) {
+                                    // Update local state visually
+                                    setOwnedTemplates(prev => prev.map(t => ({
+                                      ...t,
+                                      isActive: t.id === template.id ? res.isActive : false
+                                    })));
+
                                     if (res.isActive) {
                                       setBackground(template.bgColor);
                                       if (template.fontStyle) setFontStyle(template.fontStyle);
@@ -3983,12 +3991,12 @@ export default function DashboardClient({
                               });
                             }}
                             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
-                              (initialUser.ownedTemplates?.find((ut: any) => ut.templateId === template.id)?.isActive) ? 'bg-teal-500' : 'bg-zinc-300'
+                              (ownedTemplates.find((ut: any) => ut.id === template.id)?.isActive) ? 'bg-teal-500' : 'bg-zinc-300'
                             }`}
                           >
                             <span
                               className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                (initialUser.ownedTemplates?.find((ut: any) => ut.templateId === template.id)?.isActive) ? 'translate-x-6' : 'translate-x-1'
+                                (ownedTemplates.find((ut: any) => ut.id === template.id)?.isActive) ? 'translate-x-6' : 'translate-x-1'
                               }`}
                             />
                           </button>

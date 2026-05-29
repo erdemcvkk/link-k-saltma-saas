@@ -71,8 +71,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
         include: { template: true }
       },
       ownedAddons: {
-        where: { isActive: true },
-        include: { addon: true }
+        where: { isActive: true }
       }
     },
   });
@@ -153,12 +152,9 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   
   let customCss = null;
   const activeTemplate = activeUser.ownedTemplates?.[0]?.template;
-  const activeAddon = activeUser.ownedAddons?.[0]?.addon;
 
   if (activeTemplate && activeTemplate.isCoded && activeTemplate.customCss) {
     customCss = activeTemplate.customCss;
-  } else if (activeAddon && activeAddon.customCss) {
-    customCss = activeAddon.customCss;
   } else {
     customCss = activeUser.profile?.customCss ?? null;
     
