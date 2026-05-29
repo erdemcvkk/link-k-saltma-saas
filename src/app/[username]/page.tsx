@@ -139,8 +139,9 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const theme = activeUser.profile?.theme ?? "dark";
   const bio = activeUser.profile?.bio ?? "";
 
-  let customCss = null;
-  if (theme) {
+  let customCss = activeUser.profile?.customCss ?? null;
+  if (!customCss && theme && theme !== "custom") {
+    // Fallback for legacy profiles that didn't copy the customCss
     const template = await db.template.findFirst({
       where: { name: theme }
     });

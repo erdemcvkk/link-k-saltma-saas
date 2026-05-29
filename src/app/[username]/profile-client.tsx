@@ -395,7 +395,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
 
       <main id="mobile-container" className="max-w-md w-full mx-auto space-y-10 relative z-10 flex-1 flex flex-col justify-center overflow-x-hidden">
         {/* Profile Card */}
-        <div className={`p-8 rounded-[2.5rem] border text-center backdrop-blur-md flex flex-col items-center gap-6 ${currentStyles.cardBg}`}>
+        <div className={`profile-card p-8 rounded-[2.5rem] border text-center backdrop-blur-md flex flex-col items-center gap-6 ${currentStyles.cardBg}`}>
           <div className={`w-24 h-24 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/10 shadow-lg flex items-center justify-center overflow-hidden`}>
             {avatarUrl ? (
               <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
@@ -427,7 +427,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
 
 
         {/* Links Grid */}
-        <div className="space-y-4 w-full">
+        <div className="links-container space-y-4 w-full">
           {links.length > 0 && <h3 className={`text-xs uppercase tracking-widest font-bold mb-1 ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>{t.socialOutposts}</h3>}
           {links.length === 0 ? (
             <div className={`text-center py-6 text-xs rounded-2xl border border-dashed ${
@@ -462,7 +462,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
                 animationDelay: `${idx * 0.12}s`, // staggered entrance delay!
               };
 
-              const dynamicBlockClass = `stagger-item ${
+              const dynamicBlockClass = `link-item btn-link stagger-item ${
                 !link.bgColor ? currentStyles.btnClass : ""
               } ${!link.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-[1.25rem]") : ""} ${link.animation || ""} ${
                 link.fontWeight === "font-normal" ? "font-normal"
