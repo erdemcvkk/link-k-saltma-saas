@@ -1861,40 +1861,48 @@ export async function buyAddonAction(addonType: string) {
 }
 
 export async function saveAddonConfig(addonId: string, configJson: string, isActive?: boolean) {
-  const user = await checkAndSyncUser();
-  if (!user) throw new Error("Unauthorized");
+  try {
+    const user = await checkAndSyncUser();
+    if (!user) return { success: false, error: "Unauthorized" };
 
-  const addon = await db.userAddon.findUnique({
-    where: { id: addonId }
-  });
-
-  if (!addon || addon.userId !== user.id) {
-    throw new Error("Addon not found or unauthorized");
-  }
-
-  const updated = await db.userAddon.update({
-    where: { id: addonId },
-    data: { 
-      config: configJson,
-      ...(isActive !== undefined ? { isActive } : {})
-    }
-  });
-
-  // If this addon is being activated, deactivate all other addons for the user
-  if (isActive === true) {
-    await db.userAddon.updateMany({
-      where: { userId: user.id, id: { not: addonId } },
-      data: { isActive: false }
+    const addon = await db.userAddon.findUnique({
+      where: { id: addonId }
     });
-  }
 
-  revalidatePath("/dashboard");
-  revalidatePath("/[username]", "page");
-  if (user.username) {
-    revalidatePath(`/${user.username}`, "page");
-    revalidatePath(`/${user.username}`, "layout");
+    if (!addon || addon.userId !== user.id) {
+      return { success: false, error: "Addon not found or unauthorized" };
+    }
+
+    const updated = await db.userAddon.update({
+      where: { id: addonId },
+      data: { 
+        config: configJson,
+        ...(isActive !== undefined ? { isActive } : {})
+      }
+    });
+
+    if (isActive === true) {
+      await db.userAddon.updateMany({
+        where: { userId: user.id, id: { not: addonId } },
+        data: { isActive: false }
+      });
+    }
+
+    try {
+      revalidatePath("/dashboard");
+      revalidatePath("/[username]", "page");
+      if (user.username) {
+        revalidatePath(`/${user.username}`, "page");
+        revalidatePath(`/${user.username}`, "layout");
+      }
+    } catch (revErr: any) {
+      console.error("Revalidation error:", revErr);
+    }
+
+    return { success: true, data: updated };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Unknown server error during saveAddonConfig" };
   }
-  return updated;
 }
 
 export async function addAddonProduct(title: string, type: string, price: number, description: string, fileUrl: string, imageUrl?: string) {

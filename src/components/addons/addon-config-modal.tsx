@@ -89,8 +89,13 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   const handleSave = () => {
     startTransition(async () => {
       try {
-        await saveAddonConfig(addon.id, JSON.stringify(configData), isActive);
-        showAlert(lang === "tr" ? "Ayarlar başarıyla kaydedildi!" : "Settings saved!");
+        const res: any = await saveAddonConfig(addon.id, JSON.stringify(configData), isActive);
+        if (res?.error) {
+          showAlert(res.error);
+        } else {
+          showAlert(lang === "tr" ? "Ayarlar başarıyla kaydedildi!" : "Settings saved!");
+          onClose(JSON.stringify(configData), isActive);
+        }
       } catch (err: any) {
         showAlert(err.message || "Error");
       }
