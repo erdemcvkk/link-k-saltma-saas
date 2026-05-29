@@ -1816,6 +1816,12 @@ export async function purchaseAddon(userId: string, addonType: string) {
   if (addonType === "ACADEMIA") defaultTheme = "dark-academia";
   if (addonType === "Y2K") defaultTheme = "y2k-holographic";
 
+  // Deactivate all other addons first to ensure only 1 active addon exists
+  await db.userAddon.updateMany({
+    where: { userId: userId },
+    data: { isActive: false }
+  });
+
   return await db.userAddon.create({
     data: {
       userId: userId,
@@ -1873,6 +1879,14 @@ export async function saveAddonConfig(addonId: string, configJson: string, isAct
       ...(isActive !== undefined ? { isActive } : {})
     }
   });
+
+  // If this addon is being activated, deactivate all other addons for the user
+  if (isActive === true) {
+    await db.userAddon.updateMany({
+      where: { userId: user.id, id: { not: addonId } },
+      data: { isActive: false }
+    });
+  }
 
   revalidatePath("/dashboard");
   revalidatePath("/[username]", "page");

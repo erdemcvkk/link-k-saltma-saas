@@ -5,7 +5,7 @@ import { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ username: string; addonSlug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
-  const username = resolvedParams.username.replace("%40", "");
+  const username = resolvedParams.username.replace("%40", "").replace(/^@/, "");
 
   const user = await db.user.findUnique({
     where: { username },
@@ -45,7 +45,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
     try {
       if (!a.config) return false;
       const parsed = JSON.parse(a.config);
-      return parsed.customSlug && parsed.customSlug.toLowerCase() === addonSlug.toLowerCase();
+      return (parsed.customSlug && parsed.customSlug.toLowerCase() === addonSlug.toLowerCase()) || (addonSlug.toLowerCase() === 'store');
     } catch {
       return false;
     }

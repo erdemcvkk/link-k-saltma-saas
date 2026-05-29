@@ -11,9 +11,10 @@ export const revalidate = 0; // Disable caching to fetch live links
 // Dynamic SEO Metadata Generator
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
   const { username } = await params;
+  const cleanUsername = username.replace("%40", "").replace(/^@/, "");
   
   const user = await db.user.findFirst({
-    where: { username: username.toLowerCase() },
+    where: { username: cleanUsername.toLowerCase() },
     include: { profile: true },
   });
 
@@ -50,12 +51,13 @@ import ProfileClient from "./profile-client";
 
 export default async function PublicProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
+  const cleanUsername = username.replace("%40", "").replace(/^@/, "");
 
   // Search for the user
   let user = await db.user.findFirst({
     where: {
       username: {
-        equals: username.toLowerCase(),
+        equals: cleanUsername.toLowerCase(),
       },
     },
     include: {
@@ -87,7 +89,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           </div>
           <h1 className="text-xl font-extrabold text-red-400">Account Suspended</h1>
           <p className="text-zinc-500 text-xs leading-relaxed">
-            The profile of @{username} has been suspended by administration due to community guidelines violation.
+            The profile of @{cleanUsername} has been suspended by administration due to community guidelines violation.
           </p>
           <a href="/" className="inline-block text-xs font-bold text-zinc-400 hover:text-white underline transition-colors">
             Back to CREATOR.HUB
