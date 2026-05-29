@@ -189,14 +189,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     ]
   },
   {
-    id: "NEWSLETTER",
-    name: "Bülten & E-Posta Formu",
-    desc: "Ziyaretçilerinizden e-posta toplayarak kitlenizi büyütün.",
-    color: "bg-indigo-500",
-    theme: "newsletter",
+    id: "PREMIUM_VIDEO",
+    name: "Premium Video Vitrini",
+    desc: "Eğitim veya Masterclass videolarınızı sinematik şekilde sunun.",
+    color: "bg-red-500",
+    theme: "premium-video",
     price: "0",
-    username: "@bulten",
-    bio: "Haftalık Bültenime Katıl",
+    username: "@masterclass",
+    bio: "Video Eğitimi",
     avatarUrl: "",
     mockProducts: []
   }
@@ -286,18 +286,28 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
                   <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
                   
                   <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">
-                    {addon.id === "NEWSLETTER" ? (
-                      <div className="w-full h-full bg-indigo-50/30 flex items-center justify-center p-4">
-                        <div className="w-full bg-white p-6 rounded-[2rem] shadow-xl flex flex-col items-center text-center scale-90 origin-top">
-                          <div className="w-16 h-16 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center mb-4">
-                            <span className="text-2xl">✉️</span>
+                    {addon.id === "PREMIUM_VIDEO" ? (
+                      <div className="w-full h-full bg-black flex flex-col p-4 relative z-0">
+                        {/* 16:9 Media Player Area */}
+                        <div className="w-full aspect-video rounded-2xl bg-zinc-900 mt-6 relative shadow-[0_0_40px_rgba(255,255,255,0.1)] overflow-hidden group">
+                          {/* Mock Cover Image */}
+                          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80')] bg-cover bg-center opacity-80 group-hover:scale-105 transition-transform duration-700" />
+                          {/* Glassmorphism Play Button */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.3)] hover:bg-white/30 transition-all cursor-pointer">
+                              <span className="text-2xl ml-1">▶</span>
+                            </div>
                           </div>
-                          <h1 className="text-xl font-black text-slate-800 mb-2">Bültenime Katıl</h1>
-                          <p className="text-slate-500 text-xs mb-6">Spam yok, sadece kaliteli içerik.</p>
-                          <div className="w-full flex flex-col gap-3">
-                            <input type="email" placeholder="E-posta adresiniz..." readOnly className="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-center text-sm" />
-                            <button className="w-full py-3 rounded-xl bg-slate-900 text-white font-bold text-sm shadow-lg pointer-events-none">
-                              Abone Ol
+                        </div>
+                        
+                        {/* Text Content */}
+                        <div className="flex flex-col mt-6 flex-1">
+                          <h1 className="text-xl font-bold text-white tracking-tight mb-2">UI/UX Masterclass Bölüm 1</h1>
+                          <p className="text-zinc-400 text-sm leading-relaxed mb-6">Tasarım sistemleri ve ileri düzey prototipleme tekniklerini keşfedin.</p>
+                          
+                          <div className="mt-auto pb-4">
+                            <button className="w-full py-4 rounded-xl bg-white text-black font-bold text-sm hover:bg-zinc-200 transition-colors pointer-events-none">
+                              Tamamını İzle
                             </button>
                           </div>
                         </div>

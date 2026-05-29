@@ -168,25 +168,54 @@ export default async function AddonPage({ params }: { params: Promise<{ username
     );
   }
 
-  if (matchingAddon.addonType === "NEWSLETTER") {
+  if (matchingAddon.addonType === "PREMIUM_VIDEO") {
     return (
-      <div className="w-full min-h-screen bg-indigo-50/30 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
-          {parsedConfig.avatarUrl ? (
-            <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full object-cover shadow-sm mb-6" alt="Profile" />
-          ) : (
-            <div className="w-20 h-20 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center mb-6">
-              <span className="text-3xl">✉️</span>
-            </div>
-          )}
-          <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Haftalık Bülten"}</h1>
-          <p className="text-slate-500 mb-8">{parsedConfig.incentiveMsg || "Spam yok, sadece kaliteli içerik."}</p>
-          <form action={parsedConfig.serviceUrl || "#"} method="POST" target="_blank" className="w-full flex flex-col gap-3">
-            <input type="email" required placeholder={parsedConfig.placeholderText || "E-posta adresiniz..."} className="w-full p-4 bg-zinc-50 border border-zinc-200 rounded-2xl outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 transition-all text-center" />
-            <button type="submit" className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
-              {parsedConfig.buttonText || "Abone Ol"}
-            </button>
-          </form>
+      <div className="w-full min-h-screen bg-black flex justify-center p-4">
+        <div className="w-full max-w-2xl bg-black rounded-[2rem] shadow-2xl flex flex-col items-center">
+          
+          {/* 16:9 Media Player Area */}
+          <div className="w-full aspect-video rounded-3xl bg-zinc-900 mt-8 relative shadow-[0_0_50px_rgba(255,255,255,0.05)] overflow-hidden group border border-white/5">
+            {/* Cover Image */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center opacity-80 group-hover:scale-105 transition-transform duration-700" 
+              style={{ backgroundImage: `url('${parsedConfig.coverUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80'}')` }}
+            />
+            
+            {/* Gradient Overlay for Text Readability if needed */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
+            {/* Glassmorphism Play Button */}
+            <a 
+              href={parsedConfig.videoUrl || "#"} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="absolute inset-0 flex items-center justify-center z-10"
+            >
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:bg-white/30 hover:scale-110 transition-all cursor-pointer">
+                <span className="text-3xl sm:text-4xl ml-2">▶</span>
+              </div>
+            </a>
+          </div>
+          
+          {/* Text Content */}
+          <div className="flex flex-col mt-8 w-full px-4 text-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3">
+              {parsedConfig.title || "UI/UX Masterclass Bölüm 1"}
+            </h1>
+            <p className="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-lg mx-auto mb-10">
+              {parsedConfig.description || "Tasarım sistemleri ve ileri düzey prototipleme tekniklerini keşfedin."}
+            </p>
+            
+            <a 
+              href={parsedConfig.actionUrl || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full max-w-sm mx-auto py-5 rounded-2xl bg-white text-black font-extrabold text-lg hover:bg-zinc-200 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+            >
+              {parsedConfig.buttonText || "Tamamını İzle"}
+            </a>
+          </div>
+
         </div>
       </div>
     );
