@@ -334,7 +334,6 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
                     clickedItem === product.id ? "scale-95 opacity-80" : ""
                   }`}
                 >
-                  <ShoppingBag className="h-3 w-3" />
                   {buyButtonText}
                 </button>
               </div>
