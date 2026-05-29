@@ -1,7 +1,0 @@
-const { PrismaClient } = require('@prisma/client'); 
-const prisma = new PrismaClient(); 
-async function main() { 
-  const templates = await prisma.template.findMany({ select: { name: true, buttonStyle: true } }); 
-  console.log(templates); 
-} 
-main().finally(() => prisma.$disconnect());
