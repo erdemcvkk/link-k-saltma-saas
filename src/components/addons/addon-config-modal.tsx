@@ -43,6 +43,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       case "RETRO": return "retro-arcade";
       case "ACADEMIA": return "dark-academia";
       case "Y2K": return "y2k-holographic";
+      case "PREMIUM_CREATOR": return "premium-creator";
       default: return "classic";
     }
   };
@@ -66,6 +67,8 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     if (type === "NEWSLETTER") return "newsletter";
     if (type === "QA") return "qa";
     if (type === "DONATION") return "donation";
+    if (type === "PREMIUM_CREATOR") return "creator-store";
+    if (type === "PREMIUM_VIDEO") return "masterclass";
     return type.toLowerCase();
   };
   const activeSlug = configData.customSlug || getDefaultSlug(addon?.addonType);
@@ -219,7 +222,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       case "ORGANIC":
       case "RETRO":
       case "ACADEMIA":
-      case "Y2K": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
+      case "Y2K":
+      case "PREMIUM_CREATOR": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
+      case "PREMIUM_VIDEO": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Premium Video" : "Premium Video" };
             case "BOOKING":
         return (
           <>
@@ -358,6 +363,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
       case "RETRO":
       case "ACADEMIA":
       case "Y2K":
+      case "PREMIUM_CREATOR":
         specificFields = (
           <>
             <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
@@ -455,6 +461,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                     <option value="retro-arcade">Retro Arcade</option>
                     <option value="dark-academia">Dark Academia</option>
                     <option value="y2k-holographic">Y2K Holographic</option>
+                    <option value="premium-creator">Premium Creator</option>
                   </select>
                 </div>
               </div>
@@ -636,6 +643,18 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                 {lang === "tr" ? "Anonim sorulara izin ver" : "Allow anonymous questions"}
               </label>
             </div>
+          </>
+        );
+        break;
+      case "PREMIUM_VIDEO":
+        specificFields = (
+          <>
+            {renderImageUpload("coverUrl", lang === "tr" ? "Kapak Fotoğrafı (URL)" : "Cover Photo URL")}
+            {renderInput("videoUrl", lang === "tr" ? "Video Linki (YouTube/Vimeo)" : "Video URL", "https://youtube.com/...")}
+            {renderInput("title", lang === "tr" ? "Video Başlığı" : "Video Title", "UI/UX Masterclass Bölüm 1")}
+            {renderTextarea("description", lang === "tr" ? "Açıklama" : "Description", "Tasarım sistemleri...")}
+            {renderInput("actionUrl", lang === "tr" ? "Aksiyon Butonu Linki" : "Action URL", "https://...")}
+            {renderInput("buttonText", lang === "tr" ? "Aksiyon Butonu Metni" : "Action Button Text", "Tamamını İzle")}
           </>
         );
         break;
