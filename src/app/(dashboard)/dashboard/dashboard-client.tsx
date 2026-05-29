@@ -3809,18 +3809,38 @@ export default function DashboardClient({
                   </span>
                   <div className="text-sm font-bold text-zinc-800 flex items-center gap-1.5">
                     <Globe className="h-4 w-4 text-teal-500" />
-                    {initialUser.profile?.customDomain ? initialUser.profile.customDomain : `link-saas.vercel.app/${initialUser.username}`}
-                    {customizingTemplateId ? "?preview=..." : ""}
+                    {(() => {
+                      const baseUrl = initialUser.profile?.customDomain 
+                        ? initialUser.profile.customDomain 
+                        : `link-saas.vercel.app`;
+                      if (activePreviewTemplateId) {
+                        const customUrl = (ownedTemplates.find(ut => ut.id === activePreviewTemplateId) as any)?.customUrl;
+                        if (customUrl) return `${baseUrl}/${customUrl}`;
+                        return `${baseUrl}/${initialUser.username}?previewTemplate=${activePreviewTemplateId}`;
+                      }
+                      return `${baseUrl}/${initialUser.username}`;
+                    })()}
                   </div>
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     onClick={() => {
+                      const protocol = initialUser.profile?.customDomain ? "https://" : `${window.location.protocol}//`;
                       const baseUrl = initialUser.profile?.customDomain 
-                        ? `https://${initialUser.profile.customDomain}`
-                        : `${window.location.protocol}//${window.location.host}/${initialUser.username}`;
-                      const url = customizingTemplateId ? `${baseUrl}?previewTemplate=${customizingTemplateId}` : baseUrl;
-                      navigator.clipboard.writeText(url);
+                        ? initialUser.profile.customDomain 
+                        : `${window.location.host}`;
+                        
+                      let finalUrl = `${protocol}${baseUrl}/${initialUser.username}`;
+                      if (activePreviewTemplateId) {
+                        const customUrl = (ownedTemplates.find(ut => ut.id === activePreviewTemplateId) as any)?.customUrl;
+                        if (customUrl) {
+                          finalUrl = `${protocol}${baseUrl}/${customUrl}`;
+                        } else {
+                          finalUrl = `${protocol}${baseUrl}/${initialUser.username}?previewTemplate=${activePreviewTemplateId}`;
+                        }
+                      }
+                      
+                      navigator.clipboard.writeText(finalUrl);
                       setSuccessMsg(lang === "tr" ? "Bağlantı kopyalandı!" : "Link copied!");
                       setTimeout(() => setSuccessMsg(""), 2000);
                     }}
@@ -3831,11 +3851,22 @@ export default function DashboardClient({
                   </button>
                   <button
                     onClick={() => {
+                      const protocol = initialUser.profile?.customDomain ? "https://" : `${window.location.protocol}//`;
                       const baseUrl = initialUser.profile?.customDomain 
-                        ? `https://${initialUser.profile.customDomain}`
-                        : `${window.location.protocol}//${window.location.host}/${initialUser.username}`;
-                      const url = customizingTemplateId ? `${baseUrl}?previewTemplate=${customizingTemplateId}` : baseUrl;
-                      window.open(url, "_blank");
+                        ? initialUser.profile.customDomain 
+                        : `${window.location.host}`;
+                        
+                      let finalUrl = `${protocol}${baseUrl}/${initialUser.username}`;
+                      if (activePreviewTemplateId) {
+                        const customUrl = (ownedTemplates.find(ut => ut.id === activePreviewTemplateId) as any)?.customUrl;
+                        if (customUrl) {
+                          finalUrl = `${protocol}${baseUrl}/${customUrl}`;
+                        } else {
+                          finalUrl = `${protocol}${baseUrl}/${initialUser.username}?previewTemplate=${activePreviewTemplateId}`;
+                        }
+                      }
+                      
+                      window.open(finalUrl, "_blank");
                     }}
                     className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-400 border border-teal-600/10 text-xs font-bold text-zinc-900 transition-colors cursor-pointer"
                   >
