@@ -3813,10 +3813,10 @@ export default function DashboardClient({
                       const baseUrl = initialUser.profile?.customDomain 
                         ? initialUser.profile.customDomain 
                         : `link-saas.vercel.app`;
-                      if (activePreviewTemplateId) {
-                        const customUrl = (ownedTemplates.find(ut => ut.id === activePreviewTemplateId) as any)?.customUrl;
+                      if (customizingTemplateId) {
+                        const customUrl = (ownedTemplates.find(ut => ut.id === customizingTemplateId) as any)?.customUrl;
                         if (customUrl) return `${baseUrl}/${customUrl}`;
-                        return `${baseUrl}/${initialUser.username}?previewTemplate=${activePreviewTemplateId}`;
+                        return `${baseUrl}/${initialUser.username}?previewTemplate=${customizingTemplateId}`;
                       }
                       return `${baseUrl}/${initialUser.username}`;
                     })()}
@@ -3831,12 +3831,12 @@ export default function DashboardClient({
                         : `${window.location.host}`;
                         
                       let finalUrl = `${protocol}${baseUrl}/${initialUser.username}`;
-                      if (activePreviewTemplateId) {
-                        const customUrl = (ownedTemplates.find(ut => ut.id === activePreviewTemplateId) as any)?.customUrl;
+                      if (customizingTemplateId) {
+                        const customUrl = (ownedTemplates.find(ut => ut.id === customizingTemplateId) as any)?.customUrl;
                         if (customUrl) {
                           finalUrl = `${protocol}${baseUrl}/${customUrl}`;
                         } else {
-                          finalUrl = `${protocol}${baseUrl}/${initialUser.username}?previewTemplate=${activePreviewTemplateId}`;
+                          finalUrl = `${protocol}${baseUrl}/${initialUser.username}?previewTemplate=${customizingTemplateId}`;
                         }
                       }
                       
@@ -3857,12 +3857,12 @@ export default function DashboardClient({
                         : `${window.location.host}`;
                         
                       let finalUrl = `${protocol}${baseUrl}/${initialUser.username}`;
-                      if (activePreviewTemplateId) {
-                        const customUrl = (ownedTemplates.find(ut => ut.id === activePreviewTemplateId) as any)?.customUrl;
+                      if (customizingTemplateId) {
+                        const customUrl = (ownedTemplates.find(ut => ut.id === customizingTemplateId) as any)?.customUrl;
                         if (customUrl) {
                           finalUrl = `${protocol}${baseUrl}/${customUrl}`;
                         } else {
-                          finalUrl = `${protocol}${baseUrl}/${initialUser.username}?previewTemplate=${activePreviewTemplateId}`;
+                          finalUrl = `${protocol}${baseUrl}/${initialUser.username}?previewTemplate=${customizingTemplateId}`;
                         }
                       }
                       
