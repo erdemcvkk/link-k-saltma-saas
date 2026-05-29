@@ -281,7 +281,6 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                             "Vintage Paper",
                             "Vintage Journal",
                             "Holographic Glass",
-                            "Bright Gold",
                             "Aura Hologram"
                           ];
                           const isLight = lightTemplates.includes(template.name);
@@ -415,7 +414,6 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                       "Vintage Paper",
                       "Vintage Journal",
                       "Holographic Glass",
-                      "Bright Gold",
                       "Aura Hologram"
                     ];
                     const isLight = lightTemplates.includes(selectedTemplate.name);
