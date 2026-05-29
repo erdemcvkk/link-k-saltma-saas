@@ -20,7 +20,7 @@ interface Template {
   isCoded: boolean;
   customCss?: string | null;
   configJson?: string | null;
-  createdAt: Date;
+  createdAt: string;
 }
 
 interface SablonlarClientProps {

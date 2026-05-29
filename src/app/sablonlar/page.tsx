@@ -51,7 +51,7 @@ export default async function SablonlarPage() {
     isCoded: t.isCoded,
     customCss: t.customCss,
     configJson: t.configJson,
-    createdAt: t.createdAt,
+    createdAt: t.createdAt.toISOString(),
   }));
 
   return (
