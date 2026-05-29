@@ -5393,6 +5393,8 @@ export default function DashboardClient({
                         if (type === "NEWSLETTER") return "newsletter";
                         if (type === "QA") return "qa";
                         if (type === "DONATION") return "donation";
+                        if (type === "PREMIUM_CREATOR") return "creator-store";
+                        if (type === "PREMIUM_VIDEO") return "masterclass";
                         return type.toLowerCase();
                       };
                       
