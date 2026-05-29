@@ -176,6 +176,19 @@ export default async function PublicProfilePage({ params, searchParams }: { para
   }
 
   // Serialize models for standard client prop constraints
+  // Map links, and optionally override button styles if a template is active
+  const parseButtonStyle = (styleStr: string) => {
+    try {
+      return JSON.parse(styleStr);
+    } catch {
+      return {};
+    }
+  };
+
+  const templateButtonOverrides = (activeTemplate && activeTemplate.buttonStyle) 
+    ? parseButtonStyle(activeTemplate.buttonStyle)
+    : {};
+
   const serializedLinks = activeUser.links.map((l: any) => ({
     id: l.id,
     title: l.title,
@@ -183,14 +196,14 @@ export default async function PublicProfilePage({ params, searchParams }: { para
     isActive: l.isActive,
     type: l.type,
     animation: l.animation || "",
-    bgColor: l.bgColor ?? null,
-    textColor: l.textColor ?? null,
-    borderColor: l.borderColor ?? null,
-    borderStyle: l.borderStyle ?? null,
-    borderWidth: l.borderWidth ?? null,
-    borderRadius: l.borderRadius ?? null,
-    shadow: l.shadow ?? null,
-    fontWeight: l.fontWeight ?? null,
+    bgColor: activeTemplate ? (templateButtonOverrides.bgColor ?? null) : (l.bgColor ?? null),
+    textColor: activeTemplate ? (templateButtonOverrides.textColor ?? null) : (l.textColor ?? null),
+    borderColor: activeTemplate ? (templateButtonOverrides.borderColor ?? null) : (l.borderColor ?? null),
+    borderStyle: activeTemplate ? (templateButtonOverrides.borderStyle ?? null) : (l.borderStyle ?? null),
+    borderWidth: activeTemplate ? (templateButtonOverrides.borderWidth ?? null) : (l.borderWidth ?? null),
+    borderRadius: activeTemplate ? (templateButtonOverrides.borderRadius ?? null) : (l.borderRadius ?? null),
+    shadow: activeTemplate ? (templateButtonOverrides.shadow ?? null) : (l.shadow ?? null),
+    fontWeight: activeTemplate ? (templateButtonOverrides.fontWeight ?? null) : (l.fontWeight ?? null),
     blockType: l.blockType || "TEXT_LINK",
     metadata: l.metadata ?? null
   }));
@@ -220,13 +233,13 @@ export default async function PublicProfilePage({ params, searchParams }: { para
     <ProfileClient
       username={activeUser.username!}
       bio={bio}
-      theme={theme}
+      theme={activeTemplate ? activeTemplate.name : theme}
       links={serializedLinks}
       products={serializedProducts}
       addons={serializedAddons}
       avatarUrl={activeUser.profile?.avatarUrl ?? null}
-      background={activeUser.profile?.background ?? null}
-      fontStyle={activeUser.profile?.fontStyle ?? "Inter"}
+      background={activeTemplate ? activeTemplate.bgColor : (activeUser.profile?.background ?? null)}
+      fontStyle={activeTemplate && activeTemplate.fontStyle ? activeTemplate.fontStyle : (activeUser.profile?.fontStyle ?? "Inter")}
       bioColor={activeUser.profile?.bioColor ?? null}
       usernameColor={activeUser.profile?.usernameColor ?? null}
       plan={activeUser.plan}
