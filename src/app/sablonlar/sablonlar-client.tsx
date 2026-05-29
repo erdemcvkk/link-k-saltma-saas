@@ -280,7 +280,9 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                             "Abstract Fluid",
                             "Vintage Paper",
                             "Vintage Journal",
-                            "Holographic Glass"
+                            "Holographic Glass",
+                            "Bright Gold",
+                            "Aura Hologram"
                           ];
                           const isLight = lightTemplates.includes(template.name);
                           const titleColor = isLight ? "text-slate-900" : "text-white";
@@ -412,7 +414,9 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                       "Abstract Fluid",
                       "Vintage Paper",
                       "Vintage Journal",
-                      "Holographic Glass"
+                      "Holographic Glass",
+                      "Bright Gold",
+                      "Aura Hologram"
                     ];
                     const isLight = lightTemplates.includes(selectedTemplate.name);
                     const titleColor = isLight ? "text-slate-900" : "text-white";

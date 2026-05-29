@@ -1511,7 +1511,7 @@ export async function seedTemplates(adminUserId?: string) {
       category: "Gamer",
       coverUrl: "https://images.unsplash.com/photo-1547082299-de196ea013d6?q=80&w=400&h=300&fit=crop",
       bgColor: "#09090b",
-      fontStyle: "Impact",
+      fontStyle: "Space Grotesk",
       buttonStyle: "bg-red-600 text-white font-bold skew-x-3 hover:bg-red-700",
       isActive: true,
       isCoded: false,
