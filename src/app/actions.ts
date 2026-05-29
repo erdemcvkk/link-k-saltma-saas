@@ -389,7 +389,7 @@ export async function updateProfile(
   // Update or create profile
   await db.profile.upsert({
     where: { userId },
-    update: { bio, theme, avatarUrl, background, fontStyle, bioColor, usernameColor, customCss },
+    update: { bio, theme, avatarUrl, background, fontStyle, bioColor, usernameColor },
     create: { 
       userId, 
       bio, 
@@ -398,8 +398,7 @@ export async function updateProfile(
       background, 
       fontStyle: fontStyle || "Inter", 
       bioColor: bioColor || null,
-      usernameColor: usernameColor || null,
-      ...(customCss !== undefined && { customCss: customCss }),
+      usernameColor: usernameColor || null
     },
   });
 
@@ -542,8 +541,7 @@ export async function toggleUserTemplateActive(userId: string, templateId: strin
     await db.profile.update({
       where: { userId },
       data: {
-        theme: "dark",
-        customCss: null
+        theme: "dark"
       }
     });
   }
