@@ -222,6 +222,7 @@ model UserTemplate {
   templateId String
   template   Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
   isActive   Boolean  @default(false)
+  customUrl  String?  @unique
   createdAt  DateTime @default(now())
 
   @@unique([userId, templateId])

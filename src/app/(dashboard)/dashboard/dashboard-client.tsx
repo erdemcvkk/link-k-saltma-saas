@@ -3921,9 +3921,15 @@ export default function DashboardClient({
                             onClick={() => {
                               const baseUrl = initialUser.profile?.customDomain 
                                 ? `https://${initialUser.profile.customDomain}`
-                                : `${window.location.protocol}//${window.location.host}/${initialUser.username}`;
-                              const url = `${baseUrl}?previewTemplate=${template.id}`;
-                              window.open(url, "_blank");
+                                : `${window.location.protocol}//${window.location.host}`;
+                              const customUrl = (ownedTemplates.find((ut: any) => ut.id === template.id) as any)?.customUrl;
+                              
+                              if (customUrl) {
+                                window.open(`${baseUrl}/${customUrl}`, "_blank");
+                              } else {
+                                const url = `${baseUrl}/${initialUser.username}?previewTemplate=${template.id}`;
+                                window.open(url, "_blank");
+                              }
                             }}
                             className="flex-1 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
                           >
@@ -4009,6 +4015,56 @@ export default function DashboardClient({
                               }`}
                             />
                           </button>
+                        </div>
+
+                        {/* CUSTOM URL SETTING */}
+                        <div className="flex flex-col gap-2 p-3 rounded-xl bg-zinc-50/50 border border-zinc-100">
+                          <span className="text-xs font-extrabold text-zinc-700">
+                            {lang === "tr" ? "Özel Şablon Linki" : "Custom Template Link"}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-zinc-400">link-saas.vercel.app/</span>
+                            <input
+                              type="text"
+                              placeholder={lang === "tr" ? "kampanyam" : "my-campaign"}
+                              defaultValue={(ownedTemplates.find((ut: any) => ut.id === template.id) as any)?.customUrl || ""}
+                              onBlur={(e) => {
+                                const newUrl = e.target.value.trim().toLowerCase();
+                                const currentUrl = (ownedTemplates.find((ut: any) => ut.id === template.id) as any)?.customUrl || "";
+                                if (newUrl === currentUrl) return;
+
+                                startTransition(async () => {
+                                  try {
+                                    const res = await fetch("/api/user-templates/custom-url", {
+                                      method: "POST",
+                                      headers: { "Content-Type": "application/json" },
+                                      body: JSON.stringify({ userTemplateId: (ownedTemplates.find((ut: any) => ut.id === template.id) as any)?.userTemplateId, customUrl: newUrl })
+                                    });
+                                    const data = await res.json();
+                                    if (data.error) {
+                                      e.target.value = currentUrl;
+                                      setErrorMsg(data.error);
+                                      setTimeout(() => setErrorMsg(""), 4000);
+                                    } else {
+                                      setOwnedTemplates(prev => prev.map(t => t.id === template.id ? { ...t, customUrl: data.customUrl } : t));
+                                      setSuccessMsg(lang === "tr" ? "Özel link güncellendi!" : "Custom link updated!");
+                                      setTimeout(() => setSuccessMsg(""), 3000);
+                                    }
+                                  } catch (err: any) {
+                                    e.target.value = currentUrl;
+                                    setErrorMsg(lang === "tr" ? "Bir hata oluştu." : "An error occurred.");
+                                    setTimeout(() => setErrorMsg(""), 4000);
+                                  }
+                                });
+                              }}
+                              className="flex-1 bg-white border border-zinc-200 rounded-lg px-2 py-1.5 text-xs font-bold text-zinc-800 outline-none focus:border-teal-500"
+                            />
+                          </div>
+                          <p className="text-[9px] text-zinc-500 leading-tight">
+                            {lang === "tr" 
+                              ? "Eğer boş bırakırsanız özel link devre dışı kalır. Bu link sadece bu şablonun uygulanmış halini gösterir."
+                              : "If left empty, custom link is disabled. This link displays your profile with this specific template applied."}
+                          </p>
                         </div>
 
                         {/* INLINE TEMPLATE CUSTOMIZATION CONTROL DRAWER */}

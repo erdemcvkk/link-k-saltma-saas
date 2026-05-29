@@ -55,6 +55,8 @@ export default async function PublicProfilePage({ params, searchParams }: { para
   const previewTemplateId = resolvedSearchParams.previewTemplate;
   const cleanUsername = username.replace("%40", "").replace(/^@/, "");
 
+  let forcedTemplateId: string | null = null;
+
   // Search for the user
   let user = await db.user.findFirst({
     where: {
@@ -76,6 +78,35 @@ export default async function PublicProfilePage({ params, searchParams }: { para
       }
     },
   });
+
+  // If not found by username, check if it's a custom template URL
+  if (!user) {
+    const userTemplate = await db.userTemplate.findFirst({
+      where: { customUrl: cleanUsername.toLowerCase() },
+      include: {
+        user: {
+          include: {
+            profile: true,
+            links: {
+              where: { isActive: true },
+              orderBy: { order: "asc" },
+            },
+            ownedTemplates: {
+              include: { template: true }
+            },
+            ownedAddons: {
+              where: { isActive: true }
+            }
+          }
+        }
+      }
+    });
+
+    if (userTemplate && userTemplate.user) {
+      user = userTemplate.user as any;
+      forcedTemplateId = userTemplate.templateId;
+    }
+  }
 
   if (!user) {
     notFound();
@@ -152,10 +183,11 @@ export default async function PublicProfilePage({ params, searchParams }: { para
   // Priority 3: Custom Profile CSS (Kullanıcının Oluşturduğu)
   
   let customCss = null;
-  let activeTemplate = activeUser.ownedTemplates?.find(ot => ot.isActive)?.template;
+  let activeTemplate = activeUser.ownedTemplates?.find((ot: any) => ot.isActive)?.template;
   
-  if (previewTemplateId) {
-    const previewMatch = activeUser.ownedTemplates?.find((ot: any) => ot.template?.id === previewTemplateId);
+  if (previewTemplateId || forcedTemplateId) {
+    const targetId = forcedTemplateId || previewTemplateId;
+    const previewMatch = activeUser.ownedTemplates?.find((ot: any) => ot.template?.id === targetId);
     if (previewMatch) activeTemplate = previewMatch.template;
   }
 
