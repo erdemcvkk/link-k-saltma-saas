@@ -187,6 +187,18 @@ export const ADDON_TYPES: AddonTypeData[] = [
       { id: "pc1", title: "Mastering Eğitimi (Video)", type: "Eğitim", price: "450", imageUrl: "https://images.unsplash.com/photo-1516280440503-66f837ce5b97?w=500&q=80" },
       { id: "pc2", title: "Özel Lo-Fi Beat Paketi", type: "Beat", price: "300", imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&q=80" },
     ]
+  },
+  {
+    id: "NEWSLETTER",
+    name: "Bülten & E-Posta Formu",
+    desc: "Ziyaretçilerinizden e-posta toplayarak kitlenizi büyütün.",
+    color: "bg-indigo-500",
+    theme: "newsletter",
+    price: "0",
+    username: "@bulten",
+    bio: "Haftalık Bültenime Katıl",
+    avatarUrl: "",
+    mockProducts: []
   }
 ];
 
@@ -274,15 +286,33 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
                   <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
                   
                   <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">
-                    <StorefrontPreview 
-                      theme={addon.theme} 
-                      products={displayProducts} 
-                      storeTitle={addon.name}
-                      username={addon.username}
-                      bio={addon.bio}
-                      avatarUrl={addon.avatarUrl}
-                      storeCoverUrl={addon.coverUrl}
-                    />
+                    {addon.id === "NEWSLETTER" ? (
+                      <div className="w-full h-full bg-indigo-50/30 flex items-center justify-center p-4">
+                        <div className="w-full bg-white p-6 rounded-[2rem] shadow-xl flex flex-col items-center text-center scale-90 origin-top">
+                          <div className="w-16 h-16 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center mb-4">
+                            <span className="text-2xl">✉️</span>
+                          </div>
+                          <h1 className="text-xl font-black text-slate-800 mb-2">Bültenime Katıl</h1>
+                          <p className="text-slate-500 text-xs mb-6">Spam yok, sadece kaliteli içerik.</p>
+                          <div className="w-full flex flex-col gap-3">
+                            <input type="email" placeholder="E-posta adresiniz..." readOnly className="w-full p-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-center text-sm" />
+                            <button className="w-full py-3 rounded-xl bg-slate-900 text-white font-bold text-sm shadow-lg pointer-events-none">
+                              Abone Ol
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <StorefrontPreview 
+                        theme={addon.theme as any} 
+                        products={displayProducts} 
+                        storeTitle={addon.name}
+                        username={addon.username}
+                        bio={addon.bio}
+                        avatarUrl={addon.avatarUrl}
+                        storeCoverUrl={addon.coverUrl}
+                      />
+                    )}
                   </div>
                 </div>
 

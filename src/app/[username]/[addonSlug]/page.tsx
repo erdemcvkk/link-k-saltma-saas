@@ -182,7 +182,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
           <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Haftalık Bülten"}</h1>
           <p className="text-slate-500 mb-8">{parsedConfig.incentiveMsg || "Spam yok, sadece kaliteli içerik."}</p>
           <form action={parsedConfig.serviceUrl || "#"} method="POST" target="_blank" className="w-full flex flex-col gap-3">
-            <input type="email" required placeholder="E-posta adresiniz..." className="w-full p-4 bg-zinc-50 border border-zinc-200 rounded-2xl outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 transition-all text-center" />
+            <input type="email" required placeholder={parsedConfig.placeholderText || "E-posta adresiniz..."} className="w-full p-4 bg-zinc-50 border border-zinc-200 rounded-2xl outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 transition-all text-center" />
             <button type="submit" className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
               {parsedConfig.buttonText || "Abone Ol"}
             </button>
