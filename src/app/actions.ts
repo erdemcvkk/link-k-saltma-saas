@@ -1810,6 +1810,11 @@ export async function purchaseAddon(userId: string, addonType: string) {
   if (addonType === "NEWSLETTER") defaultTheme = "glassmorphism";
   if (addonType === "QA") defaultTheme = "dark-drill";
   if (addonType === "DONATION") defaultTheme = "classic";
+  if (addonType === "NEO_BRUTAL") defaultTheme = "neo-brutalism";
+  if (addonType === "ORGANIC") defaultTheme = "organic-earth";
+  if (addonType === "RETRO") defaultTheme = "retro-arcade";
+  if (addonType === "ACADEMIA") defaultTheme = "dark-academia";
+  if (addonType === "Y2K") defaultTheme = "y2k-holographic";
 
   return await db.userAddon.create({
     data: {

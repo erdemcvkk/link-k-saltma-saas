@@ -1,45 +1,23 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const { PrismaClient } = require('@prisma/client'); 
+const prisma = new PrismaClient(); 
 
-async function main() {
-  const templates = await prisma.template.findMany();
-  let updated = 0;
-  for (const t of templates) {
-    let changed = false;
-    let newButtonStyle = t.buttonStyle;
-    if (newButtonStyle && (newButtonStyle.includes('font-extrabold') || newButtonStyle.includes('font-black'))) {
-      newButtonStyle = newButtonStyle.replace(/font-extrabold/g, 'font-bold').replace(/font-black/g, 'font-bold');
-      changed = true;
-    }
-
-    if (changed) {
-      await prisma.template.update({
-        where: { id: t.id },
-        data: {
-          buttonStyle: newButtonStyle
-        }
-      });
-      updated++;
-    }
-  }
-  
-  const links = await prisma.link.findMany();
-  let updatedLinks = 0;
-  for (const l of links) {
-    if (l.fontWeight === 'font-extrabold' || l.fontWeight === 'font-black') {
-      await prisma.link.update({
-        where: { id: l.id },
-        data: {
-          fontWeight: 'font-bold'
-        }
-      });
-      updatedLinks++;
-    }
-  }
-
-  console.log(`Updated ${updated} templates and ${updatedLinks} links in DB.`);
-}
-
-main()
-  .catch(e => console.error(e))
-  .finally(() => prisma.$disconnect());
+async function main() { 
+  const addons = await prisma.userAddon.findMany(); 
+  let updatedCount = 0;
+  for(let a of addons) { 
+    if(['NEO_BRUTAL','ORGANIC','RETRO','ACADEMIA','Y2K'].includes(a.addonType)) { 
+      let c = a.config ? JSON.parse(a.config) : {}; 
+      if(!c.theme || c.theme === 'classic') { 
+        if(a.addonType === 'NEO_BRUTAL') c.theme = 'neo-brutalism'; 
+        if(a.addonType === 'ORGANIC') c.theme = 'organic-earth'; 
+        if(a.addonType === 'RETRO') c.theme = 'retro-arcade'; 
+        if(a.addonType === 'ACADEMIA') c.theme = 'dark-academia'; 
+        if(a.addonType === 'Y2K') c.theme = 'y2k-holographic'; 
+        await prisma.userAddon.update({where:{id:a.id}, data:{config: JSON.stringify(c)}}); 
+        updatedCount++;
+      } 
+    } 
+  } 
+  console.log("Updated " + updatedCount + " addons");
+} 
+main();

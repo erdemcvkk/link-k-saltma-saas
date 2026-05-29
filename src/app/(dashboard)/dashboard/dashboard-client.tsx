@@ -530,6 +530,8 @@ export default function DashboardClient({
 
   useEffect(() => {
     setSimulatedPlan(initialUser.plan);
+    if (initialAddons) setAddons(initialAddons);
+
   }, [initialUser.plan]);
 
   const [links, setLinks] = useState<LinkItem[]>(initialLinks);
