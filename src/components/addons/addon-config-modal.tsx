@@ -737,29 +737,23 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
       case "ACADEMIA":
       case "Y2K":
         return (
-          <div className="w-full h-full bg-[#f8f9fa] overflow-hidden flex flex-col">
-            {/* Mock Header to give it a profile feel */}
-            <div className="w-full h-24 bg-gradient-to-b from-black/5 to-transparent flex-shrink-0" />
-            <div className="px-4 pb-12 w-full flex-1">
-              <div className="w-full bg-white rounded-[2rem] overflow-hidden border border-zinc-200 shadow-xl pb-6">
-                <StorefrontPreview 
-                  theme={configData.theme || getDefaultTheme(addon.addonType)} 
-                  products={products.map(p => ({
-                    id: p.id,
-                    title: p.title,
-                    type: p.type,
-                    price: p.price.toString(),
-                    imageUrl: p.imageUrl || p.fileUrl,
-                    description: p.description || ""
-                  }))}
-                  storeTitle={configData.storeTitle || (lang === "tr" ? "Mağazam" : "My Store")}
-                  username={configData.storeUsername}
-                  bio={configData.storeBio}
-                  avatarUrl={configData.storeAvatarUrl}
-                  buyButtonText={configData.buyButtonText}
-                />
-              </div>
-            </div>
+          <div className="w-full h-full relative overflow-hidden flex flex-col">
+            <StorefrontPreview 
+              theme={configData.theme || getDefaultTheme(addon.addonType)} 
+              products={products.map(p => ({
+                id: p.id,
+                title: p.title,
+                type: p.type,
+                price: p.price.toString(),
+                imageUrl: p.imageUrl || p.fileUrl,
+                description: p.description || ""
+              }))}
+              storeTitle={configData.storeTitle || (lang === "tr" ? "Mağazam" : "My Store")}
+              username={configData.storeUsername}
+              bio={configData.storeBio}
+              avatarUrl={configData.storeAvatarUrl}
+              buyButtonText={configData.buyButtonText}
+            />
           </div>
         );
       // For other addons, we render a generic card that reacts to configData in real time.

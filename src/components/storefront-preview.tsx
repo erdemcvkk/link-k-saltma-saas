@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { ShoppingBag, ChevronRight, Search, LayoutGrid, List, User } from "lucide-react";
 
 export interface DummyProduct {
@@ -32,7 +32,39 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
   const [layout, setLayout] = useState<"GRID" | "LIST">("GRID");
   const [clickedItem, setClickedItem] = useState<string | null>(null);
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [hasDragged, setHasDragged] = useState(false);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollContainerRef.current) return;
+    setIsDragging(true);
+    setHasDragged(false);
+    setStartY(e.pageY - scrollContainerRef.current.offsetTop);
+    setScrollTop(scrollContainerRef.current.scrollTop);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollContainerRef.current) return;
+    e.preventDefault();
+    setHasDragged(true);
+    const y = e.pageY - scrollContainerRef.current.offsetTop;
+    const walk = (y - startY) * 2;
+    scrollContainerRef.current.scrollTop = scrollTop - walk;
+  };
+
   const handlePurchase = (id: string) => {
+    if (hasDragged) return;
     setClickedItem(id);
     if (onProductClick) {
       setTimeout(() => {
@@ -246,7 +278,15 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
   const priceSizeClass = isRetro ? "text-[10px]" : "text-sm";
 
   return (
-    <div className={`relative w-full h-full overflow-y-auto no-scrollbar ${styles.wrapper}`} style={{ fontFamily: styles.wrapperFont }}>
+    <div 
+      ref={scrollContainerRef}
+      onMouseDown={handleMouseDown}
+      onMouseLeave={handleMouseLeave}
+      onMouseUp={handleMouseUp}
+      onMouseMove={handleMouseMove}
+      className={`relative w-full h-full overflow-y-auto no-scrollbar ${styles.wrapper} ${isDragging ? 'cursor-grabbing' : 'cursor-auto'}`} 
+      style={{ fontFamily: styles.wrapperFont }}
+    >
       {/* Extra overlay (CRT for retro) */}
       {styles.extraOverlay && <div className={styles.extraOverlay} />}
 
