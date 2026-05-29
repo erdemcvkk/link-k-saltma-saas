@@ -40,14 +40,29 @@ export default async function AddonPage({ params }: { params: Promise<{ username
   });
 
   // Find the addon that matches this slug
-  // The slug is stored in config.customSlug
+  function getDefaultSlug(type: string) {
+    if (type === "MINI_STORE") return "store";
+    if (type === "NEO_BRUTAL") return "neo-brutal";
+    if (type === "ORGANIC") return "organic";
+    if (type === "RETRO") return "retro";
+    if (type === "ACADEMIA") return "academia";
+    if (type === "Y2K") return "y2k";
+    if (type === "BOOKING") return "booking";
+    if (type === "NEWSLETTER") return "newsletter";
+    if (type === "QA") return "qa";
+    if (type === "DONATION") return "donation";
+    return type.toLowerCase();
+  }
+
+  // Find the matching active addon by slug
   const matchingAddon = addons.find(a => {
+    if (!a.isActive) return false;
     try {
-      if (!a.config) return false;
-      const parsed = JSON.parse(a.config);
-      return (parsed.customSlug && parsed.customSlug.toLowerCase() === addonSlug.toLowerCase()) || (addonSlug.toLowerCase() === 'store');
+      const parsed = a.config ? JSON.parse(a.config) : {};
+      const cSlug = (parsed.customSlug || getDefaultSlug(a.addonType)).toLowerCase();
+      return cSlug === addonSlug.toLowerCase();
     } catch {
-      return false;
+      return getDefaultSlug(a.addonType).toLowerCase() === addonSlug.toLowerCase();
     }
   });
 
