@@ -3919,17 +3919,16 @@ export default function DashboardClient({
                           <button
                             type="button"
                             onClick={() => {
-                              setBackground(template.bgColor);
-                              setFontStyle(template.fontStyle);
-                              setActiveTemplateCss(template.isCoded ? (template.customCss || null) : null);
-                              setTheme(template.name);
-                              setSuccessMsg(lang === "tr" ? "Şablon canlı simülatörde önizleniyor!" : "Previewing template in simulator!");
-                              setTimeout(() => setSuccessMsg(""), 2000);
+                              const baseUrl = initialUser.profile?.customDomain 
+                                ? `https://${initialUser.profile.customDomain}`
+                                : `${window.location.protocol}//${window.location.host}/${initialUser.username}`;
+                              const url = `${baseUrl}?previewTemplate=${template.id}`;
+                              window.open(url, "_blank");
                             }}
                             className="flex-1 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
                           >
                             <Eye className="h-3.5 w-3.5" />
-                            <span>{lang === "tr" ? "Önizle" : "Preview"}</span>
+                            <span>{lang === "tr" ? "Canlı Önizle" : "Live Preview"}</span>
                           </button>
 
                           <button
