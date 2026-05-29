@@ -520,7 +520,7 @@ export default function DashboardClient({
         clearTimeout(initialTimer);
       };
     }
-  }, [initialUser.plan, initialAddons]);
+  }, [initialUser.plan]);
 
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons || []);
   const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
@@ -532,7 +532,7 @@ export default function DashboardClient({
     setSimulatedPlan(initialUser.plan);
     if (initialAddons) setAddons(initialAddons);
 
-  }, [initialUser.plan, initialAddons]);
+  }, [initialUser.plan]);
 
   const [links, setLinks] = useState<LinkItem[]>(initialLinks);
   const [bio, setBio] = useState(initialUser.profile?.bio ?? "");
@@ -3574,7 +3574,1814 @@ export default function DashboardClient({
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {addons.map(addon => {
+                  {ownedTemplates.map((template) => {
+                    const isCurrentlyApplied = background === template.bgColor && fontStyle === template.fontStyle;
+                    return (
+                      <div 
+                        key={template.id} 
+                        className={`p-5 rounded-2xl border transition-all flex flex-col justify-between gap-5 ${
+                          isCurrentlyApplied 
+                            ? "bg-teal-50/20 border-teal-500 shadow-md shadow-teal-500/5" 
+                            : "bg-zinc-50/50 border-zinc-200 hover:border-zinc-300 hover:shadow-sm"
+                        }`}
+                      >
+                        <div className="space-y-3">
+                          {/* Mini design preview card */}
+                          <div 
+                            className="h-28 rounded-xl flex flex-col items-center justify-center p-4 border border-zinc-200/60 relative overflow-hidden shadow-inner"
+                            style={{ background: template.bgColor }}
+                          >
+                            {/* Glass overlay button preview */}
+                            <div 
+                              className={`px-4 py-2 rounded-xl text-[10px] font-bold text-center w-3/4 truncate max-w-xs ${template.buttonStyle}`}
+                            >
+                              {template.name}
+                            </div>
+                            <span className="absolute bottom-2 right-2 text-[9px] font-mono text-zinc-400 bg-black/45 px-2 py-0.5 rounded backdrop-blur-sm">
+                              {template.fontStyle}
+                            </span>
+                          </div>
+
+                          <div className="space-y-1">
+                            <div className="flex items-center justify-between">
+                              <h3 className="font-extrabold text-sm text-zinc-950">
+                                {template.name}
+                              </h3>
+                              <span className="text-[10px] font-bold text-teal-600 bg-teal-50 border border-teal-100 px-2 py-0.5 rounded-full">
+                                {template.category}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-slate-500">
+                              {template.isCoded 
+                                ? (lang === "tr" ? "Özel CSS/Kod Yapısı" : "Custom Encoded Layout") 
+                                : (lang === "tr" ? "Hazır Görsel Düzen" : "Visual Grid Template")}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2 w-full">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setBackground(template.bgColor);
+                              setFontStyle(template.fontStyle);
+                              setTheme("custom");
+                              setSuccessMsg(lang === "tr" ? "Şablon canlı simülatörde önizleniyor!" : "Previewing template in simulator!");
+                              setTimeout(() => setSuccessMsg(""), 2000);
+                            }}
+                            className="flex-1 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                            <span>{lang === "tr" ? "Önizle" : "Preview"}</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setBackground(template.bgColor);
+                              setFontStyle(template.fontStyle);
+                              setTheme("custom");
+                              setCustomizingTemplateId(customizingTemplateId === template.id ? null : template.id);
+                            }}
+                            className="flex-1 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
+                          >
+                            <Settings className="h-3.5 w-3.5" />
+                            <span>{lang === "tr" ? "Düzenle" : "Customize"}</span>
+                          </button>
+                        </div>
+
+                        <button
+                          type="button"
+                          disabled={isCurrentlyApplied || isPending}
+                          onClick={() => {
+                            startTransition(async () => {
+                              try {
+                                const res = await applyTemplateToProfile(initialUser.id, template.id);
+                                if (res.success) {
+                                  setBackground(template.bgColor);
+                                  if (template.fontStyle) {
+                                    setFontStyle(template.fontStyle);
+                                  }
+                                  setTheme("custom");
+
+                                  // Parse button style and update client-side link states
+                                  if (template.buttonStyle) {
+                                    const parsed = parseButtonStyle(template.buttonStyle);
+                                    setBtnBgColor(parsed.bgColor);
+                                    setBtnTextColor(parsed.textColor);
+                                    setBtnBorderColor(parsed.borderColor);
+                                    setBtnBorderStyle(parsed.borderStyle);
+                                    setBtnBorderWidth(parsed.borderWidth);
+                                    setBtnBorderRadius(parsed.borderRadius);
+                                    setBtnShadow(parsed.shadow);
+                                    setBtnFontWeight(parsed.fontWeight);
+
+                                    // Update all links in state with new template styles
+                                    setLinks(prev => prev.map(l => ({
+                                      ...l,
+                                      bgColor: parsed.bgColor,
+                                      textColor: parsed.textColor,
+                                      borderColor: parsed.borderColor,
+                                      borderStyle: parsed.borderStyle,
+                                      borderWidth: parsed.borderWidth,
+                                      borderRadius: parsed.borderRadius,
+                                      shadow: parsed.shadow,
+                                      fontWeight: parsed.fontWeight
+                                    })));
+                                  }
+
+                                  setSuccessMsg(lang === "tr" ? "Şablon başarıyla uygulandı!" : "Template applied successfully!");
+                                  setTimeout(() => setSuccessMsg(""), 3000);
+                                }
+                              } catch (e: any) {
+                                setErrorMsg(e.message || "An error occurred");
+                                setTimeout(() => setErrorMsg(""), 4000);
+                              }
+                            });
+                          }}
+                          className={`w-full py-2.5 rounded-xl font-extrabold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
+                            isCurrentlyApplied 
+                              ? "bg-zinc-100 text-zinc-400 border border-zinc-200 cursor-not-allowed" 
+                              : "bg-teal-500 hover:bg-teal-400 text-slate-900 shadow-md shadow-teal-500/10"
+                          }`}
+                        >
+                          {isCurrentlyApplied ? (
+                            <>
+                              <Check className="h-3.5 w-3.5" />
+                              <span>{lang === "tr" ? "Aktif Olarak Uygulandı" : "Currently Active"}</span>
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="h-3.5 w-3.5" />
+                              <span>{lang === "tr" ? "Profili Güncelle (Uygula)" : "Apply to Profile"}</span>
+                            </>
+                          )}
+                        </button>
+
+                        {/* INLINE TEMPLATE CUSTOMIZATION CONTROL DRAWER */}
+                        {customizingTemplateId === template.id && (
+                          <div className="w-full p-4 rounded-xl border border-zinc-200 bg-white space-y-4 text-left animate-in fade-in duration-200">
+                            <h4 className="text-xs font-black text-zinc-900 uppercase tracking-wide border-b pb-2 flex items-center gap-1.5">
+                              <Settings className="h-3.5 w-3.5 text-teal-500" />
+                              {lang === "tr" ? "Şablon Tasarımını Özelleştir" : "Customize Template Design"}
+                            </h4>
+                            
+                            {/* Profile Image (Avatar) Input */}
+                            <div className="space-y-1.5">
+                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
+                                {lang === "tr" ? "Profil Fotoğrafı" : "Profile Picture"}
+                              </label>
+                              <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-full border border-zinc-200 overflow-hidden bg-slate-50 flex items-center justify-center shrink-0">
+                                  {avatarUrl ? (
+                                    <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <User className="h-5 w-5 text-slate-400" />
+                                  )}
+                                </div>
+                                <div className="flex gap-2">
+                                  <label className="px-3 py-1 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 text-[10px] font-bold transition-all cursor-pointer select-none text-zinc-700 flex items-center justify-center">
+                                    {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      className="hidden"
+                                      onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                          if (file.size > 2.5 * 1024 * 1024) {
+                                            alert(lang === "tr" ? "Lütfen 2.5MB'den küçük bir fotoğraf seçin!" : "Please select an image smaller than 2.5MB!");
+                                            return;
+                                          }
+                                          const reader = new FileReader();
+                                          reader.onload = (event) => {
+                                            if (event.target?.result) {
+                                              setAvatarUrl(event.target.result as string);
+                                            }
+                                          };
+                                          reader.readAsDataURL(file);
+                                        }
+                                      }}
+                                    />
+                                  </label>
+                                  {avatarUrl && (
+                                    <button
+                                      type="button"
+                                      onClick={() => setAvatarUrl("")}
+                                      className="px-3 py-1 rounded-lg border border-red-250 bg-red-50 hover:bg-red-100 text-[10px] font-bold text-red-650 transition-all cursor-pointer select-none"
+                                    >
+                                      {lang === "tr" ? "Kaldır" : "Remove"}
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Background Input */}
+                            <div className="space-y-1">
+                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
+                                {lang === "tr" ? "Arka Plan (Renk veya Gradyan CSS)" : "Background (CSS Gradient or Color)"}
+                              </label>
+                              <input
+                                type="text"
+                                value={background || ""}
+                                onChange={(e) => setBackground(e.target.value)}
+                                className="w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-teal-500 outline-none"
+                                placeholder="e.g. #ffffff or linear-gradient(...)"
+                              />
+                            </div>
+
+                            {/* Font Select */}
+                            <div className="space-y-1">
+                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
+                                {lang === "tr" ? "Yazı Tipi" : "Typography Style"}
+                              </label>
+                              <select
+                                value={fontStyle}
+                                onChange={(e) => setFontStyle(e.target.value)}
+                                className="w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 focus:border-teal-500 outline-none bg-white"
+                              >
+                                {initialFonts.map((f) => (
+                                  <option key={f.value} value={f.value}>{f.name}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            {/* Colors Grid */}
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="space-y-1">
+                                <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
+                                  {lang === "tr" ? "Kullanıcı Adı Rengi" : "Username Color"}
+                                </label>
+                                <div className="flex gap-2">
+                                  <input
+                                    type="color"
+                                    value={usernameColor || "#ffffff"}
+                                    onChange={(e) => setUsernameColor(e.target.value)}
+                                    className="h-7 w-8 rounded border border-zinc-200 cursor-pointer animate-none"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={usernameColor || ""}
+                                    onChange={(e) => setUsernameColor(e.target.value)}
+                                    className="flex-1 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="space-y-1">
+                                <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
+                                  {lang === "tr" ? "Biyografi Rengi" : "Bio Color"}
+                                </label>
+                                <div className="flex gap-2">
+                                  <input
+                                    type="color"
+                                    value={bioColor || "#888888"}
+                                    onChange={(e) => setBioColor(e.target.value)}
+                                    className="h-7 w-8 rounded border border-zinc-200 cursor-pointer animate-none"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={bioColor || ""}
+                                    onChange={(e) => setBioColor(e.target.value)}
+                                    className="flex-1 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* --- BUTTON PROPERTIES (Buton Özellikleri) --- */}
+                            <div className="border-t pt-3 mt-1 space-y-3">
+                              <h5 className="text-[10px] font-black text-zinc-800 uppercase tracking-wider">
+                                {lang === "tr" ? "Buton Stil Özellikleri" : "Button Style Features"}
+                              </h5>
+
+                              {/* Button Colors Grid */}
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Buton Arka Planı" : "Button Background"}
+                                  </label>
+                                  <div className="flex gap-1.5">
+                                    <input
+                                      type="color"
+                                      value={btnBgColor || "#ffffff"}
+                                      onChange={(e) => setBtnBgColor(e.target.value)}
+                                      className="h-7 w-7 rounded border border-zinc-200 cursor-pointer animate-none"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={btnBgColor || ""}
+                                      onChange={(e) => setBtnBgColor(e.target.value)}
+                                      className="flex-1 min-w-0 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Buton Yazı Rengi" : "Button Text Color"}
+                                  </label>
+                                  <div className="flex gap-1.5">
+                                    <input
+                                      type="color"
+                                      value={btnTextColor || "#000000"}
+                                      onChange={(e) => setBtnTextColor(e.target.value)}
+                                      className="h-7 w-7 rounded border border-zinc-200 cursor-pointer animate-none"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={btnTextColor || ""}
+                                      onChange={(e) => setBtnTextColor(e.target.value)}
+                                      className="flex-1 min-w-0 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Çerçeve Rengi" : "Border Color"}
+                                  </label>
+                                  <div className="flex gap-1.5">
+                                    <input
+                                      type="color"
+                                      value={btnBorderColor || "#000000"}
+                                      onChange={(e) => setBtnBorderColor(e.target.value)}
+                                      className="h-7 w-7 rounded border border-zinc-200 cursor-pointer animate-none"
+                                    />
+                                    <input
+                                      type="text"
+                                      value={btnBorderColor || ""}
+                                      onChange={(e) => setBtnBorderColor(e.target.value)}
+                                      className="flex-1 min-w-0 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Çerçeve Stili" : "Border Style"}
+                                  </label>
+                                  <select
+                                    value={btnBorderStyle}
+                                    onChange={(e) => setBtnBorderStyle(e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
+                                  >
+                                    <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
+                                    <option value="dashed">{lang === "tr" ? "Kesikli (Dashed)" : "Dashed"}</option>
+                                    <option value="double">{lang === "tr" ? "Çift (Double)" : "Double"}</option>
+                                    <option value="dotted">{lang === "tr" ? "Noktalı (Dotted)" : "Dotted"}</option>
+                                    <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Çerçeve Kalınlığı" : "Border Width"}
+                                  </label>
+                                  <select
+                                    value={btnBorderWidth}
+                                    onChange={(e) => setBtnBorderWidth(e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
+                                  >
+                                    <option value="0px">0px</option>
+                                    <option value="1px">1px</option>
+                                    <option value="2px">2px</option>
+                                    <option value="3px">3px</option>
+                                    <option value="4px">4px</option>
+                                    <option value="5px">5px</option>
+                                  </select>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Köşe Yuvarlaklığı" : "Border Radius"}
+                                  </label>
+                                  <select
+                                    value={btnBorderRadius}
+                                    onChange={(e) => setBtnBorderRadius(e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
+                                  >
+                                    <option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp (0px)"}</option>
+                                    <option value="4px">4px</option>
+                                    <option value="8px">8px</option>
+                                    <option value="12px">12px</option>
+                                    <option value="16px">16px</option>
+                                    <option value="20px">20px</option>
+                                    <option value="24px">24px</option>
+                                    <option value="9999px">{lang === "tr" ? "Yuvarlak (Oval)" : "Round (Oval)"}</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Gölge Efekti" : "Shadow Effect"}
+                                  </label>
+                                  <select
+                                    value={btnShadow}
+                                    onChange={(e) => setBtnShadow(e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
+                                  >
+                                    <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
+                                    <option value="soft">{lang === "tr" ? "Yumuşak (Soft)" : "Soft"}</option>
+                                    <option value="glow-purple">{lang === "tr" ? "Mor Işıma (Glow)" : "Glow Purple"}</option>
+                                    <option value="glow-emerald">{lang === "tr" ? "Yeşil Işıma (Glow)" : "Glow Emerald"}</option>
+                                    <option value="hard-3d">{lang === "tr" ? "Sert 3D (Brutal)" : "Hard 3D"}</option>
+                                  </select>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
+                                    {lang === "tr" ? "Yazı Kalınlığı" : "Font Weight"}
+                                  </label>
+                                  <select
+                                    value={btnFontWeight}
+                                    onChange={(e) => setBtnFontWeight(e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
+                                  >
+                                    <option value="font-normal">{lang === "tr" ? "Normal" : "Normal"}</option>
+                                    <option value="font-medium">{lang === "tr" ? "Orta (Medium)" : "Medium"}</option>
+                                    <option value="font-bold">{lang === "tr" ? "Kalın (Bold)" : "Bold"}</option>
+                                    <option value="font-black">{lang === "tr" ? "Çok Kalın (Black)" : "Black"}</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* --- QUICK LINK ADDITION (Hızlı Link Ekleme) --- */}
+                            <div className="border-t pt-3 mt-1 space-y-3">
+                              <h5 className="text-[10px] font-black text-zinc-800 uppercase tracking-wider flex items-center gap-1">
+                                <span>🔗</span>
+                                {lang === "tr" ? "Yeni Link Ekle (Önizleme İçin)" : "Add New Link (For Preview)"}
+                              </h5>
+                              <div className="space-y-2 bg-slate-50 p-2.5 rounded-lg border border-zinc-150">
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div className="space-y-0.5">
+                                    <input
+                                      type="text"
+                                      placeholder={lang === "tr" ? "Link Başlığı" : "Link Title"}
+                                      value={quickLinkTitle}
+                                      onChange={(e) => setQuickLinkTitle(e.target.value)}
+                                      className="w-full px-2.5 py-1.5 rounded border border-zinc-200 text-[10px] text-zinc-900 focus:border-teal-500 outline-none bg-white"
+                                    />
+                                  </div>
+                                  <div className="space-y-0.5">
+                                    <input
+                                      type="text"
+                                      placeholder={lang === "tr" ? "Link URL" : "Link URL"}
+                                      value={quickLinkUrl}
+                                      onChange={(e) => setQuickLinkUrl(e.target.value)}
+                                      className="w-full px-2.5 py-1.5 rounded border border-zinc-200 text-[10px] text-zinc-900 focus:border-teal-500 outline-none bg-white"
+                                    />
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={async () => {
+                                    if (!quickLinkTitle || !quickLinkUrl) return;
+                                    if (simulatedPlan === "FREE" && links.length >= 5) {
+                                      triggerUpgradeModal(
+                                        lang === "tr" ? "Link Sınırına Ulaştınız 🔒" : "Link Limit Reached 🔒",
+                                        lang === "tr" 
+                                          ? "Ücretsiz planda en fazla 5 link oluşturabilirsiniz. Sınırları kaldırmak için Premium pakete geçin!" 
+                                          : "Free tier is limited to 5 links. Upgrade your plan to add unlimited links!"
+                                      );
+                                      return;
+                                    }
+                                    startTransition(async () => {
+                                      try {
+                                        await addLink(
+                                          initialUser.id,
+                                          quickLinkTitle,
+                                          quickLinkUrl,
+                                          "WEBSITE",
+                                          "",
+                                          "TEXT_LINK",
+                                          null
+                                        );
+                                        const tempId = Math.random().toString();
+                                        setLinks([
+                                          ...links,
+                                          {
+                                            id: tempId,
+                                            title: quickLinkTitle,
+                                            url: quickLinkUrl,
+                                            isActive: true,
+                                            type: "WEBSITE",
+                                            clicks: [],
+                                            blockType: "TEXT_LINK",
+                                            metadata: null,
+                                            bgColor: btnBgColor || null,
+                                            textColor: btnTextColor || null,
+                                            borderColor: btnBorderColor || null,
+                                            borderStyle: btnBorderStyle || null,
+                                            borderWidth: btnBorderWidth || null,
+                                            borderRadius: btnBorderRadius || null,
+                                            shadow: btnShadow || null,
+                                            fontWeight: btnFontWeight || null
+                                          }
+                                        ]);
+                                        setQuickLinkTitle("");
+                                        setQuickLinkUrl("");
+                                        setSuccessMsg(lang === "tr" ? "Link başarıyla eklendi!" : "Link added successfully!");
+                                        setTimeout(() => setSuccessMsg(""), 3000);
+                                      } catch (err: any) {
+                                        setErrorMsg(err.message || "Failed to add link");
+                                        setTimeout(() => setErrorMsg(""), 4000);
+                                      }
+                                    });
+                                  }}
+                                  className="w-full py-1.5 rounded bg-zinc-950 hover:bg-zinc-850 text-white text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1 border-none"
+                                >
+                                  <span>{lang === "tr" ? "Listeye Ekle" : "Add to List"}</span>
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="pt-2 flex gap-1.5 border-t">
+                              <button
+                                type="button"
+                                onClick={async () => {
+                                  startTransition(async () => {
+                                    try {
+                                      await applyTemplateToProfile(initialUser.id, template.id);
+                                      await updateProfile(
+                                        initialUser.id,
+                                        bio,
+                                        "custom",
+                                        username,
+                                        avatarUrl || undefined,
+                                        background || undefined,
+                                        fontStyle || undefined,
+                                        bioColor || undefined,
+                                        usernameColor || undefined
+                                      );
+                                      await updateAllLinksCustomStyle(
+                                        initialUser.id,
+                                        btnBgColor || null,
+                                        btnTextColor || null,
+                                        btnBorderColor || null,
+                                        btnBorderStyle || null,
+                                        btnBorderWidth || null,
+                                        btnBorderRadius || null,
+                                        btnShadow || null,
+                                        btnFontWeight || null
+                                      );
+                                      setSuccessMsg(lang === "tr" ? "Özelleştirilmiş tasarım kaydedildi!" : "Custom design saved successfully!");
+                                      setCustomizingTemplateId(null);
+                                      setTimeout(() => setSuccessMsg(""), 3000);
+                                    } catch (err: any) {
+                                      setErrorMsg(err.message || "Failed to save profile changes");
+                                      setTimeout(() => setErrorMsg(""), 4000);
+                                    }
+                                  });
+                                }}
+                                disabled={isPending}
+                                className="flex-1 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-900 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1 border-none"
+                              >
+                                <Check className="h-3 w-3" />
+                                <span>{lang === "tr" ? "Kaydet" : "Save"}</span>
+                              </button>
+                              
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setBackground(template.bgColor);
+                                  setFontStyle(template.fontStyle);
+                                  setUsernameColor("#ffffff");
+                                  setBioColor("#888888");
+                                  setBtnBgColor("");
+                                  setBtnTextColor("");
+                                  setBtnBorderColor("");
+                                  setBtnBorderStyle("solid");
+                                  setBtnBorderWidth("1px");
+                                  setBtnBorderRadius("12px");
+                                  setBtnShadow("none");
+                                  setBtnFontWeight("font-bold");
+                                }}
+                                className="px-2 py-1.5 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-650 text-[9px] font-black cursor-pointer bg-white"
+                              >
+                                {lang === "tr" ? "Sıfırla" : "Reset"}
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: TRAFFIC ANALYTICS */}
+        {activeTab === "analytics" && (
+          <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+            {/* Top Summaries Grids */}
+            <div className="grid md:grid-cols-4 gap-6">
+              <div className={`p-6 rounded-2xl border flex items-center justify-between ${
+                "bg-white border-zinc-200 shadow-sm"
+              }`}>
+                <div className="space-y-1">
+                  <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">{t.totalViews}</span>
+                  <div className={`text-3xl font-black ${"text-zinc-950"}`}>{totalViews}</div>
+                </div>
+                <div className="p-3 rounded-xl bg-teal-400/10 border border-teal-500/20 text-teal-500">
+                  <Eye className="h-5 w-5" />
+                </div>
+              </div>
+
+              <div className={`p-6 rounded-2xl border flex items-center justify-between ${
+                "bg-white border-zinc-200 shadow-sm"
+              }`}>
+                <div className="space-y-1">
+                  <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">{t.totalClicks}</span>
+                  <div className={`text-3xl font-black ${"text-zinc-950"}`}>{totalClicks}</div>
+                </div>
+                <div className="p-3 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
+                  <MousePointerClick className="h-5 w-5" />
+                </div>
+              </div>
+
+              <div className={`p-6 rounded-2xl border flex items-center justify-between ${
+                "bg-white border-zinc-200 shadow-sm"
+              }`}>
+                <div className="space-y-1">
+                  <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">Average CTR</span>
+                  <div className="text-3xl font-black text-emerald-400">{averageCTR}%</div>
+                </div>
+                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                  <Percent className="h-5 w-5" />
+                </div>
+              </div>
+
+              <div className={`p-6 rounded-2xl border flex flex-col justify-center space-y-2 ${
+                "bg-white border-zinc-200 shadow-sm"
+              }`}>
+                <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">{lang === "tr" ? "Test Araçları" : "Verification Testing"}</span>
+                <button
+                  onClick={handleMockTraffic}
+                  disabled={isPending}
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-extrabold text-xs transition-colors cursor-pointer shadow-[0_0_15px_rgba(45,212,191,0.25)]"
+                >
+                  {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+                  {t.simTraffic}
+                </button>
+              </div>
+            </div>
+
+            {totalViews === 0 ? (
+              <div className={`p-12 text-center rounded-2xl border border-dashed space-y-3 ${
+                "bg-white border-zinc-200"
+              }`}>
+                <div className="text-slate-500 text-sm font-semibold italic">
+                  {lang === "tr" ? "Henüz trafik kaydı bulunmuyor. Sayfa linkinizi paylaşarak veya yukarıdaki 'Trafik Simülasyonu Çalıştır' butonuna tıklayarak grafikleri anında inceleyebilirsiniz!" : "No traffic logged yet. Promote your link page or click the 'Simulate Traffic Action' button to see analytics charts instantly!"}
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* Chart 1: Daily views & clicks */}
+                <div className={`p-6 rounded-2xl border space-y-4 ${
+                  "bg-white border-zinc-200 shadow-sm"
+                }`}>
+                  <h3 className={`font-extrabold text-sm uppercase tracking-wider ${"text-zinc-800"}`}>{t.trafficOverTime}</h3>
+                  <div className="h-80 w-full text-xs">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={chartData}>
+                        <defs>
+                          <linearGradient id="viewsGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#a855f7" stopOpacity={0.2}/>
+                            <stop offset="95%" stopColor="#a855f7" stopOpacity={0}/>
+                          </linearGradient>
+                          <linearGradient id="clicksGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#ec4899" stopOpacity={0.2}/>
+                            <stop offset="95%" stopColor="#ec4899" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <XAxis dataKey="date" stroke="#52525b" fontSize={10} />
+                        <YAxis stroke="#52525b" fontSize={10} />
+                        <Tooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e4e4e7", color: "#000", borderRadius: "12px" }} />
+                        <Legend />
+                        <Area type="monotone" dataKey="Views" stroke="#a855f7" strokeWidth={2.5} fillOpacity={1} fill="url(#viewsGrad)" />
+                        <Area type="monotone" dataKey="Clicks" stroke="#ec4899" strokeWidth={2.5} fillOpacity={1} fill="url(#clicksGrad)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Sub aggregations grid */}
+                <div className="grid md:grid-cols-3 gap-6">
+                  {/* Device and Browser splits */}
+                  <div className={`p-6 rounded-2xl border space-y-4 flex flex-col justify-between ${
+                    "bg-white border-zinc-200 shadow-sm"
+                  }`}>
+                    <h3 className={`font-extrabold text-xs uppercase tracking-wider ${"text-zinc-800"}`}>{t.devices} & {t.browsers}</h3>
+                    <div className="h-56 flex items-center justify-center text-xs">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={deviceData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={50}
+                            outerRadius={70}
+                            paddingAngle={4}
+                            dataKey="value"
+                          >
+                            {deviceData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <Tooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e4e4e7", color: "#000" }} />
+                          <Legend verticalAlign="bottom" height={36} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Top Referrals split */}
+                  <div className={`p-6 rounded-2xl border space-y-4 ${
+                    "bg-white border-zinc-200 shadow-sm"
+                  }`}>
+                    <h3 className={`font-extrabold text-xs uppercase tracking-wider ${"text-zinc-800"}`}>{t.referrers}</h3>
+                    <div className="h-56 text-xs">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={referrerData} layout="vertical">
+                          <XAxis type="number" stroke="#52525b" />
+                          <YAxis dataKey="name" type="category" stroke="#52525b" width={80} />
+                          <Tooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e4e4e7", color: "#000" }} />
+                          <Bar dataKey="value" fill="#a855f7" radius={[0, 4, 4, 0]}>
+                            {referrerData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Geolocation splits */}
+                  <div className={`p-6 rounded-2xl border space-y-4 flex flex-col justify-between ${
+                    "bg-white border-zinc-200 shadow-sm"
+                  }`}>
+                    <h3 className={`font-extrabold text-xs uppercase tracking-wider ${"text-zinc-800"}`}>{t.countries}</h3>
+                    <div className="h-56 flex items-center justify-center text-xs">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={countryData}
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={65}
+                            dataKey="value"
+                            label={({ name, percent }) => `${name} ${percent ? (percent * 100).toFixed(0) : 0}%`}
+                          >
+                            {countryData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <Tooltip contentStyle={{ backgroundColor: "#ffffff", borderColor: "#e4e4e7", color: "#000" }} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Table: Links Performance */}
+                <div className={`p-6 rounded-2xl border space-y-4 ${
+                  "bg-white border-zinc-200 shadow-sm"
+                }`}>
+                  <h3 className={`font-extrabold text-sm uppercase tracking-wider ${"text-zinc-800"}`}>{t.performanceInsights}</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs border-collapse">
+                      <thead>
+                        <tr className={`border-b text-slate-500 ${"border-zinc-200"}`}>
+                          <th className="py-3 px-4 font-bold">{t.linkTitle}</th>
+                          <th className="py-3 px-4 font-bold">{t.linkUrl}</th>
+                          <th className="py-3 px-4 font-bold text-center">{lang === "tr" ? "Tıklama Sayısı" : "Click Count"}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {links.map((lnk) => (
+                          <tr key={lnk.id} className={`border-b hover:bg-zinc-550/10 transition-all ${
+                            "border-zinc-100"
+                          }`}>
+                            <td className={`py-3.5 px-4 font-bold ${"text-zinc-800"}`}>
+                              <div className="flex items-center gap-2">
+                                <div className="h-6 w-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100/50">
+                                  {getLinkIconHelper(lnk.type, lnk.url)}
+                                </div>
+                                <span>{lnk.title}</span>
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4 text-slate-500 font-mono">{lnk.url}</td>
+                            <td className="py-3.5 px-4 font-extrabold text-teal-500 text-center">{lnk.clicks?.length || 0}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {activeTab === "qr" && (() => {
+          const QR_TEMPLATES = [
+            { id: "WEBSITE", name: lang === "tr" ? "İnternet sitesi" : "Website", desc: lang === "tr" ? "Herhangi bir web sitesi URL'sine bağlantı" : "Link to any website URL", icon: Globe, tier: "FREE" },
+            { id: "PDF", name: "PDF", desc: lang === "tr" ? "PDF göster" : "Display a PDF", icon: FileText, tier: "CREATOR" },
+            { id: "LINK_LIST", name: lang === "tr" ? "Bağlantıların Listesi" : "Link List", desc: lang === "tr" ? "Birden fazla bağlantı paylaşın" : "Share multiple links", icon: List, tier: "CREATOR" },
+            { id: "VCARD", name: "vCard", desc: lang === "tr" ? "Elektronik kartvizitinizi paylaşın" : "Share contact vCard", icon: User, tier: "STARTER" },
+            { id: "BUSINESS", name: lang === "tr" ? "İşletme" : "Business", desc: lang === "tr" ? "İşletmenizle ilgili bilgileri paylaşın" : "Share business info", icon: Briefcase, tier: "CREATOR" },
+            { id: "VIDEO", name: "Video", desc: lang === "tr" ? "Bir video göster" : "Display a video", icon: Play, tier: "STARTER" },
+            { id: "IMAGES", name: lang === "tr" ? "Görseller" : "Images", desc: lang === "tr" ? "Birden fazla görsel paylaşın" : "Share multiple images", icon: Image, tier: "STARTER" },
+            { id: "FACEBOOK", name: "Facebook", desc: lang === "tr" ? "Facebook sayfanızı paylaşın" : "Share Facebook page", icon: Globe, tier: "FREE" },
+            { id: "INSTAGRAM", name: "Instagram", desc: lang === "tr" ? "Instagram'ınızı paylaşın" : "Share Instagram page", icon: Globe, tier: "FREE" },
+            { id: "SOCIAL_MEDIA", name: lang === "tr" ? "Sosyal medya" : "Social Media", desc: lang === "tr" ? "Sosyal kanallarınızı paylaşın" : "Share social channels", icon: MessageCircle, tier: "STARTER" },
+            { id: "WHATSAPP", name: "WhatsApp", desc: lang === "tr" ? "WhatsApp mesajlarını alın" : "Receive WhatsApp messages", icon: MessageCircle, tier: "FREE" },
+            { id: "MP3", name: "MP3", desc: lang === "tr" ? "Bir ses dosyası paylaş" : "Share an audio file", icon: Music, tier: "CREATOR" },
+            { id: "MENU", name: lang === "tr" ? "Menü" : "Menu", desc: lang === "tr" ? "Bir restoran menüsü oluşturun" : "Create restaurant menu", icon: Utensils, tier: "CREATOR" },
+            { id: "APPS", name: lang === "tr" ? "Uygulamalar" : "Apps", desc: lang === "tr" ? "Bir uygulama mağazasına yönlendir" : "Redirect to app store", icon: Smartphone, tier: "CREATOR" },
+            { id: "COUPON", name: lang === "tr" ? "Kupon" : "Coupon", desc: lang === "tr" ? "Kupon paylaş" : "Share promotional coupons", icon: Percent, tier: "STARTER" },
+            { id: "WIFI", name: "Wifi", desc: lang === "tr" ? "Bir Wi-Fi ağına bağlanın" : "Connect to a Wi-Fi network", icon: Wifi, tier: "FREE" },
+          ];
+
+          const userPlan = initialUser.plan || "FREE";
+          const qrLimitMax = userPlan === "FREE" ? 5 : userPlan === "STARTER" ? 15 : Infinity;
+          const qrCount = qrCodes.length;
+          const isQuotaReached = qrCount >= qrLimitMax;
+
+          const isTemplateUnlocked = (templateTier: string) => {
+            if (userPlan === "CREATOR" || userPlan === "PRO_BUSINESS" || initialUser.role === "ADMIN") {
+              return true;
+            }
+            if (userPlan === "STARTER") {
+              return templateTier === "FREE" || templateTier === "STARTER";
+            }
+            return templateTier === "FREE";
+          };
+
+          const getQrTypeMeta = (type: string) => {
+            const found = QR_TEMPLATES.find((t) => t.id === type);
+            return found || { name: type, desc: "", icon: QrCode, tier: "FREE" };
+          };
+
+          return (
+            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+              {/* Top Banner Alert / Quotas */}
+              <div className={`p-6 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden ${
+                "bg-white border-zinc-200 shadow-sm"
+              }`}>
+                <div className="space-y-2 flex-1 w-full">
+                  <div className="flex items-center gap-2.5">
+                    <QrCode className="h-5 w-5 text-teal-500" />
+                    <h2 className={`font-black text-lg ${"text-zinc-950"}`}>
+                      {lang === "tr" ? "Dinamik QR Kod Stüdyosu" : "Dynamic QR Code Studio"}
+                    </h2>
+                  </div>
+                  <p className="text-xs text-slate-500 font-medium">
+                    {lang === "tr" 
+                      ? "Kreatör profiliniz ve özel şablonlarınız için yüksek çözünürlüklü dynamic QR kodları oluşturun."
+                      : "Create custom high-resolution dynamic QR codes for your profiles and template assets."}
+                  </p>
+
+                  {/* Quota Progress Bar */}
+                  <div className="space-y-1.5 pt-2 max-w-md">
+                    <div className="flex justify-between items-center text-[10px] font-black uppercase text-slate-500">
+                      <span>{lang === "tr" ? "QR OLUŞTURMA LİMİTİ" : "QR USAGE LIMIT"}</span>
+                      <span>
+                        {qrCount} / {qrLimitMax === Infinity ? (lang === "tr" ? "SINIRSIZ" : "UNLIMITED") : `${qrLimitMax}`}
+                      </span>
+                    </div>
+                    <div className={`w-full h-2 rounded-full overflow-hidden ${"bg-zinc-100"}`}>
+                      <div 
+                        className="h-full bg-gradient-to-r from-purple-500 to-rose-500 rounded-full transition-all duration-500" 
+                        style={{ width: `${Math.min((qrCount / (qrLimitMax === Infinity ? 100 : qrLimitMax)) * 100, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {qrMode === "catalog" && (
+                  <button
+                    onClick={() => {
+                      if (isQuotaReached) {
+                        alert(lang === "tr" ? "Oluşturma limitine ulaştınız. Lütfen paketinizi yükseltin!" : "You have reached your creation limit. Please upgrade your plan!");
+                        return;
+                      }
+                      setQrMode("create");
+                    }}
+                    className={`px-5 py-3 rounded-xl font-bold text-xs cursor-pointer transition-all flex items-center gap-2 text-slate-900 bg-gradient-to-r from-purple-600 to-rose-600 hover:opacity-90 shadow-md ${
+                      isQuotaReached ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                  >
+                    <Plus className="h-4 w-4" />
+                    {lang === "tr" ? "Yeni QR Kodu Oluştur" : "Create New QR Code"}
+                  </button>
+                )}
+              </div>
+
+              {/* MODE 1: CATALOG VIEW */}
+              {qrMode === "catalog" && (
+                <>
+                  {qrCodes.length === 0 ? (
+                    <div className={`p-16 rounded-2xl border text-center flex flex-col items-center gap-4 ${
+                      "bg-white border-zinc-200 shadow-sm"
+                    }`}>
+                      <div className="h-16 w-16 rounded-full bg-teal-400/10 flex items-center justify-center border border-teal-500/20">
+                        <QrCode className="h-8 w-8 text-teal-500" />
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className={`font-black text-sm ${"text-zinc-900"}`}>
+                          {lang === "tr" ? "Henüz QR Kod Oluşturmadınız" : "No QR Codes Created Yet"}
+                        </h3>
+                        <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                          {lang === "tr" 
+                            ? "Yukarıdaki 'Yeni QR Kodu Oluştur' butonuna basarak 16 şablondan birini seçip ilk dinamik QR kodunuzu oluşturabilirsiniz!"
+                            : "Click the 'Create New QR Code' button above to select from 16 green templates and generate your first dynamic code!"}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {qrCodes.map((qr) => {
+                        const meta = getQrTypeMeta(qr.type);
+                        const MetaIcon = meta.icon;
+                        return (
+                          <div 
+                            key={qr.id} 
+                            className={`p-5 rounded-2xl border flex flex-col justify-between gap-5 relative overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md ${
+                              "bg-white border-zinc-200 shadow-sm hover:border-zinc-350"
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="space-y-1">
+                                <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-[9px] font-black uppercase tracking-wider flex items-center gap-1.5 w-fit">
+                                  <MetaIcon className="h-2.5 w-2.5" />
+                                  {meta.name}
+                                </span>
+                                <h4 className={`font-black text-sm leading-snug ${"text-zinc-900"}`}>{qr.name}</h4>
+                                <p className="text-[10px] text-slate-500 font-semibold">{new Date(qr.createdAt).toLocaleDateString("tr-TR")}</p>
+                              </div>
+
+                              <button
+                                onClick={() => handleDeleteQr(qr.id)}
+                                className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 transition-all cursor-pointer"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+
+                            {/* Center Preview QR Code */}
+                            <div className="flex justify-center py-2 bg-white rounded-xl p-3 border border-zinc-100">
+                              <QRCodeSVG
+                                value={qr.value}
+                                size={140}
+                                fgColor={qr.fgColor}
+                                bgColor={qr.bgColor}
+                                level="H"
+                              />
+                            </div>
+
+                            {/* Download Action Bar */}
+                            <div className="grid grid-cols-2 gap-2">
+                              <button
+                                onClick={() => {
+                                  const link = document.createElement("a");
+                                  const canvas = document.createElement("canvas");
+                                  canvas.width = 1000;
+                                  canvas.height = 1000;
+                                  const ctx = canvas.getContext("2d");
+                                  if (!ctx) return;
+                                  ctx.fillStyle = qr.bgColor;
+                                  ctx.fillRect(0, 0, 1000, 1000);
+
+                                  // Draw QR Code
+                                  const img = new window.Image();
+                                  const svgString = new XMLSerializer().serializeToString(
+                                    document.createElementNS("http://www.w3.org/2000/svg", "svg")
+                                  );
+                                  const svgBlob = new Blob([
+                                    `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 200 200">
+                                      <rect width="200" height="200" fill="${qr.bgColor}"/>
+                                      ${document.createElementNS("http://www.w3.org/2000/svg", "path").outerHTML}
+                                     </svg>`
+                                  ], { type: "image/svg+xml;charset=utf-8" });
+
+                                  // Download Simple Base64 PNG fallback
+                                  const qrImg = new window.Image();
+                                  qrImg.onload = () => {
+                                    ctx.drawImage(qrImg, 100, 100, 800, 800);
+                                    link.href = canvas.toDataURL("image/png");
+                                    link.download = `qr-${qr.name.toLowerCase().replace(/\s+/g, "-")}.png`;
+                                    link.click();
+                                  };
+                                  qrImg.src = `data:image/svg+xml;utf8,${encodeURIComponent(
+                                    `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 200 200">
+                                      <rect width="200" height="200" fill="${qr.bgColor}"/>
+                                      <g transform="scale(1)">
+                                        <rect width="200" height="200" fill="none"/>
+                                      </g>
+                                     </svg>`
+                                  )}`;
+
+                                  // Let browser download via secondary simplified anchor
+                                  const fallbackUrl = `https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=${encodeURIComponent(qr.value)}&color=${qr.fgColor.replace("#", "")}&ecc=H`;
+                                  link.href = fallbackUrl;
+                                  link.download = `qr-${qr.name}.png`;
+                                  link.target = "_blank";
+                                  link.click();
+                                }}
+                                className={`flex items-center justify-center gap-1.5 py-2 rounded-xl border font-bold text-[10px] transition-colors cursor-pointer ${
+                                  "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                }`}
+                              >
+                                <Download className="h-3 w-3" />
+                                PNG
+                              </button>
+                              <button
+                                onClick={() => {
+                                  const link = document.createElement("a");
+                                  link.href = `https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=${encodeURIComponent(qr.value)}&color=${qr.fgColor.replace("#", "")}&ecc=H&format=svg`;
+                                  link.download = `qr-${qr.name}.svg`;
+                                  link.target = "_blank";
+                                  link.click();
+                                }}
+                                className={`flex items-center justify-center gap-1.5 py-2 rounded-xl border font-bold text-[10px] transition-colors cursor-pointer ${
+                                  "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                }`}
+                              >
+                                <Download className="h-3 w-3" />
+                                SVG
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* MODE 2: CREATION BUILDER VIEW */}
+              {qrMode === "create" && (
+                <div className="space-y-8 animate-in fade-in zoom-in-95 duration-200">
+                  {/* Cancel Header Bar */}
+                  <div className="flex justify-between items-center">
+                    <button
+                      onClick={() => {
+                        setQrMode("catalog");
+                        setSelectedTemplate(null);
+                      }}
+                      className={`px-4 py-2 rounded-full border text-xs font-bold transition-all cursor-pointer ${
+                        "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+                      }`}
+                    >
+                      &larr; {lang === "tr" ? "Listeye Geri Dön" : "Back to List"}
+                    </button>
+
+                    {selectedTemplate && (
+                      <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black uppercase flex items-center gap-1.5">
+                        {lang === "tr" ? "Aktif Şablon" : "Active Template"}: {selectedTemplate}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* 1. SELECT TEMPLATE GRID (IF NOT YET SELECTED) */}
+                  {!selectedTemplate ? (
+                    <div className="space-y-4">
+                      <div className="border-b pb-2">
+                        <h3 className={`font-black text-sm uppercase tracking-wider ${"text-zinc-800"}`}>
+                          {lang === "tr" ? "Bir Şablon Tipi Seçin" : "Select a Template Type"}
+                        </h3>
+                        <p className="text-[10px] text-slate-500">
+                          {lang === "tr" 
+                            ? "Kreatör planınıza dahil olan 16 premium şablondan birini seçerek başlayın."
+                            : "Start by selecting one of the 16 premium green templates included in your subscription."}
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {QR_TEMPLATES.map((tmpl) => {
+                          const Icon = tmpl.icon;
+                          const unlocked = isTemplateUnlocked(tmpl.tier);
+                          return (
+                            <button
+                              key={tmpl.id}
+                              onClick={() => {
+                                if (!unlocked) {
+                                  alert(lang === "tr" 
+                                    ? `Bu şablon ${tmpl.tier} planı gerektiriyor! Lütfen profilinizi yükseltin.` 
+                                    : `This template requires ${tmpl.tier} plan! Please upgrade your subscription.`);
+                                  return;
+                                }
+                                setSelectedTemplate(tmpl.id);
+                                setQrName(tmpl.name);
+                              }}
+                              className={`p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-3 transition-all relative group cursor-pointer ${
+                                unlocked 
+                                  ? "bg-white border-zinc-200 hover:border-emerald-350 hover:shadow-md"
+                                  : "opacity-40 cursor-not-allowed"
+                              }`}
+                            >
+                              {/* Locked Overlay badge */}
+                              {!unlocked && (
+                                <div className="absolute top-2.5 right-2.5 p-1 rounded-md bg-gray-50 border border-gray-100 text-slate-500">
+                                  <Lock className="h-3 w-3" />
+                                </div>
+                              )}
+
+                              {/* Green background circle identical to screenshot icon colors */}
+                              <div className={`h-12 w-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-105 ${
+                                unlocked 
+                                  ? "bg-emerald-50 text-emerald-500" 
+                                  : "bg-gray-50 text-slate-500"
+                              }`}>
+                                <Icon className="h-5 w-5" />
+                              </div>
+
+                              <div className="space-y-0.5">
+                                <h4 className={`font-black text-xs ${"text-zinc-900"}`}>
+                                  {tmpl.name}
+                                </h4>
+                                <p className="text-[9px] text-slate-500 font-semibold leading-normal line-clamp-2">
+                                  {tmpl.desc}
+                                </p>
+                              </div>
+
+                              {tmpl.tier !== "FREE" && (
+                                <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full select-none ${
+                                  tmpl.tier === "STARTER" 
+                                    ? "bg-blue-500/10 text-blue-400 border border-blue-500/20" 
+                                    : "bg-teal-400/10 text-teal-500 border border-teal-500/20"
+                                }`}>
+                                  {tmpl.tier}
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    /* 2. DYNAMIC TEMPLATE DESIGNER BUILDER */
+                    <div className="flex flex-col lg:flex-row gap-8">
+                      {/* Left: Input parameters */}
+                      <div className="flex-1 space-y-6">
+                        <div className={`p-6 rounded-2xl border space-y-6 ${
+                          "bg-white border-zinc-200 shadow-sm"
+                        }`}>
+                          <div className="border-b pb-3 flex items-center gap-3">
+                            <span className="p-2 rounded-lg bg-emerald-50 text-emerald-500">
+                              {(() => {
+                                const MetaIcon = getQrTypeMeta(selectedTemplate).icon;
+                                return <MetaIcon className="h-5 w-5" />;
+                              })()}
+                            </span>
+                            <div className="space-y-0.5">
+                              <h3 className={`font-black text-sm uppercase tracking-wider ${"text-zinc-900"}`}>
+                                {lang === "tr" ? "Şablon Ayrıntılarını Doldurun" : "Fill Template Details"}
+                              </h3>
+                              <p className="text-[10px] text-slate-500">
+                                {lang === "tr" ? "Seçtiğiniz şablon tipine göre aşağıdaki form alanlarını girin." : "Fill the template fields below to automatically encode your custom code."}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* QR General Name */}
+                          <div className="space-y-2">
+                            <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>
+                              {lang === "tr" ? "QR Kod İsmi" : "QR Code Label Name"}
+                            </label>
+                            <input
+                              type="text"
+                              value={qrName}
+                              onChange={(e) => setQrName(e.target.value)}
+                              placeholder={lang === "tr" ? "Örn: Portfolyo Linkim" : "e.g., My Portfolio Link"}
+                              className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                "bg-zinc-50 border-zinc-200 text-zinc-900"
+                              }`}
+                            />
+                          </div>
+
+                          {/* DYNAMIC TEMPLATE FORMS */}
+
+                          {/* DYNAMIC FORM: WIFI */}
+                          {selectedTemplate === "WIFI" && (
+                            <div className="space-y-4 pt-2">
+                              <div className="space-y-2">
+                                <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Network SSID (Ağ Adı)</label>
+                                <input
+                                  type="text"
+                                  value={wifiSsid}
+                                  onChange={(e) => setWifiSsid(e.target.value)}
+                                  placeholder="e.g. Creator_Guest_Wifi"
+                                  className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                    "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                  }`}
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Wi-Fi Şifresi</label>
+                                <input
+                                  type="password"
+                                  value={wifiPassword}
+                                  onChange={(e) => setWifiPassword(e.target.value)}
+                                  placeholder="••••••••"
+                                  className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                    "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                  }`}
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Şifreleme Tipi</label>
+                                <select
+                                  value={wifiEncryption}
+                                  onChange={(e: any) => setWifiEncryption(e.target.value)}
+                                  className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs font-semibold ${
+                                    "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                  }`}
+                                >
+                                  <option value="WPA">WPA / WPA2</option>
+                                  <option value="WEP">WEP</option>
+                                  <option value="nopass">{lang === "tr" ? "Şifresiz (Açık)" : "Open (No Password)"}</option>
+                                </select>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* DYNAMIC FORM: WHATSAPP */}
+                          {selectedTemplate === "WHATSAPP" && (
+                            <div className="space-y-4 pt-2">
+                              <div className="space-y-2">
+                                <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Telefon Numarası</label>
+                                <input
+                                  type="text"
+                                  value={whatsAppPhone}
+                                  onChange={(e) => setWhatsAppPhone(e.target.value)}
+                                  placeholder="Örn: +905321234567"
+                                  className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                    "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                  }`}
+                                />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Hazır Mesaj (Seçenekli)</label>
+                                <textarea
+                                  value={whatsAppMessage}
+                                  onChange={(e) => setWhatsAppMessage(e.target.value)}
+                                  placeholder={lang === "tr" ? "Örn: Merhaba, beatler hakkında bilgi almak istiyorum." : "e.g. Hi! I'd like to check licensing prices."}
+                                  className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs min-h-[80px] resize-y ${
+                                    "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                  }`}
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          {/* DYNAMIC FORM: VCARD */}
+                          {selectedTemplate === "VCARD" && (
+                            <div className="space-y-4 pt-2">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Tam İsim</label>
+                                  <input
+                                    type="text"
+                                    value={vCardName}
+                                    onChange={(e) => setVCardName(e.target.value)}
+                                    placeholder="Jane Doe"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    }`}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Telefon</label>
+                                  <input
+                                    type="text"
+                                    value={vCardPhone}
+                                    onChange={(e) => setVCardPhone(e.target.value)}
+                                    placeholder="+90555..."
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    }`}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>E-posta Adresi</label>
+                                  <input
+                                    type="email"
+                                    value={vCardEmail}
+                                    onChange={(e) => setVCardEmail(e.target.value)}
+                                    placeholder="jane@company.com"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    }`}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>İşletme / Kurum</label>
+                                  <input
+                                    type="text"
+                                    value={vCardOrg}
+                                    onChange={(e) => setVCardOrg(e.target.value)}
+                                    placeholder="Creator Corp"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    }`}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Başlık / Ünvan</label>
+                                  <input
+                                    type="text"
+                                    value={vCardTitle}
+                                    onChange={(e) => setVCardTitle(e.target.value)}
+                                    placeholder="Lead Producer"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    }`}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>İnternet Adresi</label>
+                                  <input
+                                    type="text"
+                                    value={vCardUrl}
+                                    onChange={(e) => setVCardUrl(e.target.value)}
+                                    placeholder="https://example.com"
+                                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                      "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                    }`}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* DEFAULT REDIRECT URL INPUT FOR ALL BASIC/URL SHABLONS */}
+                          {selectedTemplate !== "WIFI" && selectedTemplate !== "WHATSAPP" && selectedTemplate !== "VCARD" && (
+                            <div className="space-y-2 pt-2">
+                              <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>
+                                {lang === "tr" ? "Bağlantı / Hedef Adresi" : "Destination URL / Asset Target"}
+                              </label>
+                              <input
+                                type="text"
+                                value={qrValueText}
+                                onChange={(e) => setQrValueText(e.target.value)}
+                                placeholder="https://example.com/asset.pdf"
+                                className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs ${
+                                  "bg-zinc-50 border-zinc-200 text-zinc-900"
+                                }`}
+                              />
+                              <p className="text-[9px] text-slate-500 font-semibold italic">
+                                {lang === "tr"
+                                  ? "Dinamik yönlendirme adresi. İstediğiniz zaman güncelleyebilirsiniz."
+                                  : "Dynamic target link. Updatable at any time from this dashboard."}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* 2. STYLE CUSTOMIZATIONS SECTION */}
+                          <div className={`space-y-6 border-t pt-6 ${"border-zinc-150"}`}>
+                            <h4 className={`font-black text-xs uppercase tracking-wider ${"text-zinc-900"}`}>
+                              {lang === "tr" ? "QR Kod Tasarımını Özelleştir" : "Customize QR Code Aesthetics"}
+                            </h4>
+
+                            <div className="grid md:grid-cols-2 gap-6">
+                              {/* FG Color */}
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>
+                                    {lang === "tr" ? "Ön Plan Rengi" : "Foreground Color"}
+                                  </label>
+                                  {!isPremium && <Lock className="h-3 w-3 text-slate-500" />}
+                                </div>
+                                <div className="flex gap-2">
+                                  <input
+                                    type="color"
+                                    value={qrFgColor}
+                                    onChange={(e) => isPremium && setQrFgColor(e.target.value)}
+                                    disabled={!isPremium}
+                                    className="h-10 w-12 rounded-lg bg-gray-50 border border-gray-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={qrFgColor}
+                                    onChange={(e) => isPremium && setQrFgColor(e.target.value)}
+                                    disabled={!isPremium}
+                                    className={`flex-1 border rounded-lg px-3 text-xs outline-none focus:border-teal-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                      "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    }`}
+                                  />
+                                </div>
+                              </div>
+
+                              {/* BG Color */}
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>
+                                    {lang === "tr" ? "Arka Plan Rengi" : "Background Color"}
+                                  </label>
+                                  {!isPremium && <Lock className="h-3 w-3 text-slate-500" />}
+                                </div>
+                                <div className="flex gap-2">
+                                  <input
+                                    type="color"
+                                    value={qrBgColor}
+                                    onChange={(e) => isPremium && setQrBgColor(e.target.value)}
+                                    disabled={!isPremium}
+                                    className="h-10 w-12 rounded-lg bg-gray-50 border border-gray-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                  />
+                                  <input
+                                    type="text"
+                                    value={qrBgColor}
+                                    onChange={(e) => isPremium && setQrBgColor(e.target.value)}
+                                    disabled={!isPremium}
+                                    className={`flex-1 border rounded-lg px-3 text-xs outline-none focus:border-teal-500 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                      "bg-zinc-100 border-zinc-200 text-zinc-900"
+                                    }`}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Watermark Branding overlay checkbox */}
+                            <div className={`flex items-center justify-between p-3.5 rounded-xl border ${
+                              "bg-zinc-50 border-zinc-200 text-zinc-850"
+                            }`}>
+                              <div className="space-y-0.5">
+                                <div className="text-xs font-black flex items-center gap-1.5">
+                                  {lang === "tr" ? "Marka Logosu Yerleşimi" : "Brand Watermark Placement"}
+                                  {!isPremium && <Lock className="h-3 w-3 text-slate-500" />}
+                                </div>
+                                <p className="text-[9px] text-slate-500 font-semibold">{lang === "tr" ? "QR kodunun tam ortasına küçük bir marka ikonu yerleştirir." : "Place a tiny brand icon exactly inside the center of your generated QR."}</p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => isPremium && setQrIncludeLogo(!qrIncludeLogo)}
+                                disabled={!isPremium}
+                                className={`w-10 h-6 rounded-full p-1 cursor-pointer transition-all flex items-center ${
+                                  qrIncludeLogo ? "bg-emerald-600 justify-end" : "bg-gray-50 justify-start"
+                                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                              >
+                                <div className="h-4 w-4 rounded-full bg-white shadow-sm" />
+                              </button>
+                            </div>
+
+                            {!isPremium && (
+                              <div className="p-4 rounded-xl bg-purple-950/20 border border-teal-500/20 flex gap-3 items-start">
+                                <Lock className="h-4 w-4 text-teal-500 shrink-0 mt-0.5" />
+                                <div className="space-y-1">
+                                  <div className="text-xs font-black text-purple-300">
+                                    {lang === "tr" ? "Tasarım Özellikleri Kilitli" : "Design Customizations Locked"}
+                                  </div>
+                                  <p className="text-[9px] text-slate-500 leading-normal">
+                                    {lang === "tr"
+                                      ? "QR kod renklerini özelleştirmek ve ortasına logo eklemek için STARTER veya CREATOR planına geçiş yapın."
+                                      : "Upgrade your subscription package to STARTER or CREATOR to configure custom colors and icons."}
+                                  </p>
+                                  <Link href="/dashboard/billing" className="text-[9px] font-black text-teal-500 hover:underline block mt-1">
+                                    {lang === "tr" ? "Hemen Yükselt &rarr;" : "Upgrade now &rarr;"}
+                                  </Link>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Submit Actions */}
+                          <div className="pt-4 flex gap-4">
+                            <button
+                              type="button"
+                              onClick={handleCreateQr}
+                              disabled={isPending}
+                              className={`flex-1 py-3 rounded-xl font-bold text-xs text-slate-900 bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 transition-opacity shadow-md shadow-emerald-950/10 cursor-pointer flex items-center justify-center gap-2 ${
+                                isPending ? "opacity-50 cursor-not-allowed" : ""
+                              }`}
+                            >
+                              {isPending ? (
+                                <>
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                  {lang === "tr" ? "Oluşturuluyor..." : "Generating..."}
+                                </>
+                              ) : (
+                                <>
+                                  <Check className="h-4 w-4" />
+                                  {lang === "tr" ? "QR Kodunu Kaydet ve Oluştur" : "Save and Create QR Code"}
+                                </>
+                              )}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedTemplate(null);
+                                setQrName("");
+                              }}
+                              className={`px-6 py-3 rounded-xl font-bold text-xs border cursor-pointer ${
+                                "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+                              }`}
+                            >
+                              {lang === "tr" ? "İptal" : "Cancel"}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right: Live Responsive Preview Sticky Canvas */}
+                      <div className="w-full lg:w-[320px] shrink-0 sticky top-32 self-start flex flex-col items-center gap-6">
+                        <div className="text-center">
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[9px] font-black uppercase tracking-wider ${
+                            "bg-white border-zinc-200 text-zinc-700 shadow-sm"
+                          }`}>
+                            {lang === "tr" ? "Canlı Önizleme" : "Live Real-Time Preview"}
+                          </span>
+                        </div>
+
+                        <div className={`p-6 rounded-3xl border flex flex-col items-center gap-5 w-full ${
+                          "bg-white border-zinc-200 shadow-sm"
+                        }`}>
+                          <div className="p-4 bg-white rounded-2xl flex items-center justify-center border border-zinc-100 overflow-hidden shadow-sm">
+                            <QRCodeSVG
+                              value={computedQrValue}
+                              size={180}
+                              fgColor={isPremium ? qrFgColor : "#000000"}
+                              bgColor={isPremium ? qrBgColor : "#ffffff"}
+                              level="H"
+                              imageSettings={
+                                qrIncludeLogo && isPremium
+                                  ? {
+                                      src: qrLogoFile || "https://t3.ftcdn.net/jpg/05/73/06/07/360_F_573060714_U5R88yvP1T2o8kQ4x05u5hVfC6L9U7oU.jpg",
+                                      x: undefined,
+                                      y: undefined,
+                                      height: 35,
+                                      width: 35,
+                                      excavate: true,
+                                    }
+                                  : undefined
+                              }
+                            />
+                          </div>
+
+                          <div className="text-center space-y-1 w-full px-2">
+                            <div className={`text-xs font-black truncate ${"text-zinc-900"}`}>
+                              {qrName || (lang === "tr" ? "Yeni QR Kod" : "Unnamed QR")}
+                            </div>
+                            <p className="text-[9px] text-slate-500 font-bold leading-normal truncate font-mono">
+                              {computedQrValue}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* TAB 4: SEO & CUSTOM DOMAINS */}
+        {activeTab === "seo" && (
+          <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+            
+            {/* COLUMN 1: Social SEO Control */}
+            <div className={`p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isPremium ? "min-h-[300px]" : ""} ${
+              "bg-white border-zinc-200 shadow-sm"
+            }`}>
+              <div className="flex items-center gap-3">
+                <Settings className="h-5 w-5 text-teal-500" />
+                <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{t.tabSeo}</h2>
+              </div>
+
+              <form onSubmit={handleSaveSeo} className={`space-y-4 border-t pt-5 ${"border-zinc-150"}`}>
+                <div className="space-y-1.5">
+                  <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-zinc-550"}`}>{lang === "tr" ? "Meta Başlık (SEO)" : "Meta Title"}</label>
+                  <input
+                    type="text"
+                    value={seoTitle}
+                    onChange={(e) => setSeoTitle(e.target.value)}
+                    disabled={!isPremium}
+                    placeholder={`@${username} | CREATOR.HUB`}
+                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs disabled:opacity-50 disabled:cursor-not-allowed ${
+                      "bg-zinc-100 border-zinc-200 text-zinc-900"
+                    }`}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-zinc-550"}`}>{lang === "tr" ? "Meta Açıklama (SEO)" : "Meta Description"}</label>
+                  <textarea
+                    value={seoDescription}
+                    onChange={(e) => setSeoDescription(e.target.value)}
+                    disabled={!isPremium}
+                    placeholder={bio || "Welcome to my link page!"}
+                    rows={3}
+                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs disabled:opacity-50 disabled:cursor-not-allowed ${
+                      "bg-zinc-100 border-zinc-200 text-zinc-900"
+                    }`}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-zinc-550"}`}>{lang === "tr" ? "Arama Kelimeleri" : "Search Keywords"}</label>
+                  <input
+                    type="text"
+                    value={seoKeywords}
+                    onChange={(e) => setSeoKeywords(e.target.value)}
+                    disabled={!isPremium}
+                    placeholder="beats, developer, portfolio, trap"
+                    className={`w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs disabled:opacity-50 disabled:cursor-not-allowed ${
+                      "bg-zinc-100 border-zinc-200 text-zinc-900"
+                    }`}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={!isPremium || isPending}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-teal-500 hover:bg-teal-400 disabled:bg-zinc-400 text-slate-900 disabled:text-zinc-700 font-extrabold text-xs transition-colors cursor-pointer disabled:cursor-not-allowed"
+                >
+                  {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+                  {lang === "tr" ? "SEO Ayarlarını Kaydet" : "Save SEO Parameters"}
+                </button>
+              </form>
+
+              {/* Locked overlay */}
+              {!isPremium && (
+                <div className="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-4">
+                  <Lock className="h-10 w-10 text-teal-500" />
+                  <div className="space-y-1 max-w-xs">
+                    <h3 className="text-sm font-extrabold text-slate-900">{lang === "tr" ? "SEO Özelleştirmeleri Kilitli" : "SEO Customs are Locked"}</h3>
+                    <p className="text-[10px] text-slate-500 leading-relaxed">
+                      {lang === "tr" ? "HTML başlık verilerinizi, sosyal medya paylaşım açıklamalarını ve arama motoru dizin anahtar kelimelerini özelleştirmek için premium plana yükseltin!" : "Upgrade to a premium plan to custom define your HTML header metadata, social share descriptions, and search indexing keywords."}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => triggerUpgradeModal(
+                      lang === "tr" ? "SEO Ayarları Kilitli 🔒" : "SEO Customs Locked 🔒",
+                      lang === "tr"
+                        ? "Meta başlık, açıklama ve anahtar kelime özelleştirmeleri gibi gelişmiş arama motoru optimizasyonu ayarlarını kullanmak Premium pakete özeldir."
+                        : "Customizing SEO meta title, description and indexing keywords is exclusive to our Premium plans."
+                    )}
+                    className="px-4 py-2 rounded-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold text-[10px] transition-colors cursor-pointer"
+                  >
+                    {lang === "tr" ? "SEO Özelliklerinin Kilidini Aç" : "Unlock SEO Settings"}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* COLUMN 2: Custom Domains Manager */}
+            <div className={`p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isCreator ? "min-h-[300px]" : ""} ${
+              "bg-white border-zinc-200 shadow-sm"
+            }`}>
+              <div className="flex items-center gap-3">
+                <Globe className="h-5 w-5 text-emerald-400" />
+                <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{lang === "tr" ? "Özel Alan Adı (Domain)" : "Custom Domain Manager"}</h2>
+              </div>
+
+              <div className={`space-y-6 border-t pt-5 ${"border-zinc-150"}`}>
+                <form onSubmit={handleSaveDomain} className="flex gap-2">
+                  <div className={`flex-1 flex items-center rounded-xl border px-3 overflow-hidden focus-within:border-emerald-500/50 ${
+                    "bg-zinc-100 border-zinc-200"
+                  }`}>
+                    <span className="text-slate-500 text-xs">https://</span>
+                    <input
+                      type="text"
+                      value={customDomain}
+                      onChange={(e) => setCustomDomain(e.target.value)}
+                      placeholder="links.erdem.com"
+                      className={`bg-transparent border-none outline-none py-2.5 text-xs flex-1 ${
+                        "text-zinc-900"
+                      }`}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isPending}
+                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-extrabold text-xs transition-colors cursor-pointer"
+                  >
+                    {lang === "tr" ? "Yapılandır" : "Configure"}
+                  </button>
+                </form>
+
+                {/* DNS Setup Card */}
+                {initialUser.profile?.customDomain && (
+                  <div className={`p-4 rounded-xl border space-y-4 ${
+                    "bg-zinc-50 border-zinc-200"
+                  }`}>
+                    <div className="flex justify-between items-center text-[10px] font-bold">
+                      <span className={`${"text-zinc-700"}`}>{lang === "tr" ? "DNS Kurulum Talimatları" : "DNS Setup Instructions"}</span>
+                      <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">DNS Connected</span>
+                    </div>
+
+                    <p className="text-[10px] text-slate-500 leading-relaxed">
+                      {lang === "tr" ? "Özel alan adınızı profil sayfanıza yönlendirmek için DNS sağlayıcınızda (Cloudflare, GoDaddy, vb.) bir CNAME kaydı oluşturun:" : "To point your custom domain name to our creator grid, create a CNAME record with your DNS provider (Cloudflare, GoDaddy, etc.):"}
+                    </p>
+
+                    <div className="overflow-x-auto text-[10px] font-mono">
+                      <table className="w-full text-left">
+                        <thead>
+                          <tr className={`border-b ${"text-slate-500 border-zinc-200"}`}>
+                            <th className="pb-2">Type</th>
+                            <th className="pb-2">Name</th>
+                            <th className="pb-2">Target Value</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className={"text-zinc-800"}>
+                            <td className="py-2">CNAME</td>
+                            <td className="py-2">links</td>
+                            <td className="py-2 flex items-center gap-1.5 font-bold text-purple-650">
+                              cname.creator.hub
+                              <button onClick={() => navigator.clipboard.writeText("cname.creator.hub")} className="p-1 rounded bg-gray-50 hover:bg-zinc-700 text-slate-500 cursor-pointer">
+                                <Copy className="h-3 w-3" />
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Locked overlay */}
+              {!isCreator && (
+                <div className="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-4">
+                  <Lock className="h-10 w-10 text-emerald-400" />
+                  <div className="space-y-1 max-w-xs">
+                    <h3 className="text-sm font-extrabold text-slate-900">{lang === "tr" ? "Özel Alan Adları Kilitli" : "Custom Domains are Locked"}</h3>
+                    <p className="text-[10px] text-zinc-450 leading-relaxed">
+                      {lang === "tr" ? "Kendi alan adınızı bağlamak, DNS kayıtlarını otomatik eşlemek ve beyaz etiketli (white-label) markalama oluşturmak için CREATOR paketine geçin." : "Upgrade to our CREATOR enterprise package to map dynamic custom domains, bind DNS records, and build white-label branding."}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => triggerUpgradeModal(
+                      lang === "tr" ? "Özel Alan Adı Kilitli 🔒" : "Custom Domain Locked 🔒",
+                      lang === "tr"
+                        ? "Kendi özel alan adınızı (cname) bağlamak ve beyaz etiketli (white-label) markalama oluşturmak Creator paketine özeldir."
+                        : "Mapping custom domains and utilizing white-label branding requires the CREATOR plan."
+                    )}
+                    className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-bold text-[10px] transition-colors cursor-pointer"
+                  >
+                    {lang === "tr" ? "Alan Adı Kilidini Aç" : "Unlock Domains"}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          )}
+
+          {/* ADDONS TAB CONTENT */}
+          {activeTab === "addons" && (
+            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+              {addons.length === 0 ? (
+                <div className={`p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
+                  "bg-white border-zinc-200 shadow-sm"
+                }`}>
+                  <div className="h-16 w-16 rounded-3xl bg-rose-50 flex items-center justify-center mb-2">
+                    <Puzzle className="h-8 w-8 text-rose-500" />
+                  </div>
+                  <div className="space-y-2 max-w-md">
+                    <h2 className="text-xl font-black text-slate-900">
+                      {lang === "tr" ? "Henüz Bir Eklentiniz Yok" : "You Don't Have Any Add-ons Yet"}
+                    </h2>
+                    <p className="text-sm text-slate-500 font-medium leading-relaxed">
+                      {lang === "tr" 
+                        ? "Mağazamızdan satın aldığınız tüm premium eklenti ve temalar burada görünecektir. Bu eklentileri buradan kolayca yapılandırabilirsiniz."
+                        : "All premium add-ons and themes you purchase from our store will appear here. You can configure them easily."}
+                    </p>
+                  </div>
+                  <a 
+                    href="/eklentiler" 
+                    target="_blank"
+                    className="px-6 py-3 bg-rose-600 text-white rounded-xl text-sm font-bold hover:bg-rose-500 transition-colors shadow-sm"
+                  >
+                    {lang === "tr" ? "Mağazayı İncele" : "Visit Store"}
+                  </a>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {addons.map(addon => {
                       const getDefaultSlug = (type: string) => {
                         if (type === "MINI_STORE") return "store";
                         if (type === "NEO_BRUTAL") return "neo-brutal";
@@ -3596,15 +5403,15 @@ export default function DashboardClient({
                       } catch(e) {}
 
                       return (
-                      <div key={addon.id} className="p-6 rounded-2xl bg-white border border-zinc-200 shadow-sm flex flex-col justify-between h-48">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center border border-zinc-200">
-                              <Puzzle className="h-5 w-5 text-zinc-700" />
-                            </div>
-                            <div>
-                              <h3 className="text-sm font-black text-zinc-900">{addon.addonType}</h3>
-                              {addon.isActive ? (
+                    <div key={addon.id} className="p-6 rounded-2xl bg-white border border-zinc-200 shadow-sm flex flex-col justify-between h-48"> 
+                      <div className="flex items-start justify-between"> 
+                        <div className="flex items-center gap-3"> 
+                          <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center border border-zinc-200"> 
+                            <Puzzle className="h-5 w-5 text-zinc-700" /> 
+                          </div> 
+                          <div> 
+                            <h3 className="text-sm font-black text-zinc-900">{addon.addonType}</h3> 
+                            {addon.isActive ? (
                                 <div className="text-[10px] font-bold text-emerald-500 mt-0.5 px-2 py-0.5 rounded-md bg-emerald-50 inline-block border border-emerald-100">
                                   {lang === "tr" ? "Yayında" : "Published"}
                                 </div>
@@ -3613,19 +5420,19 @@ export default function DashboardClient({
                                   {lang === "tr" ? "Taslak" : "Draft"}
                                 </div>
                               )}
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="mt-4 pt-4 border-t border-zinc-100 flex items-center gap-2">
-                          <button 
-                            onClick={() => setEditingAddon(addon)}
-                            className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2"
-                          >
-                            <Settings className="h-3.5 w-3.5" />
-                            {lang === "tr" ? "Ayarla" : "Config"}
-                          </button>
-                          {addon.isActive && (
+                          </div> 
+                        </div> 
+                      </div> 
+                       
+                      <div className="mt-4 pt-4 border-t border-zinc-100 flex items-center gap-2"> 
+                        <button  
+                          onClick={() => setEditingAddon(addon)} 
+                          className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2" 
+                        > 
+                          <Settings className="h-3.5 w-3.5" /> 
+                          {lang === "tr" ? "Ayarla" : "Config"} 
+                        </button> 
+                        {addon.isActive && (
                             <a 
                               href={addonLink}
                               target="_blank"
@@ -3635,11 +5442,11 @@ export default function DashboardClient({
                               <Globe className="h-3.5 w-3.5" />
                               {lang === "tr" ? "Linke Git" : "Visit Link"}
                             </a>
-                          )}
-                        </div>
-                      </div>
-                    )})}
-                  </div>
+                        )}
+                      </div> 
+                    </div> 
+                  )})} 
+                </div>
               )}
             </div>
           )}
