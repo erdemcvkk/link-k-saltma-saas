@@ -95,9 +95,10 @@ export default async function AddonPage({ params }: { params: Promise<{ username
     });
 
     return (
-      <div className="w-full min-h-screen bg-[#f8f9fa] overflow-hidden">
-        <StorefrontPreview 
-          theme={parsedConfig.theme || getDefaultTheme(matchingAddon.addonType)} 
+      <div className="w-full min-h-screen bg-zinc-100 flex justify-center">
+        <div className="w-full max-w-[480px] min-h-screen relative shadow-2xl overflow-hidden bg-white">
+          <StorefrontPreview 
+            theme={parsedConfig.theme || getDefaultTheme(matchingAddon.addonType)} 
           onProductClick={undefined}
           products={products.map(p => ({
             id: p.id,
@@ -114,6 +115,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
           bio={parsedConfig.storeBio || user.profile.bio}
           buyButtonText={parsedConfig.buyButtonText || "Satın Al"}
         />
+        </div>
       </div>
     );
   }
