@@ -1600,7 +1600,7 @@ export async function seedTemplates(adminUserId?: string) {
       coverUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=400&h=300&fit=crop",
       bgColor: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=600&h=800&fit=crop",
       fontStyle: "Georgia",
-      buttonStyle: "bg-emerald-950/70 border border-emerald-800 text-emerald-100 hover:bg-emerald-900 rounded-full",
+      buttonStyle: "bg-green-950/70 border border-green-800 text-green-100 hover:bg-green-900 rounded-full",
       isActive: true,
       isCoded: false,
     },
