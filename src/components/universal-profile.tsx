@@ -150,9 +150,9 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
         <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0" src={customVideoUrl} />
       )}
 
-      <main className="max-w-md w-full mx-auto space-y-8 relative z-10 flex-1 flex flex-col overflow-x-hidden">
+      <main className="max-w-md w-full mx-auto relative z-10 flex-1 flex flex-col items-center justify-start gap-8 overflow-x-hidden">
         {/* Profile Card */}
-        <div className={`profile-card p-6 rounded-[2.5rem] border text-center backdrop-blur-md flex flex-col items-center gap-4 ${currentStyles.cardBg}`}>
+        <div className={`profile-card p-6 w-full rounded-[2.5rem] border text-center backdrop-blur-md flex flex-col items-center gap-4 ${currentStyles.cardBg}`} style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
           <div className={`w-20 h-20 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/10 shadow-lg flex items-center justify-center overflow-hidden`}>
             {avatarUrl ? (
               <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
@@ -173,7 +173,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
         </div>
 
         {/* Links Grid */}
-        <div className="links-container space-y-3 w-full">
+        <div className="links-container w-full flex flex-col gap-3" style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
           {links.length > 0 && <h3 className={`text-[10px] uppercase tracking-widest font-bold mb-1 ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>Links</h3>}
           {links.length === 0 ? (
             <div className={`text-center py-6 text-xs rounded-2xl border border-dashed ${isDark ? "text-zinc-500 bg-zinc-950/20 border-zinc-900" : "text-zinc-600 bg-zinc-100 border-zinc-200"}`}>
@@ -215,7 +215,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
                     <div className="h-8 w-8 rounded-full bg-black/10 flex items-center justify-center shrink-0 border border-white/5">
                       {getLinkIcon(link.type, link.url)}
                     </div>
-                    <span className="link-title truncate flex-1 font-semibold" style={link.textColor ? { color: link.textColor } : undefined}>{link.title}</span>
+                    <span className="link-title truncate flex-1 font-semibold" style={{ color: link.textColor || 'inherit', display: 'block', visibility: 'visible', opacity: 1 }}>{link.title}</span>
                   </div>
                   <ArrowUpRight className="h-4 w-4 opacity-50 shrink-0" style={link.textColor ? { color: link.textColor } : undefined} />
                 </a>
