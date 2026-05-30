@@ -1481,7 +1481,7 @@ export default function DashboardClient({
             });
 
             return (
-              <div id="sandbox-preview" className="relative rounded-[2.5rem] aspect-[9/18] overflow-hidden bg-zinc-950 flex flex-col justify-between transition-all duration-300 w-full h-full pointer-events-none p-0 border-0">
+              <div id="sandbox-preview" className="relative rounded-[2.5rem] aspect-[9/18] overflow-y-auto overflow-x-hidden bg-zinc-950 flex flex-col justify-between transition-all duration-300 w-full h-full pointer-events-none p-0 border-0 scrollbar-none">
                 <UniversalProfile 
                   data={{
                     username: username || "username",

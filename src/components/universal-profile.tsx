@@ -132,7 +132,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
   return (
     <div 
       id={wrapperId}
-      className={`relative w-full h-full min-h-[500px] overflow-hidden flex flex-col justify-between py-12 px-4 transition-all duration-500 ${bgClassName}`}
+      className={`relative w-full flex flex-col justify-start py-12 px-4 transition-all duration-500 ${isCompactMode ? 'min-h-full' : 'min-h-screen'} ${bgClassName}`}
       style={{
         fontFamily: fontStyle,
         ...(isCssBg ? { background: background } : {}),
@@ -210,11 +210,11 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 
               return (
                 <a key={link.id} href={isCompactMode ? "#" : `/click/${link.id}`} target={isCompactMode ? "_self" : "_blank"} rel="noopener noreferrer" style={customStyle} className={`flex items-center justify-between p-3 text-sm transition-all hover:scale-[1.02] ${dynamicBlockClass}`}>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-1 overflow-hidden">
                     <div className="h-8 w-8 rounded-full bg-black/10 flex items-center justify-center shrink-0 border border-white/5">
                       {getLinkIcon(link.type, link.url)}
                     </div>
-                    <span style={link.textColor ? { color: link.textColor } : undefined}>{link.title}</span>
+                    <span className="link-title truncate flex-1 font-semibold" style={link.textColor ? { color: link.textColor } : undefined}>{link.title}</span>
                   </div>
                   <ArrowUpRight className="h-4 w-4 opacity-50 shrink-0" style={link.textColor ? { color: link.textColor } : undefined} />
                 </a>

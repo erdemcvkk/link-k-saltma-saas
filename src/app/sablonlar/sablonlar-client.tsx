@@ -279,7 +279,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                     >
                       <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
                       
-                      <div className="w-full h-full rounded-[1.5rem] overflow-hidden pointer-events-none">
+                      <div className="w-full h-full rounded-[1.5rem] overflow-y-auto overflow-x-hidden pointer-events-none scrollbar-none">
                         <UniversalProfile 
                           data={getDummyData(template)} 
                           isCompactMode={true} 
@@ -350,7 +350,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
               <div className="relative w-[280px] h-[540px] bg-slate-900 rounded-[2.5rem] p-2.5 shadow-2xl border-4 border-slate-800 overflow-hidden shrink-0">
                 <div className="absolute top-0 inset-x-0 h-4 bg-slate-900 z-20 rounded-b-2xl w-1/3 mx-auto" />
                 
-                <div className="w-full h-full rounded-[2rem] overflow-hidden relative pointer-events-none">
+                <div className="w-full h-full rounded-[2rem] overflow-y-auto overflow-x-hidden relative pointer-events-none scrollbar-none">
                   <UniversalProfile 
                     data={getDummyData(selectedTemplate)} 
                     isCompactMode={true} 
