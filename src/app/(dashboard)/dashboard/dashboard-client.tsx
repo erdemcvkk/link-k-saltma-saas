@@ -4343,15 +4343,18 @@ export default function DashboardClient({
                                     }
                                     startTransition(async () => {
                                       try {
-                                        await addLink(
-                                          initialUser.id,
-                                          quickLinkTitle,
-                                          quickLinkUrl,
-                                          quickLinkIcon,
-                                          "",
-                                          "TEXT_LINK",
-                                          null
-                                        );
+                                        const res = await addLink(
+    initialUser.id,
+    quickLinkTitle,
+    quickLinkUrl,
+    quickLinkIcon,
+    "",
+    "TEXT_LINK",
+    null
+  );
+  if (res && res.error) {
+    throw new Error(res.error);
+  }
                                         const tempId = Math.random().toString();
                                         setLinks([
                                           ...links,

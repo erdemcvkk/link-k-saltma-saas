@@ -54,7 +54,7 @@ export async function addLink(
   blockType: string = "TEXT_LINK",
   metadata: string | null = null
 ) {
-  if (!title || !url) throw new Error("Title and URL are required");
+  if (!title || !url) return { error: "Title and URL are required" };
 
   // Get user details for plan validation
   const user = await db.user.findUnique({
@@ -62,7 +62,7 @@ export async function addLink(
     select: { plan: true, role: true },
   });
 
-  if (!user) throw new Error("User not found");
+  if (!user) return { error: "User not found" };
 
   // Get current links count
   const linkCount = await db.link.count({
@@ -71,15 +71,15 @@ export async function addLink(
 
   // Gating check
   if (user.plan === "FREE" && linkCount >= 5) {
-    throw new Error("FREE plan is limited to 5 links. Please upgrade to STARTER or CREATOR plan to add more links!");
+    return { error: "FREE plan is limited to 5 links. Please upgrade to STARTER or CREATOR plan to add more links!" };
   }
 
   // Template restrictions checks
   const isTemplateUnlocked = (templateType: string, plan: string, isAdmin: boolean) => {
     if (plan === "CREATOR" || plan === "PRO_BUSINESS" || isAdmin) return true;
     
-    const starterTemplates = ["WEBSITE", "FACEBOOK", "INSTAGRAM", "WHATSAPP", "WIFI", "VCARD", "IMAGES", "SOCIAL_MEDIA", "VIDEO", "COUPON"];
-    const freeTemplates = ["WEBSITE", "FACEBOOK", "INSTAGRAM", "WHATSAPP", "WIFI"];
+    const starterTemplates = ["WEBSITE", "FACEBOOK", "INSTAGRAM", "WHATSAPP", "WIFI", "VCARD", "IMAGES", "SOCIAL_MEDIA", "VIDEO", "COUPON", "TIKTOK", "YOUTUBE", "X", "TWITTER", "PINTEREST", "LINKEDIN", "MESSAGE"];
+    const freeTemplates = ["WEBSITE", "FACEBOOK", "INSTAGRAM", "WHATSAPP", "WIFI", "TIKTOK", "YOUTUBE", "X", "TWITTER", "PINTEREST", "LINKEDIN", "MESSAGE"];
     
     if (plan === "STARTER") {
       return starterTemplates.includes(templateType);
@@ -88,7 +88,7 @@ export async function addLink(
   };
 
   if (!isTemplateUnlocked(type, user.plan, user.role === "ADMIN")) {
-    throw new Error(`The "${type}" link action requires a premium plan. Please upgrade to unlock!`);
+    return { error: `The "${type}" link action requires a premium plan. Please upgrade to unlock!` };
   }
 
   // Format URL if it doesn't have http/https, but ONLY if it's not a custom protocol like WIFI: or BEGIN:VCARD
