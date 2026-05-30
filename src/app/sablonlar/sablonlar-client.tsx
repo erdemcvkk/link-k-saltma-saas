@@ -273,13 +273,14 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                       <p className="text-xs text-zinc-400 font-medium">{template.category}</p>
                     </div>
 
+                    {/* Phone Mockup Frame */}
                     <div 
-                      className="relative w-full h-[600px] max-w-[300px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-4 cursor-pointer flex flex-col" 
+                      className="relative w-full aspect-[1/2] max-w-[340px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6 cursor-pointer" 
                       onClick={() => handleSelectTemplate(template)}
                     >
                       <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
                       
-                      <div className="w-full h-full rounded-[1.5rem] overflow-y-auto overflow-x-hidden pointer-events-none scrollbar-none">
+                      <div className="relative w-full h-full bg-zinc-950 rounded-[2rem] overflow-hidden pointer-events-none">
                         <UniversalProfile 
                           data={getDummyData(template)} 
                           isCompactMode={true} 
@@ -350,7 +351,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
               <div className="relative w-[280px] h-[540px] bg-slate-900 rounded-[2.5rem] p-2.5 shadow-2xl border-4 border-slate-800 overflow-hidden shrink-0">
                 <div className="absolute top-0 inset-x-0 h-4 bg-slate-900 z-20 rounded-b-2xl w-1/3 mx-auto" />
                 
-                <div className="w-full h-full rounded-[2rem] overflow-y-auto overflow-x-hidden relative pointer-events-none scrollbar-none">
+                <div className="relative w-full h-full bg-zinc-950 rounded-[2rem] overflow-hidden pointer-events-none">
                   <UniversalProfile 
                     data={getDummyData(selectedTemplate)} 
                     isCompactMode={true} 
