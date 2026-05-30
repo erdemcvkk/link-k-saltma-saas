@@ -1326,7 +1326,8 @@ export async function applyTemplateToProfile(userId: string, templateId: string)
     data: {
       background: template.bgColor,
       fontStyle: template.fontStyle,
-      theme: template.name
+      theme: template.name,
+      customCss: template.isCoded ? template.customCss : null
     }
   });
 

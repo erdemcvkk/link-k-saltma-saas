@@ -25,6 +25,7 @@ import {
   updateAllLinksCustomStyle,
   toggleUserTemplateActive
 } from "@/app/actions";
+import UniversalProfile from "@/components/universal-profile";
 import { parseButtonStyle } from "@/lib/parse-button-style";
 import {
   ResponsiveContainer,
@@ -184,8 +185,7 @@ interface DashboardClientProps {
   globalSettings?: Record<string, string>;
   initialFonts?: { id?: string; name: string; value: string; tier: string; giftLabel?: string | null }[];
   initialQrCodes?: QrCodeItem[];
-  initialFeatures?: any[];
-  initialOwnedTemplates?: {
+    initialOwnedTemplates?: {
     userTemplateId: string;
     isActive: boolean;
     id: string;
@@ -349,7 +349,7 @@ export default function DashboardClient({
   const [quickLinkUrl, setQuickLinkUrl] = useState("");
   const [quickLinkIcon, setQuickLinkIcon] = useState("WEBSITE");
   
-  const firstLink = initialUser.links?.[0];
+  const firstLink = initialLinks?.[0];
   const [btnBgColor, setBtnBgColor] = useState(firstLink?.bgColor || "");
   const [btnTextColor, setBtnTextColor] = useState(firstLink?.textColor || "");
   const [btnBorderColor, setBtnBorderColor] = useState(firstLink?.borderColor || "");
@@ -365,6 +365,9 @@ export default function DashboardClient({
       if (template) {
         setBackground(template.bgColor);
         setFontStyle(template.fontStyle);
+        
+        setTheme(template.name);
+        setActiveTemplateCss(template.customCss || null);
         
         // Parse button style from template definition as the source of truth
         if (template.buttonStyle) {
@@ -544,7 +547,7 @@ export default function DashboardClient({
   const [bio, setBio] = useState(initialUser.profile?.bio ?? "");
   const [avatarUrl, setAvatarUrl] = useState(initialUser.profile?.avatarUrl ?? "");
   const [background, setBackground] = useState(initialUser.profile?.background ?? "");
-  const [activeTemplateCss, setActiveTemplateCss] = useState<string | null>(initialUser.profile?.theme ? initialOwnedTemplates.find(t => t.name === initialUser.profile?.theme)?.customCss || null : null);
+  const [activeTemplateCss, setActiveTemplateCss] = useState<string | null>(initialUser.profile?.customCss ?? null);
   const [theme, setTheme] = useState(initialUser.profile?.theme ?? "dark");
   const [fontStyle, setFontStyle] = useState(initialUser.profile?.fontStyle ?? "Inter");
   const [bioColor, setBioColor] = useState(initialUser.profile?.bioColor ?? "#888888");
@@ -1447,181 +1450,54 @@ export default function DashboardClient({
         }`}>
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-50 rounded-b-xl z-20" />
           {(() => {
-            const isCustomImg = background?.startsWith("custom-img::") || background?.startsWith("http://") || background?.startsWith("https://") || background?.startsWith("/");
             const previewTemplateId = customizingTemplateId;
             const previewTemplate = previewTemplateId ? ownedTemplates.find((t: any) => t.id === previewTemplateId) : null;
             const templateButtonOverrides = (previewTemplate && (previewTemplate as any).buttonStyle) 
               ? parseButtonStyle((previewTemplate as any).buttonStyle) 
-              : {};
+              : {} as any;
 
-            const isCustomVideo = background?.startsWith("custom-video::");
-            const customImgUrl = isCustomImg ? (background.startsWith("custom-img::") ? background.replace("custom-img::", "") : background) : null;
-            const customVideoUrl = isCustomVideo ? background.replace("custom-video::", "") : null;
-            
-            const isTailwindBg = background?.includes("bg-") || background?.includes("from-") || background?.includes("to-");
-            const isCssBg = background && !isCustomImg && !isCustomVideo && !isTailwindBg;
+            const isLight = [
+              "Minimalist Light", "Pastel Dream", "Abstract Fluid", 
+              "Vintage Paper", "Vintage Journal", "Holographic Glass", "Aura Hologram"
+            ].includes(theme);
 
-            const bgClassName = (background && isTailwindBg && !isCustomImg && !isCustomVideo) 
-              ? background 
-              : (!background && !isCustomImg && !isCustomVideo ? previewStyles.bg : "");
+            const mappedLinks = links.map(link => {
+              let blockMeta: any = {};
+              if (link.metadata) {
+                try { blockMeta = JSON.parse(link.metadata); } catch (e) {}
+              }
+              return {
+                ...link,
+                bgColor: templateButtonOverrides.bgColor ?? link.bgColor ?? null,
+                textColor: templateButtonOverrides.textColor ?? link.textColor ?? null,
+                borderColor: templateButtonOverrides.borderColor ?? link.borderColor ?? null,
+                borderStyle: templateButtonOverrides.borderStyle ?? link.borderStyle ?? null,
+                borderWidth: templateButtonOverrides.borderWidth ?? link.borderWidth ?? null,
+                borderRadius: templateButtonOverrides.borderRadius ?? link.borderRadius ?? null,
+                shadow: templateButtonOverrides.shadow ?? link.shadow ?? null,
+                fontWeight: templateButtonOverrides.fontWeight ?? link.fontWeight ?? null,
+                metadata: blockMeta
+              };
+            });
 
             return (
-              <div 
-                id="sandbox-preview"
-                className={`relative rounded-[2.5rem] aspect-[9/18] overflow-hidden p-6 flex flex-col justify-between transition-all duration-300 ${bgClassName}`}
-                style={{
-                  fontFamily: fontStyle,
-                  ...(isCssBg ? { background: background } : {}),
-                  ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {})
-                }}
-              >
-                {activeTemplateCss && (
-                  <style dangerouslySetInnerHTML={{ 
-                    __html: activeTemplateCss
-                      .replace(/body/g, `#sandbox-preview`)
-                      .replace(/\.profile-card/g, `#sandbox-preview .profile-card`)
-                      .replace(/\.btn-link/g, `#sandbox-preview .btn-link`)
-                      .replace(/\.link-item/g, `#sandbox-preview .link-item`)
-                      .replace(/\.links-container/g, `#sandbox-preview .links-container`)
-                  }} />
-                )}
-                {customVideoUrl && (
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
-                    src={customVideoUrl}
-                  />
-                )}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none z-[1]" />
-
-                <div className="space-y-4 pt-10 text-center relative z-10">
-                  <div className={`w-20 h-20 rounded-full bg-gradient-to-tr ${previewStyles.avatarBg} mx-auto border-2 border-white/10 flex items-center justify-center overflow-hidden`}>
-                    {avatarUrl ? (
-                      <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                    ) : (
-                      <User className="h-10 w-10 text-slate-900" />
-                    )}
-                  </div>
-                  <div className="space-y-1">
-                    <h3 
-                      style={usernameColor ? { color: usernameColor } : undefined}
-                      className={`text-base font-bold ${previewStyles.glowText}`}
-                    >
-                      @{username || "username"}
-                    </h3>
-                    <p 
-                      style={bioColor ? { color: bioColor } : undefined}
-                      className="text-slate-500 text-xs px-4 truncate max-w-full"
-                    >
-                      {bio || "Enter profile bio details..."}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="links-container space-y-3.5 my-auto overflow-y-auto max-h-[250px] relative z-10 px-2 scrollbar-none">
-                  {links.filter((l) => l.isActive).length === 0 ? (
-                    <div className="text-center py-8 text-xs text-zinc-600 border border-dashed border-zinc-500/30 rounded-xl">
-                      No active links published
-                    </div>
-                  ) : (
-                    links
-                      .filter((l) => l.isActive)
-                      .map((link) => {
-                        let blockMeta: any = {};
-                        if (link.metadata) {
-                          try {
-                            blockMeta = JSON.parse(link.metadata);
-                          } catch (e) {}
-                        }
-
-                        const customStyle: React.CSSProperties = {
-                          backgroundColor: templateButtonOverrides.bgColor ?? link.bgColor ?? undefined,
-                          color: templateButtonOverrides.textColor ?? link.textColor ?? undefined,
-                          borderColor: templateButtonOverrides.borderColor ?? link.borderColor ?? undefined,
-                          borderStyle: templateButtonOverrides.borderStyle ?? (link.borderStyle as any) ?? undefined,
-                          borderWidth: templateButtonOverrides.borderWidth ?? link.borderWidth ?? undefined,
-                          borderRadius: templateButtonOverrides.borderRadius ?? link.borderRadius ?? undefined,
-                          boxShadow: (templateButtonOverrides.shadow ?? link.shadow) === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
-                                   : (templateButtonOverrides.shadow ?? link.shadow) === "glow-emerald" ? "0 0 15px rgba(10,185,129,0.5)"
-                                   : (templateButtonOverrides.shadow ?? link.shadow) === "soft" ? "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
-                                   : (templateButtonOverrides.shadow ?? link.shadow) === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
-                                   : undefined,
-                        };
-
-                        const effectiveBg = templateButtonOverrides.bgColor ?? link.bgColor;
-                        const dynamicBlockClass = `${
-                          !effectiveBg ? previewStyles.card : ""
-                        } ${!(templateButtonOverrides.borderRadius ?? link.borderRadius) ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-xl") : ""} ${link.animation || ""} ${
-                          (templateButtonOverrides.fontWeight ?? link.fontWeight) === "font-normal" ? "font-normal"
-                          : (templateButtonOverrides.fontWeight ?? link.fontWeight) === "font-medium" ? "font-medium"
-                          : (templateButtonOverrides.fontWeight ?? link.fontWeight) === "font-bold" ? "font-bold"
-                          : (templateButtonOverrides.fontWeight ?? link.fontWeight) === "font-black" ? "font-black"
-                          : "font-bold"
-                        }`;
-
-                        if (link.blockType === "VIDEO_PLAYER") {
-                          return (
-                            <VideoPlayer
-                              key={link.id}
-                              title={link.title}
-                              url={link.url}
-                              isDark={isDark}
-                              boxStyle={customStyle}
-                              className={dynamicBlockClass}
-                            />
-                          );
-                        }
-
-                        if (link.blockType === "BEFORE_AFTER") {
-                          return (
-                            <BeforeAfterSlider
-                              key={link.id}
-                              title={link.title}
-                              beforeImage={blockMeta.beforeImage || ""}
-                              afterImage={blockMeta.afterImage || ""}
-                              isDark={isDark}
-                              boxStyle={customStyle}
-                              className={dynamicBlockClass}
-                            />
-                          );
-                        }
-
-                        if (link.blockType === "AUDIO_PLAYER") {
-                          return (
-                            <AudioPlayer
-                              key={link.id}
-                              title={link.title}
-                              url={link.url}
-                              isDark={isDark}
-                              boxStyle={customStyle}
-                              className={dynamicBlockClass}
-                            />
-                          );
-                        }
-
-                        // Standard text link preview
-                        return (
-                          <div
-                            key={link.id}
-                            style={customStyle}
-                            className={`w-full p-2.5 border text-left text-xs transition-all flex items-center gap-3 backdrop-blur-md cursor-pointer ${dynamicBlockClass}`}
-                          >
-                            <div className="h-6 w-6 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100/50">
-                              {getLinkIconHelper(link.type, link.url)}
-                            </div>
-                            <span className="truncate flex-1" style={link.textColor ? { color: link.textColor } : undefined}>{link.title}</span>
-                          </div>
-                        );
-                      })
-                  )}
-                </div>
-
-                <div className="text-center text-[9px] text-zinc-600 uppercase tracking-widest font-bold py-4 border-t border-gray-100 relative z-10">
-                  CREATOR.HUB
-                </div>
+              <div id="sandbox-preview" className="relative rounded-[2.5rem] aspect-[9/18] overflow-hidden bg-zinc-950 flex flex-col justify-between transition-all duration-300 w-full h-full pointer-events-none p-0 border-0">
+                <UniversalProfile 
+                  data={{
+                    username: username || "username",
+                    bio: bio || "Enter profile bio details...",
+                    avatarUrl: avatarUrl,
+                    theme: theme,
+                    customCss: activeTemplateCss,
+                    background: background,
+                    fontStyle: fontStyle,
+                    usernameColor: usernameColor || (isLight ? "#0f172a" : "#ffffff"),
+                    bioColor: bioColor || (isLight ? "#475569" : "rgba(255,255,255,0.7)"),
+                    links: mappedLinks,
+                  }} 
+                  isCompactMode={true} 
+                  isDarkContext={!isLight}
+                />
               </div>
             );
           })()}

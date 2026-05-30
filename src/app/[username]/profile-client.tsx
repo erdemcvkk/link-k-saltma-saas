@@ -2,37 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { buyProductSimulated } from "@/app/actions";
-import {
-  User,
-  Music,
-  ShoppingBag,
-  Globe,
-  Zap,
-  ArrowUpRight,
-  Loader2,
-  CheckCircle,
-  CreditCard,
-  Lock,
-  X,
-  Download,
-  Sparkles,
-  FileText,
-  List,
-  Briefcase,
-  Play,
-  Image,
-  MessageCircle,
-  Utensils,
-  Smartphone,
-  Percent,
-  Wifi
-} from "lucide-react";
-import { YoutubeIcon, TwitterIcon, LinkedinIcon, TiktokIcon, PinterestIcon, InstagramIcon } from "@/components/brand-icons";
-import StorefrontPreview from "@/components/storefront-preview";
+import { Loader2, CheckCircle, CreditCard, Lock, X, Download, FileText, ShoppingBag } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
-import VideoPlayer from "@/components/blocks/video-player";
-import BeforeAfterSlider from "@/components/blocks/before-after-slider";
-import AudioPlayer from "@/components/blocks/audio-player";
+import UniversalProfile, { UniversalProfileData } from "@/components/universal-profile";
 
 type LinkItem = {
   id: string;
@@ -59,7 +31,7 @@ type ProductItem = {
   type: string;
   price: number;
   description: string | null;
-  fileUrl: string;
+  fileUrl: string | null;
   isActive: boolean;
   salesCount: number;
 };
@@ -80,6 +52,7 @@ interface ProfileClientProps {
   storeTitle?: string | null;
   storeCoverUrl?: string | null;
   storeLayout?: string | null;
+  customCss?: string | null;
 }
 
 export default function ProfileClient({ username, bio, theme, links, products, addons = [], avatarUrl, background, fontStyle, bioColor, usernameColor, plan, storeTitle, storeCoverUrl, storeLayout, customCss }: ProfileClientProps) {
@@ -89,15 +62,6 @@ export default function ProfileClient({ username, bio, theme, links, products, a
   const [cardCvc, setCardCvc] = useState("");
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
-  const [clickedProductId, setClickedProductId] = useState<string | null>(null);
-  
-  const handleProductClick = (prod: ProductItem) => {
-    setClickedProductId(prod.id);
-    setTimeout(() => {
-      setClickedProductId(null);
-      setSelectedProduct(prod);
-    }, 200);
-  };
   
   const [isPending, startTransition] = useTransition();
   const [errorMsg, setErrorMsg] = useState("");
@@ -109,175 +73,6 @@ export default function ProfileClient({ username, bio, theme, links, products, a
     setActiveTheme(state.theme);
   };
 
-  const isDark = activeTheme === "dark";
-
-  // Get matching styles for current theme based on dark/light context!
-  const getThemeStyles = (themeId: string) => {
-    switch (themeId) {
-      case "neon-purple":
-        return {
-          bg: isDark 
-            ? "bg-gradient-to-b from-purple-950 via-zinc-950 to-black text-purple-200"
-            : "bg-gradient-to-b from-purple-50 via-zinc-100 to-white text-purple-950",
-          cardBg: isDark
-            ? "bg-purple-950/10 border-purple-500/20 shadow-[0_0_30px_rgba(168,85,247,0.1)]"
-            : "bg-white/80 border-purple-200 shadow-md text-zinc-800",
-          glowText: isDark
-            ? "text-purple-400 font-bold tracking-wide drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]"
-            : "text-purple-700 font-bold tracking-wide",
-          avatarBg: "from-purple-500 to-pink-500",
-          btnClass: isDark
-            ? "bg-purple-950/20 border border-purple-500/30 text-purple-200 hover:bg-purple-900/30 hover:border-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.05)]"
-            : "bg-purple-50 border border-purple-200 text-purple-700 hover:bg-purple-100/50 shadow-sm",
-          accentColor: isDark ? "text-purple-400" : "text-purple-600",
-          badgeClass: "bg-purple-500/20 text-purple-300 border-purple-500/30",
-        };
-      case "glow-green":
-        return {
-          bg: isDark
-            ? "bg-gradient-to-b from-emerald-950/40 via-zinc-950 to-black text-emerald-200"
-            : "bg-gradient-to-b from-emerald-50 via-zinc-100 to-white text-emerald-950",
-          cardBg: isDark
-            ? "bg-emerald-950/10 border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
-            : "bg-white/80 border-emerald-200 shadow-md text-zinc-800",
-          glowText: isDark
-            ? "text-emerald-400 font-bold tracking-wide drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]"
-            : "text-emerald-700 font-bold tracking-wide",
-          avatarBg: "from-emerald-500 to-teal-500",
-          btnClass: isDark
-            ? "bg-emerald-950/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-900/30 hover:border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.05)]"
-            : "bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100/50 shadow-sm",
-          accentColor: isDark ? "text-emerald-400" : "text-emerald-600",
-          badgeClass: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
-        };
-      case "pink-retro":
-        return {
-          bg: isDark
-            ? "bg-gradient-to-b from-pink-950/40 via-zinc-950 to-black text-pink-200"
-            : "bg-gradient-to-b from-pink-50 via-zinc-100 to-white text-pink-950",
-          cardBg: isDark
-            ? "bg-pink-950/10 border-pink-500/20 shadow-[0_0_30px_rgba(244,63,94,0.1)]"
-            : "bg-white/80 border-pink-200 shadow-md text-zinc-800",
-          glowText: isDark
-            ? "text-pink-400 font-bold tracking-wide drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]"
-            : "text-pink-700 font-bold tracking-wide",
-          avatarBg: "from-pink-500 to-rose-500",
-          btnClass: isDark
-            ? "bg-pink-950/20 border border-pink-500/30 text-pink-200 hover:bg-pink-900/30 hover:border-pink-400 shadow-[0_0_15px_rgba(244,63,94,0.05)]"
-            : "bg-pink-50 border border-pink-200 text-pink-700 hover:bg-pink-100/50 shadow-sm",
-          accentColor: isDark ? "text-pink-400" : "text-pink-600",
-          badgeClass: "bg-pink-500/20 text-pink-300 border-pink-500/30",
-        };
-      case "glassmorphism":
-        return {
-          bg: "bg-slate-950 text-white",
-          cardBg: "bg-white/10 border-white/20 backdrop-blur-md shadow-2xl text-white",
-          glowText: "text-white font-bold tracking-wide drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]",
-          avatarBg: "from-purple-500/50 to-pink-500/50",
-          btnClass: "bg-white/10 border border-white/20 backdrop-blur-md hover:bg-white/20 text-white shadow-lg",
-          accentColor: "text-white",
-          badgeClass: "bg-white/20 text-white border-white/30",
-        };
-      case "brutalism":
-        return {
-          bg: "bg-[#facc15] text-black",
-          cardBg: "bg-white border-4 border-black rounded-none shadow-brutal text-black",
-          glowText: "text-black font-bold uppercase",
-          avatarBg: "from-zinc-900 to-black",
-          btnClass: "bg-[#ff007f] border-4 border-black rounded-none shadow-brutal-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1 text-black font-bold transition-all",
-          accentColor: "text-black",
-          badgeClass: "bg-[#ff007f] text-black border-2 border-black rounded-none",
-        };
-      case "terminal":
-        return {
-          bg: "bg-black text-[#22c55e] font-mono",
-          cardBg: "bg-black border-2 border-[#22c55e] rounded-none shadow-[0_0_15px_rgba(34,197,94,0.15)] text-[#22c55e]",
-          glowText: "text-[#22c55e] font-mono font-bold tracking-widest uppercase",
-          avatarBg: "from-zinc-950 to-zinc-900 border-[#22c55e]",
-          btnClass: "bg-black border-2 border-[#22c55e] rounded-none text-[#22c55e] hover:bg-[#22c55e]/10 font-mono transition-all",
-          accentColor: "text-[#22c55e]",
-          badgeClass: "bg-[#22c55e]/20 text-[#22c55e] border-[#22c55e]/30 rounded-none",
-        };
-      default: // dark default
-        return {
-          bg: isDark ? "bg-black text-zinc-200" : "bg-zinc-50 text-zinc-800",
-          cardBg: isDark ? "bg-zinc-900/40 border-zinc-800" : "bg-white border-zinc-200 shadow-md",
-          glowText: isDark ? "text-white" : "text-zinc-900 font-bold",
-          avatarBg: "from-zinc-400 to-zinc-500",
-          btnClass: isDark
-            ? "bg-zinc-900/50 border border-zinc-800 hover:bg-zinc-900 hover:border-zinc-700 text-zinc-200"
-            : "bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-100 shadow-sm",
-          accentColor: isDark ? "text-white" : "text-zinc-800",
-          badgeClass: "bg-zinc-800 text-zinc-400 border-zinc-700",
-        };
-    }
-  };
-
-  const currentStyles = getThemeStyles(theme);
-  const getLinkIcon = (type?: string, url?: string) => {
-    switch (type) {
-      case "WEBSITE":
-        return <Globe className="h-5 w-5" />;
-      case "FACEBOOK":
-        return <Globe className="h-5 w-5" />;
-      case "INSTAGRAM":
-        return <InstagramIcon className="h-5 w-5" />;
-      case "WHATSAPP":
-        return <MessageCircle className="h-5 w-5" />;
-      case "YOUTUBE":
-        return <YoutubeIcon className="h-5 w-5" />;
-      case "TWITTER":
-      case "X":
-        return <TwitterIcon className="h-5 w-5" />;
-      case "LINKEDIN":
-        return <LinkedinIcon className="h-5 w-5" />;
-      case "REDDIT":
-        return <MessageCircle className="h-5 w-5" />;
-      case "PINTEREST":
-        return <PinterestIcon className="h-5 w-5" />;
-      case "TIKTOK":
-        return <TiktokIcon className="h-5 w-5" />;
-      case "PDF":
-        return <FileText className="h-5 w-5" />;
-      case "LINK_LIST":
-        return <List className="h-5 w-5" />;
-      case "VCARD":
-        return <User className="h-5 w-5" />;
-      case "BUSINESS":
-        return <Briefcase className="h-5 w-5" />;
-      case "VIDEO":
-        return <Play className="h-5 w-5" />;
-      case "IMAGES":
-        return <Image className="h-5 w-5" />;
-      case "SOCIAL_MEDIA":
-      case "WHATSAPP":
-        return <MessageCircle className="h-5 w-5" />;
-      case "MP3":
-        return <Music className="h-5 w-5" />;
-      case "MENU":
-        return <Utensils className="h-5 w-5" />;
-      case "APPS":
-        return <Smartphone className="h-5 w-5" />;
-      case "COUPON":
-        return <Percent className="h-5 w-5" />;
-      case "WIFI":
-        return <Wifi className="h-5 w-5" />;
-      default:
-        if (url) {
-          const lowerUrl = url.toLowerCase();
-          if (lowerUrl.includes("spotify") || lowerUrl.includes("soundcloud") || lowerUrl.includes("music")) {
-            return <Music className="h-5 w-5" />;
-          }
-          if (lowerUrl.includes("shop") || lowerUrl.includes("store") || lowerUrl.includes("presets")) {
-            return <ShoppingBag className="h-5 w-5" />;
-          }
-          if (lowerUrl.includes("website") || lowerUrl.includes("portfolio")) {
-            return <Globe className="h-5 w-5" />;
-          }
-        }
-        return <Zap className="h-5 w-5" />;
-    }
-  };
   const handleCheckoutSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedProduct) return;
@@ -304,10 +99,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
     setErrorMsg("");
   };
 
-  // Translations
   const t = {
-    socialOutposts: lang === "tr" ? "Sosyal Medya Linkleri" : "Social Outposts",
-    noLinks: lang === "tr" ? "Henüz aktif bağlantı adresi eklenmemiş." : "No active links found.",
     shopCatalog: lang === "tr" ? "Dijital Ürün Mağazası" : "Digital Shop Catalog",
     noDesc: lang === "tr" ? "Bu ürün için bir açıklama girilmemiş." : "No description provided.",
     downloadGlow: lang === "tr" ? "Anında Dosya Teslimat" : "Instant File Download",
@@ -324,227 +116,100 @@ export default function ProfileClient({ username, bio, theme, links, products, a
     downloadInstantly: lang === "tr" ? "Dosyayı Şimdi İndir" : "Download File Instantly",
   };
 
-  // Determine background rendering mode
-  const isCustomImg = background?.startsWith("custom-img::") || background?.startsWith("http://") || background?.startsWith("https://") || background?.startsWith("/");
-  const isCustomVideo = background?.startsWith("custom-video::");
-  const customImgUrl = isCustomImg ? (background!.startsWith("custom-img::") ? background!.replace("custom-img::", "") : background) : null;
-  const customVideoUrl = isCustomVideo ? background!.replace("custom-video::", "") : null;
-  
-  const isTailwindBg = background?.includes("bg-") || background?.includes("from-") || background?.includes("to-");
-  const isCssBg = background && !isCustomImg && !isCustomVideo && !isTailwindBg;
-
-  const bgClassName = (background && isTailwindBg && !isCustomImg && !isCustomVideo) 
-    ? background 
-    : (!background && !isCustomImg && !isCustomVideo ? currentStyles.bg : "");
+  const profileData: UniversalProfileData = {
+    username,
+    bio,
+    theme,
+    links,
+    products,
+    addons,
+    avatarUrl,
+    background,
+    fontStyle,
+    bioColor,
+    usernameColor,
+    plan,
+    storeTitle,
+    storeCoverUrl,
+    storeLayout,
+    customCss
+  };
 
   return (
-    <div 
-      id="profile-wrapper"
-      className={`min-h-screen relative overflow-hidden flex flex-col justify-between py-20 px-4 transition-all duration-500 ${bgClassName}`}
-      style={{
-        fontFamily: fontStyle,
-        ...(isCssBg ? { background: background } : {}),
-        ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {})
-      }}
-    >
+    <>
       <GlobalOverlayManager onStateChange={handleStateChange} />
+      <UniversalProfile data={profileData} isDarkContext={activeTheme === "dark"} />
+      
+      {/* Product Modals */}
+      {selectedProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={closeCheckoutModal} />
+          <div className="relative w-full max-w-md bg-zinc-950 border border-zinc-800 shadow-2xl rounded-3xl p-6 overflow-hidden">
+            <button onClick={closeCheckoutModal} className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors">
+              <X className="h-5 w-5" />
+            </button>
 
-      {customCss && (
-        <style dangerouslySetInnerHTML={{ 
-          __html: customCss
-            .replace(/body/g, `#profile-wrapper`)
-            .replace(/\.profile-card/g, `#mobile-container .profile-card`)
-            .replace(/\.btn-link/g, `#mobile-container .btn-link`)
-            .replace(/\.link-item/g, `#mobile-container .link-item`)
-        }} />
-      )}
-
-      {/* Advanced Theme Overlays */}
-      {theme === "glassmorphism" && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <div className="glass-sphere glass-sphere-purple w-[300px] h-[300px] top-[10%] left-[-50px]" />
-          <div className="glass-sphere glass-sphere-emerald w-[280px] h-[280px] bottom-[15%] right-[-50px]" />
-          <div className="glass-sphere glass-sphere-pink w-[220px] h-[220px] top-[50%] left-[30%]" />
-        </div>
-      )}
-
-      {theme === "terminal" && <div className="crt-scanlines" />}
-
-      {theme === "brutalism" && (
-        <div className="absolute top-0 left-0 right-0 h-10 bg-black text-[#facc15] font-black text-xs uppercase flex items-center overflow-hidden border-b-4 border-black z-20">
-          <div className="animate-marquee">
-            {" 🔥 WEB3 BRUTALISM // PORTFOLIO SITE CREATOR // ULTRA-DYNAMIC UX // NO CORNERS ALLOWED // ".repeat(4)}
-          </div>
-        </div>
-      )}
-
-      {/* Custom Video Background */}
-      {customVideoUrl && (
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
-          src={customVideoUrl}
-        />
-      )}
-
-      <main id="mobile-container" className="max-w-md w-full mx-auto space-y-10 relative z-10 flex-1 flex flex-col justify-center overflow-x-hidden">
-        {/* Profile Card */}
-        <div className={`profile-card p-8 rounded-[2.5rem] border text-center backdrop-blur-md flex flex-col items-center gap-6 ${currentStyles.cardBg}`}>
-          <div className={`w-24 h-24 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/10 shadow-lg flex items-center justify-center overflow-hidden`}>
-            {avatarUrl ? (
-              <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-            ) : (
-              <User className="h-12 w-12 text-white" />
-            )}
-          </div>
-
-          <div className="space-y-2 w-full">
-            <h1 
-              style={usernameColor ? { color: usernameColor } : undefined}
-              className={`text-2xl font-bold ${currentStyles.glowText}`}
-            >
-              @{username}
-            </h1>
-            {bio && (
-              <p 
-                style={bioColor ? { color: bioColor } : undefined}
-                className={`text-sm leading-relaxed max-w-xs mx-auto px-2 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}
-              >
-                {bio}
-              </p>
-            )}
-          </div>
-        </div>
-
-        
-
-
-
-        {/* Links Grid */}
-        <div className="links-container space-y-4 w-full">
-          {links.length > 0 && <h3 className={`text-xs uppercase tracking-widest font-bold mb-1 ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>{t.socialOutposts}</h3>}
-          {links.length === 0 ? (
-            <div className={`text-center py-6 text-xs rounded-2xl border border-dashed ${
-              isDark ? "text-zinc-500 bg-zinc-950/20 border-zinc-900" : "text-zinc-600 bg-zinc-100 border-zinc-200"
-            }`}>
-              {t.noLinks}
-            </div>
-          ) : (
-            links.map((link, idx) => {
-              // Parse optional block metadata safely
-              let blockMeta: any = {};
-              if (link.metadata) {
-                try {
-                  blockMeta = JSON.parse(link.metadata);
-                } catch (e) {
-                  console.error("Failed to parse link block metadata: ", e);
-                }
-              }
-
-              const customStyle: React.CSSProperties = {
-                backgroundColor: link.bgColor || undefined,
-                color: link.textColor || undefined,
-                borderColor: link.borderColor || undefined,
-                borderStyle: link.borderStyle as any || undefined,
-                borderWidth: link.borderWidth || undefined,
-                borderRadius: link.borderRadius || undefined,
-                boxShadow: link.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
-                         : link.shadow === "glow-emerald" ? "0 0 15px rgba(16,185,129,0.5)"
-                         : link.shadow === "soft" ? "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
-                         : link.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
-                         : undefined,
-                animationDelay: `${idx * 0.12}s`, // staggered entrance delay!
-              };
-
-              const dynamicBlockClass = `link-item btn-link stagger-item ${
-                !link.bgColor ? currentStyles.btnClass : ""
-              } ${!link.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-[1.25rem]") : ""} ${link.animation || ""} ${
-                link.fontWeight === "font-normal" ? "font-normal"
-                : link.fontWeight === "font-medium" ? "font-medium"
-                : link.fontWeight === "font-bold" ? "font-bold"
-                : link.fontWeight === "font-black" ? "font-black"
-                : "font-bold"
-              }`;
-
-              if (link.blockType === "VIDEO_PLAYER") {
-                return (
-                  <VideoPlayer
-                    key={link.id}
-                    title={link.title}
-                    url={link.url}
-                    isDark={isDark}
-                    boxStyle={customStyle}
-                    className={dynamicBlockClass}
-                  />
-                );
-              }
-
-              if (link.blockType === "BEFORE_AFTER") {
-                return (
-                  <BeforeAfterSlider
-                    key={link.id}
-                    title={link.title}
-                    beforeImage={blockMeta.beforeImage || ""}
-                    afterImage={blockMeta.afterImage || ""}
-                    isDark={isDark}
-                    boxStyle={customStyle}
-                    className={dynamicBlockClass}
-                  />
-                );
-              }
-
-              if (link.blockType === "AUDIO_PLAYER") {
-                return (
-                  <AudioPlayer
-                    key={link.id}
-                    title={link.title}
-                    url={link.url}
-                    isDark={isDark}
-                    boxStyle={customStyle}
-                    className={dynamicBlockClass}
-                  />
-                );
-              }
-
-              // Standard TEXT_LINK fallback
-              return (
-                <a
-                  key={link.id}
-                  href={`/click/${link.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={customStyle}
-                  className={`flex items-center justify-between p-3 transition-all text-sm select-none hover:scale-[1.025] hover:shadow-lg ${dynamicBlockClass}`}
-                >
-                  <div className="flex items-center gap-3.5">
-                    <div className="h-9 w-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 shadow-sm">
-                      {getLinkIcon(link.type, link.url)}
+            {!checkoutSuccess ? (
+              <>
+                <div className="mb-6 border-b border-zinc-800 pb-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="h-10 w-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center border border-purple-500/30">
+                      <ShoppingBag className="h-5 w-5" />
                     </div>
-                    <span style={link.textColor ? { color: link.textColor } : undefined}>{link.title}</span>
+                    <div>
+                      <h3 className="text-lg font-bold text-white">{selectedProduct.title}</h3>
+                      <p className="text-xs font-medium text-emerald-400">{t.downloadGlow}</p>
+                    </div>
                   </div>
-                  <ArrowUpRight className="h-4 w-4 opacity-50 shrink-0" style={link.textColor ? { color: link.textColor } : undefined} />
+                  <p className="text-sm text-zinc-400 mt-3">{selectedProduct.description || t.noDesc}</p>
+                </div>
+
+                <form onSubmit={handleCheckoutSubmit} className="space-y-4">
+                  <div className="flex justify-between items-center mb-4 p-3 rounded-xl bg-black/50 border border-zinc-800/50">
+                    <span className="text-sm font-semibold text-zinc-400">{t.totalPrice}</span>
+                    <span className="text-xl font-black text-white">{selectedProduct.price === 0 ? "Ücretsiz" : `${selectedProduct.price} ₺`}</span>
+                  </div>
+                  {/* ... Rest of the checkout form ... */}
+                  {selectedProduct.price > 0 && (
+                    <>
+                      <div className="space-y-3">
+                        <div className="relative">
+                          <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-600" />
+                          <input required type="text" placeholder={t.cardNum} maxLength={19} className="w-full pl-11 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors text-sm font-medium" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <input required type="text" placeholder="MM/YY" maxLength={5} className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors text-sm font-medium text-center" />
+                          <input required type="text" placeholder="CVC" maxLength={3} className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors text-sm font-medium text-center" />
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2 mt-4 px-1">
+                        <Lock className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                        <p className="text-[10px] text-zinc-500 leading-tight">{t.secureSim}</p>
+                      </div>
+                    </>
+                  )}
+                  {errorMsg && <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold text-center">{errorMsg}</div>}
+                  <button disabled={isPending} type="submit" className="w-full mt-2 py-3.5 rounded-xl bg-white text-black font-bold text-sm hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2">
+                    {isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : t.completePay}
+                  </button>
+                </form>
+              </>
+            ) : (
+              <div className="text-center py-6">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/30">
+                  <CheckCircle className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">{t.confirmed}</h3>
+                <p className="text-sm text-zinc-400 mb-8">{t.confirmedDesc}</p>
+                <a href={downloadUrl || "#"} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-emerald-500 text-white font-bold text-sm hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20">
+                  <Download className="h-5 w-5" />
+                  {t.downloadInstantly}
                 </a>
-              );
-            })
-          )}
+              </div>
+            )}
+          </div>
         </div>
-
-
-      </main>
-
-
-
-      {/* Brand Watermark */}
-      {(plan !== "CREATOR" && plan !== "PRO_BUSINESS") && (
-        <footer className="text-center text-[10px] text-zinc-600 uppercase tracking-widest font-black py-8 relative z-10">
-          <a href="/" className="hover:text-zinc-500 transition-colors">
-            Powered by CREATOR.HUB
-          </a>
-        </footer>
       )}
-    </div>
+    </>
   );
 }

@@ -178,40 +178,20 @@ export default async function PublicProfilePage({ params, searchParams }: { para
   const theme = activeUser.profile?.theme ?? "dark";
   const bio = activeUser.profile?.bio ?? "";
 
-  // Priority 1: Active Template (Şablon)
-  // Priority 2: Active Addon (Eklenti)
-  // Priority 3: Custom Profile CSS (Kullanıcının Oluşturduğu)
-  
-  let customCss = null;
-  let activeTemplate = activeUser.purchasedTemplates?.find((ot: any) => ot.isActive)?.template;
-  
+  // Priority 1: Preview Template (If ?previewTemplate=... is passed)
+  // We keep preview override for dashboard iframe ONLY. Live profiles use hydrated DB data.
+  let activeTemplate = null;
   if (previewTemplateId || forcedTemplateId) {
     const targetId = forcedTemplateId || previewTemplateId;
     const previewMatch = activeUser.purchasedTemplates?.find((ot: any) => ot.template?.id === targetId);
     if (previewMatch) activeTemplate = previewMatch.template;
   }
 
-  if (activeTemplate) {
-    customCss = activeTemplate.customCss;
-  } else {
-    customCss = activeUser.profile?.customCss ?? null;
-    
-    // Fallback for legacy profiles that didn't copy the customCss
-    if (!customCss && theme && theme !== "custom") {
-      // NOTE: We await the db call, but it's okay because this is an async function
-      const templateRecord = await db.template.findFirst({
-        where: { name: theme }
-      });
-      if (templateRecord) {
-        customCss = templateRecord.customCss;
-      }
-    }
-  }
+  let customCss = activeTemplate ? activeTemplate.customCss : (activeUser.profile?.customCss ?? null);
 
-  // Serialize models for standard client prop constraints
-  // Map links, and optionally override button styles if a template is active
   const parseButtonStyle = (styleStr: string) => {
     try {
+      if (!styleStr) return {};
       const parsed = JSON.parse(styleStr);
       return (parsed && typeof parsed === "object") ? parsed : {};
     } catch {

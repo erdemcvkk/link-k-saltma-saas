@@ -90,6 +90,7 @@ export default async function DashboardPage() {
       fontStyle: user.profile.fontStyle,
       bioColor: user.profile.bioColor,
       usernameColor: user.profile.usernameColor,
+      customCss: user.profile.customCss,
     } : null,
   };
 
@@ -131,7 +132,7 @@ export default async function DashboardPage() {
     type: p.type,
     price: p.price,
     description: p.description,
-    fileUrl: p.fileUrl,
+    fileUrl: p.fileUrl || undefined,
     isActive: p.isActive,
     salesCount: p.salesCount,
     createdAt: p.createdAt.toISOString(),
