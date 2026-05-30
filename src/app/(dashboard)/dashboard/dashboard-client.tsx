@@ -548,6 +548,7 @@ export default function DashboardClient({
   const [avatarUrl, setAvatarUrl] = useState(initialUser.profile?.avatarUrl ?? "");
   const [background, setBackground] = useState(initialUser.profile?.background ?? "");
   const [activeTemplateCss, setActiveTemplateCss] = useState<string | null>(initialUser.profile?.customCss ?? null);
+  const [buttonClass, setButtonClass] = useState<string | null>(initialUser.profile?.buttonClass ?? null);
   const [theme, setTheme] = useState(initialUser.profile?.theme ?? "dark");
   const [fontStyle, setFontStyle] = useState(initialUser.profile?.fontStyle ?? "Inter");
   const [bioColor, setBioColor] = useState(initialUser.profile?.bioColor ?? "#888888");
@@ -1490,6 +1491,7 @@ export default function DashboardClient({
                     theme: theme,
                     customCss: activeTemplateCss,
                     background: background,
+                    buttonClass: buttonClass,
                     fontStyle: fontStyle,
                     usernameColor: usernameColor || (isLight ? "#0f172a" : "#ffffff"),
                     bioColor: bioColor || (isLight ? "#475569" : "rgba(255,255,255,0.7)"),
@@ -3795,38 +3797,29 @@ export default function DashboardClient({
                             : "bg-zinc-50/50 border-zinc-200 hover:border-zinc-300 hover:shadow-sm"
                         }`}
                       >
-                        <div className="space-y-3">
-                          {/* Mini design preview card */}
-                          <div 
-                            className="h-28 rounded-xl flex flex-col items-center justify-center p-4 border border-zinc-200/60 relative overflow-hidden shadow-inner"
-                            style={{ background: template.bgColor }}
-                          >
-                            {/* Glass overlay button preview */}
-                            <div 
-                              className={`px-4 py-2 rounded-xl text-[10px] font-bold text-center w-3/4 truncate max-w-xs ${template.buttonStyle}`}
-                            >
-                              {template.name}
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center border border-zinc-200">
+                              <Palette className="h-5 w-5 text-zinc-700" />
                             </div>
-                            <span className="absolute bottom-2 right-2 text-[9px] font-mono text-zinc-400 bg-black/45 px-2 py-0.5 rounded backdrop-blur-sm">
-                              {template.fontStyle}
-                            </span>
-                          </div>
-
-                          <div className="space-y-1">
-                            <div className="flex items-center justify-between">
-                              <h3 className="font-extrabold text-sm text-zinc-950">
-                                {template.name}
-                              </h3>
-                              <span className="text-[10px] font-bold text-teal-600 bg-teal-50 border border-teal-100 px-2 py-0.5 rounded-full">
-                                {template.category}
-                              </span>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h3 className="text-sm font-black text-zinc-900">{template.name}</h3>
+                              </div>
+                              {(ownedTemplates.find((ut: any) => ut.id === template.id)?.isActive) ? (
+                                <div className="text-[10px] font-bold text-emerald-500 mt-0.5 px-2 py-0.5 rounded-md bg-emerald-50 inline-block border border-emerald-100">
+                                  {lang === "tr" ? "Yayında" : "Published"}
+                                </div>
+                              ) : (
+                                <div className="text-[10px] font-bold text-zinc-500 mt-0.5 px-2 py-0.5 rounded-md bg-zinc-100 inline-block border border-zinc-200">
+                                  {lang === "tr" ? "Taslak" : "Draft"}
+                                </div>
+                              )}
                             </div>
-                            <p className="text-[10px] text-slate-500">
-                              {template.isCoded 
-                                ? (lang === "tr" ? "Özel CSS/Kod Yapısı" : "Custom Encoded Layout") 
-                                : (lang === "tr" ? "Hazır Görsel Düzen" : "Visual Grid Template")}
-                            </p>
                           </div>
+                          <span className="text-[10px] font-bold text-teal-600 bg-teal-50 border border-teal-100 px-2 py-0.5 rounded-full">
+                            {template.category}
+                          </span>
                         </div>
 
                         <div className="flex gap-2 w-full">

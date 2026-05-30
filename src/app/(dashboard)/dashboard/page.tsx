@@ -91,6 +91,7 @@ export default async function DashboardPage() {
       bioColor: user.profile.bioColor,
       usernameColor: user.profile.usernameColor,
       customCss: user.profile.customCss,
+      buttonClass: user.profile.buttonClass,
     } : null,
   };
 

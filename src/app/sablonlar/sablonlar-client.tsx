@@ -44,27 +44,11 @@ const isLightColor = (color: string) => {
 };
 
 const getDummyData = (template: Template): UniversalProfileData => {
-  let btnStyles: any = {};
-  if (template.buttonStyle) {
-    try { btnStyles = JSON.parse(template.buttonStyle); } catch (e) {}
-  }
-
   const dummyLinks = [
-    { id: "1", title: "📸 Instagram Hesabım", url: "#", type: "INSTAGRAM" },
-    { id: "2", title: "🎵 Yeni Spotify Albümüm", url: "#", type: "MUSIC" },
-    { id: "3", title: "🛍️ Mağaza Vitrinim", url: "#", type: "STORE" }
-  ].map(l => ({
-    ...l,
-    bgColor: btnStyles.bgColor || null,
-    textColor: btnStyles.textColor || null,
-    borderColor: btnStyles.borderColor || null,
-    borderStyle: btnStyles.borderStyle || null,
-    borderWidth: btnStyles.borderWidth || null,
-    borderRadius: btnStyles.borderRadius || null,
-    shadow: btnStyles.shadow || null,
-    fontWeight: btnStyles.fontWeight || null,
-    blockType: "TEXT_LINK"
-  }));
+    { id: "1", title: "📸 Instagram Hesabım", url: "#", type: "INSTAGRAM", blockType: "TEXT_LINK" },
+    { id: "2", title: "🎧 Yeni Spotify Albümüm", url: "#", type: "MUSIC", blockType: "TEXT_LINK" },
+    { id: "3", title: "🛍️ Mağaza Vitrinim", url: "#", type: "STORE", blockType: "TEXT_LINK" }
+  ];
 
   const isLight = isLightColor(template.bgColor) || [
       "Minimalist Light", "Pastel Dream", "Abstract Fluid", 
@@ -74,13 +58,14 @@ const getDummyData = (template: Template): UniversalProfileData => {
   return {
     username: "kullaniciadi",
     bio: "Bu harika şablonun canlı önizlemesidir. Kendi sayfanızda uygulamak için hemen sahip olun!",
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&fit=crop",
+    avatarUrl: null,
     theme: template.name,
-    customCss: template.isCoded ? template.customCss : null,
     background: template.bgColor,
     fontStyle: template.fontStyle,
-    usernameColor: isLight ? "#0f172a" : "#ffffff", // slate-900 / white
-    bioColor: isLight ? "#475569" : "rgba(255,255,255,0.7)", // slate-600
+    buttonClass: template.buttonStyle || null,
+    customCss: template.customCss || null,
+    usernameColor: isLight ? "#000000" : "#ffffff",
+    bioColor: isLight ? "#4b5563" : "#9ca3af",
     links: dummyLinks,
   };
 };

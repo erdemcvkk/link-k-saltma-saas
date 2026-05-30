@@ -21,6 +21,7 @@ export interface UniversalProfileData {
   storeTitle?: string | null;
   storeCoverUrl?: string | null;
   storeLayout?: string | null;
+  buttonClass?: string | null;
   links: any[];
   products?: any[];
   addons?: any[];
@@ -236,7 +237,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
               let blockMeta: any = {};
               if (link.metadata) try { blockMeta = JSON.parse(link.metadata); } catch(e) {}
 
-              const customStyle: React.CSSProperties = {
+              const customStyle: React.CSSProperties = data.buttonClass ? {} : {
                 backgroundColor: link.bgColor || undefined,
                 color: link.textColor || undefined,
                 borderColor: link.borderColor || undefined,
@@ -249,7 +250,9 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
                          : undefined
               };
 
-              const dynamicBlockClass = `link-item btn-link ${!link.bgColor ? currentStyles.btnClass : ""} ${!link.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-2xl") : ""} ${link.animation || ""} ${link.fontWeight || "font-bold"}`;
+              const dynamicBlockClass = data.buttonClass 
+                ? `link-item btn-link ${data.buttonClass} ${link.animation || ""} ${link.fontWeight || ""}`
+                : `link-item btn-link ${!link.bgColor ? currentStyles.btnClass : ""} ${!link.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-2xl") : ""} ${link.animation || ""} ${link.fontWeight || "font-bold"}`;
 
               if (link.blockType === "VIDEO_PLAYER") {
                 return <VideoPlayer key={link.id} title={link.title} url={link.url} isDark={isDark} boxStyle={customStyle} className={dynamicBlockClass} />;

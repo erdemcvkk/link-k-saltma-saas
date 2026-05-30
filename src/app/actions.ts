@@ -541,7 +541,11 @@ export async function toggleUserTemplateActive(userId: string, templateId: strin
     await db.profile.update({
       where: { userId },
       data: {
-        theme: "dark"
+        background: null,
+        fontStyle: "Inter",
+        theme: "dark",
+        customCss: null,
+        buttonClass: null
       }
     });
   }
@@ -1327,28 +1331,10 @@ export async function applyTemplateToProfile(userId: string, templateId: string)
       background: template.bgColor,
       fontStyle: template.fontStyle,
       theme: template.name,
+      buttonClass: template.buttonStyle,
       customCss: template.isCoded ? template.customCss : null
     }
   });
-
-  // Apply button styling from template's buttonStyle to all user's links
-  if (template.buttonStyle) {
-    const parsed = parseButtonStyle(template.buttonStyle);
-    await db.link.updateMany({
-      where: { userId },
-      data: {
-        bgColor: parsed.bgColor,
-        textColor: parsed.textColor,
-        borderColor: parsed.borderColor,
-        borderStyle: parsed.borderStyle,
-        borderWidth: parsed.borderWidth,
-        borderRadius: parsed.borderRadius,
-        shadow: parsed.shadow,
-        fontWeight: parsed.fontWeight,
-        animation: parsed.animation || ""
-      }
-    });
-  }
 
   revalidatePath("/dashboard");
   revalidatePath("/[username]", "page");
