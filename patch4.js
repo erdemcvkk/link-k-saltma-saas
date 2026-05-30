@@ -1,4 +1,7 @@
-"use client";
+const fs = require('fs');
+const path = 'src/app/admin/templates/templates-client.tsx';
+
+const content = `"use client";
 
 import React, { useState, useTransition } from "react";
 import Link from "next/link";
@@ -98,7 +101,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
       try {
         const res = await seedTemplates(adminUserId);
         if (res.seeded) {
-          showMsg(`Başarıyla ${res.count} adet örnek şablon eklendi!`, "success");
+          showMsg(\`Başarıyla \${res.count} adet örnek şablon eklendi!\`, "success");
           setTimeout(() => window.location.reload(), 1500);
         } else {
           showMsg(res.message || "Zaten şablonlar mevcut.", "error");
@@ -171,9 +174,9 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
       
       {/* Messages */}
       {msg.text && (
-        <div className={`fixed top-8 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-sm font-bold flex items-center gap-3 z-50 shadow-2xl animate-in slide-in-from-top-4 ${
+        <div className={\`fixed top-8 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-sm font-bold flex items-center gap-3 z-50 shadow-2xl animate-in slide-in-from-top-4 \${
           msg.type === "success" ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
-        }`}>
+        }\`}>
           <CheckCircle className="h-5 w-5" /> {msg.text}
         </div>
       )}
@@ -251,14 +254,14 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                             {template.category}
                           </div>
                           <div className="text-xs font-bold text-emerald-400 mt-1">
-                            {template.price > 0 ? `${template.price} ₺` : 'Ücretsiz'}
+                            {template.price > 0 ? \`\${template.price} ₺\` : 'Ücretsiz'}
                           </div>
                         </div>
                       </div>
                       <div className="flex flex-col gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity pr-2">
                         <button 
                           onClick={() => handleToggleActive(template.id, template.isActive)} 
-                          className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors ${template.isActive ? 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}
+                          className={\`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors \${template.isActive ? 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}\`}
                         >
                           {template.isActive ? "Aktif" : "Pasif"}
                         </button>
@@ -314,22 +317,22 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
               <button
                 type="button"
                 onClick={() => setFormMode("no-code")}
-                className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all ${
+                className={\`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all \${
                   formMode === "no-code"
                     ? "bg-zinc-800 text-white shadow-sm"
                     : "text-zinc-500 hover:text-white"
-                }`}
+                }\`}
               >
                 No-Code (Kodsuz)
               </button>
               <button
                 type="button"
                 onClick={() => setFormMode("code")}
-                className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all ${
+                className={\`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all \${
                   formMode === "code"
                     ? "bg-purple-500/20 text-purple-400"
                     : "text-zinc-500 hover:text-white"
-                }`}
+                }\`}
               >
                 Advanced Code (Kodlu)
               </button>
@@ -430,3 +433,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     </div>
   );
 }
+`;
+
+fs.writeFileSync(path, content);
+console.log('templates-client.tsx rewritten');
