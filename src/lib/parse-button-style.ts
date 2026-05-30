@@ -74,6 +74,10 @@ export function parseButtonStyle(buttonStyleStr: string): ParsedButtonStyle {
 
   const classes = buttonStyleStr.split(" ");
   for (const cls of classes) {
+    if (cls.startsWith("hover:") || cls.startsWith("focus:") || cls.startsWith("active:") || cls.startsWith("disabled:")) {
+      continue; // Skip pseudo-classes to avoid overwriting base colors
+    }
+
     const cleanCls = cls.trim();
     if (!cleanCls) continue;
 

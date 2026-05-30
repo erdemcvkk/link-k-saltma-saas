@@ -1446,9 +1446,14 @@ export default function DashboardClient({
           "bg-white border-zinc-200"
         }`}>
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-50 rounded-b-xl z-20" />
-
           {(() => {
             const isCustomImg = background?.startsWith("custom-img::") || background?.startsWith("http://") || background?.startsWith("https://") || background?.startsWith("/");
+            const previewTemplateId = activePreviewTemplateId || customizingTemplateId;
+            const previewTemplate = previewTemplateId ? ownedTemplates.find((t: any) => t.id === previewTemplateId) : null;
+            const templateButtonOverrides = (previewTemplate && (previewTemplate as any).buttonStyle) 
+              ? parseButtonStyle((previewTemplate as any).buttonStyle) 
+              : {};
+
             const isCustomVideo = background?.startsWith("custom-video::");
             const customImgUrl = isCustomImg ? (background.startsWith("custom-img::") ? background.replace("custom-img::", "") : background) : null;
             const customVideoUrl = isCustomVideo ? background.replace("custom-video::", "") : null;
@@ -1477,6 +1482,7 @@ export default function DashboardClient({
                       .replace(/\.profile-card/g, `#sandbox-preview .profile-card`)
                       .replace(/\.btn-link/g, `#sandbox-preview .btn-link`)
                       .replace(/\.link-item/g, `#sandbox-preview .link-item`)
+                      .replace(/\.links-container/g, `#sandbox-preview .links-container`)
                   }} />
                 )}
                 {customVideoUrl && (
@@ -1515,7 +1521,7 @@ export default function DashboardClient({
                   </div>
                 </div>
 
-                <div className="space-y-3.5 my-auto overflow-y-auto max-h-[250px] relative z-10 px-2 scrollbar-none">
+                <div className="links-container space-y-3.5 my-auto overflow-y-auto max-h-[250px] relative z-10 px-2 scrollbar-none">
                   {links.filter((l) => l.isActive).length === 0 ? (
                     <div className="text-center py-8 text-xs text-zinc-600 border border-dashed border-zinc-500/30 rounded-xl">
                       No active links published
@@ -1532,26 +1538,27 @@ export default function DashboardClient({
                         }
 
                         const customStyle: React.CSSProperties = {
-                          backgroundColor: link.bgColor || undefined,
-                          color: link.textColor || undefined,
-                          borderColor: link.borderColor || undefined,
-                          borderStyle: link.borderStyle as any || undefined,
-                          borderWidth: link.borderWidth || undefined,
-                          borderRadius: link.borderRadius || undefined,
-                          boxShadow: link.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
-                                   : link.shadow === "glow-emerald" ? "0 0 15px rgba(10,185,129,0.5)"
-                                   : link.shadow === "soft" ? "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
-                                   : link.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
+                          backgroundColor: templateButtonOverrides.bgColor ?? link.bgColor ?? undefined,
+                          color: templateButtonOverrides.textColor ?? link.textColor ?? undefined,
+                          borderColor: templateButtonOverrides.borderColor ?? link.borderColor ?? undefined,
+                          borderStyle: templateButtonOverrides.borderStyle ?? (link.borderStyle as any) ?? undefined,
+                          borderWidth: templateButtonOverrides.borderWidth ?? link.borderWidth ?? undefined,
+                          borderRadius: templateButtonOverrides.borderRadius ?? link.borderRadius ?? undefined,
+                          boxShadow: (templateButtonOverrides.shadow ?? link.shadow) === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
+                                   : (templateButtonOverrides.shadow ?? link.shadow) === "glow-emerald" ? "0 0 15px rgba(10,185,129,0.5)"
+                                   : (templateButtonOverrides.shadow ?? link.shadow) === "soft" ? "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+                                   : (templateButtonOverrides.shadow ?? link.shadow) === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
                                    : undefined,
                         };
 
+                        const effectiveBg = templateButtonOverrides.bgColor ?? link.bgColor;
                         const dynamicBlockClass = `${
-                          !link.bgColor ? previewStyles.card : ""
-                        } ${!link.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-xl") : ""} ${link.animation || ""} ${
-                          link.fontWeight === "font-normal" ? "font-normal"
-                          : link.fontWeight === "font-medium" ? "font-medium"
-                          : link.fontWeight === "font-bold" ? "font-bold"
-                          : link.fontWeight === "font-black" ? "font-black"
+                          !effectiveBg ? previewStyles.card : ""
+                        } ${!(templateButtonOverrides.borderRadius ?? link.borderRadius) ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-xl") : ""} ${link.animation || ""} ${
+                          (templateButtonOverrides.fontWeight ?? link.fontWeight) === "font-normal" ? "font-normal"
+                          : (templateButtonOverrides.fontWeight ?? link.fontWeight) === "font-medium" ? "font-medium"
+                          : (templateButtonOverrides.fontWeight ?? link.fontWeight) === "font-bold" ? "font-bold"
+                          : (templateButtonOverrides.fontWeight ?? link.fontWeight) === "font-black" ? "font-black"
                           : "font-bold"
                         }`;
 
