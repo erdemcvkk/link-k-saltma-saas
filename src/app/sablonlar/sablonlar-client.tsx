@@ -75,7 +75,6 @@ const getDummyData = (template: Template): UniversalProfileData => {
 export default function SablonlarClient({ initialTemplates, userId, initialOwnedTemplateIds = [] }: SablonlarClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Tümü");
-  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [purchaseSuccess, setPurchaseSuccess] = useState(false);
   const [ownedTemplateIds, setOwnedTemplateIds] = useState<string[]>(initialOwnedTemplateIds);
   const [isPending, setIsPending] = useState(false);
@@ -108,11 +107,6 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
     }
   }, [initialTemplates, userId]);
 
-  const handleSelectTemplate = (template: Template | null) => {
-    setSelectedTemplate(template);
-    setErrorMsg("");
-  };
-
   const categories = ["Tümü", ...Array.from(new Set(initialTemplates.map((t) => t.category)))];
 
   const filteredTemplates = initialTemplates.filter((t) => {
@@ -143,7 +137,6 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
         setIsPending(false);
         setTimeout(() => {
           setPurchaseSuccess(false);
-          setSelectedTemplate(null);
         }, 2000);
       } catch (err: any) {
         setErrorMsg(err.message || "Şablon tanımlanırken hata oluştu.");
@@ -172,7 +165,6 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
       setTimeout(() => {
         setPaymentSuccess(false);
         setCheckoutTemplate(null);
-        setSelectedTemplate(null);
         setPurchaseSuccess(false);
         setCardNumber("");
         setCardExpiry("");
@@ -263,24 +255,24 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 pb-12">
               {filteredTemplates.slice(0, visibleCount).map((template) => {
                 const isPurchased = ownedTemplateIds.includes(template.id);
                 return (
                   <div key={template.id} className="flex flex-col items-center">
-                    <div className="text-center mb-4 px-2">
-                      <h3 className="text-lg font-bold text-white mb-1">{template.name}</h3>
-                      <p className="text-xs text-zinc-400 font-medium">{template.category}</p>
+                    <div className="text-center mb-6 px-4">
+                      <div className={`w-3 h-3 rounded-full mb-3 mx-auto ${template.category === 'Premium' ? 'bg-rose-500' : 'bg-neon-blue'} animate-pulse`} />
+                      <h3 className="text-xl font-bold text-white mb-2">{template.name}</h3>
+                      <p className="text-sm text-zinc-400 font-medium leading-relaxed h-[40px] flex items-center justify-center">
+                        {template.category}
+                      </p>
                     </div>
 
                     {/* Phone Mockup Frame */}
-                    <div 
-                      className="relative w-full aspect-[1/2] max-w-[340px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6 cursor-pointer" 
-                      onClick={() => handleSelectTemplate(template)}
-                    >
+                    <div className="relative w-full aspect-[1/2] max-w-[340px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6">
                       <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
                       
-                      <div className="relative w-full h-full bg-zinc-950 rounded-[2rem] overflow-hidden pointer-events-none">
+                      <div className="relative w-full h-full bg-zinc-950 rounded-[2rem] overflow-hidden">
                         <UniversalProfile 
                           data={getDummyData(template)} 
                           isCompactMode={true} 
@@ -293,28 +285,24 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                           KODLANMIŞ
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-30">
-                        <div className="px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full text-white text-sm font-bold flex items-center gap-2">
-                          <Eye className="h-4 w-4" /> İncele
-                        </div>
-                      </div>
                     </div>
 
-                    <div className="w-full bg-zinc-900 rounded-2xl p-3 border border-zinc-800 text-center flex flex-col gap-2">
-                      <div className="text-xl font-black text-white">{template.price === 0 ? "Ücretsiz" : `₺${template.price}`}</div>
+                    <div className="w-full bg-zinc-900 rounded-2xl p-4 border border-zinc-800 text-center flex flex-col gap-3">
+                      <div className="text-2xl font-black text-white">{template.price === 0 ? "Ücretsiz" : `₺${template.price}`}</div>
                       {isPurchased ? (
-                        <button disabled className="w-full py-2.5 rounded-xl bg-green-500/20 text-green-500 font-bold flex items-center justify-center gap-2 text-sm">
+                        <button disabled className="w-full py-3 rounded-xl bg-green-500/20 text-green-500 font-bold flex items-center justify-center gap-2">
                           <Check className="h-4 w-4" /> Tanımlı
                         </button>
                       ) : (
                         <button 
                           onClick={() => handlePurchase(template)}
                           disabled={isPending}
-                          className="w-full py-2.5 rounded-xl bg-rose-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-rose-500 transition-colors disabled:opacity-50 text-sm"
+                          className="w-full py-3 rounded-xl bg-rose-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-rose-500 transition-colors disabled:opacity-50"
                         >
-                          {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-4 w-4" />} Satın Al
+                          {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Hemen Satın Al"}
                         </button>
                       )}
+                      <p className="text-xs text-zinc-500 font-medium">Tek Seferlik Ödeme</p>
                     </div>
                   </div>
                 );
@@ -335,90 +323,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
         )}
       </div>
 
-      {selectedTemplate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/85 backdrop-blur-md" onClick={() => handleSelectTemplate(null)} />
 
-          <div className="relative w-full max-w-4xl bg-slate-950 border border-slate-800 rounded-3xl p-6 overflow-hidden flex flex-col md:flex-row gap-8 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-            <button 
-              onClick={() => handleSelectTemplate(null)} 
-              className="absolute top-4 right-4 p-1.5 rounded-full bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-all cursor-pointer z-10"
-            >
-              <X className="h-4 w-4" />
-            </button>
-
-            <div className="flex-1 flex justify-center items-center">
-              <div className="relative w-[280px] h-[540px] bg-slate-900 rounded-[2.5rem] p-2.5 shadow-2xl border-4 border-slate-800 overflow-hidden shrink-0">
-                <div className="absolute top-0 inset-x-0 h-4 bg-slate-900 z-20 rounded-b-2xl w-1/3 mx-auto" />
-                
-                <div className="relative w-full h-full bg-zinc-950 rounded-[2rem] overflow-hidden pointer-events-none">
-                  <UniversalProfile 
-                    data={getDummyData(selectedTemplate)} 
-                    isCompactMode={true} 
-                    isDarkContext={true} 
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex-1 flex flex-col justify-between py-2 text-left">
-              <div>
-                <span className="px-2.5 py-1 bg-slate-900 border border-slate-800 rounded-full text-[10px] font-black text-neon-blue uppercase tracking-wider">
-                  {selectedTemplate.category} Şablonu
-                </span>
-                <h2 className="text-3xl font-black tracking-tight text-white mt-3.5">
-                  {selectedTemplate.name}
-                </h2>
-                <div className="text-2xl font-black text-neon-blue mt-2">
-                  {selectedTemplate.price === 0 ? "Ücretsiz Plan" : `${selectedTemplate.price} ₺`}
-                </div>
-                <div className="border-t border-slate-900 my-5 pt-4 space-y-3">
-                  <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-300">
-                    <Check className="h-4 w-4 text-neon-blue shrink-0" />
-                    <span>Dinamik {selectedTemplate.fontStyle} yazı tipi desteği</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-300">
-                    <Check className="h-4 w-4 text-neon-blue shrink-0" />
-                    <span>Gelişmiş buton animasyonları ve düzenleri</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-300">
-                    <Check className="h-4 w-4 text-neon-blue shrink-0" />
-                    <span>Tüm tarayıcılar ve mobil cihazlar ile tam uyumluluk</span>
-                  </div>
-                  {selectedTemplate.isCoded && (
-                    <div className="flex items-center gap-2.5 text-xs font-semibold text-purple-400">
-                      <Check className="h-4 w-4 text-purple-500 shrink-0" />
-                      <span>Custom CSS stili ve JSON yapılandırmaları aktif</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-3.5 pt-4">
-                {purchaseSuccess ? (
-                  <div className="w-full py-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-center font-bold text-sm flex items-center justify-center gap-2 animate-pulse">
-                    <Check className="h-5 w-5" />
-                    Şablon Hesabınıza Tanımlandı!
-                  </div>
-                ) : ownedTemplateIds.includes(selectedTemplate.id) ? (
-                  <Link href="/dashboard" className="w-full py-3.5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-750 text-white font-black text-sm tracking-wide transition-all flex items-center justify-center gap-2 cursor-pointer text-center">
-                    <Check className="h-4 w-4 text-emerald-450" />
-                    Hesabınızda Tanımlı (Panele Git)
-                  </Link>
-                ) : (
-                  <button onClick={() => handlePurchase(selectedTemplate)} disabled={isPending} className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-neon-blue to-light-blue hover:opacity-95 disabled:opacity-50 text-white font-black text-sm tracking-wide transition-all shadow-lg shadow-neon-blue/20 flex items-center justify-center gap-2 cursor-pointer border-0">
-                    {isPending ? <Loader2 className="h-4.5 w-4.5 animate-spin" /> : <><ShoppingCart className="h-4 w-4" />{selectedTemplate.price === 0 ? "Hemen Ücretsiz Kullan" : `${selectedTemplate.name} Satın Al`}</>}
-                  </button>
-                )}
-                {errorMsg && <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold text-center">{errorMsg}</div>}
-                <button onClick={() => handleSelectTemplate(null)} className="w-full py-2.5 rounded-2xl bg-transparent border border-slate-900 hover:bg-slate-900/30 text-slate-400 hover:text-slate-300 text-xs font-bold transition-all cursor-pointer text-center">
-                  Geri Dön
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* 💳 Simulated Checkout Modal */}
       {checkoutTemplate && (
