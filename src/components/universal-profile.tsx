@@ -111,6 +111,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
         .replace(/\.profile-card/g, `#${wrapperId} .profile-card`)
         .replace(/\.btn-link/g, `#${wrapperId} .btn-link`)
         .replace(/\.link-item/g, `#${wrapperId} .link-item`)
+        .replace(/height\s*:\s*100vh/g, 'min-height: 100vh')
     : null;
 
   const getLinkIcon = (type?: string, url?: string) => {
@@ -132,7 +133,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
   return (
     <div 
       id={wrapperId}
-      className={`justify-start py-12 px-4 transition-all duration-500 ${bgClassName} ${isCompactMode ? 'h-full w-full absolute inset-0 overflow-y-auto overflow-x-hidden flex flex-col' : 'min-h-screen w-full relative flex flex-col overflow-x-hidden'}`}
+      className={`justify-start py-12 px-4 transition-all duration-500 ${bgClassName} ${isCompactMode ? 'h-full w-full absolute inset-0 overflow-y-auto overflow-x-hidden flex flex-col' : 'flex-1 min-h-screen w-full relative flex flex-col overflow-x-hidden'}`}
       style={{
         fontFamily: fontStyle,
         ...(isCssBg ? { background: background } : {}),
