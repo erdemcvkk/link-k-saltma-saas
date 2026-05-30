@@ -117,6 +117,28 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
   if (scopedCss && isCompactMode) {
     // Disable custom scrollbars in compact mode to prevent "gri buçuklar"
     scopedCss = scopedCss.replace(/::-webkit-scrollbar/g, '.disabled-scrollbar-in-mockup');
+    
+    // BRUTE FORCE HIDE SCROLLBARS (Track, Thumb, Corner)
+    scopedCss += `
+      #${wrapperId}::-webkit-scrollbar, 
+      #${wrapperId} *::-webkit-scrollbar { 
+        display: none !important; 
+        width: 0 !important; 
+        height: 0 !important; 
+      }
+      #${wrapperId}::-webkit-scrollbar-track,
+      #${wrapperId} *::-webkit-scrollbar-track,
+      #${wrapperId}::-webkit-scrollbar-thumb,
+      #${wrapperId} *::-webkit-scrollbar-thumb {
+        display: none !important;
+        background: transparent !important;
+      }
+      #${wrapperId} { 
+        -ms-overflow-style: none !important; 
+        scrollbar-width: none !important; 
+      }
+    `;
+
     // Force h1 font-size to be normal in mockup and prevent gigantic text
     scopedCss += `\n#${wrapperId} h1, #${wrapperId} .profile-card h1 { font-size: 1.25rem !important; line-height: 1.2 !important; word-break: break-all !important; margin: 0 !important; padding: 0 !important; }`;
   }
