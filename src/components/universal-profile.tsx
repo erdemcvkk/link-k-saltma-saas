@@ -163,7 +163,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
     `;
 
     // Force h1 font-size to be normal in mockup and prevent gigantic text
-    scopedCss += `\n#${wrapperId} h1, #${wrapperId} .profile-card h1, #${wrapperId} .profile-name { font-size: 1.25rem !important; line-height: 1.2 !important; word-break: break-all !important; margin: 0 !important; padding: 0 !important; text-transform: none !important; letter-spacing: normal !important; }`;
+    scopedCss += `\n#${wrapperId} h1, #${wrapperId} .profile-card h1, #${wrapperId} .profile-name { font-size: 1.25rem !important; line-height: 1.2 !important; word-break: break-word !important; }`;
   }
 
   const getLinkIcon = (type?: string, url?: string) => {

@@ -30,6 +30,19 @@ interface SablonlarClientProps {
   initialOwnedTemplateIds?: string[];
 }
 
+const isLightColor = (color: string) => {
+  if (!color) return false;
+  const hex = color.replace('#', '');
+  if (hex.length === 3 || hex.length === 6) {
+    const r = parseInt(hex.length === 3 ? hex[0]+hex[0] : hex.substring(0,2), 16);
+    const g = parseInt(hex.length === 3 ? hex[1]+hex[1] : hex.substring(2,4), 16);
+    const b = parseInt(hex.length === 3 ? hex[2]+hex[2] : hex.substring(4,6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 128;
+  }
+  return color.toLowerCase().includes('white') || color.toLowerCase().includes('yellow') || color.toLowerCase().includes('#fff') || color.toLowerCase().includes('#fdf') || color.toLowerCase() === '#f3f4f6';
+};
+
 const getDummyData = (template: Template): UniversalProfileData => {
   let btnStyles: any = {};
   if (template.buttonStyle) {
@@ -53,9 +66,9 @@ const getDummyData = (template: Template): UniversalProfileData => {
     blockType: "TEXT_LINK"
   }));
 
-  const isLight = [
-    "Minimalist Light", "Pastel Dream", "Abstract Fluid", 
-    "Vintage Paper", "Vintage Journal", "Holographic Glass", "Aura Hologram"
+  const isLight = isLightColor(template.bgColor) || [
+      "Minimalist Light", "Pastel Dream", "Abstract Fluid", 
+      "Vintage Paper", "Vintage Journal", "Holographic Glass", "Aura Hologram", "Sandstone Zen", "Swiss Minimalist", "Neo-Brutalist Grid"
   ].includes(template.name);
 
   return {
@@ -276,7 +289,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                         <UniversalProfile 
                           data={getDummyData(template)} 
                           isCompactMode={true} 
-                          isDarkContext={true} 
+                          isDarkContext={!isLightColor(template.bgColor) && !["Sandstone Zen", "Swiss Minimalist", "Neo-Brutalist Grid"].includes(template.name)} 
                         />
                       </div>
 
