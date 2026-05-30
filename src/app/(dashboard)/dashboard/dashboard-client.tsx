@@ -1448,7 +1448,7 @@ export default function DashboardClient({
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-50 rounded-b-xl z-20" />
           {(() => {
             const isCustomImg = background?.startsWith("custom-img::") || background?.startsWith("http://") || background?.startsWith("https://") || background?.startsWith("/");
-            const previewTemplateId = activePreviewTemplateId || customizingTemplateId;
+            const previewTemplateId = customizingTemplateId;
             const previewTemplate = previewTemplateId ? ownedTemplates.find((t: any) => t.id === previewTemplateId) : null;
             const templateButtonOverrides = (previewTemplate && (previewTemplate as any).buttonStyle) 
               ? parseButtonStyle((previewTemplate as any).buttonStyle) 
