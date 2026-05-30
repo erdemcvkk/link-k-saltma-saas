@@ -81,12 +81,14 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
           btnClass: "bg-black border-2 border-[#22c55e] rounded-none text-[#22c55e] font-mono"
         };
       default:
+        // If it's a coded template, we force the baseline to dark/transparent to avoid a glaring white box in light mode.
+        const effectiveDark = customCss ? true : isDark;
         return {
-          bg: isDark ? "bg-black text-zinc-200" : "bg-zinc-50 text-zinc-800",
-          cardBg: isDark ? "bg-zinc-900/40 border-zinc-800" : "bg-white border-zinc-200 shadow-md",
-          glowText: isDark ? "text-white" : "text-zinc-900 font-bold",
+          bg: effectiveDark ? "bg-black text-zinc-200" : "bg-zinc-50 text-zinc-800",
+          cardBg: effectiveDark ? "bg-zinc-900/40 border-zinc-800" : "bg-white border-zinc-200 shadow-md",
+          glowText: effectiveDark ? "text-white" : "text-zinc-900 font-bold",
           avatarBg: "from-zinc-400 to-zinc-500",
-          btnClass: isDark ? "bg-zinc-900/50 border border-zinc-800 text-zinc-200" : "bg-white border border-zinc-200 text-zinc-700"
+          btnClass: effectiveDark ? "bg-zinc-900/50 border border-zinc-800 text-zinc-200" : "bg-white border border-zinc-200 text-zinc-700"
         };
     }
   };
