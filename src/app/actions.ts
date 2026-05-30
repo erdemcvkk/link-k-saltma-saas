@@ -1197,7 +1197,7 @@ export async function createTemplate(
   }
 ) {
   await ensureAdmin(adminUserId);
-  if (!data.name || data.price === undefined || !data.category || !data.coverUrl) {
+  if (!data.name || data.price === undefined || !data.category) {
     throw new Error("Missing required fields for template creation.");
   }
 

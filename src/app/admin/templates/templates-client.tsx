@@ -385,7 +385,37 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                     </div>
                   </div>
 
+                  
                   <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Yazı Tipi (Font)</label>
+                    <select
+                      value={formData.fontStyle} onChange={(e) => setFormData(prev => ({ ...prev, fontStyle: e.target.value }))}
+                      className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-neon-blue focus:ring-1 focus:ring-neon-blue outline-none transition-all text-white cursor-pointer"
+                    >
+                      <option value="Inter">Inter</option>
+                      <option value="Roboto">Roboto</option>
+                      <option value="Open Sans">Open Sans</option>
+                      <option value="Lato">Lato</option>
+                      <option value="Montserrat">Montserrat</option>
+                      <option value="Poppins">Poppins</option>
+                      <option value="Oswald">Oswald</option>
+                      <option value="Raleway">Raleway</option>
+                      <option value="Playfair Display">Playfair Display</option>
+                      <option value="Merriweather">Merriweather</option>
+                      <option value="Nunito">Nunito</option>
+                      <option value="Ubuntu">Ubuntu</option>
+                      <option value="Lora">Lora</option>
+                      <option value="Mukta">Mukta</option>
+                      <option value="Quicksand">Quicksand</option>
+                      <option value="Rubik">Rubik</option>
+                      <option value="Work Sans">Work Sans</option>
+                      <option value="Fira Sans">Fira Sans</option>
+                      <option value="PT Serif">PT Serif</option>
+                      <option value="Space Grotesk">Space Grotesk</option>
+                    </select>
+                  </div>
+
+<div className="space-y-1.5">
                     <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Buton Stili (Tailwind CSS)</label>
                     <input
                       type="text" value={formData.buttonStyle} onChange={(e) => setFormData(prev => ({ ...prev, buttonStyle: e.target.value }))}
