@@ -105,14 +105,37 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
     : (!background && !isCustomImg && !isCustomVideo ? currentStyles.bg : "");
 
   // Auto-Scope CSS to prevent bleeding into /sablonlar or dashboard
-  let scopedCss = customCss 
-    ? customCss
-        .replace(/body/g, `#${wrapperId}`)
-        .replace(/\.profile-card/g, `#${wrapperId} .profile-card`)
-        .replace(/\.btn-link/g, `#${wrapperId} .btn-link`)
-        .replace(/\.link-item/g, `#${wrapperId} .link-item`)
-        .replace(/height\s*:\s*100vh/g, 'min-height: 100vh')
-    : null;
+  let scopedCss = customCss || "";
+  if (scopedCss) {
+    // 1. Replace body with wrapperId
+    scopedCss = scopedCss.replace(/body/gi, `#${wrapperId}`);
+    
+    // 2. Prevent fixed positioning which escapes the mockup frame
+    scopedCss = scopedCss.replace(/position\s*:\s*fixed/gi, 'position: absolute');
+    
+    // 3. Prevent viewport units from breaking the mockup width/height
+    if (isCompactMode) {
+      scopedCss = scopedCss.replace(/100vw/gi, '100%').replace(/100vh/gi, '100%');
+      scopedCss = scopedCss.replace(/height\s*:\s*100vh/gi, 'min-height: 100%');
+    }
+
+    // 4. Force scope for all known generic tags and classes to prevent global CSS leaks
+    const tagsToScope = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'span', '\\*', 'div', 'img', 'svg'];
+    const classesToScope = ['profile-card', 'profile-name', 'profile-avatar', 'profile-title', 'profile-bio', 'social-icon', 'btn-link', 'link-item', 'ambient-glow'];
+    
+    const allSelectors = [...tagsToScope, ...classesToScope.map(c => `\\.${c}`)];
+    
+    allSelectors.forEach(selector => {
+      // Regex explanation: Match start of string, }, or , followed by spaces, then the selector
+      const regex = new RegExp(`(^|\\}|,)\\s*(${selector})(?=[\\s{,:]|$)`, 'gi');
+      scopedCss = scopedCss.replace(regex, (match, prefix, sel) => {
+        return `${prefix} #${wrapperId} ${sel}`;
+      });
+    });
+
+    // Quick fix for the Obsidian Luxe global transition bug:
+    scopedCss = scopedCss.replace(/^\s*\*\s*\{/gm, `#${wrapperId} * {`);
+  }
 
   if (scopedCss && isCompactMode) {
     // Disable custom scrollbars in compact mode to prevent "gri buçuklar"
@@ -140,7 +163,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
     `;
 
     // Force h1 font-size to be normal in mockup and prevent gigantic text
-    scopedCss += `\n#${wrapperId} h1, #${wrapperId} .profile-card h1 { font-size: 1.25rem !important; line-height: 1.2 !important; word-break: break-all !important; margin: 0 !important; padding: 0 !important; }`;
+    scopedCss += `\n#${wrapperId} h1, #${wrapperId} .profile-card h1, #${wrapperId} .profile-name { font-size: 1.25rem !important; line-height: 1.2 !important; word-break: break-all !important; margin: 0 !important; padding: 0 !important; text-transform: none !important; letter-spacing: normal !important; }`;
   }
 
   const getLinkIcon = (type?: string, url?: string) => {
