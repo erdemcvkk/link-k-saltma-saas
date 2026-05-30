@@ -274,7 +274,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                     </div>
 
                     <div 
-                      className="relative w-full aspect-[1/2] max-w-[340px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-4 cursor-pointer" 
+                      className="relative w-full h-[600px] max-w-[300px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-4 cursor-pointer flex flex-col" 
                       onClick={() => handleSelectTemplate(template)}
                     >
                       <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />

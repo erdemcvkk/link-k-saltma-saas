@@ -51,6 +51,20 @@
 }
 
 @layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
   .animate-slide-down {
     animation: slideDownFromTop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }

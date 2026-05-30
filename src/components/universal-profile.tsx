@@ -133,7 +133,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
   return (
     <div 
       id={wrapperId}
-      className={`justify-start py-12 px-4 transition-all duration-500 ${bgClassName} ${isCompactMode ? 'h-full w-full absolute inset-0 overflow-y-auto overflow-x-hidden flex flex-col' : 'flex-1 min-h-screen w-full relative flex flex-col overflow-x-hidden'}`}
+      className={`transition-all duration-500 ${bgClassName} ${isCompactMode ? 'h-full w-full relative flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide' : 'flex-1 min-h-screen min-h-full w-full relative flex flex-col overflow-x-hidden'}`}
       style={{
         fontFamily: fontStyle,
         ...(isCssBg ? { background: background } : {}),
@@ -150,7 +150,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
         <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0" src={customVideoUrl} />
       )}
 
-      <main className="max-w-md w-full mx-auto relative z-10 flex-1 flex flex-col items-center justify-start gap-8 overflow-x-hidden">
+      <main className="flex flex-col items-center justify-start w-full px-4 py-8 gap-4 max-w-md mx-auto relative z-10 overflow-x-hidden">
         {/* Profile Card */}
         <div className={`profile-card p-6 w-full rounded-[2.5rem] border text-center backdrop-blur-md flex flex-col items-center gap-4 ${currentStyles.cardBg}`} style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
           <div className={`w-20 h-20 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/10 shadow-lg flex items-center justify-center overflow-hidden`}>
