@@ -132,7 +132,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
   return (
     <div 
       id={wrapperId}
-      className={`relative w-full flex flex-col justify-start py-12 px-4 transition-all duration-500 ${isCompactMode ? 'min-h-full' : 'min-h-screen'} ${bgClassName}`}
+      className={`justify-start py-12 px-4 transition-all duration-500 ${bgClassName} ${isCompactMode ? 'h-full w-full absolute inset-0 overflow-y-auto overflow-x-hidden flex flex-col' : 'min-h-screen w-full relative flex flex-col overflow-x-hidden'}`}
       style={{
         fontFamily: fontStyle,
         ...(isCssBg ? { background: background } : {}),
