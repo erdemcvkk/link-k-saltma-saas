@@ -261,6 +261,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
       storeCoverUrl={activeUser.profile?.storeCoverUrl ?? null}
       storeLayout={activeUser.profile?.storeLayout ?? "GRID"}
       customCss={customCss}
+      buttonClass={activeTemplate ? activeTemplate.buttonStyle : (activeUser.profile?.buttonClass ?? null)}
     />
   );
 }
