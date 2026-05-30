@@ -105,7 +105,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
     : (!background && !isCustomImg && !isCustomVideo ? currentStyles.bg : "");
 
   // Auto-Scope CSS to prevent bleeding into /sablonlar or dashboard
-  const scopedCss = customCss 
+  let scopedCss = customCss 
     ? customCss
         .replace(/body/g, `#${wrapperId}`)
         .replace(/\.profile-card/g, `#${wrapperId} .profile-card`)
@@ -113,6 +113,13 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
         .replace(/\.link-item/g, `#${wrapperId} .link-item`)
         .replace(/height\s*:\s*100vh/g, 'min-height: 100vh')
     : null;
+
+  if (scopedCss && isCompactMode) {
+    // Disable custom scrollbars in compact mode to prevent "gri buçuklar"
+    scopedCss = scopedCss.replace(/::-webkit-scrollbar/g, '.disabled-scrollbar-in-mockup');
+    // Force h1 font-size to be normal in mockup and prevent gigantic text
+    scopedCss += `\n#${wrapperId} h1, #${wrapperId} .profile-card h1 { font-size: 1.25rem !important; line-height: 1.2 !important; word-break: break-all !important; margin: 0 !important; padding: 0 !important; }`;
+  }
 
   const getLinkIcon = (type?: string, url?: string) => {
     switch (type) {
