@@ -175,7 +175,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     setErrorMsg("");
     setSuccessMsg("");
 
-    if (!formData.name || !formData.price || !formData.coverUrl) {
+    if (!formData.name || !formData.price) {
       setErrorMsg("Lütfen zorunlu tüm alanları doldurun.");
       return;
     }
@@ -304,169 +304,106 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
 
       {/* Templates List */}
       {templates.length > 0 && (
-        <div className="bg-slate-900/30 border border-slate-900 rounded-3xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-slate-900 text-slate-400 bg-slate-900/40">
-                  <th className="py-4 px-6 font-black uppercase tracking-wider">Şablon</th>
-                  <th className="py-4 px-6 font-black uppercase tracking-wider">Kategori</th>
-                  <th className="py-4 px-6 font-black uppercase tracking-wider">Fiyat & Ödeme Linki</th>
-                  <th className="py-4 px-6 font-black uppercase tracking-wider">Tür</th>
-                  <th className="py-4 px-6 font-black uppercase tracking-wider">Durum</th>
-                  <th className="py-4 px-6 font-black uppercase tracking-wider text-right">İşlemler</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-900/60">
-                {templates.map((template) => (
-                  <tr key={template.id} className="hover:bg-slate-900/10 transition-colors">
-                    {/* Cover & Name */}
-                    <td className="py-4 px-6 flex items-center gap-3">
-                      <div className="w-12 h-9 rounded-lg overflow-hidden bg-slate-950 border border-slate-800 shrink-0">
-                        <img src={template.coverUrl} className="w-full h-full object-cover" />
-                      </div>
-                      <div>
-                        <span className="font-extrabold text-sm text-white block">{template.name}</span>
-                        <span className="font-mono text-[9px] text-slate-500">{template.id}</span>
-                      </div>
-                    </td>
-                    
-                    {/* Category */}
-                    <td className="py-4 px-6">
-                      <span className="px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-[10px] font-bold text-slate-300">
+        <div className="space-y-3">
+          {templates.map((template) => {
+            const firstLetter = template.name.charAt(0).toUpperCase();
+            
+            return (
+              <div key={template.id} className="group p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between hover:border-slate-700 transition-all hover:shadow-lg">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm" style={{ background: template.bgColor || "#1e293b" }}>
+                    <div className="text-white opacity-90 mix-blend-overlay font-bold text-lg">
+                      {firstLetter}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-sm font-bold text-white group-hover:text-neon-blue transition-colors">{template.name}</div>
+                      <span className="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[9px] font-bold text-slate-400">
                         {template.category}
                       </span>
-                    </td>
-                    
-                    {/* Price & Payment Link edit */}
-                    <td className="py-4 px-6 space-y-2">
-                      {isEditPriceOpen === template.id ? (
-                        <div className="flex items-center gap-1.5">
-                          <input
-                            type="text"
-                            value={newPrice}
-                            onChange={(e) => setNewPrice(e.target.value)}
-                            placeholder="Yeni Fiyat"
-                            className="w-16 px-2 py-1 rounded bg-slate-950 border border-slate-800 text-xs font-semibold focus:outline-none focus:border-neon-blue text-white"
-                          />
-                          <button
-                            onClick={() => handleUpdatePrice(template.id)}
-                            className="p-1 rounded bg-neon-blue text-white hover:opacity-90 cursor-pointer"
-                          >
-                            <Check className="h-3 w-3" />
-                          </button>
-                          <button
-                            onClick={() => setIsEditPriceOpen(null)}
-                            className="p-1 rounded bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
+                      {template.isCoded ? (
+                        <span className="px-2 py-0.5 rounded-full bg-purple-950/40 border border-purple-800 text-[9px] font-bold text-purple-300 flex items-center gap-1">
+                          <Code className="h-3 w-3" /> Kodlu
+                        </span>
                       ) : (
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold">{template.price} ₺</span>
-                          <button
-                            onClick={() => {
-                              setIsEditPriceOpen(template.id);
-                              setNewPrice(String(template.price));
-                            }}
-                            className="text-[10px] text-neon-blue hover:underline cursor-pointer"
-                          >
-                            Düzenle
-                          </button>
-                        </div>
+                        <span className="px-2 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[9px] font-bold text-slate-400 flex items-center gap-1">
+                          <Layout className="h-3 w-3" /> Kodsuz
+                        </span>
                       )}
-
-                      {/* Payment Link inline edit */}
+                    </div>
+                    
+                    <div className="flex items-center gap-4 mt-2">
+                      <div className="text-xs font-bold text-emerald-400">
+                        {isEditPriceOpen === template.id ? (
+                          <div className="flex items-center gap-1.5 inline-flex">
+                            <input
+                              type="text"
+                              value={newPrice}
+                              onChange={(e) => setNewPrice(e.target.value)}
+                              className="w-14 px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 text-xs font-semibold focus:outline-none focus:border-neon-blue text-white"
+                            />
+                            <button onClick={() => handleUpdatePrice(template.id)} className="p-0.5 rounded bg-neon-blue text-white hover:opacity-90">
+                              <Check className="h-3 w-3" />
+                            </button>
+                            <button onClick={() => setIsEditPriceOpen(null)} className="p-0.5 rounded bg-slate-800 text-slate-400 hover:text-white">
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                        ) : (
+                          <span onClick={() => { setIsEditPriceOpen(template.id); setNewPrice(String(template.price)); }} className="cursor-pointer hover:underline">
+                            {template.price} ₺
+                          </span>
+                        )}
+                      </div>
+                      
                       {template.price > 0 && (
-                        <div>
+                        <div className="text-xs text-slate-400">
                           {isEditLinkOpen === template.id ? (
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1.5 inline-flex">
                               <input
                                 type="text"
                                 value={newPaymentLink}
                                 onChange={(e) => setNewPaymentLink(e.target.value)}
-                                placeholder="Ödeme Linki (Shopier)"
-                                className="w-32 px-2 py-1 rounded bg-slate-950 border border-slate-800 text-[10px] font-semibold focus:outline-none focus:border-neon-blue text-white"
+                                className="w-24 px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 text-[10px] font-semibold focus:outline-none focus:border-neon-blue text-white"
                               />
-                              <button
-                                onClick={() => handleUpdatePaymentLink(template.id)}
-                                className="p-1 rounded bg-neon-blue text-white hover:opacity-90 cursor-pointer"
-                              >
+                              <button onClick={() => handleUpdatePaymentLink(template.id)} className="p-0.5 rounded bg-neon-blue text-white hover:opacity-90">
                                 <Check className="h-3 w-3" />
                               </button>
-                              <button
-                                onClick={() => setIsEditLinkOpen(null)}
-                                className="p-1 rounded bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
-                              >
+                              <button onClick={() => setIsEditLinkOpen(null)} className="p-0.5 rounded bg-slate-800 text-slate-400 hover:text-white">
                                 <X className="h-3 w-3" />
                               </button>
                             </div>
                           ) : (
-                            <div className="text-[10px] text-slate-400 flex items-center gap-2">
-                              <span className="truncate max-w-[120px] inline-block font-mono">
-                                {template.paymentLink ? "Link Tanımlı" : "Link Tanımsız"}
-                              </span>
-                              <button
-                                onClick={() => {
-                                  setIsEditLinkOpen(template.id);
-                                  setNewPaymentLink(template.paymentLink || "");
-                                }}
-                                className="text-neon-blue hover:underline cursor-pointer"
-                              >
-                                Link Düzenle
-                              </button>
-                            </div>
+                            <span onClick={() => { setIsEditLinkOpen(template.id); setNewPaymentLink(template.paymentLink || ""); }} className="cursor-pointer hover:underline flex items-center gap-1">
+                              <DollarSign className="h-3 w-3" />
+                              {template.paymentLink ? "Link Aktif" : "Link Ekle"}
+                            </span>
                           )}
                         </div>
                       )}
-                    </td>
+                    </div>
+                  </div>
+                </div>
 
-                    {/* Mode Type (Coded vs NoCode) */}
-                    <td className="py-4 px-6">
-                      {template.isCoded ? (
-                        <span className="px-2.5 py-0.5 rounded-full bg-purple-950/40 border border-purple-800 text-[9px] font-bold text-purple-300 flex items-center gap-1 w-fit">
-                          <Code className="h-3 w-3" /> Kodlu
-                        </span>
-                      ) : (
-                        <span className="px-2.5 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-[9px] font-bold text-slate-400 flex items-center gap-1 w-fit">
-                          <Layout className="h-3 w-3" /> Kodsuz
-                        </span>
-                      )}
-                    </td>
-
-                    {/* Active/Inactive publish status */}
-                    <td className="py-4 px-6">
-                      <button
-                        onClick={() => handleToggleActive(template.id, template.isActive)}
-                        className="focus:outline-none text-slate-400 hover:text-white cursor-pointer"
-                      >
-                        {template.isActive ? (
-                          <span className="text-emerald-400 flex items-center gap-1 font-bold">
-                            <ToggleRight className="h-5 w-5" /> Aktif
-                          </span>
-                        ) : (
-                          <span className="text-slate-500 flex items-center gap-1 font-bold">
-                            <ToggleLeft className="h-5 w-5" /> Pasif
-                          </span>
-                        )}
-                      </button>
-                    </td>
-
-                    {/* Delete action */}
-                    <td className="py-4 px-6 text-right">
-                      <button
-                        onClick={() => handleDelete(template.id)}
-                        className="p-2 rounded-lg bg-slate-900 border border-slate-800 hover:border-red-500/20 text-slate-400 hover:text-red-400 transition-all cursor-pointer"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                <div className="flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity pr-2">
+                  <button
+                    onClick={() => handleToggleActive(template.id, template.isActive)}
+                    className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition-colors flex items-center gap-1.5 text-xs font-bold"
+                  >
+                    {template.isActive ? <ToggleRight className="h-4 w-4 text-emerald-400" /> : <ToggleLeft className="h-4 w-4 text-slate-400" />}
+                    {template.isActive ? "Aktif" : "Pasif"}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(template.id)}
+                    className="p-2 rounded-xl bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -560,18 +497,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                   </select>
                 </div>
 
-                {/* Cover Image URL */}
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Kapak Görseli URL *</label>
-                  <input
-                    type="url"
-                    required
-                    value={formData.coverUrl}
-                    onChange={(e) => setFormData(prev => ({ ...prev, coverUrl: e.target.value }))}
-                    placeholder="https://..."
-                    className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold focus:outline-none focus:border-neon-blue"
-                  />
-                </div>
+
               </div>
 
               <div className="grid grid-cols-2 gap-4">

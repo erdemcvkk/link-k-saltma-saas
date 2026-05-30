@@ -7,16 +7,6 @@ import SablonlarClient from "./sablonlar-client";
 export const dynamic = "force-dynamic";
 
 export default async function SablonlarPage() {
-  // Check if any templates exist, if not, automatically seed them
-  const count = await db.template.count();
-  if (count === 0) {
-    try {
-      await seedTemplates();
-    } catch (e) {
-      console.error("Auto-seeding templates failed:", e);
-    }
-  }
-
   // Get current user session
   const user = await checkAndSyncUser();
   const userId = user ? user.id : null;
