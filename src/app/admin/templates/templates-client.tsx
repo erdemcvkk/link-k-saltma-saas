@@ -46,6 +46,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  // Modals state
  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
  const [previewTemplate, setPreviewTemplate] = useState<Template | null>(initialTemplates[0] || null);
+ const [editingTemplateId, setEditingTemplateId] = useState<string | null>(null);
 
  // Form states
  const [formMode, setFormMode] = useState<"no-code" | "code">("no-code");
@@ -111,6 +112,23 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  });
  };
 
+ const handleEditClick = (template: Template) => {
+  setEditingTemplateId(template.id);
+  setFormMode(template.isCoded ? "code" : "no-code");
+  setFormData({
+    name: template.name,
+    price: template.price.toString(),
+    category: template.category,
+    bgColor: template.bgColor || "#09090b",
+    fontStyle: template.fontStyle || "Inter",
+    buttonStyle: template.buttonStyle || "",
+    paymentLink: template.paymentLink || "",
+    customCss: template.customCss || "",
+    configJson: template.configJson || "",
+  });
+  setIsAddModalOpen(true);
+ };
+
  const handleAddTemplate = async (e: React.FormEvent) => {
  e.preventDefault();
 
@@ -121,49 +139,92 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
 
  startTransition(async () => {
  try {
- const result = await createTemplate(adminUserId, {
- name: formData.name,
- price: Number(formData.price),
- category: formData.category,
- coverUrl: "",
- bgColor: formData.bgColor,
- fontStyle: formData.fontStyle,
- buttonStyle: formData.buttonStyle,
- paymentLink: formData.paymentLink,
- isActive: true,
- isCoded: formMode === "code",
- customCss: formMode === "code" ? formData.customCss : undefined,
- configJson: formMode === "code" ? formData.configJson : undefined,
- });
+ if (editingTemplateId) {
+  const result = await updateTemplate(adminUserId, editingTemplateId, {
+    name: formData.name,
+    price: Number(formData.price),
+    category: formData.category,
+    bgColor: formData.bgColor,
+    fontStyle: formData.fontStyle,
+    buttonStyle: formData.buttonStyle,
+    paymentLink: formData.paymentLink || undefined,
+    isCoded: formMode === "code",
+    customCss: formMode === "code" ? formData.customCss : undefined,
+    configJson: formMode === "code" ? formData.configJson : undefined,
+  });
 
- const newT: Template = {
- id: result.id,
- name: result.name,
- price: result.price,
- category: result.category,
- coverUrl: result.coverUrl,
- bgColor: result.bgColor,
- fontStyle: result.fontStyle,
- buttonStyle: result.buttonStyle,
- paymentLink: result.paymentLink,
- isActive: result.isActive,
- isCoded: result.isCoded,
- customCss: result.customCss,
- configJson: result.configJson,
- createdAt: result.createdAt.toISOString(),
- };
+  const updatedT: Template = {
+    id: result.id,
+    name: result.name,
+    price: result.price,
+    category: result.category,
+    coverUrl: result.coverUrl,
+    bgColor: result.bgColor,
+    fontStyle: result.fontStyle,
+    buttonStyle: result.buttonStyle,
+    paymentLink: result.paymentLink,
+    isActive: result.isActive,
+    isCoded: result.isCoded,
+    customCss: result.customCss,
+    configJson: result.configJson,
+    createdAt: result.createdAt.toISOString(),
+  };
 
- setTemplates(prev => [newT, ...prev]);
- setPreviewTemplate(newT); // Automatically select the new template for preview
- showMsg("Şablon başarıyla eklendi!", "success");
- setIsAddModalOpen(false);
- setFormData({
- name: "", price: "", category: "Genel", bgColor: "#09090b",
- fontStyle: "Inter", buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
- paymentLink: "", customCss: "", configJson: "",
- });
+  setTemplates(prev => prev.map(t => t.id === editingTemplateId ? updatedT : t));
+  setPreviewTemplate(updatedT);
+  showMsg("Şablon başarıyla güncellendi!", "success");
+  setIsAddModalOpen(false);
+  setEditingTemplateId(null);
+  setFormData({
+    name: "", price: "", category: "Genel", bgColor: "#09090b",
+    fontStyle: "Inter", buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
+    paymentLink: "", customCss: "", configJson: "",
+  });
+ } else {
+  const result = await createTemplate(adminUserId, {
+    name: formData.name,
+    price: Number(formData.price),
+    category: formData.category,
+    coverUrl: "",
+    bgColor: formData.bgColor,
+    fontStyle: formData.fontStyle,
+    buttonStyle: formData.buttonStyle,
+    paymentLink: formData.paymentLink || undefined,
+    isActive: true,
+    isCoded: formMode === "code",
+    customCss: formMode === "code" ? formData.customCss : undefined,
+    configJson: formMode === "code" ? formData.configJson : undefined,
+  });
+
+  const newT: Template = {
+    id: result.id,
+    name: result.name,
+    price: result.price,
+    category: result.category,
+    coverUrl: result.coverUrl,
+    bgColor: result.bgColor,
+    fontStyle: result.fontStyle,
+    buttonStyle: result.buttonStyle,
+    paymentLink: result.paymentLink,
+    isActive: result.isActive,
+    isCoded: result.isCoded,
+    customCss: result.customCss,
+    configJson: result.configJson,
+    createdAt: result.createdAt.toISOString(),
+  };
+
+  setTemplates(prev => [newT, ...prev]);
+  setPreviewTemplate(newT);
+  showMsg("Şablon başarıyla eklendi!", "success");
+  setIsAddModalOpen(false);
+  setFormData({
+    name: "", price: "", category: "Genel", bgColor: "#09090b",
+    fontStyle: "Inter", buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
+    paymentLink: "", customCss: "", configJson: "",
+  });
+ }
  } catch (err: any) {
- showMsg(err.message || "Şablon eklenirken hata oluştu.", "error");
+ showMsg(err.message || "Şablon kaydedilirken hata oluştu.", "error");
  }
  });
  };
@@ -211,7 +272,15 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  <p className="text-sm text-zinc-400 font-medium mt-2">Sistemdeki genel ve özel şablonları yönetin.</p>
  </div>
  <button
- onClick={() => setIsAddModalOpen(true)}
+ onClick={() => {
+    setEditingTemplateId(null);
+    setFormData({
+      name: "", price: "", category: "Genel", bgColor: "#09090b",
+      fontStyle: "Inter", buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
+      paymentLink: "", customCss: "", configJson: "",
+    });
+    setIsAddModalOpen(true);
+  }}
  className="flex items-center gap-1.5 px-4 py-3 md:py-2 rounded-xl bg-neon-blue hover:opacity-90 text-white text-xs font-black tracking-wider transition-all shadow-md cursor-pointer"
  >
  <Plus className="h-4 w-4" /> YENİ ŞABLON
@@ -283,6 +352,12 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  </div>
  <div className="flex flex-col gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity pr-2">
  <button 
+ onClick={(e) => { e.stopPropagation(); handleEditClick(template); }} 
+ className="px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-[10px] font-bold transition-colors cursor-pointer flex items-center justify-center gap-1"
+ >
+ <Edit2 className="h-3 w-3" /> Düzenle
+ </button>
+ <button 
  onClick={(e) => { e.stopPropagation(); handleToggleActive(template.id, template.isActive); }} 
  className={`px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg text-[10px] font-bold transition-colors cursor-pointer ${template.isActive ? 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}
  >
@@ -307,9 +382,17 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  <div className="absolute inset-0 z-20 bg-zinc-950 flex flex-col animate-in slide-in-from-bottom-8 duration-300">
  <div className="p-3 md:p-6 border-b border-white/5 flex items-center justify-between bg-zinc-900">
  <h2 className="text-lg font-bold text-white flex items-center gap-2">
- <Plus className="h-5 w-5 text-neon-blue" /> Yeni Şablon Ekle
+ {editingTemplateId ? (
+    <>
+      <Edit2 className="h-5 w-5 text-neon-blue" /> Şablonu Düzenle
+    </>
+  ) : (
+    <>
+      <Plus className="h-5 w-5 text-neon-blue" /> Yeni Şablon Ekle
+    </>
+  )}
  </h2>
- <button type="button" onClick={() => setIsAddModalOpen(false)} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-full text-zinc-400 hover:text-white transition-colors cursor-pointer">
+ <button type="button" onClick={() => { setIsAddModalOpen(false); setEditingTemplateId(null); }} className="p-2 bg-zinc-800 hover:bg-zinc-700 rounded-full text-zinc-400 hover:text-white transition-colors cursor-pointer">
  <X className="h-5 w-5" />
  </button>
  </div>
@@ -456,7 +539,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
 
  <div className="pt-6 border-t border-zinc-800 flex gap-3 pb-8">
  <button type="submit" disabled={isPending} className="flex-1 py-3.5 rounded-xl bg-neon-blue hover:opacity-90 text-white text-sm font-bold transition-colors shadow-lg shadow-neon-blue/20 cursor-pointer">
- Şablonu Oluştur
+ {editingTemplateId ? "Şablonu Güncelle" : "Şablonu Oluştur"}
  </button>
  </div>
  </form>
