@@ -4,433 +4,433 @@ import StorefrontPreview from "@/components/storefront-preview";
 import { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ username: string; addonSlug: string }> }): Promise<Metadata> {
-  const resolvedParams = await params;
-  const username = resolvedParams.username.replace("%40", "").replace(/^@/, "");
+ const resolvedParams = await params;
+ const username = resolvedParams.username.replace("%40", "").replace(/^@/, "");
 
-  const user = await db.user.findUnique({
-    where: { username },
-    include: { profile: true },
-  });
+ const user = await db.user.findUnique({
+ where: { username },
+ include: { profile: true },
+ });
 
-  if (!user || !user.profile) return { title: "Not Found" };
+ if (!user || !user.profile) return { title: "Not Found" };
 
-  return {
-    title: `${user.profile.displayName || user.username} - Addon`,
-    description: user.profile.bio || "Link-in-bio addon",
-  };
+ return {
+ title: `${user.profile.displayName || user.username} - Addon`,
+ description: user.profile.bio || "Link-in-bio addon",
+ };
 }
 
 export default async function AddonPage({ params }: { params: Promise<{ username: string; addonSlug: string }> }) {
-  const resolvedParams = await params;
-  const username = resolvedParams.username.replace("%40", "");
-  const addonSlug = resolvedParams.addonSlug;
+ const resolvedParams = await params;
+ const username = resolvedParams.username.replace("%40", "");
+ const addonSlug = resolvedParams.addonSlug;
 
-  const user = await db.user.findUnique({
-    where: { username },
-    include: { profile: true },
-  });
+ const user = await db.user.findUnique({
+ where: { username },
+ include: { profile: true },
+ });
 
-  if (!user || !user.profile) {
-    notFound();
-  }
+ if (!user || !user.profile) {
+ notFound();
+ }
 
-  // Find active addons
-  const addons = await db.userAddon.findMany({
-    where: { userId: user.id, isActive: true },
-  });
+ // Find active addons
+ const addons = await db.userAddon.findMany({
+ where: { userId: user.id, isActive: true },
+ });
 
-  // Find the addon that matches this slug
-  function getDefaultSlug(type: string) {
-    if (type === "MINI_STORE") return "store";
-    if (type === "NEO_BRUTAL") return "neo-brutal";
-    if (type === "ORGANIC") return "organic";
-    if (type === "RETRO") return "retro";
-    if (type === "ACADEMIA") return "academia";
-    if (type === "Y2K") return "y2k";
-    if (type === "BOOKING") return "booking";
-    if (type === "NEWSLETTER") return "newsletter";
-    if (type === "QA") return "qa";
-    if (type === "DONATION") return "donation";
-    if (type === "PREMIUM_CREATOR") return "creator-store";
-    if (type === "PREMIUM_VIDEO") return "masterclass";
-    return type.toLowerCase();
-  }
+ // Find the addon that matches this slug
+ function getDefaultSlug(type: string) {
+ if (type === "MINI_STORE") return "store";
+ if (type === "NEO_BRUTAL") return "neo-brutal";
+ if (type === "ORGANIC") return "organic";
+ if (type === "RETRO") return "retro";
+ if (type === "ACADEMIA") return "academia";
+ if (type === "Y2K") return "y2k";
+ if (type === "BOOKING") return "booking";
+ if (type === "NEWSLETTER") return "newsletter";
+ if (type === "QA") return "qa";
+ if (type === "DONATION") return "donation";
+ if (type === "PREMIUM_CREATOR") return "creator-store";
+ if (type === "PREMIUM_VIDEO") return "masterclass";
+ return type.toLowerCase();
+ }
 
-  // Find the matching active addon by slug
-  const matchingAddon = addons.find(a => {
-    if (!a.isActive) return false;
-    try {
-      const parsed = a.config ? JSON.parse(a.config) : {};
-      const cSlug = (parsed.customSlug || getDefaultSlug(a.addonType)).toLowerCase();
-      return cSlug === addonSlug.toLowerCase();
-    } catch {
-      return getDefaultSlug(a.addonType).toLowerCase() === addonSlug.toLowerCase();
-    }
-  });
+ // Find the matching active addon by slug
+ const matchingAddon = addons.find(a => {
+ if (!a.isActive) return false;
+ try {
+ const parsed = a.config ? JSON.parse(a.config) : {};
+ const cSlug = (parsed.customSlug || getDefaultSlug(a.addonType)).toLowerCase();
+ return cSlug === addonSlug.toLowerCase();
+ } catch {
+ return getDefaultSlug(a.addonType).toLowerCase() === addonSlug.toLowerCase();
+ }
+ });
 
-  if (!matchingAddon) {
-    notFound();
-  }
+ if (!matchingAddon) {
+ notFound();
+ }
 
-    const getDefaultTheme = (type: string) => {
-    switch (type) {
-      case "NEO_BRUTAL": return "neo-brutalism";
-      case "ORGANIC": return "organic-earth";
-      case "RETRO": return "retro-arcade";
-      case "ACADEMIA": return "dark-academia";
-      case "Y2K": return "y2k-holographic";
-      case "PREMIUM_CREATOR": return "premium-creator";
-      default: return "classic";
-    }
-  };
-  let parsedConfig: any = { theme: 'classic' };
-  try { if (matchingAddon.config) parsedConfig = JSON.parse(matchingAddon.config); } catch (e) {}
+ const getDefaultTheme = (type: string) => {
+ switch (type) {
+ case "NEO_BRUTAL": return "neo-brutalism";
+ case "ORGANIC": return "organic-earth";
+ case "RETRO": return "retro-arcade";
+ case "ACADEMIA": return "dark-academia";
+ case "Y2K": return "y2k-holographic";
+ case "PREMIUM_CREATOR": return "premium-creator";
+ default: return "classic";
+ }
+ };
+ let parsedConfig: any = { theme: 'classic' };
+ try { if (matchingAddon.config) parsedConfig = JSON.parse(matchingAddon.config); } catch (e) {}
 
-  if (matchingAddon.addonType === "MINI_STORE" || 
-      matchingAddon.addonType === "NEO_BRUTAL" || 
-      matchingAddon.addonType === "ORGANIC" || 
-      matchingAddon.addonType === "RETRO" || 
-      matchingAddon.addonType === "ACADEMIA" || 
-      matchingAddon.addonType === "Y2K" ||
-      matchingAddon.addonType === "PREMIUM_CREATOR") {
-    const products = await db.product.findMany({
-      where: { userId: user.id, isActive: true },
-      orderBy: { createdAt: "desc" },
-    });
+ if (matchingAddon.addonType === "MINI_STORE" || 
+ matchingAddon.addonType === "NEO_BRUTAL" || 
+ matchingAddon.addonType === "ORGANIC" || 
+ matchingAddon.addonType === "RETRO" || 
+ matchingAddon.addonType === "ACADEMIA" || 
+ matchingAddon.addonType === "Y2K" ||
+ matchingAddon.addonType === "PREMIUM_CREATOR") {
+ const products = await db.product.findMany({
+ where: { userId: user.id, isActive: true },
+ orderBy: { createdAt: "desc" },
+ });
 
-    return (
-      <div className="w-full min-h-screen bg-zinc-100 flex justify-center">
-        <div className="w-full max-w-full md:w-[480px] min-h-screen relative shadow-2xl overflow-hidden bg-white">
-          <StorefrontPreview 
-            theme={parsedConfig.theme || getDefaultTheme(matchingAddon.addonType)} 
-          onProductClick={undefined}
-          products={products.map(p => ({
-            id: p.id,
-            title: p.title,
-            type: p.type,
-            price: p.price.toString(),
-            imageUrl: p.imageUrl || p.fileUrl,
-            description: p.description || ""
-          }))} 
-          storeTitle={parsedConfig.storeTitle || user.profile.displayName || "Mağazam"}
-          storeCoverUrl={parsedConfig.storeCoverUrl || user.profile.background || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&q=80"}
-          avatarUrl={parsedConfig.storeAvatarUrl || user.profile.avatarUrl}
-          username={parsedConfig.storeUsername || ("@" + user.username)}
-          bio={parsedConfig.storeBio || user.profile.bio}
-          buyButtonText={parsedConfig.buyButtonText || "Satın Al"}
-        />
-        </div>
-      </div>
-    );
-  }
+ return (
+ <div className="w-full min-h-screen bg-zinc-100 flex justify-center">
+ <div className="w-full max-w-full md:w-[480px] min-h-screen relative shadow-2xl overflow-hidden bg-white">
+ <StorefrontPreview 
+ theme={parsedConfig.theme || getDefaultTheme(matchingAddon.addonType)} 
+ onProductClick={undefined}
+ products={products.map(p => ({
+ id: p.id,
+ title: p.title,
+ type: p.type,
+ price: p.price.toString(),
+ imageUrl: p.imageUrl || p.fileUrl,
+ description: p.description || ""
+ }))} 
+ storeTitle={parsedConfig.storeTitle || user.profile.displayName || "Mağazam"}
+ storeCoverUrl={parsedConfig.storeCoverUrl || user.profile.background || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&q=80"}
+ avatarUrl={parsedConfig.storeAvatarUrl || user.profile.avatarUrl}
+ username={parsedConfig.storeUsername || ("@" + user.username)}
+ bio={parsedConfig.storeBio || user.profile.bio}
+ buyButtonText={parsedConfig.buyButtonText || "Satın Al"}
+ />
+ </div>
+ </div>
+ );
+ }
 
 
-  if (matchingAddon.addonType === "BOOKING") {
-    return (
-      <div className="w-full min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white p-4 md:p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
-          {parsedConfig.avatarUrl ? (
-            <img src={parsedConfig.avatarUrl} className="w-24 h-24 rounded-full object-cover shadow-md mb-6" alt="Profile" />
-          ) : (
-            <div className="w-24 h-24 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-6">
-              <span className="text-xl md:text-3xl">📅</span>
-            </div>
-          )}
-          <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Birebir Görüşme Ayarla"}</h1>
-          <p className="text-slate-500 mb-8">{parsedConfig.description || "Sizinle tanışmak için sabırsızlanıyorum."}</p>
-          <a href={parsedConfig.calendarLink || "#"} target="_blank" rel="noopener noreferrer" className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
-            {parsedConfig.buttonText || "Takvimi Görüntüle"}
-          </a>
-        </div>
-      </div>
-    );
-  }
+ if (matchingAddon.addonType === "BOOKING") {
+ return (
+ <div className="w-full min-h-screen bg-slate-50 flex items-center justify-center p-4">
+ <div className="w-full max-w-md bg-white p-4 md:p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
+ {parsedConfig.avatarUrl ? (
+ <img src={parsedConfig.avatarUrl} className="w-24 h-24 rounded-full object-cover shadow-md mb-6" alt="Profile" />
+ ) : (
+ <div className="w-24 h-24 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-6">
+ <span className="text-xl md:text-3xl">📅</span>
+ </div>
+ )}
+ <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Birebir Görüşme Ayarla"}</h1>
+ <p className="text-slate-500 mb-8">{parsedConfig.description || "Sizinle tanışmak için sabırsızlanıyorum."}</p>
+ <a href={parsedConfig.calendarLink || "#"} target="_blank" rel="noopener noreferrer" className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
+ {parsedConfig.buttonText || "Takvimi Görüntüle"}
+ </a>
+ </div>
+ </div>
+ );
+ }
 
-  if (matchingAddon.addonType === "QA") {
-    return (
-      <div className="w-full min-h-screen bg-amber-50/30 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white p-4 md:p-8 rounded-[2rem] shadow-xl flex flex-col">
-          <div className="flex flex-col items-center text-center mb-8">
-            {parsedConfig.avatarUrl ? (
-              <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full object-cover shadow-sm mb-4" alt="Profile" />
-            ) : (
-              <div className="w-20 h-20 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mb-4">
-                <span className="text-xl md:text-3xl">❓</span>
-              </div>
-            )}
-            <h1 className="text-2xl font-black text-slate-800">{parsedConfig.boxTitle || "Bana Soru Sor!"}</h1>
-            <p className="text-slate-500 mt-2 bg-amber-50/50 p-4 rounded-2xl">{parsedConfig.welcomeMessage || "Sorularınızı anonim olarak sorabilirsiniz."}</p>
-          </div>
-          <textarea className="w-full min-h-[120px] p-4 bg-zinc-50 border border-zinc-200 rounded-2xl outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200 transition-all resize-none mb-4" placeholder={parsedConfig.placeholderText || "Sorunuzu buraya yazın..."}></textarea>
-          <button className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
-            {parsedConfig.buttonText || "Gönder"}
-          </button>
-        </div>
-      </div>
-    );
-  }
+ if (matchingAddon.addonType === "QA") {
+ return (
+ <div className="w-full min-h-screen bg-amber-50/30 flex items-center justify-center p-4">
+ <div className="w-full max-w-md bg-white p-4 md:p-8 rounded-[2rem] shadow-xl flex flex-col">
+ <div className="flex flex-col items-center text-center mb-8">
+ {parsedConfig.avatarUrl ? (
+ <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full object-cover shadow-sm mb-4" alt="Profile" />
+ ) : (
+ <div className="w-20 h-20 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mb-4">
+ <span className="text-xl md:text-3xl">❓</span>
+ </div>
+ )}
+ <h1 className="text-2xl font-black text-slate-800">{parsedConfig.boxTitle || "Bana Soru Sor!"}</h1>
+ <p className="text-slate-500 mt-2 bg-amber-50/50 p-4 rounded-2xl">{parsedConfig.welcomeMessage || "Sorularınızı anonim olarak sorabilirsiniz."}</p>
+ </div>
+ <textarea className="w-full min-h-[120px] p-4 bg-zinc-50 border border-zinc-200 rounded-2xl outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200 transition-all resize-none mb-4" placeholder={parsedConfig.placeholderText || "Sorunuzu buraya yazın..."}></textarea>
+ <button className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
+ {parsedConfig.buttonText || "Gönder"}
+ </button>
+ </div>
+ </div>
+ );
+ }
 
-  if (matchingAddon.addonType === "PREMIUM_VIDEO") {
-    return (
-      <div className="w-full min-h-screen bg-black flex justify-center p-4">
-        <div className="w-full max-w-2xl bg-black rounded-[2rem] shadow-2xl flex flex-col items-center">
-          
-          {/* 16:9 Media Player Area */}
-          <div className="w-full aspect-video rounded-3xl bg-zinc-900 mt-8 relative shadow-[0_0_50px_rgba(255,255,255,0.05)] overflow-hidden group border border-white/5">
-            {/* Cover Image */}
-            <div 
-              className="absolute inset-0 bg-cover bg-center opacity-80 group-hover:scale-105 transition-transform duration-700" 
-              style={{ backgroundImage: `url('${parsedConfig.coverUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80'}')` }}
-            />
-            
-            {/* Gradient Overlay for Text Readability if needed */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+ if (matchingAddon.addonType === "PREMIUM_VIDEO") {
+ return (
+ <div className="w-full min-h-screen bg-black flex justify-center p-4">
+ <div className="w-full max-w-2xl bg-black rounded-[2rem] shadow-2xl flex flex-col items-center">
+ 
+ {/* 16:9 Media Player Area */}
+ <div className="w-full aspect-video rounded-3xl bg-zinc-900 mt-8 relative shadow-[0_0_50px_rgba(255,255,255,0.05)] overflow-hidden group border border-white/5">
+ {/* Cover Image */}
+ <div 
+ className="absolute inset-0 bg-cover bg-center opacity-80 group-hover:scale-105 transition-transform duration-700" 
+ style={{ backgroundImage: `url('${parsedConfig.coverUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80'}')` }}
+ />
+ 
+ {/* Gradient Overlay for Text Readability if needed */}
+ <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
-            {/* Glassmorphism Play Button */}
-            <a 
-              href={parsedConfig.videoUrl || "#"} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="absolute inset-0 flex items-center justify-center z-10"
-            >
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:bg-white/30 hover:scale-110 transition-all cursor-pointer">
-                <span className="text-xl md:text-3xl sm:text-4xl ml-2">▶</span>
-              </div>
-            </a>
-          </div>
-          
-          {/* Text Content */}
-          <div className="flex flex-col mt-8 w-full px-4 text-center">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3">
-              {parsedConfig.title || "UI/UX Masterclass Bölüm 1"}
-            </h1>
-            <p className="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-lg mx-auto mb-10">
-              {parsedConfig.description || "Tasarım sistemleri ve ileri düzey prototipleme tekniklerini keşfedin."}
-            </p>
-            
-            <a 
-              href={parsedConfig.actionUrl || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full max-w-sm mx-auto py-5 rounded-2xl bg-white text-black font-extrabold text-lg hover:bg-zinc-200 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-            >
-              {parsedConfig.buttonText || "Tamamını İzle"}
-            </a>
-          </div>
+ {/* Glassmorphism Play Button */}
+ <a 
+ href={parsedConfig.videoUrl || "#"} 
+ target="_blank" 
+ rel="noopener noreferrer"
+ className="absolute inset-0 flex items-center justify-center z-10"
+ >
+ <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:bg-white/30 hover:scale-110 transition-all cursor-pointer">
+ <span className="text-xl md:text-3xl sm:text-4xl ml-2">▶</span>
+ </div>
+ </a>
+ </div>
+ 
+ {/* Text Content */}
+ <div className="flex flex-col mt-8 w-full px-4 text-center">
+ <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3">
+ {parsedConfig.title || "UI/UX Masterclass Bölüm 1"}
+ </h1>
+ <p className="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-lg mx-auto mb-10">
+ {parsedConfig.description || "Tasarım sistemleri ve ileri düzey prototipleme tekniklerini keşfedin."}
+ </p>
+ 
+ <a 
+ href={parsedConfig.actionUrl || "#"}
+ target="_blank"
+ rel="noopener noreferrer"
+ className="w-full max-w-sm mx-auto py-5 rounded-2xl bg-white text-black font-extrabold text-lg hover:bg-zinc-200 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+ >
+ {parsedConfig.buttonText || "Tamamını İzle"}
+ </a>
+ </div>
 
-        </div>
-      </div>
-    );
-  }
+ </div>
+ </div>
+ );
+ }
 
-  if (matchingAddon.addonType === "DONATION") {
-    return (
-      <div className="w-full min-h-screen bg-pink-50/30 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white p-4 md:p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
-          {parsedConfig.avatarUrl ? (
-            <img src={parsedConfig.avatarUrl} className="w-24 h-24 rounded-full object-cover shadow-md mb-6" alt="Profile" />
-          ) : (
-            <div className="w-24 h-24 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center mb-6">
-              <span className="text-xl md:text-3xl">☕</span>
-            </div>
-          )}
-          <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Bana Kahve Ismarla"}</h1>
-          <p className="text-slate-500 mb-8">{parsedConfig.thankYouMsg || "Desteğiniz için teşekkürler!"}</p>
-          <a href={parsedConfig.platformUrl || "#"} target="_blank" rel="noopener noreferrer" className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
-            {parsedConfig.buttonText || "Destek Ol"}
-          </a>
-        </div>
-      </div>
-    );
-  }
+ if (matchingAddon.addonType === "DONATION") {
+ return (
+ <div className="w-full min-h-screen bg-pink-50/30 flex items-center justify-center p-4">
+ <div className="w-full max-w-md bg-white p-4 md:p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
+ {parsedConfig.avatarUrl ? (
+ <img src={parsedConfig.avatarUrl} className="w-24 h-24 rounded-full object-cover shadow-md mb-6" alt="Profile" />
+ ) : (
+ <div className="w-24 h-24 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center mb-6">
+ <span className="text-xl md:text-3xl">☕</span>
+ </div>
+ )}
+ <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Bana Kahve Ismarla"}</h1>
+ <p className="text-slate-500 mb-8">{parsedConfig.thankYouMsg || "Desteğiniz için teşekkürler!"}</p>
+ <a href={parsedConfig.platformUrl || "#"} target="_blank" rel="noopener noreferrer" className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
+ {parsedConfig.buttonText || "Destek Ol"}
+ </a>
+ </div>
+ </div>
+ );
+ }
 
-  if (matchingAddon.addonType === "COUNTDOWN") {
-    // Generate an aesthetic countdown layout
-    return (
-      <div className="w-full min-h-screen bg-gradient-to-br from-indigo-900 via-slate-900 to-black flex items-center justify-center p-4">
-        <div className="w-full max-w-lg bg-white/10 backdrop-blur-xl border border-white/20 p-4 md:p-10 rounded-[3rem] shadow-2xl flex flex-col items-center text-center">
-          {parsedConfig.avatarUrl ? (
-            <img src={parsedConfig.avatarUrl} className="w-24 h-24 rounded-3xl object-cover shadow-[0_0_30px_rgba(255,255,255,0.2)] mb-8" alt="Profile" />
-          ) : (
-            <div className="w-24 h-24 rounded-3xl bg-white/10 text-indigo-300 flex items-center justify-center mb-8 border border-white/20 shadow-inner">
-              <span className="text-2xl md:text-4xl">⏳</span>
-            </div>
-          )}
-          <h1 className="text-xl md:text-3xl font-black text-white tracking-tight mb-4">{parsedConfig.title || "Büyük Lansman"}</h1>
-          <p className="text-indigo-200/80 mb-10 text-lg leading-relaxed">{parsedConfig.description || "Yeni ürünümüz çok yakında sizlerle!"}</p>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-10">
-            {['Gün', 'Saat', 'Dk', 'Sn'].map((label, idx) => (
-              <div key={label} className="bg-black/40 border border-white/10 rounded-2xl py-4 flex flex-col items-center justify-center">
-                <span className="text-xl md:text-3xl font-black text-white font-mono mb-1">{['14', '08', '45', '22'][idx]}</span>
-                <span className="text-[10px] uppercase tracking-widest text-indigo-300/70 font-bold">{label}</span>
-              </div>
-            ))}
-          </div>
+ if (matchingAddon.addonType === "COUNTDOWN") {
+ // Generate an aesthetic countdown layout
+ return (
+ <div className="w-full min-h-screen bg-gradient-to-br from-indigo-900 via-slate-900 to-black flex items-center justify-center p-4">
+ <div className="w-full max-w-lg bg-white/10 backdrop-blur-xl border border-white/20 p-4 md:p-10 rounded-[3rem] shadow-2xl flex flex-col items-center text-center">
+ {parsedConfig.avatarUrl ? (
+ <img src={parsedConfig.avatarUrl} className="w-24 h-24 rounded-3xl object-cover shadow-[0_0_30px_rgba(255,255,255,0.2)] mb-8" alt="Profile" />
+ ) : (
+ <div className="w-24 h-24 rounded-3xl bg-white/10 text-indigo-300 flex items-center justify-center mb-8 border border-white/20 shadow-inner">
+ <span className="text-2xl md:text-4xl">⏳</span>
+ </div>
+ )}
+ <h1 className="text-xl md:text-3xl font-black text-white tracking-tight mb-4">{parsedConfig.title || "Büyük Lansman"}</h1>
+ <p className="text-indigo-200/80 mb-10 text-lg leading-relaxed">{parsedConfig.description || "Yeni ürünümüz çok yakında sizlerle!"}</p>
+ 
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-10">
+ {['Gün', 'Saat', 'Dk', 'Sn'].map((label, idx) => (
+ <div key={label} className="bg-black/40 border border-white/10 rounded-2xl py-4 flex flex-col items-center justify-center">
+ <span className="text-xl md:text-3xl font-black text-white font-mono mb-1">{['14', '08', '45', '22'][idx]}</span>
+ <span className="text-[10px] uppercase tracking-widest text-indigo-300/70 font-bold">{label}</span>
+ </div>
+ ))}
+ </div>
 
-          <a href={parsedConfig.buttonUrl || "#"} target="_blank" rel="noopener noreferrer" className="w-full py-5 rounded-2xl bg-indigo-500 text-white font-black text-lg hover:bg-indigo-400 hover:scale-[1.02] transition-all shadow-[0_0_40px_rgba(99,102,241,0.4)] tracking-wide">
-            {parsedConfig.buttonText || "Detaylar"}
-          </a>
-        </div>
-      </div>
-    );
-  }
+ <a href={parsedConfig.buttonUrl || "#"} target="_blank" rel="noopener noreferrer" className="w-full py-5 rounded-2xl bg-indigo-500 text-white font-black text-lg hover:bg-indigo-400 hover:scale-[1.02] transition-all shadow-[0_0_40px_rgba(99,102,241,0.4)] tracking-wide">
+ {parsedConfig.buttonText || "Detaylar"}
+ </a>
+ </div>
+ </div>
+ );
+ }
 
-  if (matchingAddon.addonType === "PORTFOLIO") {
-    return (
-      <div className="w-full min-h-screen bg-[#f3f4f6] flex flex-col items-center py-12 px-4">
-        <div className="w-full max-w-2xl bg-white p-4 md:p-8 md:p-12 rounded-[2rem] shadow-xl">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-8 mb-10">
-            {parsedConfig.avatarUrl ? (
-              <img src={parsedConfig.avatarUrl} className="w-32 h-32 rounded-[2rem] object-cover shadow-lg shrink-0" alt="Profile" />
-            ) : (
-              <div className="w-32 h-32 rounded-[2rem] bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0 shadow-inner">
-                <span className="text-2xl md:text-4xl">🎨</span>
-              </div>
-            )}
-            <div className="text-center md:text-left flex-1">
-              <h1 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight mb-3">{parsedConfig.title || "Benim Çalışmalarım"}</h1>
-              <p className="text-slate-500 leading-relaxed font-medium">{parsedConfig.description || "Yaratıcı tasarımcı ve geliştirici."}</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-            {[
-              { title: "Behance", url: parsedConfig.behanceUrl, icon: "🎨", color: "bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100" },
-              { title: "Dribbble", url: parsedConfig.dribbbleUrl, icon: "🏀", color: "bg-pink-50 text-pink-600 hover:bg-pink-100 border-pink-100" },
-              { title: "GitHub", url: parsedConfig.githubUrl, icon: "💻", color: "bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200" }
-            ].map(link => link.url ? (
-              <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className={`flex flex-col items-center justify-center py-6 px-4 rounded-2xl border transition-all ${link.color}`}>
-                <span className="text-xl md:text-3xl mb-2">{link.icon}</span>
-                <span className="font-bold text-sm">{link.title}</span>
-              </a>
-            ) : null)}
-          </div>
-          
-          <button className="w-full py-5 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
-            {parsedConfig.buttonText || "Projelerime Göz At"}
-          </button>
-        </div>
-      </div>
-    );
-  }
+ if (matchingAddon.addonType === "PORTFOLIO") {
+ return (
+ <div className="w-full min-h-screen bg-[#f3f4f6] flex flex-col items-center py-12 px-4">
+ <div className="w-full max-w-2xl bg-white p-4 md:p-8 md:p-12 rounded-[2rem] shadow-xl">
+ <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-8 mb-10">
+ {parsedConfig.avatarUrl ? (
+ <img src={parsedConfig.avatarUrl} className="w-32 h-32 rounded-[2rem] object-cover shadow-lg shrink-0" alt="Profile" />
+ ) : (
+ <div className="w-32 h-32 rounded-[2rem] bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0 shadow-inner">
+ <span className="text-2xl md:text-4xl">🎨</span>
+ </div>
+ )}
+ <div className="text-center md:text-left flex-1">
+ <h1 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight mb-3">{parsedConfig.title || "Benim Çalışmalarım"}</h1>
+ <p className="text-slate-500 leading-relaxed font-medium">{parsedConfig.description || "Yaratıcı tasarımcı ve geliştirici."}</p>
+ </div>
+ </div>
+ 
+ <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+ {[
+ { title: "Behance", url: parsedConfig.behanceUrl, icon: "🎨", color: "bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-100" },
+ { title: "Dribbble", url: parsedConfig.dribbbleUrl, icon: "🏀", color: "bg-pink-50 text-pink-600 hover:bg-pink-100 border-pink-100" },
+ { title: "GitHub", url: parsedConfig.githubUrl, icon: "💻", color: "bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200" }
+ ].map(link => link.url ? (
+ <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className={`flex flex-col items-center justify-center py-6 px-4 rounded-2xl border transition-all ${link.color}`}>
+ <span className="text-xl md:text-3xl mb-2">{link.icon}</span>
+ <span className="font-bold text-sm">{link.title}</span>
+ </a>
+ ) : null)}
+ </div>
+ 
+ <button className="w-full py-5 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
+ {parsedConfig.buttonText || "Projelerime Göz At"}
+ </button>
+ </div>
+ </div>
+ );
+ }
 
-  if (matchingAddon.addonType === "FAQ") {
-    const qas = (parsedConfig.questionsText || "Kargo ne zaman ulaşır?|2-3 iş günü içinde.; İade var mı?|Evet, 14 gün içinde.;")
-      .split(';')
-      .map((pair: string) => pair.split('|'))
-      .filter((pair: string[]) => pair.length === 2 && pair[0].trim() !== "");
+ if (matchingAddon.addonType === "FAQ") {
+ const qas = (parsedConfig.questionsText || "Kargo ne zaman ulaşır?|2-3 iş günü içinde.; İade var mı?|Evet, 14 gün içinde.;")
+ .split(';')
+ .map((pair: string) => pair.split('|'))
+ .filter((pair: string[]) => pair.length === 2 && pair[0].trim() !== "");
 
-    return (
-      <div className="w-full min-h-screen bg-emerald-50/50 flex flex-col items-center py-12 px-4">
-        <div className="w-full max-w-2xl bg-white p-4 md:p-8 md:p-12 rounded-[2rem] shadow-xl">
-          <div className="text-center mb-10">
-            {parsedConfig.avatarUrl ? (
-              <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full object-cover mx-auto shadow-md mb-6" alt="Profile" />
-            ) : (
-              <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-6">
-                <span className="text-xl md:text-3xl">💡</span>
-              </div>
-            )}
-            <h1 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight">{parsedConfig.title || "Sıkça Sorulan Sorular"}</h1>
-          </div>
-          
-          <div className="space-y-4 mb-10">
-            {qas.length > 0 ? qas.map(([q, a]: [string, string], i: number) => (
-              <div key={i} className="bg-zinc-50 border border-zinc-100 rounded-2xl p-3 md:p-6">
-                <h3 className="text-lg font-bold text-slate-800 mb-2 flex gap-3">
-                  <span className="text-emerald-500">Q.</span>
-                  {q.trim()}
-                </h3>
-                <p className="text-slate-600 leading-relaxed font-medium flex gap-3">
-                  <span className="text-slate-300 font-bold">A.</span>
-                  {a.trim()}
-                </p>
-              </div>
-            )) : (
-              <div className="text-center p-3 md:p-6 bg-zinc-50 rounded-2xl text-slate-500">Soru bulunamadı.</div>
-            )}
-          </div>
-          
-          <a href={parsedConfig.contactUrl || "mailto:info@domain.com"} className="block text-center w-full py-5 rounded-2xl bg-emerald-500 text-white font-bold text-lg hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/30">
-            {parsedConfig.buttonText || "Bize Ulaşın"}
-          </a>
-        </div>
-      </div>
-    );
-  }
+ return (
+ <div className="w-full min-h-screen bg-emerald-50/50 flex flex-col items-center py-12 px-4">
+ <div className="w-full max-w-2xl bg-white p-4 md:p-8 md:p-12 rounded-[2rem] shadow-xl">
+ <div className="text-center mb-10">
+ {parsedConfig.avatarUrl ? (
+ <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full object-cover mx-auto shadow-md mb-6" alt="Profile" />
+ ) : (
+ <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-6">
+ <span className="text-xl md:text-3xl">💡</span>
+ </div>
+ )}
+ <h1 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight">{parsedConfig.title || "Sıkça Sorulan Sorular"}</h1>
+ </div>
+ 
+ <div className="space-y-4 mb-10">
+ {qas.length > 0 ? qas.map(([q, a]: [string, string], i: number) => (
+ <div key={i} className="bg-zinc-50 border border-zinc-100 rounded-2xl p-3 md:p-6">
+ <h3 className="text-lg font-bold text-slate-800 mb-2 flex gap-3">
+ <span className="text-emerald-500">Q.</span>
+ {q.trim()}
+ </h3>
+ <p className="text-slate-600 leading-relaxed font-medium flex gap-3">
+ <span className="text-slate-300 font-bold">A.</span>
+ {a.trim()}
+ </p>
+ </div>
+ )) : (
+ <div className="text-center p-3 md:p-6 bg-zinc-50 rounded-2xl text-slate-500">Soru bulunamadı.</div>
+ )}
+ </div>
+ 
+ <a href={parsedConfig.contactUrl || "mailto:info@domain.com"} className="block text-center w-full py-5 rounded-2xl bg-emerald-500 text-white font-bold text-lg hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/30">
+ {parsedConfig.buttonText || "Bize Ulaşın"}
+ </a>
+ </div>
+ </div>
+ );
+ }
 
-  if (matchingAddon.addonType === "MAP") {
-    return (
-      <div className="w-full min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col">
-          <div className="h-48 bg-slate-200 relative">
-            <div className="absolute inset-0 bg-blue-100/50 flex flex-col items-center justify-center text-blue-500">
-              <span className="text-3xl md:text-5xl mb-2">🗺️</span>
-              <span className="font-bold text-sm tracking-widest uppercase opacity-50">Harita Yükleniyor...</span>
-            </div>
-            {parsedConfig.avatarUrl && (
-              <img src={parsedConfig.avatarUrl} className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white object-cover shadow-md z-10" alt="Location" />
-            )}
-          </div>
-          
-          <div className={`p-4 md:p-8 flex flex-col items-center text-center ${parsedConfig.avatarUrl ? 'pt-14' : 'pt-8'}`}>
-            <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Bizi Ziyaret Edin"}</h1>
-            <div className="inline-flex items-center gap-2 bg-zinc-100 text-slate-600 px-4 py-3 md:py-2.5 rounded-xl font-medium text-sm mb-8 max-w-full">
-              <span className="text-red-500">📍</span>
-              <span className="truncate">{parsedConfig.address || "İstanbul, Türkiye"}</span>
-            </div>
-            
-            <a href={parsedConfig.googleMapsUrl || "#"} target="_blank" rel="noopener noreferrer" className="w-full py-4 rounded-2xl bg-blue-600 text-white font-bold text-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20">
-              {parsedConfig.buttonText || "Yol Tarifi Al"}
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
+ if (matchingAddon.addonType === "MAP") {
+ return (
+ <div className="w-full min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4">
+ <div className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col">
+ <div className="h-48 bg-slate-200 relative">
+ <div className="absolute inset-0 bg-blue-100/50 flex flex-col items-center justify-center text-blue-500">
+ <span className="text-3xl md:text-5xl mb-2">🗺️</span>
+ <span className="font-bold text-sm tracking-widest uppercase opacity-50">Harita Yükleniyor...</span>
+ </div>
+ {parsedConfig.avatarUrl && (
+ <img src={parsedConfig.avatarUrl} className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white object-cover shadow-md z-10" alt="Location" />
+ )}
+ </div>
+ 
+ <div className={`p-4 md:p-8 flex flex-col items-center text-center ${parsedConfig.avatarUrl ? 'pt-14' : 'pt-8'}`}>
+ <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Bizi Ziyaret Edin"}</h1>
+ <div className="inline-flex items-center gap-2 bg-zinc-100 text-slate-600 px-4 py-3 md:py-2.5 rounded-xl font-medium text-sm mb-8 max-w-full">
+ <span className="text-red-500">📍</span>
+ <span className="truncate">{parsedConfig.address || "İstanbul, Türkiye"}</span>
+ </div>
+ 
+ <a href={parsedConfig.googleMapsUrl || "#"} target="_blank" rel="noopener noreferrer" className="w-full py-4 rounded-2xl bg-blue-600 text-white font-bold text-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20">
+ {parsedConfig.buttonText || "Yol Tarifi Al"}
+ </a>
+ </div>
+ </div>
+ </div>
+ );
+ }
 
-  if (matchingAddon.addonType === "WHATSAPP") {
-    return (
-      <div className="w-full min-h-screen bg-[#ece5dd] flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col">
-          <div className="bg-[#075e54] p-3 md:p-6 flex flex-col items-center text-center text-white">
-            {parsedConfig.avatarUrl ? (
-              <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full border-2 border-white/20 object-cover shadow-sm mb-4" alt="Profile" />
-            ) : (
-              <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-4">
-                <span className="text-xl md:text-3xl">💬</span>
-              </div>
-            )}
-            <h1 className="text-xl font-bold tracking-wide">{parsedConfig.title || "WhatsApp İletişim"}</h1>
-            <p className="text-white/70 text-sm mt-1 flex items-center gap-1.5 justify-center">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-              Çevrimiçi
-            </p>
-          </div>
-          
-          <div className="p-3 md:p-6 bg-[#e5ddd5] flex-1 flex flex-col justify-end min-h-[200px]">
-            <div className="bg-white p-4 rounded-2xl rounded-tl-sm shadow-sm self-start max-w-[85%] relative mb-4">
-              <p className="text-slate-800 text-[15px] leading-snug">{parsedConfig.welcomeMessage || "Merhaba, size nasıl yardımcı olabilirim?"}</p>
-              <span className="text-[10px] text-slate-400 block text-right mt-1.5">Şimdi</span>
-            </div>
-          </div>
-          
-          <div className="p-4 bg-white border-t border-zinc-100">
-            <a href={`https://wa.me/${parsedConfig.phoneNumber?.replace(/[^0-9]/g, '') || "905551234567"}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-[#25d366] text-white font-bold text-lg hover:bg-[#1ebd5a] transition-colors shadow-lg shadow-[#25d366]/30">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.711.928 3.144.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.066.376-.05c.101-.114.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zM20.056 3.96C17.898 1.802 15.029.61 12.01.61 5.753.61.66 5.703.658 11.963c0 1.996.52 3.945 1.509 5.666L.645 23.364l5.882-1.543c1.664.897 3.535 1.371 5.481 1.373 6.257 0 11.35-5.094 11.353-11.355.002-3.033-1.178-5.881-3.305-8.879z" /></svg>
-              {parsedConfig.buttonText || "Sohbete Başla"}
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
+ if (matchingAddon.addonType === "WHATSAPP") {
+ return (
+ <div className="w-full min-h-screen bg-[#ece5dd] flex items-center justify-center p-4">
+ <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col">
+ <div className="bg-[#075e54] p-3 md:p-6 flex flex-col items-center text-center text-white">
+ {parsedConfig.avatarUrl ? (
+ <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full border-2 border-white/20 object-cover shadow-sm mb-4" alt="Profile" />
+ ) : (
+ <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-4">
+ <span className="text-xl md:text-3xl">💬</span>
+ </div>
+ )}
+ <h1 className="text-xl font-bold tracking-wide">{parsedConfig.title || "WhatsApp İletişim"}</h1>
+ <p className="text-white/70 text-sm mt-1 flex items-center gap-1.5 justify-center">
+ <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+ Çevrimiçi
+ </p>
+ </div>
+ 
+ <div className="p-3 md:p-6 bg-[#e5ddd5] flex-1 flex flex-col justify-end min-h-[200px]">
+ <div className="bg-white p-4 rounded-2xl rounded-tl-sm shadow-sm self-start max-w-[85%] relative mb-4">
+ <p className="text-slate-800 text-[15px] leading-snug">{parsedConfig.welcomeMessage || "Merhaba, size nasıl yardımcı olabilirim?"}</p>
+ <span className="text-[10px] text-slate-400 block text-right mt-1.5">Şimdi</span>
+ </div>
+ </div>
+ 
+ <div className="p-4 bg-white border-t border-zinc-100">
+ <a href={`https://wa.me/${parsedConfig.phoneNumber?.replace(/[^0-9]/g, '') || "905551234567"}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-[#25d366] text-white font-bold text-lg hover:bg-[#1ebd5a] transition-colors shadow-lg shadow-[#25d366]/30">
+ <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.711.928 3.144.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.066.376-.05c.101-.114.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zM20.056 3.96C17.898 1.802 15.029.61 12.01.61 5.753.61.66 5.703.658 11.963c0 1.996.52 3.945 1.509 5.666L.645 23.364l5.882-1.543c1.664.897 3.535 1.371 5.481 1.373 6.257 0 11.35-5.094 11.353-11.355.002-3.033-1.178-5.881-3.305-8.879z" /></svg>
+ {parsedConfig.buttonText || "Sohbete Başla"}
+ </a>
+ </div>
+ </div>
+ </div>
+ );
+ }
 
-  // Fallback for other addon types
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <h1>Addon: {matchingAddon.addonType}</h1>
-    </div>
-  );
+ // Fallback for other addon types
+ return (
+ <div className="flex items-center justify-center min-h-screen">
+ <h1>Addon: {matchingAddon.addonType}</h1>
+ </div>
+ );
 }
