@@ -196,7 +196,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
 
       <div className="max-w-full md:w-[1800px] mx-auto px-6 pt-16 pb-6">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 text-rose-500 font-bold text-sm mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-rose-500/10 text-rose-500 font-bold text-sm mb-6">
             <Sparkles className="h-4 w-4" />
             <span>Premium Şablon Vitrini</span>
           </div>
@@ -219,7 +219,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                   setSelectedCategory(cat);
                   setVisibleCount(12);
                 }}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                className={`px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   selectedCategory === cat
                     ? "bg-gradient-to-r from-rose-500 to-orange-500 text-white shadow-md shadow-rose-500/20"
                     : "bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white"
@@ -242,7 +242,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                 setSearchQuery(e.target.value);
                 setVisibleCount(12);
               }}
-              className="w-full pl-10 pr-4 py-2 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white placeholder-zinc-500 transition-colors"
+              className="w-full pl-10 pr-4 py-3 md:py-2 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white placeholder-zinc-500 transition-colors"
             />
           </div>
         </div>
@@ -267,7 +267,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                     </div>
 
                     {/* Phone Mockup Frame */}
-                    <div className="relative w-full aspect-[1/2] max-w-[340px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6">
+                    <div className="relative w-full aspect-[1/2] max-w-full max-w-sm lg:w-[340px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6">
                       <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
                       
                       <div className="relative w-full h-full bg-zinc-950 rounded-[2rem] overflow-hidden">
@@ -326,7 +326,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
       {/* 💳 Simulated Checkout Modal */}
       {checkoutTemplate && (
         <div className="fixed inset-0 z-55 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-sm rounded-[2rem] bg-zinc-950 border border-zinc-900 shadow-2xl relative overflow-hidden p-6 space-y-6">
+          <div className="w-full max-w-sm rounded-[2rem] bg-zinc-950 border border-zinc-900 shadow-2xl relative overflow-hidden p-3 md:p-6 space-y-6">
             <button onClick={() => setCheckoutTemplate(null)} className="absolute top-4 right-4 p-2 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white cursor-pointer transition-colors">
               <X className="h-4 w-4" />
             </button>

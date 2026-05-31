@@ -1439,9 +1439,9 @@ export default function DashboardClient({
 
   const renderSimulator = () => {
     return (
-      <div className="hidden lg:block w-[360px] shrink-0 sticky top-32 self-start">
+      <div className="hidden lg:block w-full max-w-sm lg:w-[360px] shrink-0 sticky top-32 self-start">
         <div className="text-center mb-4">
-          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${
+          <span className={`inline-flex items-center gap-1.5 px-3 py-3 md:py-2.5 md:py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${
             "bg-white border-zinc-200 text-zinc-700 shadow-sm"
           }`}>
             <Laptop className="h-3 w-3" />
@@ -1512,7 +1512,7 @@ export default function DashboardClient({
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 p-6 max-w-7xl mx-auto flex flex-col gap-6 font-corporate overflow-x-hidden ${
+    <div className={`min-h-screen transition-colors duration-500 p-3 md:p-6 max-w-7xl mx-auto flex flex-col gap-6 font-corporate overflow-x-hidden ${
       "bg-white text-zinc-900"
     }`}>
       <GlobalOverlayManager onStateChange={handleStateChange} />
@@ -1537,7 +1537,7 @@ export default function DashboardClient({
           {initialUser.role === "ADMIN" && (
             <Link
               href="/admin"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-red-950/20 border border-red-500/20 hover:border-red-400 text-red-400 text-xs font-bold transition-all"
+              className="flex items-center gap-1.5 px-4 py-3 md:py-2 rounded-full bg-red-950/20 border border-red-500/20 hover:border-red-400 text-red-400 text-xs font-bold transition-all"
             >
               <span>{t.adminStudio}</span>
             </Link>
@@ -1545,7 +1545,7 @@ export default function DashboardClient({
 
           <Link
             href="/dashboard/billing"
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-all ${
+            className={`flex items-center gap-1.5 px-4 py-3 md:py-2 rounded-full border text-xs font-semibold transition-all ${
               "bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 shadow-sm"
             }`}
           >
@@ -1557,7 +1557,7 @@ export default function DashboardClient({
               href={`/${username}`}
               target="_blank"
               rel="noreferrer"
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-3 md:py-2 rounded-full border text-xs font-semibold transition-all ${
                 "bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 shadow-sm"
               }`}
             >
@@ -1569,7 +1569,7 @@ export default function DashboardClient({
           {/* Logout Button */}
           <SignOutButton>
             <button
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full border text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 px-4 py-3 md:py-2 rounded-full border text-xs font-semibold transition-all ${
                 "bg-red-50 border-red-200 hover:bg-red-100 text-red-600 shadow-sm"
               }`}
             >
@@ -1586,7 +1586,7 @@ export default function DashboardClient({
       }`}>
         <button
           onClick={() => setActiveTab("editor")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "editor"
               ? "bg-teal-500 border-teal-500 text-white shadow-sm"
               : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
@@ -1609,7 +1609,7 @@ export default function DashboardClient({
             }
             setActiveTab("analytics");
           }}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "analytics"
               ? "bg-teal-500 border-teal-500 text-white shadow-sm"
               : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
@@ -1622,7 +1622,7 @@ export default function DashboardClient({
 
         <button
           onClick={() => setActiveTab("qr")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "qr"
               ? "bg-teal-500 border-teal-500 text-white shadow-sm"
               : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
@@ -1634,7 +1634,7 @@ export default function DashboardClient({
 
         <button
           onClick={() => setActiveTab("seo")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "seo"
               ? "bg-teal-500 border-teal-500 text-white shadow-sm"
               : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
@@ -1646,7 +1646,7 @@ export default function DashboardClient({
 
         <button
           onClick={() => setActiveTab("templates")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "templates"
               ? "bg-teal-500 border-teal-500 text-white shadow-sm"
               : "bg-white border-zinc-200 text-zinc-650 hover:bg-zinc-100 hover:text-zinc-900"
@@ -1659,7 +1659,7 @@ export default function DashboardClient({
         
         <button
           onClick={() => setActiveTab("addons")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "addons"
               ? "bg-rose-500 border-rose-500 text-white shadow-sm"
               : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
@@ -1671,7 +1671,7 @@ export default function DashboardClient({
 
         <button
           onClick={() => setActiveTab("store")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+          className={`flex items-center gap-2 px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all border cursor-pointer ${
             activeTab === "store"
               ? "bg-indigo-500 border-indigo-500 text-white shadow-sm"
               : "bg-indigo-50 border-indigo-100 text-indigo-600 hover:bg-indigo-100"
@@ -1685,7 +1685,7 @@ export default function DashboardClient({
 
         <button
           onClick={() => setIsShareModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all border cursor-pointer bg-slate-900 text-white hover:bg-slate-800 border-slate-900 shadow-sm"
+          className="flex items-center gap-2 px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all border cursor-pointer bg-slate-900 text-white hover:bg-slate-800 border-slate-900 shadow-sm"
         >
           <Share2 className="h-3.5 w-3.5" />
           {lang === "tr" ? "Paylaş & İşbirliği" : "Share & Collaborate"}
@@ -1770,7 +1770,7 @@ export default function DashboardClient({
                       <button
                         onClick={handleSaveProfile}
                         disabled={isPending}
-                        className={`flex items-center gap-1.5 px-4.5 py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
+                        className={`flex items-center gap-1.5 px-4.5 py-3 md:py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
                           "bg-zinc-900 text-white hover:bg-zinc-800 shadow-md shadow-zinc-950/15"
                         }`}
                       >
@@ -1790,7 +1790,7 @@ export default function DashboardClient({
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className={`flex-1 bg-transparent py-2.5 outline-none text-sm ${"text-zinc-900"}`}
+                            className={`flex-1 bg-transparent py-3 md:py-2.5 outline-none text-sm ${"text-zinc-900"}`}
                             placeholder="username"
                           />
                         </div>
@@ -1814,7 +1814,7 @@ export default function DashboardClient({
                           </div>
                           <div className="space-y-1.5">
                             <div className="flex gap-2">
-                              <label className={`px-3.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
+                              <label className={`px-3.5 py-3 md:py-2.5 md:py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
                                 "bg-white hover:bg-zinc-55 border-zinc-300 text-zinc-700 shadow-sm"
                               }`}>
                                 {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
@@ -1844,7 +1844,7 @@ export default function DashboardClient({
                                 <button
                                   type="button"
                                   onClick={() => setAvatarUrl("")}
-                                  className={`px-3.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
+                                  className={`px-3.5 py-3 md:py-2.5 md:py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
                                     "bg-red-50 hover:bg-red-100 border-red-200 text-red-600"
                                   }`}
                                 >
@@ -1864,7 +1864,7 @@ export default function DashboardClient({
                         <textarea
                           value={bio}
                           onChange={(e) => setBio(e.target.value)}
-                          className={`w-full px-4 py-2.5 rounded-xl border focus:border-teal-500/50 outline-none text-sm ${
+                          className={`w-full px-4 py-3 md:py-2.5 rounded-xl border focus:border-teal-500/50 outline-none text-sm ${
                             "bg-zinc-100 border-zinc-200 text-zinc-900"
                           }`}
                           placeholder={t.bioPlaceholder}
@@ -2005,7 +2005,7 @@ export default function DashboardClient({
                         type="button"
                         onClick={handleSaveProfile}
                         disabled={isPending}
-                        className={`flex items-center gap-1.5 px-4.5 py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
+                        className={`flex items-center gap-1.5 px-4.5 py-3 md:py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
                           "bg-zinc-900 text-white hover:bg-zinc-800 shadow-md shadow-zinc-950/15"
                         }`}
                       >
@@ -2121,7 +2121,7 @@ export default function DashboardClient({
                             </div>
                             <Link
                               href="/dashboard/billing"
-                              className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-black font-extrabold text-[10px] uppercase rounded-xl transition-all whitespace-nowrap"
+                              className="px-4 py-3 md:py-2 bg-amber-500 hover:bg-amber-600 text-black font-extrabold text-[10px] uppercase rounded-xl transition-all whitespace-nowrap"
                             >
                               {lang === "tr" ? "Şimdi Yükselt" : "Upgrade Now"}
                             </Link>
@@ -2156,7 +2156,7 @@ export default function DashboardClient({
                         key={p}
                         type="button"
                         onClick={() => setSimulatedPlan(p)}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer select-none ${
+                        className={`px-3.5 py-3 md:py-2.5 md:py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer select-none ${
                           simulatedPlan === p
                             ? "bg-teal-500 border-teal-500 text-white shadow-md"
                             : "bg-white border-zinc-200 text-zinc-700 hover:bg-zinc-50 shadow-sm"
@@ -2169,7 +2169,7 @@ export default function DashboardClient({
               </div>
 
               {/* Refined Custom Backgrounds Selector */}
-              <div className={`p-6 rounded-2xl border space-y-4 relative overflow-hidden ${
+              <div className={`p-3 md:p-6 rounded-2xl border space-y-4 relative overflow-hidden ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="flex items-center justify-between">
@@ -2182,7 +2182,7 @@ export default function DashboardClient({
                   {background && (
                     <button
                       onClick={() => setBackground("")}
-                      className={`px-3 py-1 rounded bg-zinc-850 hover:bg-gray-50 text-zinc-300 font-extrabold text-[10px] transition-all cursor-pointer`}
+                      className={`px-3 py-3 md:py-2.5 md:py-1 rounded bg-zinc-850 hover:bg-gray-50 text-zinc-300 font-extrabold text-[10px] transition-all cursor-pointer`}
                     >
                       {lang === "tr" ? "Varsayılana Sıfırla" : "Reset to Default"}
                     </button>
@@ -2233,7 +2233,7 @@ export default function DashboardClient({
                             ? "Kendi özel resimlerinizi veya videolarınızı arka plan olarak kullanmak Premium pakete özeldir. Hemen yükseltin!"
                             : "Uploading custom background assets is exclusive to our Premium plans. Upgrade now to unlock!"
                         )}
-                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-teal-500/30 bg-purple-950/15 hover:bg-purple-900/30 text-teal-500 font-extrabold text-xs transition-all cursor-pointer"
+                        className="flex items-center gap-1.5 px-4 py-3 md:py-2.5 rounded-xl border border-teal-500/30 bg-purple-950/15 hover:bg-purple-900/30 text-teal-500 font-extrabold text-xs transition-all cursor-pointer"
                       >
                         <Lock className="h-3.5 w-3.5" />
                         {lang === "tr" ? "Görsel Yükle" : "Upload Photo"}
@@ -2278,7 +2278,7 @@ export default function DashboardClient({
                           <p className="text-[10px] text-red-400 font-bold mt-1">{customBgError}</p>
                         )}
                       </div>
-                      <label className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border cursor-pointer font-extrabold text-xs transition-all select-none ${
+                      <label className={`flex items-center gap-2 px-4 py-3 md:py-2.5 rounded-xl border cursor-pointer font-extrabold text-xs transition-all select-none ${
                         "bg-indigo-50 hover:bg-indigo-100 border-indigo-200 text-indigo-700"
                       }`}>
                         <Image className="h-3.5 w-3.5" />
@@ -2356,7 +2356,7 @@ export default function DashboardClient({
                             <p className="text-[10px] text-red-400 font-bold">{customBgError}</p>
                           )}
                         </div>
-                        <label className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border cursor-pointer font-extrabold text-xs transition-all select-none ${
+                        <label className={`flex items-center justify-center gap-2 px-4 py-3 md:py-2.5 rounded-xl border cursor-pointer font-extrabold text-xs transition-all select-none ${
                           "bg-purple-100 hover:bg-purple-200 border-purple-300 text-purple-800"
                         }`}>
                           <Image className="h-3.5 w-3.5" />
@@ -2405,7 +2405,7 @@ export default function DashboardClient({
                             <p className="text-[10px] text-red-400 font-bold">{customBgError}</p>
                           )}
                         </div>
-                        <label className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border cursor-pointer font-extrabold text-xs transition-all select-none ${
+                        <label className={`flex items-center justify-center gap-2 px-4 py-3 md:py-2.5 rounded-xl border cursor-pointer font-extrabold text-xs transition-all select-none ${
                           "bg-amber-100 hover:bg-amber-200 border-amber-300 text-amber-800"
                         }`}>
                           <Play className="h-3.5 w-3.5" />
@@ -2461,7 +2461,7 @@ export default function DashboardClient({
                           type="button"
                           onClick={handleSaveProfile}
                           disabled={isPending}
-                          className={`flex items-center gap-1.5 px-4.5 py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
+                          className={`flex items-center gap-1.5 px-4.5 py-3 md:py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
                             "bg-zinc-900 text-white hover:bg-zinc-800 shadow-md shadow-zinc-950/15"
                           }`}
                         >
@@ -2541,7 +2541,7 @@ export default function DashboardClient({
                           <select
                             value={btnBorderStyle}
                             onChange={(e) => setBtnBorderStyle(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
+                            className="w-full px-3 py-3 md:py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
                           >
                             <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
                             <option value="dashed">{lang === "tr" ? "Kesikli (Dashed)" : "Dashed"}</option>
@@ -2560,7 +2560,7 @@ export default function DashboardClient({
                           <select
                             value={btnBorderWidth}
                             onChange={(e) => setBtnBorderWidth(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
+                            className="w-full px-3 py-3 md:py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
                           >
                             <option value="0px">0px</option>
                             <option value="1px">1px</option>
@@ -2578,7 +2578,7 @@ export default function DashboardClient({
                           <select
                             value={btnBorderRadius}
                             onChange={(e) => setBtnBorderRadius(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
+                            className="w-full px-3 py-3 md:py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
                           >
                             <option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp (0px)"}</option>
                             <option value="4px">4px</option>
@@ -2600,7 +2600,7 @@ export default function DashboardClient({
                           <select
                             value={btnShadow}
                             onChange={(e) => setBtnShadow(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
+                            className="w-full px-3 py-3 md:py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
                           >
                             <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
                             <option value="soft">{lang === "tr" ? "Yumuşak (Soft)" : "Soft"}</option>
@@ -2617,7 +2617,7 @@ export default function DashboardClient({
                           <select
                             value={btnFontWeight}
                             onChange={(e) => setBtnFontWeight(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
+                            className="w-full px-3 py-3 md:py-2.5 rounded-xl border border-zinc-200 text-sm font-bold text-zinc-900 outline-none bg-white focus:border-teal-500"
                           >
                             <option value="font-normal">{lang === "tr" ? "Normal" : "Normal"}</option>
                             <option value="font-medium">{lang === "tr" ? "Orta (Medium)" : "Medium"}</option>
@@ -2672,7 +2672,7 @@ export default function DashboardClient({
                 };
 
                 return (
-                  <div className={`p-6 rounded-2xl border space-y-6 ${
+                  <div className={`p-3 md:p-6 rounded-2xl border space-y-6 ${
                     "bg-white border-zinc-200 shadow-sm"
                   }`}>
                     <div className="flex items-center justify-between">
@@ -2688,7 +2688,7 @@ export default function DashboardClient({
                             setNewTitle("");
                             setNewUrl("");
                           }}
-                          className="px-3 py-1 rounded bg-gray-50 hover:bg-zinc-700 text-zinc-300 font-extrabold text-[10px] transition-all cursor-pointer"
+                          className="px-3 py-3 md:py-2.5 md:py-1 rounded bg-gray-50 hover:bg-zinc-700 text-zinc-300 font-extrabold text-[10px] transition-all cursor-pointer"
                         >
                           {lang === "tr" ? "Şablon Seçimine Dön" : "Change Template"}
                         </button>
@@ -3096,7 +3096,7 @@ export default function DashboardClient({
                                 key={iconOption.id}
                                 type="button"
                                 onClick={() => setNewLinkIcon(iconOption.id)}
-                                className={`px-3 py-2 rounded-xl flex items-center gap-1.5 text-xs font-bold transition-all ${
+                                className={`px-3 py-3 md:py-2 rounded-xl flex items-center gap-1.5 text-xs font-bold transition-all ${
                                   newLinkIcon === iconOption.id 
                                     ? "bg-emerald-500 text-white shadow-md" 
                                     : "bg-slate-100 text-slate-600 hover:bg-slate-200"
@@ -3213,7 +3213,7 @@ export default function DashboardClient({
                                     }
                                     handleUpdateAnimation(link.id, anim.id);
                                   }}
-                                  className={`px-2 py-1 rounded-md text-[10px] font-bold border transition-all cursor-pointer flex items-center gap-1.5 ${
+                                  className={`px-2 py-3 md:py-2.5 md:py-1 rounded-md text-[10px] font-bold border transition-all cursor-pointer flex items-center gap-1.5 ${
                                     isSelected
                                       ? "bg-teal-500 border-light-blue text-white shadow-sm"
                                       : "bg-zinc-50 hover:bg-zinc-100 text-zinc-650 border-zinc-200"
@@ -3320,7 +3320,7 @@ export default function DashboardClient({
                                   type="button"
                                   disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                   onClick={() => applyPresetTheme(link.id, presetTheme)}
-                                  className="px-2.5 py-1.5 rounded-lg text-[9px] font-black border border-gray-100 hover:border-teal-500/50 bg-gray-50 text-zinc-300 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+                                  className="px-2.5 py-3 md:py-2.5 md:py-1.5 rounded-lg text-[9px] font-black border border-gray-100 hover:border-teal-500/50 bg-gray-50 text-zinc-300 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
                                 >
                                   <span className="w-2 h-2 rounded-full border border-zinc-700 shrink-0" style={{ backgroundColor: presetTheme.bgColor === "transparent" ? "#fff" : presetTheme.bgColor }} />
                                   {presetTheme.name}
@@ -3383,7 +3383,7 @@ export default function DashboardClient({
                                     shadow: link.shadow || "none",
                                     fontWeight: link.fontWeight || "font-bold",
                                   })}
-                                  className="flex items-center gap-2 px-3 py-2 rounded-2xl border border-gray-100 bg-gray-50 hover:bg-gray-50 hover:border-zinc-700 hover:shadow-lg hover:shadow-zinc-950/20 transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed group"
+                                  className="flex items-center gap-2 px-3 py-3 md:py-2 rounded-2xl border border-gray-100 bg-gray-50 hover:bg-gray-50 hover:border-zinc-700 hover:shadow-lg hover:shadow-zinc-950/20 transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed group"
                                 >
                                   {/* Color circles */}
                                   <div className="flex items-center gap-1 shrink-0">
@@ -3565,7 +3565,7 @@ export default function DashboardClient({
                                 value={link.borderStyle || "solid"}
                                 disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "borderStyle", e.target.value)}
-                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
+                                className="text-[10px] font-bold py-3 md:py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
                               >
                                 <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
                                 <option value="dashed">{lang === "tr" ? "Kesikli (Dashed)" : "Dashed"}</option>
@@ -3584,7 +3584,7 @@ export default function DashboardClient({
                                 value={link.borderWidth || "1px"}
                                 disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "borderWidth", e.target.value)}
-                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
+                                className="text-[10px] font-bold py-3 md:py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
                               >
                                 <option value="1px">1px</option>
                                 <option value="2px">2px</option>
@@ -3602,7 +3602,7 @@ export default function DashboardClient({
                                 value={link.borderRadius || "12px"}
                                 disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "borderRadius", e.target.value)}
-                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
+                                className="text-[10px] font-bold py-3 md:py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
                               >
                                 <option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp (0px)"}</option>
                                 <option value="8px">8px</option>
@@ -3621,7 +3621,7 @@ export default function DashboardClient({
                                 value={link.shadow || "none"}
                                 disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "shadow", e.target.value)}
-                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
+                                className="text-[10px] font-bold py-3 md:py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
                               >
                                 <option value="none">{lang === "tr" ? "Gölgesiz" : "No Shadow"}</option>
                                 <option value="soft">{lang === "tr" ? "Yumuşak Gölge" : "Soft Shadow"}</option>
@@ -3640,7 +3640,7 @@ export default function DashboardClient({
                                 value={link.fontWeight || "font-bold"}
                                 disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
                                 onChange={(e) => handleUpdateLinkStyle(link.id, "fontWeight", e.target.value)}
-                                className="text-[10px] font-bold py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
+                                className="text-[10px] font-bold py-3 md:py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
                               >
                                 <option value="font-normal">{lang === "tr" ? "Normal" : "Normal"}</option>
                                 <option value="font-medium">{lang === "tr" ? "Orta (Medium)" : "Medium"}</option>
@@ -3664,7 +3664,7 @@ export default function DashboardClient({
           {/* TAB 5: OWNED TEMPLATES (ŞABLONLARIM) */}
         {activeTab === "templates" && (
           <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
-            <div className={`p-6 rounded-2xl border space-y-6 ${
+            <div className={`p-3 md:p-6 rounded-2xl border space-y-6 ${
               "bg-white border-zinc-200 shadow-sm"
             }`}>
               <div className="flex items-center justify-between border-b border-zinc-150 pb-5">
@@ -3683,7 +3683,7 @@ export default function DashboardClient({
                 </div>
                 <Link
                   href="/sablonlar"
-                  className="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 text-xs font-black transition-colors cursor-pointer"
+                  className="px-4 py-3 md:py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 text-xs font-black transition-colors cursor-pointer"
                 >
                   {lang === "tr" ? "Yeni Şablon Al" : "Browse Showcase"}
                 </Link>
@@ -3732,7 +3732,7 @@ export default function DashboardClient({
                       setSuccessMsg(lang === "tr" ? "Bağlantı kopyalandı!" : "Link copied!");
                       setTimeout(() => setSuccessMsg(""), 2000);
                     }}
-                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-white border border-zinc-200 hover:bg-zinc-50 text-xs font-bold text-zinc-700 transition-colors cursor-pointer"
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-3 md:py-2 rounded-lg bg-white border border-zinc-200 hover:bg-zinc-50 text-xs font-bold text-zinc-700 transition-colors cursor-pointer"
                   >
                     <Copy className="h-3.5 w-3.5" />
                     {lang === "tr" ? "Kopyala" : "Copy"}
@@ -3756,7 +3756,7 @@ export default function DashboardClient({
                       
                       window.open(finalUrl, "_blank");
                     }}
-                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-400 border border-teal-600/10 text-xs font-bold text-zinc-900 transition-colors cursor-pointer"
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-3 md:py-2 rounded-lg bg-teal-500 hover:bg-teal-400 border border-teal-600/10 text-xs font-bold text-zinc-900 transition-colors cursor-pointer"
                   >
                     <span>{lang === "tr" ? "Önizle" : "Preview"}</span>
                     <ExternalLink className="h-3.5 w-3.5" />
@@ -3781,7 +3781,7 @@ export default function DashboardClient({
                   </div>
                   <Link
                     href="/sablonlar"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 text-xs font-black transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-4 py-3 md:py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 text-xs font-black transition-colors cursor-pointer"
                   >
                     <span>{lang === "tr" ? "Şablon Vitrinine Git" : "Go to Showcase"}</span>
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -3841,7 +3841,7 @@ export default function DashboardClient({
                                 window.open(url, "_blank");
                               }
                             }}
-                            className="flex-1 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
+                            className="flex-1 py-3 md:py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
                           >
                             <Eye className="h-3.5 w-3.5" />
                             <span>{lang === "tr" ? "Canlı Önizle" : "Live Preview"}</span>
@@ -3856,7 +3856,7 @@ export default function DashboardClient({
                               setTheme(template.name);
                               setCustomizingTemplateId(customizingTemplateId === template.id ? null : template.id);
                             }}
-                            className="flex-1 py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
+                            className="flex-1 py-3 md:py-2 rounded-xl border border-zinc-200 hover:bg-zinc-100 text-zinc-700 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1"
                           >
                             <Settings className="h-3.5 w-3.5" />
                             <span>{lang === "tr" ? "Düzenle" : "Customize"}</span>
@@ -3936,7 +3936,7 @@ export default function DashboardClient({
                             <span className="text-xs font-bold text-zinc-400 whitespace-nowrap">link-saas.vercel.app/</span>
                             <input
                               type="text"
-                              className="w-full min-w-0 bg-transparent border-b border-zinc-200 outline-none focus:border-teal-500 py-1 text-sm font-semibold"
+                              className="w-full min-w-0 bg-transparent border-b border-zinc-200 outline-none focus:border-teal-500 py-3 md:py-2.5 md:py-1 text-sm font-semibold"
                               placeholder={lang === "tr" ? "kampanyam" : "my-campaign"}
                               defaultValue={(ownedTemplates.find((ut: any) => ut.id === template.id) as any)?.customUrl || ""}
                               onBlur={(e) => {
@@ -3968,7 +3968,7 @@ export default function DashboardClient({
                                   }
                                 });
                               }}
-                              className="flex-1 bg-white border border-zinc-200 rounded-lg px-2 py-1.5 text-xs font-bold text-zinc-800 outline-none focus:border-teal-500"
+                              className="flex-1 bg-white border border-zinc-200 rounded-lg px-2 py-3 md:py-2.5 md:py-1.5 text-xs font-bold text-zinc-800 outline-none focus:border-teal-500"
                             />
                           </div>
                           <p className="text-[9px] text-zinc-500 leading-tight">
@@ -3993,7 +3993,7 @@ export default function DashboardClient({
           <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
             {/* Top Summaries Grids */}
             <div className="grid md:grid-cols-4 gap-6">
-              <div className={`p-6 rounded-2xl border flex items-center justify-between ${
+              <div className={`p-3 md:p-6 rounded-2xl border flex items-center justify-between ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="space-y-1">
@@ -4005,7 +4005,7 @@ export default function DashboardClient({
                 </div>
               </div>
 
-              <div className={`p-6 rounded-2xl border flex items-center justify-between ${
+              <div className={`p-3 md:p-6 rounded-2xl border flex items-center justify-between ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="space-y-1">
@@ -4017,7 +4017,7 @@ export default function DashboardClient({
                 </div>
               </div>
 
-              <div className={`p-6 rounded-2xl border flex items-center justify-between ${
+              <div className={`p-3 md:p-6 rounded-2xl border flex items-center justify-between ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="space-y-1">
@@ -4029,14 +4029,14 @@ export default function DashboardClient({
                 </div>
               </div>
 
-              <div className={`p-6 rounded-2xl border flex flex-col justify-center space-y-2 ${
+              <div className={`p-3 md:p-6 rounded-2xl border flex flex-col justify-center space-y-2 ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">{lang === "tr" ? "Test Araçları" : "Verification Testing"}</span>
                 <button
                   onClick={handleMockTraffic}
                   disabled={isPending}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-extrabold text-xs transition-colors cursor-pointer shadow-[0_0_15px_rgba(45,212,191,0.25)]"
+                  className="w-full flex items-center justify-center gap-2 py-3 md:py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-extrabold text-xs transition-colors cursor-pointer shadow-[0_0_15px_rgba(45,212,191,0.25)]"
                 >
                   {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
                   {t.simTraffic}
@@ -4055,7 +4055,7 @@ export default function DashboardClient({
             ) : (
               <>
                 {/* Chart 1: Daily views & clicks */}
-                <div className={`p-6 rounded-2xl border space-y-4 ${
+                <div className={`p-3 md:p-6 rounded-2xl border space-y-4 ${
                   "bg-white border-zinc-200 shadow-sm"
                 }`}>
                   <h3 className={`font-extrabold text-sm uppercase tracking-wider ${"text-zinc-800"}`}>{t.trafficOverTime}</h3>
@@ -4086,7 +4086,7 @@ export default function DashboardClient({
                 {/* Sub aggregations grid */}
                 <div className="grid md:grid-cols-3 gap-6">
                   {/* Device and Browser splits */}
-                  <div className={`p-6 rounded-2xl border space-y-4 flex flex-col justify-between ${
+                  <div className={`p-3 md:p-6 rounded-2xl border space-y-4 flex flex-col justify-between ${
                     "bg-white border-zinc-200 shadow-sm"
                   }`}>
                     <h3 className={`font-extrabold text-xs uppercase tracking-wider ${"text-zinc-800"}`}>{t.devices} & {t.browsers}</h3>
@@ -4114,7 +4114,7 @@ export default function DashboardClient({
                   </div>
 
                   {/* Top Referrals split */}
-                  <div className={`p-6 rounded-2xl border space-y-4 ${
+                  <div className={`p-3 md:p-6 rounded-2xl border space-y-4 ${
                     "bg-white border-zinc-200 shadow-sm"
                   }`}>
                     <h3 className={`font-extrabold text-xs uppercase tracking-wider ${"text-zinc-800"}`}>{t.referrers}</h3>
@@ -4135,7 +4135,7 @@ export default function DashboardClient({
                   </div>
 
                   {/* Geolocation splits */}
-                  <div className={`p-6 rounded-2xl border space-y-4 flex flex-col justify-between ${
+                  <div className={`p-3 md:p-6 rounded-2xl border space-y-4 flex flex-col justify-between ${
                     "bg-white border-zinc-200 shadow-sm"
                   }`}>
                     <h3 className={`font-extrabold text-xs uppercase tracking-wider ${"text-zinc-800"}`}>{t.countries}</h3>
@@ -4162,7 +4162,7 @@ export default function DashboardClient({
                 </div>
 
                 {/* Table: Links Performance */}
-                <div className={`p-6 rounded-2xl border space-y-4 ${
+                <div className={`p-3 md:p-6 rounded-2xl border space-y-4 ${
                   "bg-white border-zinc-200 shadow-sm"
                 }`}>
                   <h3 className={`font-extrabold text-sm uppercase tracking-wider ${"text-zinc-800"}`}>{t.performanceInsights}</h3>
@@ -4244,7 +4244,7 @@ export default function DashboardClient({
           return (
             <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
               {/* Top Banner Alert / Quotas */}
-              <div className={`p-6 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden ${
+              <div className={`p-3 md:p-6 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="space-y-2 flex-1 w-full">
@@ -4348,7 +4348,7 @@ export default function DashboardClient({
                             </div>
 
                             {/* Center Preview QR Code */}
-                            <div className="flex justify-center py-2 bg-white rounded-xl p-3 border border-zinc-100">
+                            <div className="flex justify-center py-3 md:py-2 bg-white rounded-xl p-3 border border-zinc-100">
                               <QRCodeSVG
                                 value={qr.value}
                                 size={140}
@@ -4407,7 +4407,7 @@ export default function DashboardClient({
                                   link.target = "_blank";
                                   link.click();
                                 }}
-                                className={`flex items-center justify-center gap-1.5 py-2 rounded-xl border font-bold text-[10px] transition-colors cursor-pointer ${
+                                className={`flex items-center justify-center gap-1.5 py-3 md:py-2 rounded-xl border font-bold text-[10px] transition-colors cursor-pointer ${
                                   "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                 }`}
                               >
@@ -4422,7 +4422,7 @@ export default function DashboardClient({
                                   link.target = "_blank";
                                   link.click();
                                 }}
-                                className={`flex items-center justify-center gap-1.5 py-2 rounded-xl border font-bold text-[10px] transition-colors cursor-pointer ${
+                                className={`flex items-center justify-center gap-1.5 py-3 md:py-2 rounded-xl border font-bold text-[10px] transition-colors cursor-pointer ${
                                   "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                 }`}
                               >
@@ -4448,7 +4448,7 @@ export default function DashboardClient({
                         setQrMode("catalog");
                         setSelectedTemplate(null);
                       }}
-                      className={`px-4 py-2 rounded-full border text-xs font-bold transition-all cursor-pointer ${
+                      className={`px-4 py-3 md:py-2 rounded-full border text-xs font-bold transition-all cursor-pointer ${
                         "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50"
                       }`}
                     >
@@ -4456,7 +4456,7 @@ export default function DashboardClient({
                     </button>
 
                     {selectedTemplate && (
-                      <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black uppercase flex items-center gap-1.5">
+                      <span className="px-3 py-3 md:py-2.5 md:py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black uppercase flex items-center gap-1.5">
                         {lang === "tr" ? "Aktif Şablon" : "Active Template"}: {selectedTemplate}
                       </span>
                     )}
@@ -4543,7 +4543,7 @@ export default function DashboardClient({
                     <div className="flex flex-col lg:flex-row gap-8">
                       {/* Left: Input parameters */}
                       <div className="flex-1 space-y-6">
-                        <div className={`p-6 rounded-2xl border space-y-6 ${
+                        <div className={`p-3 md:p-6 rounded-2xl border space-y-6 ${
                           "bg-white border-zinc-200 shadow-sm"
                         }`}>
                           <div className="border-b pb-3 flex items-center gap-3">
@@ -4914,14 +4914,14 @@ export default function DashboardClient({
                       {/* Right: Live Responsive Preview Sticky Canvas */}
                       <div className="w-full lg:w-[320px] shrink-0 sticky top-32 self-start flex flex-col items-center gap-6">
                         <div className="text-center">
-                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[9px] font-black uppercase tracking-wider ${
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-3 md:py-2.5 md:py-1 rounded-full border text-[9px] font-black uppercase tracking-wider ${
                             "bg-white border-zinc-200 text-zinc-700 shadow-sm"
                           }`}>
                             {lang === "tr" ? "Canlı Önizleme" : "Live Real-Time Preview"}
                           </span>
                         </div>
 
-                        <div className={`p-6 rounded-3xl border flex flex-col items-center gap-5 w-full ${
+                        <div className={`p-3 md:p-6 rounded-3xl border flex flex-col items-center gap-5 w-full ${
                           "bg-white border-zinc-200 shadow-sm"
                         }`}>
                           <div className="p-4 bg-white rounded-2xl flex items-center justify-center border border-zinc-100 overflow-hidden shadow-sm">
@@ -4969,7 +4969,7 @@ export default function DashboardClient({
           <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
             
             {/* COLUMN 1: Social SEO Control */}
-            <div className={`p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isPremium ? "min-h-[300px]" : ""} ${
+            <div className={`p-3 md:p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isPremium ? "min-h-[300px]" : ""} ${
               "bg-white border-zinc-200 shadow-sm"
             }`}>
               <div className="flex items-center gap-3">
@@ -5032,7 +5032,7 @@ export default function DashboardClient({
 
               {/* Locked overlay */}
               {!isPremium && (
-                <div className="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-4">
+                <div className="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-3 md:p-6 text-center space-y-4">
                   <Lock className="h-10 w-10 text-teal-500" />
                   <div className="space-y-1 max-w-xs">
                     <h3 className="text-sm font-extrabold text-slate-900">{lang === "tr" ? "SEO Özelleştirmeleri Kilitli" : "SEO Customs are Locked"}</h3>
@@ -5047,7 +5047,7 @@ export default function DashboardClient({
                         ? "Meta başlık, açıklama ve anahtar kelime özelleştirmeleri gibi gelişmiş arama motoru optimizasyonu ayarlarını kullanmak Premium pakete özeldir."
                         : "Customizing SEO meta title, description and indexing keywords is exclusive to our Premium plans."
                     )}
-                    className="px-4 py-2 rounded-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold text-[10px] transition-colors cursor-pointer"
+                    className="px-4 py-3 md:py-2 rounded-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold text-[10px] transition-colors cursor-pointer"
                   >
                     {lang === "tr" ? "SEO Özelliklerinin Kilidini Aç" : "Unlock SEO Settings"}
                   </button>
@@ -5056,7 +5056,7 @@ export default function DashboardClient({
             </div>
 
             {/* COLUMN 2: Custom Domains Manager */}
-            <div className={`p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isCreator ? "min-h-[300px]" : ""} ${
+            <div className={`p-3 md:p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isCreator ? "min-h-[300px]" : ""} ${
               "bg-white border-zinc-200 shadow-sm"
             }`}>
               <div className="flex items-center gap-3">
@@ -5075,7 +5075,7 @@ export default function DashboardClient({
                       value={customDomain}
                       onChange={(e) => setCustomDomain(e.target.value)}
                       placeholder="links.erdem.com"
-                      className={`bg-transparent border-none outline-none py-2.5 text-xs flex-1 ${
+                      className={`bg-transparent border-none outline-none py-3 md:py-2.5 text-xs flex-1 ${
                         "text-zinc-900"
                       }`}
                     />
@@ -5083,7 +5083,7 @@ export default function DashboardClient({
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-extrabold text-xs transition-colors cursor-pointer"
+                    className="px-4 py-3 md:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-extrabold text-xs transition-colors cursor-pointer"
                   >
                     {lang === "tr" ? "Yapılandır" : "Configure"}
                   </button>
@@ -5114,9 +5114,9 @@ export default function DashboardClient({
                         </thead>
                         <tbody>
                           <tr className={"text-zinc-800"}>
-                            <td className="py-2">CNAME</td>
-                            <td className="py-2">links</td>
-                            <td className="py-2 flex items-center gap-1.5 font-bold text-purple-650">
+                            <td className="py-3 md:py-2">CNAME</td>
+                            <td className="py-3 md:py-2">links</td>
+                            <td className="py-3 md:py-2 flex items-center gap-1.5 font-bold text-purple-650">
                               cname.creator.hub
                               <button onClick={() => navigator.clipboard.writeText("cname.creator.hub")} className="p-1 rounded bg-gray-50 hover:bg-zinc-700 text-slate-500 cursor-pointer">
                                 <Copy className="h-3 w-3" />
@@ -5132,7 +5132,7 @@ export default function DashboardClient({
 
               {/* Locked overlay */}
               {!isCreator && (
-                <div className="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center space-y-4">
+                <div className="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-3 md:p-6 text-center space-y-4">
                   <Lock className="h-10 w-10 text-emerald-400" />
                   <div className="space-y-1 max-w-xs">
                     <h3 className="text-sm font-extrabold text-slate-900">{lang === "tr" ? "Özel Alan Adları Kilitli" : "Custom Domains are Locked"}</h3>
@@ -5147,7 +5147,7 @@ export default function DashboardClient({
                         ? "Kendi özel alan adınızı (cname) bağlamak ve beyaz etiketli (white-label) markalama oluşturmak Creator paketine özeldir."
                         : "Mapping custom domains and utilizing white-label branding requires the CREATOR plan."
                     )}
-                    className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-bold text-[10px] transition-colors cursor-pointer"
+                    className="px-4 py-3 md:py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-bold text-[10px] transition-colors cursor-pointer"
                   >
                     {lang === "tr" ? "Alan Adı Kilidini Aç" : "Unlock Domains"}
                   </button>
@@ -5211,7 +5211,7 @@ export default function DashboardClient({
                       } catch(e) {}
 
                       return (
-                    <div key={addon.id} className="p-6 rounded-2xl bg-white border border-zinc-200 shadow-sm flex flex-col justify-between h-48"> 
+                    <div key={addon.id} className="p-3 md:p-6 rounded-2xl bg-white border border-zinc-200 shadow-sm flex flex-col justify-between h-48"> 
                       <div className="flex items-start justify-between"> 
                         <div className="flex items-center gap-3"> 
                           <div className="w-10 h-10 rounded-xl bg-zinc-100 flex items-center justify-center border border-zinc-200"> 
@@ -5235,7 +5235,7 @@ export default function DashboardClient({
                       <div className="mt-4 pt-4 border-t border-zinc-100 flex items-center gap-2"> 
                         <button  
                           onClick={() => setEditingAddon(addon)} 
-                          className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2" 
+                          className="flex-1 py-3 md:py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2" 
                         > 
                           <Settings className="h-3.5 w-3.5" /> 
                           {lang === "tr" ? "Ayarla" : "Config"} 
@@ -5245,7 +5245,7 @@ export default function DashboardClient({
                               href={addonLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2"
+                              className="flex-1 py-3 md:py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-2"
                             >
                               <Globe className="h-3.5 w-3.5" />
                               {lang === "tr" ? "Linke Git" : "Visit Link"}
@@ -5295,7 +5295,7 @@ export default function DashboardClient({
         {activeTab === "editor" || activeTab === "templates" ? (
           renderSimulator()
         ) : (
-          <div className="hidden lg:block w-[360px] shrink-0 sticky top-32 self-start pointer-events-none opacity-0" />
+          <div className="hidden lg:block w-full max-w-sm lg:w-[360px] shrink-0 sticky top-32 self-start pointer-events-none opacity-0" />
         )}
 
       </div>
@@ -5308,7 +5308,7 @@ export default function DashboardClient({
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsShareModalOpen(false)} />
           <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-zinc-100 flex items-center justify-between">
+            <div className="p-3 md:p-6 border-b border-zinc-100 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-teal-50 flex items-center justify-center">
                   <Share2 className="h-5 w-5 text-teal-600" />
@@ -5323,7 +5323,7 @@ export default function DashboardClient({
               </button>
             </div>
             
-            <div className="p-6 space-y-8">
+            <div className="p-3 md:p-6 space-y-8">
               {/* Collaborate Section */}
               <div className="space-y-4">
                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">
@@ -5336,10 +5336,10 @@ export default function DashboardClient({
                     <input 
                       type="email" 
                       placeholder={lang === "tr" ? "Alıcı: Davetiye göndermek için e-posta girin." : "To: Enter email to send invite."}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none text-sm transition-all"
+                      className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-xl border border-zinc-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none text-sm transition-all"
                     />
                   </div>
-                  <button className="px-5 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+                  <button className="px-5 py-3 md:py-2.5 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
                     {lang === "tr" ? "Davet Et" : "Invite"}
                   </button>
                 </div>
@@ -5462,7 +5462,7 @@ export default function DashboardClient({
                                           <User className="h-5 w-5 text-slate-300" />
                                         )}
                                       </div>
-                                      <label className="px-4 py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-100 text-[11px] font-bold transition-all cursor-pointer select-none">
+                                      <label className="px-4 py-3 md:py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-100 text-[11px] font-bold transition-all cursor-pointer select-none">
                                         {lang === "tr" ? "Fotoğraf Değiştir" : "Change Photo"}
                                         <input
                                           type="file"
@@ -5492,7 +5492,7 @@ export default function DashboardClient({
                                       placeholder="#f2f2f2, linear-gradient..."
                                       value={background || ""}
                                       onChange={(e) => setBackground(e.target.value)}
-                                      className="w-full px-3 py-2.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white transition-colors"
+                                      className="w-full px-3 py-3 md:py-2.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white transition-colors"
                                     />
                                   </div>
 
@@ -5504,7 +5504,7 @@ export default function DashboardClient({
                                     <select
                                       value={fontStyle}
                                       onChange={(e) => setFontStyle(e.target.value)}
-                                      className="w-full px-3 py-2.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white transition-colors cursor-pointer appearance-none"
+                                      className="w-full px-3 py-3 md:py-2.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white transition-colors cursor-pointer appearance-none"
                                     >
                                       {initialFonts.map(font => (
                                         <option key={font.value} value={font.value}>{font.name}</option>
@@ -5651,7 +5651,7 @@ export default function DashboardClient({
                                     <select
                                       value={btnBorderStyle || "solid"}
                                       onChange={(e) => setBtnBorderStyle(e.target.value)}
-                                      className="w-full px-3 py-2.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 outline-none bg-slate-50 hover:bg-white"
+                                      className="w-full px-3 py-3 md:py-2.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 outline-none bg-slate-50 hover:bg-white"
                                     >
                                       <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
                                       <option value="dashed">{lang === "tr" ? "Kesik (Dashed)" : "Dashed"}</option>
@@ -5678,7 +5678,7 @@ export default function DashboardClient({
                                         placeholder="Link Başlığı"
                                         value={quickLinkTitle}
                                         onChange={(e) => setQuickLinkTitle(e.target.value)}
-                                        className="w-full px-3 py-2.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white"
+                                        className="w-full px-3 py-3 md:py-2.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white"
                                       />
                                     </div>
                                     <div className="space-y-1.5">
@@ -5688,7 +5688,7 @@ export default function DashboardClient({
                                         placeholder="https://..."
                                         value={quickLinkUrl}
                                         onChange={(e) => setQuickLinkUrl(e.target.value)}
-                                        className="w-full px-3 py-2.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white"
+                                        className="w-full px-3 py-3 md:py-2.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white"
                                       />
                                     </div>
                                   </div>
@@ -5856,7 +5856,7 @@ export default function DashboardClient({
                                   });
                                 }}
                                 disabled={isPending}
-                                className="flex-1 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-900 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1 border-none"
+                                className="flex-1 py-3 md:py-2.5 md:py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-900 text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1 border-none"
                               >
                                 <Check className="h-3 w-3" />
                                 <span>{lang === "tr" ? "Kaydet" : "Save"}</span>
@@ -5880,7 +5880,7 @@ export default function DashboardClient({
                                   setBtnFontWeight("font-bold");
                                     setBtnIconColor("");
                                   }}
-                                  className="px-2 py-1.5 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-650 text-[9px] font-black cursor-pointer bg-white"
+                                  className="px-2 py-3 md:py-2.5 md:py-1.5 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-650 text-[9px] font-black cursor-pointer bg-white"
                               >
                                 {lang === "tr" ? "Sıfırla" : "Reset"}
                               </button>

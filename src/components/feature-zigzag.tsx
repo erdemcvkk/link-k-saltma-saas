@@ -48,7 +48,7 @@ export default function FeatureZigzag({ features }: FeatureZigzagProps) {
             >
               {/* Text Content */}
               <div className="flex-1 space-y-8">
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-50 text-teal-600 text-xs font-bold uppercase tracking-wider mb-2">
+                <div className="inline-flex items-center space-x-2 px-3 py-3 md:py-2.5 md:py-1 rounded-full bg-teal-50 text-teal-600 text-xs font-bold uppercase tracking-wider mb-2">
                   <SparklesIcon className="h-3.5 w-3.5" />
                   <span>Feature 0{index + 1}</span>
                 </div>

@@ -146,7 +146,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
       {selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={closeCheckoutModal} />
-          <div className="relative w-full max-w-md bg-zinc-950 border border-zinc-800 shadow-2xl rounded-3xl p-6 overflow-hidden">
+          <div className="relative w-full max-w-md bg-zinc-950 border border-zinc-800 shadow-2xl rounded-3xl p-3 md:p-6 overflow-hidden">
             <button onClick={closeCheckoutModal} className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors">
               <X className="h-5 w-5" />
             </button>

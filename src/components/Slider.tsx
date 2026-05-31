@@ -69,7 +69,7 @@ export default function Slider({ isDark = true, initialItems = [] }: PhoneSlider
       <div className="max-w-6xl mx-auto px-6">
         {/* Section Title */}
         <div className="text-center mb-10">
-          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-black uppercase tracking-widest mb-4 ${
+          <span className={`inline-flex items-center gap-1.5 px-3 py-3 md:py-2.5 md:py-1 rounded-full border text-[10px] font-black uppercase tracking-widest mb-4 ${
             isDark ? "bg-purple-950/30 border-purple-500/30 text-purple-400" : "bg-purple-50 border-purple-200 text-purple-600"
           }`}>
             📱 Mobil Önizleme
@@ -175,14 +175,14 @@ export default function Slider({ isDark = true, initialItems = [] }: PhoneSlider
                 </div>
 
                 {/* Home Indicator */}
-                <div className={`flex justify-center py-2 ${isDark ? "bg-black" : "bg-white"}`}>
+                <div className={`flex justify-center py-3 md:py-2 ${isDark ? "bg-black" : "bg-white"}`}>
                   <div className={`w-28 h-1 rounded-full ${isDark ? "bg-zinc-700" : "bg-zinc-300"}`} />
                 </div>
               </div>
             </div>
 
             {/* Floating Badge */}
-            <div className={`absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full border text-[9px] font-black uppercase tracking-wider whitespace-nowrap z-20 ${
+            <div className={`absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-3 md:py-2.5 md:py-1.5 rounded-full border text-[9px] font-black uppercase tracking-wider whitespace-nowrap z-20 ${
               isDark 
                 ? "bg-zinc-950 border-purple-500/30 text-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.15)]" 
                 : "bg-white border-purple-200 text-purple-600 shadow-md"

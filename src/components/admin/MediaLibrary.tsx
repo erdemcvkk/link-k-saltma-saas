@@ -44,7 +44,7 @@ export default function MediaLibrary() {
   }, []);
 
   return (
-    <section className="p-6">
+    <section className="p-3 md:p-6">
       <h1 className="text-2xl font-semibold mb-4 text-zinc-800 dark:text-zinc-200">Medya Kütüphanesi</h1>
       <MediaUploadForm onUploadSuccess={fetchMedia} />
       {loading && <p className="mt-4 text-zinc-600 dark:text-zinc-400">Yükleniyor...</p>}

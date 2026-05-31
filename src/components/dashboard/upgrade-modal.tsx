@@ -33,7 +33,7 @@ export default function UpgradeModal({ isOpen, onClose, title, description, glob
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-3xl bg-zinc-950 border border-slate-800 p-6 text-center shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-md overflow-hidden rounded-3xl bg-zinc-950 border border-slate-800 p-3 md:p-6 text-center shadow-2xl animate-in fade-in zoom-in-95 duration-200">
         
         {/* Decorative Light Glow */}
         <div className="absolute -top-16 -left-16 w-32 h-32 bg-neon-blue/10 rounded-full blur-3xl pointer-events-none" />
@@ -121,7 +121,7 @@ export default function UpgradeModal({ isOpen, onClose, title, description, glob
             )}
             <button
               onClick={onClose}
-              className="w-full py-2.5 rounded-xl bg-transparent border border-zinc-900 hover:bg-zinc-900/50 text-zinc-500 hover:text-zinc-300 font-bold text-xs transition-all cursor-pointer"
+              className="w-full py-3 md:py-2.5 rounded-xl bg-transparent border border-zinc-900 hover:bg-zinc-900/50 text-zinc-500 hover:text-zinc-300 font-bold text-xs transition-all cursor-pointer"
             >
               Daha Sonra
             </button>
@@ -138,7 +138,7 @@ export default function UpgradeModal({ isOpen, onClose, title, description, glob
             </Link>
             <button
               onClick={onClose}
-              className="w-full py-2.5 rounded-xl bg-transparent border border-zinc-900 hover:bg-zinc-900/50 text-zinc-500 hover:text-zinc-300 font-bold text-xs transition-all cursor-pointer"
+              className="w-full py-3 md:py-2.5 rounded-xl bg-transparent border border-zinc-900 hover:bg-zinc-900/50 text-zinc-500 hover:text-zinc-300 font-bold text-xs transition-all cursor-pointer"
             >
               Daha Sonra
             </button>

@@ -70,7 +70,7 @@ export default function SuperAdminLoginPage() {
             <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
               Yüksek yetkili erişim paneli
             </p>
-            <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full" style={{
+            <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-3 md:py-2.5 md:py-1 rounded-full" style={{
               background: "rgba(220,38,38,0.1)",
               border: "1px solid rgba(220,38,38,0.2)"
             }}>

@@ -205,7 +205,7 @@ export default function StoreThemesShowcase() {
               </div>
 
               {/* Phone Mockup Frame */}
-              <div className="relative w-[340px] h-[680px] bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group">
+              <div className="relative w-full max-w-sm lg:w-[340px] h-[680px] bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group">
                 <div className="absolute top-0 inset-x-0 h-7 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
 
                 <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">

@@ -89,7 +89,7 @@ export default function HomeClient({
             {userId ? (
               <Link
                 href="/dashboard"
-                className="flex items-center space-x-2 px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
+                className="flex items-center space-x-2 px-5 py-3 md:py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
               >
                 <span>Yönetim Paneli</span>
                 <ArrowRight className="h-4 w-4" />
@@ -104,7 +104,7 @@ export default function HomeClient({
                 </Link>
                 <Link
                   href="/sign-up"
-                  className="px-5 py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
+                  className="px-5 py-3 md:py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
                 >
                   Hemen Başla
                 </Link>
@@ -129,7 +129,7 @@ export default function HomeClient({
             </p>
 
             <form onSubmit={handleCreate} className="max-w-md flex flex-col sm:flex-row items-center p-2 bg-white rounded-full border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex items-center flex-1 px-4 py-2 w-full">
+              <div className="flex items-center flex-1 px-4 py-3 md:py-2 w-full">
                 <span className="text-slate-400 font-medium whitespace-nowrap">link.saas/</span>
                 <input 
                   type="text" 
@@ -152,7 +152,7 @@ export default function HomeClient({
             <div className="flex justify-center lg:justify-end relative animate-slide-down">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-neon-blue/5 rounded-full blur-3xl opacity-50 -z-10" />
               
-              <div className="relative w-[300px] h-[600px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl border-4 border-slate-900 overflow-hidden">
+              <div className="relative w-full max-w-sm lg:w-[300px] h-[600px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl border-4 border-slate-900 overflow-hidden">
                 <div className="absolute top-0 inset-x-0 h-6 bg-slate-900 z-20 rounded-b-3xl w-1/2 mx-auto" />
                 
                 <div className="relative w-full h-full bg-gray-50 rounded-[2rem] overflow-hidden flex flex-col items-center pt-16 px-4">
@@ -205,7 +205,7 @@ export default function HomeClient({
           <div className="flex justify-center lg:justify-start relative order-2 lg:order-1">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-50 rounded-full blur-3xl opacity-60 -z-10" />
             
-            <div className="relative w-[300px] h-[600px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl border-4 border-slate-900 overflow-hidden">
+            <div className="relative w-full max-w-sm lg:w-[300px] h-[600px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl border-4 border-slate-900 overflow-hidden">
               <div className="absolute top-0 inset-x-0 h-6 bg-slate-900 z-20 rounded-b-3xl w-1/2 mx-auto" />
               
               <div className="relative w-full h-full bg-gray-50 rounded-[2rem] overflow-hidden flex flex-col p-5 pt-12">
@@ -251,7 +251,7 @@ export default function HomeClient({
           {/* Text Content (Right) */}
           <div className="text-left order-1 lg:order-2 space-y-8">
             <div>
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-neon-blue/5 text-neon-blue text-xs font-bold uppercase tracking-wider mb-4">
+              <div className="inline-flex items-center space-x-2 px-3 py-3 md:py-2.5 md:py-1 rounded-full bg-neon-blue/5 text-neon-blue text-xs font-bold uppercase tracking-wider mb-4">
                 <TrendingUp className="h-3.5 w-3.5" />
                 <span>Gelişmiş Analizler</span>
               </div>
@@ -272,7 +272,7 @@ export default function HomeClient({
                 
                 {/* Block 1: Görüntülenme Artışı (Market Size Growth) */}
                 <div className="bg-white p-4 rounded-3xl border border-neon-blue/10 shadow-sm flex flex-col justify-between">
-                  <div className="bg-neon-blue text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3">
+                  <div className="bg-neon-blue text-white text-center py-3 md:py-2.5 md:py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3">
                     Görüntülenme Artışı
                   </div>
                   <div className="h-32 flex items-end justify-center relative px-2">
@@ -298,7 +298,7 @@ export default function HomeClient({
 
                 {/* Block 2: Ziyaretçi Yaş Dağılımı (Consumer Demographics) */}
                 <div className="bg-white p-4 rounded-3xl border border-neon-blue/10 shadow-sm flex flex-col justify-between items-center text-center">
-                  <div className="bg-neon-blue text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3 w-full">
+                  <div className="bg-neon-blue text-white text-center py-3 md:py-2.5 md:py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3 w-full">
                     Yaş Dağılımı
                   </div>
                   <div className="relative w-20 h-20 mb-2">
@@ -323,7 +323,7 @@ export default function HomeClient({
 
                 {/* Block 3: Tıklama Trendleri (Product Demand Trends) */}
                 <div className="bg-white p-4 rounded-3xl border border-neon-blue/10 shadow-sm flex flex-col justify-between">
-                  <div className="bg-neon-blue text-white text-center py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3">
+                  <div className="bg-neon-blue text-white text-center py-3 md:py-2.5 md:py-1 px-3 rounded-full text-[10px] font-bold tracking-wider mb-3">
                     Tıklama Trendleri
                   </div>
                   <div className="h-32 flex items-end justify-between gap-1.5 px-2">
@@ -349,7 +349,7 @@ export default function HomeClient({
 
               {/* Row 2: Competitive Market Share style arc meters */}
               <div className="bg-white p-5 rounded-3xl border border-neon-blue/10 shadow-sm space-y-4">
-                <div className="bg-neon-blue text-white text-center py-1 px-4 rounded-full text-[10px] font-bold tracking-wider w-fit mx-auto">
+                <div className="bg-neon-blue text-white text-center py-3 md:py-2.5 md:py-1 px-4 rounded-full text-[10px] font-bold tracking-wider w-fit mx-auto">
                   Bağlantı Tıklama Oranları
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-5 gap-3 pt-2 text-center">
@@ -423,7 +423,7 @@ export default function HomeClient({
             {/* FREE TIER */}
             <div className="bg-white rounded-3xl p-4 md:p-8 border border-gray-100 shadow-sm flex flex-col">
               <div className="mb-6">
-                <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-full">Ücretsiz</span>
+                <span className="px-3 py-3 md:py-2.5 md:py-1 bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-full">Ücretsiz</span>
                 <h3 className="text-2xl md:text-4xl font-extrabold text-slate-900 mt-4">0 ₺ <span className="text-base text-slate-500 font-medium">/ ömür boyu</span></h3>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
@@ -458,11 +458,11 @@ export default function HomeClient({
 
             {/* STARTER TIER */}
             <div className="bg-slate-900 rounded-3xl p-4 md:p-8 border-2 border-slate-900 shadow-xl flex flex-col relative transform md:-translate-y-4">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-gradient-to-r from-neon-blue to-light-blue text-white text-xs font-black uppercase tracking-widest rounded-full">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-3 md:py-2.5 md:py-1 bg-gradient-to-r from-neon-blue to-light-blue text-white text-xs font-black uppercase tracking-widest rounded-full">
                 En Popüler
               </div>
               <div className="mb-6 mt-2">
-                <span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold uppercase tracking-wider rounded-full">Başlangıç</span>
+                <span className="px-3 py-3 md:py-2.5 md:py-1 bg-slate-800 text-slate-300 text-xs font-bold uppercase tracking-wider rounded-full">Başlangıç</span>
                 <h3 className="text-2xl md:text-4xl font-extrabold text-white mt-4">{priceStarter} ₺ <span className="text-base text-slate-400 font-medium">/ ay</span></h3>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
@@ -510,7 +510,7 @@ export default function HomeClient({
             {/* CREATOR TIER */}
             <div className="bg-white rounded-3xl p-4 md:p-8 border border-gray-100 shadow-sm flex flex-col">
               <div className="mb-6">
-                <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-full">Üretici</span>
+                <span className="px-3 py-3 md:py-2.5 md:py-1 bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-full">Üretici</span>
                 <h3 className="text-2xl md:text-4xl font-extrabold text-slate-900 mt-4">{priceCreator} ₺ <span className="text-base text-slate-500 font-medium">/ ay</span></h3>
               </div>
               <ul className="space-y-4 mb-8 flex-1">

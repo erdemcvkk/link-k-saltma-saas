@@ -131,7 +131,7 @@ export default function FeaturesClient({ adminUserId, adminRole, initialFeatures
           </div>
           <button 
             onClick={handleOpenCreate}
-            className="px-4 py-2 bg-neon-blue hover:bg-light-blue text-white rounded-lg text-sm font-bold flex items-center gap-2 transition-colors shadow-sm shadow-neon-blue/20"
+            className="px-4 py-3 md:py-2 bg-neon-blue hover:bg-light-blue text-white rounded-lg text-sm font-bold flex items-center gap-2 transition-colors shadow-sm shadow-neon-blue/20"
           >
             <Plus className="h-4 w-4" />
             Yeni Özellik
@@ -149,7 +149,7 @@ export default function FeaturesClient({ adminUserId, adminRole, initialFeatures
         )}
 
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-slate-100 flex items-center gap-3">
+          <div className="p-3 md:p-6 border-b border-slate-100 flex items-center gap-3">
             <div className="p-2 bg-slate-50 text-slate-500 rounded-lg">
               <LayoutGrid className="h-5 w-5" />
             </div>
@@ -230,7 +230,7 @@ export default function FeaturesClient({ adminUserId, adminRole, initialFeatures
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
           <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div className="p-3 md:p-6 border-b border-slate-100 flex items-center justify-between">
               <h2 className="text-xl font-bold text-slate-900">
                 {editingFeature ? "Özellik Düzenle" : "Yeni Özellik Ekle"}
               </h2>
@@ -239,7 +239,7 @@ export default function FeaturesClient({ adminUserId, adminRole, initialFeatures
               </button>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-6 space-y-5">
+            <form onSubmit={handleSubmit} className="p-3 md:p-6 space-y-5">
               {errorMsg && (
                 <div className="p-3 bg-red-50 text-red-600 text-sm font-semibold rounded-lg">
                   {errorMsg}
@@ -254,7 +254,7 @@ export default function FeaturesClient({ adminUserId, adminRole, initialFeatures
                     value={key}
                     onChange={(e) => setKey(e.target.value)}
                     placeholder="Örn: custom_domain"
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-neon-blue focus:ring-2 focus:ring-neon-blue/20 outline-none text-sm text-slate-900 font-mono transition-all"
+                    className="w-full px-3 py-3 md:py-2 rounded-xl border border-slate-200 focus:border-neon-blue focus:ring-2 focus:ring-neon-blue/20 outline-none text-sm text-slate-900 font-mono transition-all"
                     required
                   />
                   <p className="text-[10px] text-slate-400 mt-1">Kod içerisinde kontrol edilecek eşsiz anahtar kelime.</p>
@@ -267,7 +267,7 @@ export default function FeaturesClient({ adminUserId, adminRole, initialFeatures
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Örn: Özel Alan Adı (Custom Domain)"
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-neon-blue focus:ring-2 focus:ring-neon-blue/20 outline-none text-sm text-slate-900 transition-all"
+                    className="w-full px-3 py-3 md:py-2 rounded-xl border border-slate-200 focus:border-neon-blue focus:ring-2 focus:ring-neon-blue/20 outline-none text-sm text-slate-900 transition-all"
                     required
                   />
                 </div>
@@ -279,7 +279,7 @@ export default function FeaturesClient({ adminUserId, adminRole, initialFeatures
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Özellik hakkında kısa bilgi..."
                     rows={2}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-neon-blue focus:ring-2 focus:ring-neon-blue/20 outline-none text-sm text-slate-900 transition-all resize-none"
+                    className="w-full px-3 py-3 md:py-2 rounded-xl border border-slate-200 focus:border-neon-blue focus:ring-2 focus:ring-neon-blue/20 outline-none text-sm text-slate-900 transition-all resize-none"
                   />
                 </div>
 
@@ -292,7 +292,7 @@ export default function FeaturesClient({ adminUserId, adminRole, initialFeatures
                         <div
                           key={plan}
                           onClick={() => handleTogglePlan(plan)}
-                          className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
+                          className={`flex items-center gap-2 px-3 py-3 md:py-2 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
                             isSelected 
                               ? "bg-purple-50 border-purple-200 text-purple-700 shadow-sm" 
                               : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
@@ -313,14 +313,14 @@ export default function FeaturesClient({ adminUserId, adminRole, initialFeatures
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-bold text-slate-600 hover:text-slate-900"
+                  className="px-4 py-3 md:py-2 text-sm font-bold text-slate-600 hover:text-slate-900"
                 >
                   İptal
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-6 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold flex items-center gap-2 transition-colors disabled:opacity-50"
+                  className="px-6 py-3 md:py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold flex items-center gap-2 transition-colors disabled:opacity-50"
                 >
                   {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                   {editingFeature ? "Güncelle" : "Oluştur"}

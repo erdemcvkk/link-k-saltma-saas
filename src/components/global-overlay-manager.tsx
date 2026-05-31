@@ -113,7 +113,7 @@ export default function GlobalOverlayManager({ onStateChange }: OverlayManagerPr
         {/* Language Toggler */}
         <button
           onClick={() => handleToggleLang(lang === "tr" ? "en" : "tr")}
-          className="px-3 py-1.5 rounded-full text-[10px] font-black tracking-wider transition-all duration-300 hover:bg-zinc-100 flex items-center gap-1.5 text-zinc-700"
+          className="px-3 py-3 md:py-2.5 md:py-1.5 rounded-full text-[10px] font-black tracking-wider transition-all duration-300 hover:bg-zinc-100 flex items-center gap-1.5 text-zinc-700"
           title="Toggle Language / Dil Değiştir"
         >
           <Globe className="h-3 w-3 text-teal-400" />
@@ -149,14 +149,14 @@ export default function GlobalOverlayManager({ onStateChange }: OverlayManagerPr
           <div className="flex items-center justify-end gap-2 mt-4 pt-3 border-t border-zinc-100">
             <button
               onClick={handleDenyLocation}
-              className="px-3.5 py-1.5 rounded-lg text-[10px] font-bold text-zinc-400 hover:text-white transition-colors"
+              className="px-3.5 py-3 md:py-2.5 md:py-1.5 rounded-lg text-[10px] font-bold text-zinc-400 hover:text-white transition-colors"
             >
               {lang === "tr" ? "Reddet" : "Deny"}
             </button>
             <button
               onClick={handleRequestLocation}
               disabled={loadingGeo}
-              className="px-4 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-black transition-all flex items-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.4)] disabled:opacity-50"
+              className="px-4 py-3 md:py-2.5 md:py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-black transition-all flex items-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.4)] disabled:opacity-50"
             >
               {loadingGeo ? (
                 <span>...</span>
@@ -173,7 +173,7 @@ export default function GlobalOverlayManager({ onStateChange }: OverlayManagerPr
 
       {/* 3. Bottom Cookie Consent Banner Panel */}
       {showCookieBanner && (
-        <div className="fixed bottom-6 right-6 left-6 md:left-auto md:max-w-lg z-[9998] p-6 rounded-2xl bg-white border border-zinc-200 text-zinc-800 backdrop-blur-xl shadow-2xl transition-all duration-500 animate-slide-up">
+        <div className="fixed bottom-6 right-6 left-6 md:left-auto md:max-w-lg z-[9998] p-3 md:p-6 rounded-2xl bg-white border border-zinc-200 text-zinc-800 backdrop-blur-xl shadow-2xl transition-all duration-500 animate-slide-up">
           <div className="flex items-start gap-4">
             <div className="p-3 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-500 shrink-0">
               <Cookie className="h-6 w-6 text-teal-500" />
@@ -193,21 +193,21 @@ export default function GlobalOverlayManager({ onStateChange }: OverlayManagerPr
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-5 pt-4 border-t border-zinc-100">
             <button
               onClick={() => handleCookieConsent("none")}
-              className="px-3 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-[10px] font-bold transition-all text-center"
+              className="px-3 py-3 md:py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-[10px] font-bold transition-all text-center"
             >
               {lang === "tr" ? "Tümünü Reddet" : "Reject All"}
             </button>
 
             <button
               onClick={() => handleCookieConsent("required")}
-              className="px-3 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-[10px] font-bold transition-all text-center"
+              className="px-3 py-3 md:py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-[10px] font-bold transition-all text-center"
             >
               {lang === "tr" ? "Gerekli Olanlar" : "Required Only"}
             </button>
 
             <button
               onClick={() => handleCookieConsent("all")}
-              className="px-3 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-black transition-all text-center shadow-[0_0_15px_rgba(168,85,247,0.3)]"
+              className="px-3 py-3 md:py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-black transition-all text-center shadow-[0_0_15px_rgba(168,85,247,0.3)]"
             >
               {lang === "tr" ? "Tümünü Kabul Et" : "Accept All"}
             </button>

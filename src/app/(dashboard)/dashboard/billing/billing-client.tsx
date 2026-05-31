@@ -89,7 +89,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
   };
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900 p-6 max-w-5xl mx-auto space-y-10 font-corporate">
+    <div className="min-h-screen bg-white text-zinc-900 p-3 md:p-6 max-w-5xl mx-auto space-y-10 font-corporate">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-200 pb-6">
         <div>
@@ -105,7 +105,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
 
         <Link
           href="/dashboard"
-          className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-semibold transition-all shadow-sm"
+          className="flex items-center gap-1.5 px-4 py-3 md:py-2 rounded-full bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-xs font-semibold transition-all shadow-sm"
         >
           <ArrowRight className="h-3.5 w-3.5 rotate-180" />
           Back to Dashboard
@@ -126,7 +126,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
 
       {/* Active Subscription Details with Premium Live Countdown */}
       {currentPlan !== "FREE" && planExpiresAt && (
-        <div className="p-6 rounded-2xl bg-zinc-50 border border-zinc-200 shadow-sm space-y-4">
+        <div className="p-3 md:p-6 rounded-2xl bg-zinc-50 border border-zinc-200 shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <span className="px-2 py-0.5 rounded-full bg-neon-blue/15 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">
@@ -157,7 +157,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
       {/* Plans Comparison */}
       <div className="grid md:grid-cols-3 gap-8">
         {/* FREE PLAN */}
-        <div className={`p-6 rounded-2xl bg-white border transition-all ${
+        <div className={`p-3 md:p-6 rounded-2xl bg-white border transition-all ${
           currentPlan === "FREE" ? "border-neon-blue ring-1 ring-neon-blue/20 shadow-md" : "border-zinc-200"
         } flex flex-col justify-between`}>
           <div>
@@ -179,14 +179,14 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
 
           <button
             disabled
-            className="w-full py-2.5 rounded-xl bg-zinc-100 text-zinc-450 font-bold text-xs transition-colors cursor-not-allowed"
+            className="w-full py-3 md:py-2.5 rounded-xl bg-zinc-100 text-zinc-450 font-bold text-xs transition-colors cursor-not-allowed"
           >
             {currentPlan === "FREE" ? "Current Plan" : "Free Plan"}
           </button>
         </div>
 
         {/* STARTER PLAN */}
-        <div className={`p-6 rounded-2xl bg-white border transition-all ${
+        <div className={`p-3 md:p-6 rounded-2xl bg-white border transition-all ${
           currentPlan === "STARTER" ? "border-neon-blue ring-1 ring-neon-blue/20 shadow-md" : "border-zinc-200"
         } flex flex-col justify-between`}>
           <div>
@@ -210,14 +210,14 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
           </div>
 
           {currentPlan === "STARTER" ? (
-            <button disabled className="w-full py-2.5 rounded-xl bg-neon-blue/10 border border-neon-blue/20 text-neon-blue font-bold text-xs cursor-not-allowed">
+            <button disabled className="w-full py-3 md:py-2.5 rounded-xl bg-neon-blue/10 border border-neon-blue/20 text-neon-blue font-bold text-xs cursor-not-allowed">
               Current Plan
             </button>
           ) : (
             <button
               onClick={() => handleUpgrade("STARTER", starterPriceNum)}
               disabled={isPending}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue text-white font-black text-xs transition-opacity hover:opacity-90 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="w-full py-3 md:py-2.5 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue text-white font-black text-xs transition-opacity hover:opacity-90 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <CreditCard className="h-3.5 w-3.5" />}
               {globalSettings?.["payment_link_starter"] ? `Secure Stripe/Shopier (${priceStarter}₺)` : `Mock Checkout (${priceStarter}₺)`}
@@ -226,7 +226,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
         </div>
 
         {/* CREATOR PLAN */}
-        <div className={`p-6 rounded-2xl bg-white border transition-all ${
+        <div className={`p-3 md:p-6 rounded-2xl bg-white border transition-all ${
           currentPlan === "CREATOR" ? "border-neon-blue ring-1 ring-neon-blue/20 shadow-md" : "border-zinc-200"
         } flex flex-col justify-between`}>
           <div>
@@ -251,14 +251,14 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
           </div>
 
           {currentPlan === "CREATOR" ? (
-            <button disabled className="w-full py-2.5 rounded-xl bg-neon-blue/10 border border-neon-blue/20 text-neon-blue font-bold text-xs cursor-not-allowed">
+            <button disabled className="w-full py-3 md:py-2.5 rounded-xl bg-neon-blue/10 border border-neon-blue/20 text-neon-blue font-bold text-xs cursor-not-allowed">
               Current Plan
             </button>
           ) : (
             <button
               onClick={() => handleUpgrade("CREATOR", creatorPriceNum)}
               disabled={isPending}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue text-white font-black text-xs transition-opacity hover:opacity-90 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+              className="w-full py-3 md:py-2.5 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue text-white font-black text-xs transition-opacity hover:opacity-90 flex items-center justify-center gap-2 cursor-pointer shadow-sm"
             >
               {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <CreditCard className="h-3.5 w-3.5" />}
               {globalSettings?.["payment_link_creator"] ? `Secure Stripe/Shopier (${priceCreator}₺)` : `Mock Checkout (${priceCreator}₺)`}
@@ -268,7 +268,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
       </div>
 
       {/* Transaction History */}
-      <div className="p-6 rounded-2xl bg-white border border-zinc-200 shadow-sm space-y-4">
+      <div className="p-3 md:p-6 rounded-2xl bg-white border border-zinc-200 shadow-sm space-y-4">
         <div className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider text-zinc-500">
           <Receipt className="h-4 w-4 text-zinc-400" />
           Transaction Logs ({payments.length})

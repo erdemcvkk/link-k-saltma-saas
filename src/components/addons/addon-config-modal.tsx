@@ -212,7 +212,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
             const newPairs = [...pairs, { q: "", a: "" }];
             setConfigData({ ...configData, faqPairs: newPairs });
           }}
-          className="w-full py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors"
+          className="w-full py-3 md:py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors"
         >
           + Soru Ekle
         </button>
@@ -738,7 +738,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
         break;
       default:
         specificFields = (
-          <div className="p-6 bg-zinc-50 border border-zinc-200 text-zinc-600 rounded-2xl text-sm text-center">
+          <div className="p-3 md:p-6 bg-zinc-50 border border-zinc-200 text-zinc-600 rounded-2xl text-sm text-center">
             {lang === "tr" ? "Bu eklenti için özel ayar bulunmuyor." : "No specific settings for this add-on."}
           </div>
         );
@@ -788,8 +788,8 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
       // For other addons, we render a generic card that reacts to configData in real time.
             case "BOOKING":
         return (
-          <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-6">
-            <div className="w-full p-6 bg-white rounded-3xl border border-zinc-200 shadow-lg flex flex-col items-center text-center space-y-4 transition-all">
+          <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-3 md:p-6">
+            <div className="w-full p-3 md:p-6 bg-white rounded-3xl border border-zinc-200 shadow-lg flex flex-col items-center text-center space-y-4 transition-all">
               {configData.avatarUrl ? (
                 <img src={configData.avatarUrl} className="w-16 h-16 rounded-full object-cover shadow-md" alt="Profile" />
               ) : (
@@ -809,8 +809,8 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
         );
       case "QA":
         return (
-          <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-6">
-            <div className="w-full p-6 bg-white rounded-3xl border border-zinc-200 shadow-lg flex flex-col space-y-4 transition-all">
+          <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-3 md:p-6">
+            <div className="w-full p-3 md:p-6 bg-white rounded-3xl border border-zinc-200 shadow-lg flex flex-col space-y-4 transition-all">
               <div className="flex items-center gap-3">
                 {configData.avatarUrl ? (
                   <img src={configData.avatarUrl} className="w-12 h-12 rounded-full object-cover shrink-0 shadow-sm" alt="Profile" />
@@ -856,7 +856,7 @@ case "FAQ":
         );
       default:
         return (
-          <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-6 text-center">
+          <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-3 md:p-6 text-center">
              <div className="space-y-4">
               <div className="w-20 h-20 mx-auto rounded-3xl bg-indigo-50 text-indigo-500 flex items-center justify-center shadow-inner">
                 {icon}
@@ -895,7 +895,7 @@ case "FAQ":
 
           <div className="flex items-center gap-3 md:gap-5 self-end sm:self-auto">
             {/* Status Toggle */}
-            <div className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-zinc-50 border border-zinc-200/80 shadow-sm cursor-pointer" onClick={() => setIsActive(!isActive)}>
+            <div className="flex items-center gap-3 px-5 py-3 md:py-2.5 rounded-2xl bg-zinc-50 border border-zinc-200/80 shadow-sm cursor-pointer" onClick={() => setIsActive(!isActive)}>
               <span className={`text-xs uppercase tracking-wider font-bold transition-colors ${isActive ? 'text-emerald-600' : 'text-zinc-400'}`}>
                 {isActive ? (lang === "tr" ? "Yayında" : "Published") : (lang === "tr" ? "Taslak" : "Draft")}
               </span>
@@ -929,7 +929,7 @@ case "FAQ":
         <div className="flex flex-col lg:flex-row flex-1 overflow-hidden bg-zinc-50/30">
           
           {/* Left Panel: Editor Form */}
-          <div className="w-full lg:w-[45%] h-full overflow-y-auto p-6 md:p-8 bg-white border-r border-zinc-100 custom-scrollbar relative z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+          <div className="w-full lg:w-[45%] h-full overflow-y-auto p-3 md:p-6 md:p-8 bg-white border-r border-zinc-100 custom-scrollbar relative z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
             <div className="max-w-full md:w-[420px] mx-auto space-y-2">
               {renderFields()}
             </div>
@@ -943,7 +943,7 @@ case "FAQ":
             </div>
             
             {/* iPhone Mockup Frame */}
-            <div className="relative w-[360px] h-[740px] bg-black rounded-[3.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] border-[12px] border-black flex flex-col overflow-hidden z-10 shrink-0 ring-1 ring-white/10">
+            <div className="relative w-full max-w-sm lg:w-[360px] h-[740px] bg-black rounded-[3.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] border-[12px] border-black flex flex-col overflow-hidden z-10 shrink-0 ring-1 ring-white/10">
               {/* Notch */}
               <div className="absolute top-0 inset-x-0 h-7 flex justify-center z-50">
                 <div className="w-36 h-7 bg-black rounded-b-3xl relative">
@@ -973,7 +973,7 @@ case "FAQ":
             </div>
 
             {/* Hint label */}
-            <div className="absolute bottom-8 text-xs font-bold uppercase tracking-widest text-zinc-400 bg-white/50 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
+            <div className="absolute bottom-8 text-xs font-bold uppercase tracking-widest text-zinc-400 bg-white/50 backdrop-blur-md px-4 py-3 md:py-2 rounded-full shadow-sm">
               {lang === "tr" ? "Canlı Önizleme Modu" : "Live Preview Mode"}
             </div>
           </div>

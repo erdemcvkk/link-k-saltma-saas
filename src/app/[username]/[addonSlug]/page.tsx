@@ -337,7 +337,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
           
           <div className="space-y-4 mb-10">
             {qas.length > 0 ? qas.map(([q, a]: [string, string], i: number) => (
-              <div key={i} className="bg-zinc-50 border border-zinc-100 rounded-2xl p-6">
+              <div key={i} className="bg-zinc-50 border border-zinc-100 rounded-2xl p-3 md:p-6">
                 <h3 className="text-lg font-bold text-slate-800 mb-2 flex gap-3">
                   <span className="text-emerald-500">Q.</span>
                   {q.trim()}
@@ -348,7 +348,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
                 </p>
               </div>
             )) : (
-              <div className="text-center p-6 bg-zinc-50 rounded-2xl text-slate-500">Soru bulunamadı.</div>
+              <div className="text-center p-3 md:p-6 bg-zinc-50 rounded-2xl text-slate-500">Soru bulunamadı.</div>
             )}
           </div>
           
@@ -376,7 +376,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
           
           <div className={`p-4 md:p-8 flex flex-col items-center text-center ${parsedConfig.avatarUrl ? 'pt-14' : 'pt-8'}`}>
             <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Bizi Ziyaret Edin"}</h1>
-            <div className="inline-flex items-center gap-2 bg-zinc-100 text-slate-600 px-4 py-2.5 rounded-xl font-medium text-sm mb-8 max-w-full">
+            <div className="inline-flex items-center gap-2 bg-zinc-100 text-slate-600 px-4 py-3 md:py-2.5 rounded-xl font-medium text-sm mb-8 max-w-full">
               <span className="text-red-500">📍</span>
               <span className="truncate">{parsedConfig.address || "İstanbul, Türkiye"}</span>
             </div>
@@ -394,7 +394,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
     return (
       <div className="w-full min-h-screen bg-[#ece5dd] flex items-center justify-center p-4">
         <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col">
-          <div className="bg-[#075e54] p-6 flex flex-col items-center text-center text-white">
+          <div className="bg-[#075e54] p-3 md:p-6 flex flex-col items-center text-center text-white">
             {parsedConfig.avatarUrl ? (
               <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full border-2 border-white/20 object-cover shadow-sm mb-4" alt="Profile" />
             ) : (
@@ -409,7 +409,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
             </p>
           </div>
           
-          <div className="p-6 bg-[#e5ddd5] flex-1 flex flex-col justify-end min-h-[200px]">
+          <div className="p-3 md:p-6 bg-[#e5ddd5] flex-1 flex flex-col justify-end min-h-[200px]">
             <div className="bg-white p-4 rounded-2xl rounded-tl-sm shadow-sm self-start max-w-[85%] relative mb-4">
               <p className="text-slate-800 text-[15px] leading-snug">{parsedConfig.welcomeMessage || "Merhaba, size nasıl yardımcı olabilirim?"}</p>
               <span className="text-[10px] text-slate-400 block text-right mt-1.5">Şimdi</span>

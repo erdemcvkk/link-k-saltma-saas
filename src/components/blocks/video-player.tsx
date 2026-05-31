@@ -131,7 +131,7 @@ export default function VideoPlayer({ title, url, isDark = true, boxStyle, class
               <button
                 type="button"
                 onClick={handlePlayToggle}
-                className="px-3 py-1.5 rounded-lg bg-purple-600 border border-purple-400 text-[10px] font-black uppercase text-white hover:bg-purple-500 transition-all shadow-md shadow-purple-500/10"
+                className="px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg bg-purple-600 border border-purple-400 text-[10px] font-black uppercase text-white hover:bg-purple-500 transition-all shadow-md shadow-purple-500/10"
               >
                 Kapat
               </button>

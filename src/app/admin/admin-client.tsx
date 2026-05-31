@@ -803,7 +803,7 @@ export default function AdminClient({
       <div className="w-full max-w-7xl h-[780px] rounded-[32px] shadow-[0_30px_80px_rgba(0,0,0,0.06)] border flex overflow-hidden backdrop-blur-xl bg-white/80 border-white/60">
         
         {/* Sidebar Nav (Ehsanmoin style) */}
-        <aside className={`w-64 shrink-0 p-6 flex flex-col justify-between border-r ${
+        <aside className={`w-64 shrink-0 p-3 md:p-6 flex flex-col justify-between border-r ${
           isDark ? "border-zinc-800 bg-zinc-950/20" : "border-zinc-150 bg-white/40"
         }`}>
           <div className="space-y-8">
@@ -861,7 +861,7 @@ export default function AdminClient({
 
               <button
                 onClick={() => setSidebarTab("homepage")}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-3 md:py-2.5 rounded-lg text-sm font-medium transition-all ${
                   sidebarTab === "homepage"
                     ? activeTheme === "dark" ? "bg-white/10 text-white" : "bg-zinc-200 text-zinc-900"
                     : activeTheme === "dark" ? "text-zinc-400 hover:text-white hover:bg-white/5" : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
@@ -985,7 +985,7 @@ export default function AdminClient({
             isDark ? "border-zinc-800" : "border-zinc-150"
           }`}>
             {/* Search Input matching top left search from mockup */}
-            <div className={`flex items-center rounded-2xl border px-3.5 py-2 w-64 ${
+            <div className={`flex items-center rounded-2xl border px-3.5 py-3 md:py-2 w-64 ${
               isDark ? "bg-zinc-900 border-zinc-800" : "bg-zinc-50 border-zinc-200"
             }`}>
               <Search className="h-4 w-4 text-zinc-400 mr-2 shrink-0" />
@@ -1005,7 +1005,7 @@ export default function AdminClient({
                 href="/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-4 py-2 rounded-2xl text-xs font-bold bg-white text-zinc-700 hover:text-zinc-950 border border-zinc-200 shadow-sm hover:shadow transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-3 md:py-2 rounded-2xl text-xs font-bold bg-white text-zinc-700 hover:text-zinc-950 border border-zinc-200 shadow-sm hover:shadow transition-all cursor-pointer"
               >
                 <ExternalLink className="h-3.5 w-3.5 text-zinc-550" />
                 {lang === "tr" ? "Siteyi Görüntüle" : "View Site"}
@@ -1015,7 +1015,7 @@ export default function AdminClient({
               <button
                 onClick={handleClearCache}
                 disabled={isPending}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-2xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100 shadow-sm hover:shadow transition-all cursor-pointer disabled:opacity-50"
+                className="flex items-center gap-1.5 px-4 py-3 md:py-2 rounded-2xl text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-100 shadow-sm hover:shadow transition-all cursor-pointer disabled:opacity-50"
               >
                 <RefreshCw className={`h-3.5 w-3.5 ${isPending ? "animate-spin" : ""}`} />
                 {lang === "tr" ? "Önbelleği Temizle" : "Clear Cache"}
@@ -1075,7 +1075,7 @@ export default function AdminClient({
                   {/* Test Simulator back Link */}
                   <Link
                     href="/dashboard"
-                    className="flex items-center gap-1.5 px-4.5 py-2.5 rounded-2xl text-xs font-bold bg-zinc-900 text-white hover:bg-zinc-850 shadow-md shadow-zinc-950/10 cursor-pointer"
+                    className="flex items-center gap-1.5 px-4.5 py-3 md:py-2.5 rounded-2xl text-xs font-bold bg-zinc-900 text-white hover:bg-zinc-850 shadow-md shadow-zinc-950/10 cursor-pointer"
                   >
                     <ArrowRight className="h-3.5 w-3.5 rotate-180" />
                     {lang === "tr" ? "Stüdyoya Git" : "Back to Studio"}
@@ -1115,7 +1115,7 @@ export default function AdminClient({
                     <button
                       onClick={handleSaveUserPlans}
                       disabled={isPending}
-                      className="flex items-center gap-2 px-5 py-2 rounded-2xl text-xs font-black bg-rose-500 hover:bg-rose-600 text-white shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all animate-bounce"
+                      className="flex items-center gap-2 px-5 py-3 md:py-2 rounded-2xl text-xs font-black bg-rose-500 hover:bg-rose-600 text-white shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all animate-bounce"
                     >
                       {isPending ? (
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -1197,7 +1197,7 @@ export default function AdminClient({
                                   value={user.plan}
                                   onChange={(e) => handlePendingPlanChange(user.id, e.target.value)}
                                   disabled={isPending}
-                                  className="px-2.5 py-1.5 rounded-xl border border-zinc-200 text-xs font-black text-rose-500 outline-none bg-white cursor-pointer hover:border-rose-300 focus:ring-2 focus:ring-rose-500/10 transition-all"
+                                  className="px-2.5 py-3 md:py-2.5 md:py-1.5 rounded-xl border border-zinc-200 text-xs font-black text-rose-500 outline-none bg-white cursor-pointer hover:border-rose-300 focus:ring-2 focus:ring-rose-500/10 transition-all"
                                 >
                                   <option value="FREE">FREE</option>
                                   <option value="STARTER">STARTER</option>
@@ -1243,7 +1243,7 @@ export default function AdminClient({
                               <button
                                 onClick={() => handleToggleRole(user.id, user.role)}
                                 disabled={isPending}
-                                className={`px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition-colors cursor-pointer ${
+                                className={`px-2.5 py-3 md:py-2.5 md:py-1.5 rounded-xl text-[10px] font-bold border transition-colors cursor-pointer ${
                                   user.role === "ADMIN"
                                     ? "bg-red-50 border-red-200 text-red-500 font-extrabold"
                                     : "bg-zinc-50 border-zinc-200 text-zinc-550"
@@ -1256,12 +1256,12 @@ export default function AdminClient({
                             {/* Active suspension status */}
                             <td className="py-4 px-4 text-center">
                               {user.isBanned ? (
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-[10px] font-black text-red-500 border border-red-200">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-3 md:py-2.5 md:py-1 rounded-full bg-red-50 text-[10px] font-black text-red-500 border border-red-200">
                                   <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
                                   {lang === "tr" ? "Askıya Alındı" : "Banned"}
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[10px] font-black text-emerald-500 border border-emerald-200">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-3 md:py-2.5 md:py-1 rounded-full bg-emerald-50 text-[10px] font-black text-emerald-500 border border-emerald-200">
                                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                                   {lang === "tr" ? "Aktif" : "Active"}
                                 </span>
@@ -1284,7 +1284,7 @@ export default function AdminClient({
                                   <div className="absolute right-4 mt-2 w-40 rounded-2xl bg-white border border-zinc-150 shadow-lg p-2 text-left z-30 space-y-1">
                                     <button
                                       onClick={() => handleToggleBan(user.id, user.isBanned)}
-                                      className={`w-full text-left px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2 ${
+                                      className={`w-full text-left px-3 py-3 md:py-2 rounded-xl text-xs font-bold flex items-center gap-2 ${
                                         user.isBanned
                                           ? "text-emerald-600 hover:bg-emerald-50"
                                           : "text-red-650 hover:bg-red-50"
@@ -1295,7 +1295,7 @@ export default function AdminClient({
                                     </button>
                                     <button
                                       onClick={() => handleToggleRole(user.id, user.role)}
-                                      className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-zinc-700 hover:bg-zinc-50 flex items-center gap-2"
+                                      className="w-full text-left px-3 py-3 md:py-2 rounded-xl text-xs font-bold text-zinc-700 hover:bg-zinc-50 flex items-center gap-2"
                                     >
                                       <ShieldAlert className="h-3.5 w-3.5 text-zinc-400" />
                                       {lang === "tr" ? "Rol Değiştir" : "Toggle Role"}
@@ -1324,7 +1324,7 @@ export default function AdminClient({
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {/* Card 1 */}
-                  <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm flex items-center justify-between">
+                  <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm flex items-center justify-between">
                     <div className="space-y-1">
                       <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-black">{lang === "tr" ? "Toplam Kreatör" : "Total Creators"}</span>
                       <div className="text-xl md:text-3xl font-black text-zinc-800">{stats.totalUsers}</div>
@@ -1335,7 +1335,7 @@ export default function AdminClient({
                   </div>
 
                   {/* Card 2 */}
-                  <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm flex items-center justify-between">
+                  <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm flex items-center justify-between">
                     <div className="space-y-1">
                       <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-black">{lang === "tr" ? "Starter Planlar" : "Starter Plans"}</span>
                       <div className="text-xl md:text-3xl font-black text-purple-600">{stats.starterCount}</div>
@@ -1346,7 +1346,7 @@ export default function AdminClient({
                   </div>
 
                   {/* Card 3 */}
-                  <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm flex items-center justify-between">
+                  <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm flex items-center justify-between">
                     <div className="space-y-1">
                       <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-black">{lang === "tr" ? "Creator Planlar" : "Creator Plans"}</span>
                       <div className="text-xl md:text-3xl font-black text-fuchsia-600">{stats.creatorCount}</div>
@@ -1357,7 +1357,7 @@ export default function AdminClient({
                   </div>
 
                   {/* Card 4 */}
-                  <div className="p-6 bg-gradient-to-tr from-rose-500 to-pink-500 border-0 rounded-[24px] shadow-sm flex items-center justify-between text-white">
+                  <div className="p-3 md:p-6 bg-gradient-to-tr from-rose-500 to-pink-500 border-0 rounded-[24px] shadow-sm flex items-center justify-between text-white">
                     <div className="space-y-1">
                       <span className="text-[10px] text-rose-100 uppercase tracking-widest font-black">{lang === "tr" ? "Toplam Simüle Kazanç" : "Total Revenue"}</span>
                       <div className="text-xl md:text-3xl font-black">{stats.totalRevenue}₺</div>
@@ -1379,7 +1379,7 @@ export default function AdminClient({
                 </div>
 
                 {/* Add new background card */}
-                <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6">
+                <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6">
                   <div className="flex items-center gap-3">
                     <Palette className="h-5 w-5 text-rose-500" />
                     <h3 className="font-extrabold text-sm text-zinc-800">{lang === "tr" ? "Yeni Arka Plan Degradesi Oluştur" : "Create New Backdrop"}</h3>
@@ -1435,7 +1435,7 @@ export default function AdminClient({
                 {/* List categories grid */}
                 <div className="grid lg:grid-cols-3 gap-6">
                   {/* FREE section */}
-                  <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
+                  <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                     <div className="flex justify-between items-center border-b pb-3">
                       <span className="font-extrabold text-sm text-zinc-800">🆓 {lang === "tr" ? "FREE Seçenekleri" : "FREE Choices"}</span>
                       <span className="text-[10px] font-mono px-2 py-0.5 bg-zinc-100 rounded-full text-zinc-500 font-bold">{freeBgs.length}</span>
@@ -1462,7 +1462,7 @@ export default function AdminClient({
                   </div>
 
                   {/* STARTER section */}
-                  <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
+                  <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                     <div className="flex justify-between items-center border-b pb-3">
                       <span className="font-extrabold text-sm text-indigo-600">⚡ {lang === "tr" ? "STARTER Seçenekleri" : "STARTER Choices"}</span>
                       <span className="text-[10px] font-mono px-2 py-0.5 bg-indigo-50 rounded-full text-indigo-600 font-bold border border-indigo-100">{starterBgs.length}</span>
@@ -1489,7 +1489,7 @@ export default function AdminClient({
                   </div>
 
                   {/* CREATOR section */}
-                  <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
+                  <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                     <div className="flex justify-between items-center border-b pb-3">
                       <span className="font-extrabold text-sm text-fuchsia-600">👑 {lang === "tr" ? "CREATOR Seçenekleri" : "CREATOR Choices"}</span>
                       <span className="text-[10px] font-mono px-2 py-0.5 bg-fuchsia-50 rounded-full text-fuchsia-600 font-bold border border-fuchsia-100">{creatorBgs.length}</span>
@@ -1542,7 +1542,7 @@ export default function AdminClient({
                 </div>
 
                 {/* Hero Section Ayarları */}
-                <div className="p-6 rounded-xl border bg-white border-gray-100 shadow-sm">
+                <div className="p-3 md:p-6 rounded-xl border bg-white border-gray-100 shadow-sm">
                   <h3 className="text-lg font-semibold mb-4 text-slate-900">Hero (Giriş) Alanı</h3>
                   <div className="space-y-4">
                     <div className="space-y-1">
@@ -1551,7 +1551,7 @@ export default function AdminClient({
                         type="text"
                         value={heroTitle}
                         onChange={(e) => setHeroTitle(e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm"
+                        className="w-full px-3 py-3 md:py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1560,7 +1560,7 @@ export default function AdminClient({
                         type="text"
                         value={settingsMap["hero_highlight"] || "on the web"}
                         onChange={(e) => setSettingsMap(prev => ({ ...prev, hero_highlight: e.target.value }))}
-                        className="w-full px-3 py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm"
+                        className="w-full px-3 py-3 md:py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm"
                       />
                     </div>
                     <div className="space-y-1">
@@ -1569,14 +1569,14 @@ export default function AdminClient({
                         value={heroSubtitle}
                         onChange={(e) => setHeroSubtitle(e.target.value)}
                         rows={3}
-                        className="w-full px-3 py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm"
+                        className="w-full px-3 py-3 md:py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Slider Linkleri Yönetimi (Yeni İstek) */}
-                <div className="p-6 rounded-xl border bg-white border-gray-100 shadow-sm space-y-6">
+                <div className="p-3 md:p-6 rounded-xl border bg-white border-gray-100 shadow-sm space-y-6">
                   <div>
                     <h3 className="text-lg font-semibold text-slate-900">Slider Bağlantıları (Önizleme Link Kartları)</h3>
                     <p className="text-xs text-slate-500 mt-1">Giriş sayfasındaki telefonda görünecek örnek link kartlarını yönetin. (En az 3-4 adet olması önerilir)</p>
@@ -1593,7 +1593,7 @@ export default function AdminClient({
                           placeholder="Örn: Instagram Hesabım"
                           value={newSliderTitle}
                           onChange={(e) => setNewSliderTitle(e.target.value)}
-                          className="w-full px-3 py-1.5 rounded-lg border bg-white border-gray-200 text-slate-900 text-xs"
+                          className="w-full px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg border bg-white border-gray-200 text-slate-900 text-xs"
                         />
                       </div>
                       <div className="space-y-1">
@@ -1603,7 +1603,7 @@ export default function AdminClient({
                           placeholder="Örn: https://images.unsplash.com/..."
                           value={newSliderLink}
                           onChange={(e) => setNewSliderLink(e.target.value)}
-                          className="w-full px-3 py-1.5 rounded-lg border bg-white border-gray-200 text-slate-900 text-xs"
+                          className="w-full px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg border bg-white border-gray-200 text-slate-900 text-xs"
                         />
                       </div>
                       <div className="flex items-end">
@@ -1634,7 +1634,7 @@ export default function AdminClient({
                             }
                           }}
                           disabled={isUploadingSlider}
-                          className="w-full py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg font-bold text-xs cursor-pointer flex items-center justify-center gap-1.5 transition-colors"
+                          className="w-full py-3 md:py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg font-bold text-xs cursor-pointer flex items-center justify-center gap-1.5 transition-colors"
                         >
                           {isUploadingSlider && <Loader2 className="h-3 w-3 animate-spin" />}
                           <Plus className="h-3.5 w-3.5" />
@@ -1688,7 +1688,7 @@ export default function AdminClient({
                 </div>
 
                 {/* Creator Carousel Ayarları */}
-                <div className="p-6 rounded-xl border bg-white border-gray-100 shadow-sm">
+                <div className="p-3 md:p-6 rounded-xl border bg-white border-gray-100 shadow-sm">
                   <h3 className="text-lg font-semibold mb-4 text-slate-900">Creator Carousel (Yatay Kayan Slider)</h3>
                   <p className="text-xs text-slate-500 mb-4">Görselleri ve isimleri JSON formatında düzenleyin.</p>
                   <textarea
@@ -1696,12 +1696,12 @@ export default function AdminClient({
                     onChange={(e) => setSettingsMap(prev => ({ ...prev, creators_data: e.target.value }))}
                     rows={8}
                     placeholder={'[\n  { "id": "1", "name": "Metro Beats", "username": "metro_beats", "imageUrl": "https://..." }\n]'}
-                    className="w-full px-3 py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm font-mono"
+                    className="w-full px-3 py-3 md:py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm font-mono"
                   />
                 </div>
 
                 {/* Zigzag Features Ayarları */}
-                <div className="p-6 rounded-xl border bg-white border-gray-100 shadow-sm">
+                <div className="p-3 md:p-6 rounded-xl border bg-white border-gray-100 shadow-sm">
                   <h3 className="text-lg font-semibold mb-4 text-slate-900">Özellik Blokları (Zig-Zag)</h3>
                   <p className="text-xs text-slate-500 mb-4">Özellikleri JSON formatında düzenleyin.</p>
                   <textarea
@@ -1709,7 +1709,7 @@ export default function AdminClient({
                     onChange={(e) => setSettingsMap(prev => ({ ...prev, features_data: e.target.value }))}
                     rows={12}
                     placeholder={'[\n  { "id": "feat-1", "title": "Build your page", "highlightWords": "in minutes.", "description": "...", "imageUrl": "...", "listItems": [ { "text": "...", "icon": "layout" } ] }\n]'}
-                    className="w-full px-3 py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm font-mono"
+                    className="w-full px-3 py-3 md:py-2 rounded-lg border bg-white border-gray-200 text-slate-900 text-sm font-mono"
                   />
                 </div>
 
@@ -1749,7 +1749,7 @@ export default function AdminClient({
 
                 {/* Payment gateway section - SUPER ADMIN ONLY */}
                 {isSuperAdmin ? (
-                <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
+                <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                   <div className="flex items-center gap-2">
                     <CreditCard className="h-5 w-5 text-rose-500" />
                     <h3 className="font-extrabold text-sm text-zinc-800">{lang === "tr" ? "Üyelik Ödeme Altyapı Bağlantıları" : "Checkout Gateways Configuration"}</h3>
@@ -1833,7 +1833,7 @@ export default function AdminClient({
                   </form>
                 </div>
                 ) : (
-                <div className="p-6 bg-zinc-50 border border-zinc-200 rounded-[24px] shadow-sm space-y-3 opacity-60">
+                <div className="p-3 md:p-6 bg-zinc-50 border border-zinc-200 rounded-[24px] shadow-sm space-y-3 opacity-60">
                   <div className="flex items-center gap-2">
                     <CreditCard className="h-5 w-5 text-zinc-400" />
                     <h3 className="font-extrabold text-sm text-zinc-500">{lang === "tr" ? "Üyelik Ödeme Altyapı Bağlantıları" : "Checkout Gateways Configuration"}</h3>
@@ -1844,7 +1844,7 @@ export default function AdminClient({
                 )}
 
                 {/* Branding section */}
-                <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
+                <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                   <div className="flex items-center gap-2">
                     <Palette className="h-5 w-5 text-rose-500" />
                     <h3 className="font-extrabold text-sm text-zinc-800">{lang === "tr" ? "Platform Markalama & Görsel Temalandırma" : "Branding Visual Settings"}</h3>
@@ -1934,7 +1934,7 @@ export default function AdminClient({
                             type="text"
                             value={lightModeBg}
                             onChange={(e) => setLightModeBg(e.target.value)}
-                            className="flex-1 px-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750"
+                            className="flex-1 px-4 py-3 md:py-2 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750"
                           />
                         </div>
                       </div>
@@ -1951,7 +1951,7 @@ export default function AdminClient({
                             type="text"
                             value={darkModeBg}
                             onChange={(e) => setDarkModeBg(e.target.value)}
-                            className="flex-1 px-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750"
+                            className="flex-1 px-4 py-3 md:py-2 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750"
                           />
                         </div>
                       </div>
@@ -2020,7 +2020,7 @@ export default function AdminClient({
                     <Link
                       href="/privacy"
                       target="_blank"
-                      className="flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold rounded-2xl border border-zinc-200 bg-white hover:border-rose-300 hover:text-rose-500 transition-all"
+                      className="flex items-center gap-1.5 px-4 py-3 md:py-2.5 text-xs font-bold rounded-2xl border border-zinc-200 bg-white hover:border-rose-300 hover:text-rose-500 transition-all"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
                       {lang === "tr" ? "Gizlilik" : "Privacy"}
@@ -2028,7 +2028,7 @@ export default function AdminClient({
                     <Link
                       href="/cookies"
                       target="_blank"
-                      className="flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold rounded-2xl border border-zinc-200 bg-white hover:border-amber-300 hover:text-amber-500 transition-all"
+                      className="flex items-center gap-1.5 px-4 py-3 md:py-2.5 text-xs font-bold rounded-2xl border border-zinc-200 bg-white hover:border-amber-300 hover:text-amber-500 transition-all"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
                       {lang === "tr" ? "Çerez" : "Cookies"}
@@ -2037,7 +2037,7 @@ export default function AdminClient({
                 </div>
 
                 {/* Privacy Policy Editor */}
-                <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
+                <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500">
@@ -2053,7 +2053,7 @@ export default function AdminClient({
 
                   <div className="rounded-2xl border border-zinc-200 overflow-hidden">
                     {/* Mini toolbar hint */}
-                    <div className="px-4 py-2.5 bg-zinc-50 border-b border-zinc-200 flex gap-3 text-[10px] font-bold text-zinc-400">
+                    <div className="px-4 py-3 md:py-2.5 bg-zinc-50 border-b border-zinc-200 flex gap-3 text-[10px] font-bold text-zinc-400">
                       <span className="font-mono">&lt;h2&gt;</span>
                       <span className="font-mono">&lt;p&gt;</span>
                       <span className="font-mono">&lt;ul&gt;&lt;li&gt;</span>
@@ -2072,7 +2072,7 @@ export default function AdminClient({
                 </div>
 
                 {/* Cookie Policy Editor */}
-                <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
+                <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500">
@@ -2088,7 +2088,7 @@ export default function AdminClient({
 
                   <div className="rounded-2xl border border-zinc-200 overflow-hidden">
                     {/* Mini toolbar hint */}
-                    <div className="px-4 py-2.5 bg-zinc-50 border-b border-zinc-200 flex gap-3 text-[10px] font-bold text-zinc-400">
+                    <div className="px-4 py-3 md:py-2.5 bg-zinc-50 border-b border-zinc-200 flex gap-3 text-[10px] font-bold text-zinc-400">
                       <span className="font-mono">&lt;h2&gt;</span>
                       <span className="font-mono">&lt;p&gt;</span>
                       <span className="font-mono">&lt;table&gt;</span>
@@ -2141,7 +2141,7 @@ export default function AdminClient({
                 </div>
 
                 {/* Add New Custom Parameter Card */}
-                <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
+                <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                   <h3 className="font-extrabold text-sm text-zinc-800 flex items-center gap-2">
                     <Plus className="h-4.5 w-4.5 text-rose-500" />
                     {lang === "tr" ? "Yeni Değişken (Kod) Ekle" : "Add New Config Parameter"}
@@ -2199,13 +2199,13 @@ export default function AdminClient({
                 </div>
 
                 {/* Parameters List */}
-                <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
+                <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-4">
                     <h3 className="font-extrabold text-sm text-zinc-800">
                       {lang === "tr" ? "Aktif Değişken Kütüphanesi" : "Registered Configuration Library"}
                     </h3>
                     {/* Inline Filter Search */}
-                    <div className="flex items-center rounded-xl border border-zinc-200 px-3 py-1.5 bg-zinc-50 w-full sm:w-64">
+                    <div className="flex items-center rounded-xl border border-zinc-200 px-3 py-3 md:py-2.5 md:py-1.5 bg-zinc-50 w-full sm:w-64">
                       <Search className="h-3.5 w-3.5 text-zinc-400 mr-2 shrink-0" />
                       <input
                         type="text"
@@ -2223,7 +2223,7 @@ export default function AdminClient({
                         <tr className="border-b border-zinc-100 text-[10px] font-black uppercase text-zinc-400 tracking-wider">
                           <th className="py-3 px-2 w-[220px]">{lang === "tr" ? "Kod / Parametre" : "Key / Code"}</th>
                           <th className="py-3 px-2">{lang === "tr" ? "İşlev & Açıklama" : "Inline Guide / Purpose"}</th>
-                          <th className="py-3 px-2 w-[350px]">{lang === "tr" ? "Mevcut Değer" : "Current Value"}</th>
+                          <th className="py-3 px-2 w-full max-w-sm lg:w-[350px]">{lang === "tr" ? "Mevcut Değer" : "Current Value"}</th>
                           <th className="py-3 px-2 w-[100px] text-right">{lang === "tr" ? "İşlemler" : "Actions"}</th>
                         </tr>
                       </thead>
@@ -2258,7 +2258,7 @@ export default function AdminClient({
                             return (
                               <tr key={key} className="hover:bg-zinc-50/40 transition-colors">
                                 <td className="py-3.5 px-2 align-top">
-                                  <span className="font-mono text-xs font-black text-rose-500 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-100/50 block w-fit truncate max-w-[200px]" title={key}>
+                                  <span className="font-mono text-xs font-black text-rose-500 bg-rose-50 px-2.5 py-3 md:py-2.5 md:py-1 rounded-lg border border-rose-100/50 block w-fit truncate max-w-[200px]" title={key}>
                                     {key}
                                   </span>
                                   {isCustom && (
@@ -2279,7 +2279,7 @@ export default function AdminClient({
                                         handleSaveCode(key, e.target.value);
                                       }
                                     }}
-                                    className="w-full px-3 py-2 bg-zinc-50 border border-zinc-150 rounded-xl outline-none text-xs text-zinc-700 font-mono focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 transition-all resize-y"
+                                    className="w-full px-3 py-3 md:py-2 bg-zinc-50 border border-zinc-150 rounded-xl outline-none text-xs text-zinc-700 font-mono focus:bg-white focus:border-rose-400 focus:ring-2 focus:ring-rose-500/10 transition-all resize-y"
                                   />
                                 </td>
                                 <td className="py-3.5 px-2 text-right align-top space-y-1">
@@ -2293,7 +2293,7 @@ export default function AdminClient({
                                       <Trash2 className="h-3.5 w-3.5" />
                                     </button>
                                   ) : (
-                                    <span className="text-[9px] font-black uppercase text-zinc-300 block py-2 select-none">
+                                    <span className="text-[9px] font-black uppercase text-zinc-300 block py-3 md:py-2 select-none">
                                       {lang === "tr" ? "Sistem" : "System Only"}
                                     </span>
                                   )}
@@ -2325,7 +2325,7 @@ export default function AdminClient({
                   
                   <Link
                     href="/dashboard"
-                    className="flex items-center gap-1.5 px-4.5 py-2.5 rounded-2xl text-xs font-bold bg-zinc-900 text-white hover:bg-zinc-850 shadow-md shadow-zinc-950/10 cursor-pointer"
+                    className="flex items-center gap-1.5 px-4.5 py-3 md:py-2.5 rounded-2xl text-xs font-bold bg-zinc-900 text-white hover:bg-zinc-850 shadow-md shadow-zinc-950/10 cursor-pointer"
                   >
                     <ArrowRight className="h-3.5 w-3.5 rotate-180" />
                     {lang === "tr" ? "Stüdyoya Git" : "Back to Studio"}
@@ -2334,7 +2334,7 @@ export default function AdminClient({
 
                 <div className="grid lg:grid-cols-3 gap-6">
                   {/* Left Column: Add Font Form */}
-                  <div className="lg:col-span-1 p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6 self-start">
+                  <div className="lg:col-span-1 p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6 self-start">
                     <div>
                       <h3 className="font-extrabold text-sm text-zinc-800">
                         {lang === "tr" ? "Yeni Yazı Tipi Ekle" : "Register New Typography Style"}
@@ -2417,7 +2417,7 @@ export default function AdminClient({
                   </div>
 
                   {/* Right Column: Categorized Fonts Catalog */}
-                  <div className="lg:col-span-2 p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6">
+                  <div className="lg:col-span-2 p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
                       <div>
                         <h3 className="font-extrabold text-sm text-zinc-800">
@@ -2435,7 +2435,7 @@ export default function AdminClient({
                             key={t}
                             type="button"
                             onClick={() => setActiveFontTab(t)}
-                            className={`px-4 py-2 text-[10px] font-black uppercase rounded-lg transition-all cursor-pointer ${
+                            className={`px-4 py-3 md:py-2 text-[10px] font-black uppercase rounded-lg transition-all cursor-pointer ${
                               activeFontTab === t
                                 ? t === "FREE"
                                   ? "bg-zinc-850 text-white shadow-sm"
@@ -2451,7 +2451,7 @@ export default function AdminClient({
                       </div>
                     </div>
 
-                    <div className="flex items-center rounded-xl border border-zinc-200 px-3 py-1.5 bg-zinc-50 w-full">
+                    <div className="flex items-center rounded-xl border border-zinc-200 px-3 py-3 md:py-2.5 md:py-1.5 bg-zinc-50 w-full">
                       <Search className="h-3.5 w-3.5 text-zinc-400 mr-2 shrink-0" />
                       <input
                         type="text"
@@ -2501,7 +2501,7 @@ export default function AdminClient({
                                     <select
                                       defaultValue={f.tier}
                                       onChange={(e) => handleUpdateFont(f.id, f.name, f.value, e.target.value, f.giftLabel || undefined)}
-                                      className={`text-[9px] font-extrabold px-2 py-1 rounded-md border cursor-pointer ${
+                                      className={`text-[9px] font-extrabold px-2 py-3 md:py-2.5 md:py-1 rounded-md border cursor-pointer ${
                                         f.tier === "FREE" 
                                           ? "bg-zinc-100 border-zinc-200 text-zinc-650"
                                           : f.tier === "STARTER"
@@ -2525,7 +2525,7 @@ export default function AdminClient({
                                             handleUpdateFont(f.id, f.name, f.value, f.tier, e.target.value || undefined);
                                           }
                                         }}
-                                        className="w-24 px-2 py-1 bg-zinc-50 border border-zinc-200 rounded-lg outline-none text-[10px] font-black text-zinc-700 placeholder-zinc-300 focus:bg-white focus:border-rose-450 focus:ring-2 focus:ring-rose-500/10 transition-all font-sans"
+                                        className="w-24 px-2 py-3 md:py-2.5 md:py-1 bg-zinc-50 border border-zinc-200 rounded-lg outline-none text-[10px] font-black text-zinc-700 placeholder-zinc-300 focus:bg-white focus:border-rose-450 focus:ring-2 focus:ring-rose-500/10 transition-all font-sans"
                                       />
                                     ) : (
                                       <span className="text-[10px] font-bold text-zinc-350 italic select-none">
@@ -2534,7 +2534,7 @@ export default function AdminClient({
                                     )}
                                   </td>
                                   <td className="py-3.5 px-2 align-middle">
-                                    <div className="py-2.5 px-3 rounded-lg bg-zinc-50 border border-zinc-100/50 text-center max-w-[280px]">
+                                    <div className="py-3 md:py-2.5 px-3 rounded-lg bg-zinc-50 border border-zinc-100/50 text-center max-w-[280px]">
                                       <span 
                                         style={{ fontFamily: f.value }}
                                         className="text-sm font-bold text-zinc-700 block truncate"
@@ -2582,7 +2582,7 @@ export default function AdminClient({
                     <button
                       onClick={handleSaveAnimations}
                       disabled={isPending}
-                      className="flex items-center gap-1.5 px-5 py-2.5 rounded-2xl text-xs font-bold bg-rose-500 text-white hover:bg-rose-600 shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 transition-all"
+                      className="flex items-center gap-1.5 px-5 py-3 md:py-2.5 rounded-2xl text-xs font-bold bg-rose-500 text-white hover:bg-rose-600 shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 transition-all"
                     >
                       {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
                       {lang === "tr" ? "Değişiklikleri Veritabanına Kaydet" : "Save Animations to DB"}
@@ -2590,7 +2590,7 @@ export default function AdminClient({
 
                     <Link
                       href="/dashboard"
-                      className="flex items-center gap-1.5 px-4.5 py-2.5 rounded-2xl text-xs font-bold bg-zinc-900 text-white hover:bg-zinc-850 shadow-md shadow-zinc-950/10 cursor-pointer"
+                      className="flex items-center gap-1.5 px-4.5 py-3 md:py-2.5 rounded-2xl text-xs font-bold bg-zinc-900 text-white hover:bg-zinc-850 shadow-md shadow-zinc-950/10 cursor-pointer"
                     >
                       <ArrowRight className="h-3.5 w-3.5 rotate-180" />
                       {lang === "tr" ? "Stüdyoya Git" : "Back to Studio"}
@@ -2600,7 +2600,7 @@ export default function AdminClient({
 
                 <div className="grid lg:grid-cols-3 gap-6">
                   {/* Left Column: Add Animation Form */}
-                  <div className="lg:col-span-1 p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6 self-start">
+                  <div className="lg:col-span-1 p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6 self-start">
                     <div>
                       <h3 className="font-extrabold text-sm text-zinc-800">
                         {lang === "tr" ? "Yeni Animasyon Ekle" : "Register New Animation Preset"}
@@ -2683,7 +2683,7 @@ export default function AdminClient({
                   </div>
 
                   {/* Right Column: Categorized Animations Catalog */}
-                  <div className="lg:col-span-2 p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6">
+                  <div className="lg:col-span-2 p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-4">
                       <div>
                         <h3 className="font-extrabold text-sm text-zinc-800">
@@ -2704,7 +2704,7 @@ export default function AdminClient({
                               key={t}
                               type="button"
                               onClick={() => setActiveAnimTab(t)}
-                              className={`px-4 py-2 text-[10px] font-black uppercase rounded-lg transition-all cursor-pointer ${
+                              className={`px-4 py-3 md:py-2 text-[10px] font-black uppercase rounded-lg transition-all cursor-pointer ${
                                 activeAnimTab === t
                                   ? t === "FREE"
                                     ? "bg-zinc-850 text-white shadow-sm"
@@ -2721,7 +2721,7 @@ export default function AdminClient({
                       </div>
                     </div>
 
-                    <div className="flex items-center rounded-xl border border-zinc-200 px-3 py-1.5 bg-zinc-50 w-full">
+                    <div className="flex items-center rounded-xl border border-zinc-200 px-3 py-3 md:py-2.5 md:py-1.5 bg-zinc-50 w-full">
                       <Search className="h-3.5 w-3.5 text-zinc-400 mr-2 shrink-0" />
                       <input
                         type="text"
@@ -2779,7 +2779,7 @@ export default function AdminClient({
                                   <select
                                     defaultValue={anim.tier}
                                     onChange={(e) => handleUpdateAnim(anim.id, anim.label, e.target.value, anim.giftLabel || undefined)}
-                                    className={`text-[9px] font-extrabold px-2 py-1 rounded-md border cursor-pointer ${
+                                    className={`text-[9px] font-extrabold px-2 py-3 md:py-2.5 md:py-1 rounded-md border cursor-pointer ${
                                       anim.tier === "FREE" 
                                         ? "bg-zinc-100 border-zinc-200 text-zinc-650"
                                         : anim.tier === "STARTER"
@@ -2803,7 +2803,7 @@ export default function AdminClient({
                                           handleUpdateAnim(anim.id, anim.label, anim.tier, e.target.value || undefined);
                                         }
                                       }}
-                                      className="w-24 px-2 py-1 bg-zinc-50 border border-zinc-200 rounded-lg outline-none text-[10px] font-black text-zinc-700 placeholder-zinc-300 focus:bg-white focus:border-rose-450 focus:ring-2 focus:ring-rose-500/10 transition-all font-sans"
+                                      className="w-24 px-2 py-3 md:py-2.5 md:py-1 bg-zinc-50 border border-zinc-200 rounded-lg outline-none text-[10px] font-black text-zinc-700 placeholder-zinc-300 focus:bg-white focus:border-rose-450 focus:ring-2 focus:ring-rose-500/10 transition-all font-sans"
                                     />
                                   ) : (
                                     <span className="text-[10px] font-bold text-zinc-350 italic select-none">

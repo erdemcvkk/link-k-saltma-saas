@@ -142,7 +142,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
             )}
           </Link>
           <div className="flex gap-4">
-            <Link href="/dashboard" className={`px-4 py-2 rounded-full text-xs font-bold transition-all border ${
+            <Link href="/dashboard" className={`px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all border ${
               isDark ? "bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-300" : "bg-white hover:bg-zinc-100 border-zinc-200 text-zinc-700 shadow-sm"
             }`}>
               {lang === "tr" ? "Yaratıcı Stüdyosu" : "Creator Studio"}
@@ -152,7 +152,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
 
         {/* Hero Section */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
-          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-extrabold uppercase tracking-widest ${
+          <div className={`inline-flex items-center gap-1.5 px-3 py-3 md:py-2.5 md:py-1 rounded-full border text-[10px] font-extrabold uppercase tracking-widest ${
             isDark ? "bg-purple-950/20 border-purple-500/30 text-purple-400" : "bg-purple-50 border-purple-200 text-purple-600"
           }`}>
             <Sparkles className="h-3.5 w-3.5" />
@@ -194,7 +194,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
           <div className="flex gap-2 overflow-x-auto pb-1 md:pb-0 shrink-0">
             <button
               onClick={() => setSelectedFilter("all")}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+              className={`px-4 py-3 md:py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                 selectedFilter === "all"
                   ? "bg-purple-600 border-purple-500 text-white shadow-md shadow-purple-500/25"
                   : isDark ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white" : "bg-zinc-100 border-zinc-200 text-zinc-600 hover:text-black"
@@ -204,7 +204,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
             </button>
             <button
               onClick={() => setSelectedFilter("beats")}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+              className={`px-4 py-3 md:py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                 selectedFilter === "beats"
                   ? "bg-purple-600 border-purple-500 text-white shadow-md shadow-purple-500/25"
                   : isDark ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white" : "bg-zinc-100 border-zinc-200 text-zinc-600 hover:text-black"
@@ -214,7 +214,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
             </button>
             <button
               onClick={() => setSelectedFilter("kits")}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+              className={`px-4 py-3 md:py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                 selectedFilter === "kits"
                   ? "bg-purple-600 border-purple-500 text-white shadow-md shadow-purple-500/25"
                   : isDark ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white" : "bg-zinc-100 border-zinc-200 text-zinc-600 hover:text-black"
@@ -224,7 +224,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
             </button>
             <button
               onClick={() => setSelectedFilter("premium")}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+              className={`px-4 py-3 md:py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                 selectedFilter === "premium"
                   ? "bg-purple-600 border-purple-500 text-white shadow-md shadow-purple-500/25"
                   : isDark ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white" : "bg-zinc-100 border-zinc-200 text-zinc-600 hover:text-black"
@@ -247,7 +247,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
             filteredCreators.map((creator) => (
               <div
                 key={creator.id}
-                className={`p-6 rounded-[2rem] border backdrop-blur-md flex flex-col justify-between gap-6 transition-all duration-300 relative overflow-hidden group ${
+                className={`p-3 md:p-6 rounded-[2rem] border backdrop-blur-md flex flex-col justify-between gap-6 transition-all duration-300 relative overflow-hidden group ${
                   isDark ? "bg-zinc-950 border-zinc-900/60" : "bg-white border-zinc-200 shadow-sm"
                 } ${getCardHoverStyle(creator.theme)}`}
               >
@@ -301,7 +301,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
                         {creator.featuredProducts.map((p) => (
                           <div
                             key={p.id}
-                            className={`flex justify-between items-center px-2.5 py-1.5 rounded-lg border text-[10px] ${
+                            className={`flex justify-between items-center px-2.5 py-3 md:py-2.5 md:py-1.5 rounded-lg border text-[10px] ${
                               isDark ? "bg-zinc-900/60 border-zinc-800" : "bg-zinc-50 border-zinc-200 text-zinc-700"
                             }`}
                           >

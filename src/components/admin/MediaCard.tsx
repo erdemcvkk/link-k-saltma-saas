@@ -27,7 +27,7 @@ export default function MediaCard({ item, onDelete }: { item: MediaItem; onDelet
         <p className="text-sm truncate" title={item.filename}>{item.filename}</p>
         <button
           onClick={() => onDelete(item.id)}
-          className="mt-1 w-full px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+          className="mt-1 w-full px-2 py-3 md:py-2.5 md:py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
         >
           Sil
         </button>

@@ -114,7 +114,7 @@ export default async function RootLayout({
           <link href={googleFontsUrl} rel="stylesheet" />
           <ThemeInitializer />
         </head>
-        <body className="min-h-full flex flex-col bg-background text-foreground">{children}</body>
+        <body className="min-h-full flex flex-col bg-background text-foreground overflow-x-hidden">{children}</body>
       </html>
     </ClerkProvider>
   );

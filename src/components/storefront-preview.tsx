@@ -337,7 +337,7 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
 
         {/* Controls */}
         <div className="px-4 pb-4 flex gap-2 relative z-10">
-          <div className={`flex-1 flex items-center px-3 py-2 gap-2 ${styles.searchBg} transition-all`}>
+          <div className={`flex-1 flex items-center px-3 py-3 md:py-2 gap-2 ${styles.searchBg} transition-all`}>
             <Search className="h-4 w-4 opacity-50" />
             <input
               type="text"
@@ -387,7 +387,7 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
                 <span className={`${priceSizeClass} ${styles.priceColor}`}>{product.price}₺</span>
                 <button
                   onClick={() => handlePurchase(product.id)}
-                  className={`w-full ${layout === "LIST" ? "w-auto px-3" : ""} py-2 text-[10px] flex items-center justify-center gap-1.5 ${styles.btnClass} ${
+                  className={`w-full ${layout === "LIST" ? "w-auto px-3" : ""} py-3 md:py-2 text-[10px] flex items-center justify-center gap-1.5 ${styles.btnClass} ${
                     clickedItem === product.id ? "scale-95 opacity-80" : ""
                   }`}
                 >

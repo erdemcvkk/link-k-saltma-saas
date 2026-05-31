@@ -245,7 +245,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
           {/* Slide-up Form Overlay for Themes */}
           {isFormOpen && (
             <div className="absolute inset-0 z-20 bg-zinc-950 flex flex-col animate-in slide-in-from-bottom-8 duration-300">
-              <div className="p-6 border-b border-white/5 flex items-center justify-between bg-zinc-900">
+              <div className="p-3 md:p-6 border-b border-white/5 flex items-center justify-between bg-zinc-900">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Edit2 className="h-5 w-5 text-rose-500" /> Temayı Düzenle
                 </h2>
@@ -253,7 +253,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto p-6">
+              <div className="flex-1 overflow-y-auto p-3 md:p-6">
                 <form onSubmit={handleSaveTheme} className="space-y-5">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Tema / Eklenti Adı</label>
@@ -292,7 +292,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
         <div className="flex-1 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-black flex flex-col relative">
           <div className="absolute inset-0 bg-gradient-to-tr from-rose-500/5 via-transparent to-indigo-500/5" />
           
-          <div className="absolute top-6 left-6 flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-zinc-900/90 backdrop-blur border border-white/10 z-10 shadow-2xl">
+          <div className="absolute top-6 left-6 flex items-center gap-3 px-5 py-3 md:py-2.5 rounded-2xl bg-zinc-900/90 backdrop-blur border border-white/10 z-10 shadow-2xl">
             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
             <span className="text-xs font-black uppercase tracking-widest text-zinc-300">Live Simulator</span>
           </div>

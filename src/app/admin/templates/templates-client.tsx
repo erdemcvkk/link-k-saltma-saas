@@ -212,7 +212,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
             </div>
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-neon-blue hover:opacity-90 text-white text-xs font-black tracking-wider transition-all shadow-md cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-3 md:py-2 rounded-xl bg-neon-blue hover:opacity-90 text-white text-xs font-black tracking-wider transition-all shadow-md cursor-pointer"
             >
               <Plus className="h-4 w-4" /> YENİ ŞABLON
             </button>
@@ -284,13 +284,13 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                       <div className="flex flex-col gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity pr-2">
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleToggleActive(template.id, template.isActive); }} 
-                          className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors cursor-pointer ${template.isActive ? 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}
+                          className={`px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg text-[10px] font-bold transition-colors cursor-pointer ${template.isActive ? 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}
                         >
                           {template.isActive ? "Aktif" : "Pasif"}
                         </button>
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleDelete(template.id); }} 
-                          className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-[10px] font-bold transition-colors cursor-pointer"
+                          className="px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-[10px] font-bold transition-colors cursor-pointer"
                         >
                           Sil
                         </button>
@@ -305,7 +305,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
           {/* Add Template Modal (Slide-up over left panel) */}
           {isAddModalOpen && (
             <div className="absolute inset-0 z-20 bg-zinc-950 flex flex-col animate-in slide-in-from-bottom-8 duration-300">
-              <div className="p-6 border-b border-white/5 flex items-center justify-between bg-zinc-900">
+              <div className="p-3 md:p-6 border-b border-white/5 flex items-center justify-between bg-zinc-900">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Plus className="h-5 w-5 text-neon-blue" /> Yeni Şablon Ekle
                 </h2>
@@ -314,13 +314,13 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                 </button>
               </div>
               
-              <div className="flex-1 overflow-y-auto p-6 no-scrollbar">
+              <div className="flex-1 overflow-y-auto p-3 md:p-6 no-scrollbar">
                 {/* Mode Tabs */}
                 <div className="flex bg-zinc-900 p-1.5 rounded-2xl border border-zinc-800 mb-6">
                   <button
                     type="button"
                     onClick={() => setFormMode("no-code")}
-                    className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                    className={`flex-1 py-3 md:py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                       formMode === "no-code"
                         ? "bg-zinc-800 text-white shadow-sm"
                         : "text-zinc-500 hover:text-white"
@@ -331,7 +331,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                   <button
                     type="button"
                     onClick={() => setFormMode("code")}
-                    className={`flex-1 py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                    className={`flex-1 py-3 md:py-2.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                       formMode === "code"
                         ? "bg-purple-500/20 text-purple-400"
                         : "text-zinc-500 hover:text-white"
@@ -470,12 +470,12 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
           <div className="absolute inset-0 bg-gradient-to-tr from-neon-blue/5 via-transparent to-purple-500/5" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-[800px] h-[400px] bg-neon-blue/10 blur-[150px] rounded-full pointer-events-none" />
           
-          <div className="absolute top-6 left-6 flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-zinc-900/90 backdrop-blur border border-white/10 z-10 shadow-2xl">
+          <div className="absolute top-6 left-6 flex items-center gap-3 px-5 py-3 md:py-2.5 rounded-2xl bg-zinc-900/90 backdrop-blur border border-white/10 z-10 shadow-2xl">
             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
             <span className="text-xs font-black uppercase tracking-widest text-zinc-300">Live Simulator</span>
           </div>
 
-          <div className="relative z-10 w-[300px] h-[600px] rounded-[2.5rem] border-8 border-zinc-800 shadow-2xl bg-zinc-950 overflow-hidden transform transition-all duration-300">
+          <div className="relative z-10 w-full max-w-sm lg:w-[300px] h-[600px] rounded-[2.5rem] border-8 border-zinc-800 shadow-2xl bg-zinc-950 overflow-hidden transform transition-all duration-300">
             {currentPreviewData ? (
               <UniversalProfile 
                 data={{
@@ -499,7 +499,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                 isDarkContext={true}
               />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-zinc-500">
+              <div className="w-full h-full flex flex-col items-center justify-center p-3 md:p-6 text-center text-zinc-500">
                 <LayoutGrid className="w-12 h-12 mb-4 opacity-50" />
                 <p className="text-sm font-medium">Önizleme yapmak için bir şablon seçin veya yeni ekleyin.</p>
               </div>

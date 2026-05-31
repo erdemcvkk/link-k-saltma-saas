@@ -242,7 +242,7 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
 
       <main className="max-w-full md:w-[1800px] mx-auto px-6 py-16">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 text-rose-500 font-bold text-sm mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-rose-500/10 text-rose-500 font-bold text-sm mb-6">
             <Zap className="h-4 w-4" />
             <span>10 Premium Eklenti Vitrini</span>
           </div>
@@ -282,7 +282,7 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
                 </div>
 
                 {/* Phone Mockup Frame */}
-                <div className="relative w-full aspect-[1/2] max-w-[340px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6">
+                <div className="relative w-full aspect-[1/2] max-w-full max-w-sm lg:w-[340px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6">
                   <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
                   
                   <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">

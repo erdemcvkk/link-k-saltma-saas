@@ -63,7 +63,7 @@ export default function FloatingUpgradePrompt({ currentPlan, globalSettings }: F
               href={bestPaymentLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-[11px] tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
+              className="w-full py-3 md:py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-[11px] tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
             >
               HEMEN SATIN AL
               <ExternalLink className="h-3 w-3 opacity-60" />
@@ -71,7 +71,7 @@ export default function FloatingUpgradePrompt({ currentPlan, globalSettings }: F
           ) : (
             <Link
               href="/dashboard/billing"
-              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-[11px] tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
+              className="w-full py-3 md:py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-[11px] tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
             >
               PAKETLERİ İNCELE
               <ArrowRight className="h-3.5 w-3.5" />
