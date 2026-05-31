@@ -228,7 +228,7 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
   return (
     <div className="min-h-screen bg-zinc-950 font-sans">
       <nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-[1800px] mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-full md:w-[1800px] mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="font-black text-xl tracking-tighter text-white">
             Link.SaaS
           </Link>
@@ -240,13 +240,13 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
         </div>
       </nav>
 
-      <main className="max-w-[1800px] mx-auto px-6 py-16">
+      <main className="max-w-full md:w-[1800px] mx-auto px-6 py-16">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 text-rose-500 font-bold text-sm mb-6">
             <Zap className="h-4 w-4" />
             <span>10 Premium Eklenti Vitrini</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
+          <h1 className="text-2xl md:text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
             Profilinize <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">Güç Katın</span>
           </h1>
           <p className="text-lg text-zinc-400 font-medium">
@@ -360,7 +360,7 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
           <div className="flex justify-center pt-4 pb-8">
             <button
               onClick={() => setVisibleCount(prev => prev + 4)}
-              className="px-8 py-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800 text-white font-bold transition-all flex items-center gap-2"
+              className="px-4 md:px-8 py-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800 text-white font-bold transition-all flex items-center gap-2"
             >
               Devamını Gör
             </button>

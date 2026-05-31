@@ -363,7 +363,7 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
       </div>
 
       {/* Product Feed */}
-      <div className={`p-4 ${layout === "GRID" ? "grid grid-cols-2 gap-3" : "flex flex-col gap-3"}`}>
+      <div className={`p-4 ${layout === "GRID" ? "grid grid-cols-1 md:grid-cols-2 gap-3" : "flex flex-col gap-3"}`}>
         {products.map((product) => (
           <div
             key={product.id}

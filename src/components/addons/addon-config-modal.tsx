@@ -442,13 +442,13 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {renderInput("storeUsername", lang === "tr" ? "Mağaza Kullanıcı Adı" : "Store Username", "@username")}
                 {renderInput("buyButtonText", lang === "tr" ? "Satın Al Butonu Metni" : "Buy Button Text", "Satın Al")}
               </div>
               {renderTextarea("storeBio", lang === "tr" ? "Mağaza Açıklaması (Bio)" : "Store Bio", lang === "tr" ? "Yazar & Kariyer Danışmanı" : "Author & Consultant")}
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {renderInput("currency", lang === "tr" ? "Para Birimi" : "Currency", "₺, $, €")}
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Mağaza Teması" : "Store Theme"}</label>
@@ -875,7 +875,7 @@ case "FAQ":
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-slate-900/60 backdrop-blur-md">
-      <div className="relative w-full max-w-[1200px] h-[90vh] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 border border-white/20">
+      <div className="relative w-full max-w-full md:w-[1200px] h-[90vh] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 border border-white/20">
         
         {/* Header (Top Bar) */}
         <div className="px-6 md:px-8 py-5 border-b border-zinc-100 flex flex-col sm:flex-row sm:items-center justify-between bg-white shrink-0 z-20 gap-4">
@@ -930,16 +930,16 @@ case "FAQ":
           
           {/* Left Panel: Editor Form */}
           <div className="w-full lg:w-[45%] h-full overflow-y-auto p-6 md:p-8 bg-white border-r border-zinc-100 custom-scrollbar relative z-10 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
-            <div className="max-w-[420px] mx-auto space-y-2">
+            <div className="max-w-full md:w-[420px] mx-auto space-y-2">
               {renderFields()}
             </div>
           </div>
 
           {/* Right Panel: Live Mockup Preview */}
-          <div className="hidden lg:flex flex-1 items-center justify-center p-8 relative overflow-hidden bg-zinc-100/50">
+          <div className="hidden lg:flex flex-1 items-center justify-center p-4 md:p-8 relative overflow-hidden bg-zinc-100/50">
             {/* Ambient Background Glow matching the active state */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] blur-[120px] rounded-full transition-colors duration-1000 ${isActive ? 'bg-emerald-500/10' : 'bg-indigo-500/5'}`} />
+              <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-[600px] h-[600px] blur-[120px] rounded-full transition-colors duration-1000 ${isActive ? 'bg-emerald-500/10' : 'bg-indigo-500/5'}`} />
             </div>
             
             {/* iPhone Mockup Frame */}
@@ -952,7 +952,7 @@ case "FAQ":
               </div>
               
               {/* Status Bar */}
-              <div className="h-12 w-full bg-white flex justify-between items-center px-8 pt-3 text-[10px] font-medium z-40 text-black">
+              <div className="h-12 w-full bg-white flex justify-between items-center px-4 md:px-8 pt-3 text-[10px] font-medium z-40 text-black">
                 <span>9:41</span>
                 <div className="flex items-center gap-1.5">
                   <div className="w-4 h-2.5 bg-black rounded-sm relative">
@@ -984,7 +984,7 @@ case "FAQ":
       {/* Custom Alert/Confirm Dialog */}
       {dialog.isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-          <div className="bg-white rounded-[2rem] shadow-2xl p-8 max-w-sm w-full transform transition-all animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-[2rem] shadow-2xl p-4 md:p-8 max-w-sm w-full transform transition-all animate-in fade-in zoom-in-95 duration-200">
             <h3 className="text-xl font-black text-slate-800 mb-3 text-center">
               {domain} {lang === "tr" ? "mesajı" : "says"}
             </h3>

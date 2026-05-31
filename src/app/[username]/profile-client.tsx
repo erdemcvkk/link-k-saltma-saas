@@ -179,7 +179,7 @@ export default function ProfileClient({ username, bio, theme, links, products, a
                           <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-600" />
                           <input required type="text" placeholder={t.cardNum} maxLength={19} className="w-full pl-11 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors text-sm font-medium" />
                         </div>
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           <input required type="text" placeholder="MM/YY" maxLength={5} className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors text-sm font-medium text-center" />
                           <input required type="text" placeholder="CVC" maxLength={3} className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-purple-500 transition-colors text-sm font-medium text-center" />
                         </div>

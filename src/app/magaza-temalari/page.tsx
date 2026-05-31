@@ -180,7 +180,7 @@ export default function StoreThemesShowcase() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white font-sans selection:bg-rose-500/30">
       <nav className="border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-[1800px] mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-full md:w-[1800px] mx-auto px-6 h-20 flex items-center justify-between">
           <div>
             <h1 className="font-black text-2xl tracking-tighter text-white">
               Vitrin<span className="text-rose-500">.Temaları</span>
@@ -193,7 +193,7 @@ export default function StoreThemesShowcase() {
         </div>
       </nav>
 
-      <main className="max-w-[1800px] mx-auto px-6 py-12">
+      <main className="max-w-full md:w-[1800px] mx-auto px-6 py-12">
         <div className="flex overflow-x-auto pb-12 gap-10 snap-x snap-mandatory no-scrollbar">
           {THEMES.map((theme) => (
             <div key={theme.id} className="snap-center shrink-0 flex flex-col items-center">

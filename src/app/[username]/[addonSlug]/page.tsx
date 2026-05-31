@@ -100,7 +100,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
 
     return (
       <div className="w-full min-h-screen bg-zinc-100 flex justify-center">
-        <div className="w-full max-w-[480px] min-h-screen relative shadow-2xl overflow-hidden bg-white">
+        <div className="w-full max-w-full md:w-[480px] min-h-screen relative shadow-2xl overflow-hidden bg-white">
           <StorefrontPreview 
             theme={parsedConfig.theme || getDefaultTheme(matchingAddon.addonType)} 
           onProductClick={undefined}
@@ -128,12 +128,12 @@ export default async function AddonPage({ params }: { params: Promise<{ username
   if (matchingAddon.addonType === "BOOKING") {
     return (
       <div className="w-full min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
+        <div className="w-full max-w-md bg-white p-4 md:p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
           {parsedConfig.avatarUrl ? (
             <img src={parsedConfig.avatarUrl} className="w-24 h-24 rounded-full object-cover shadow-md mb-6" alt="Profile" />
           ) : (
             <div className="w-24 h-24 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-6">
-              <span className="text-3xl">📅</span>
+              <span className="text-xl md:text-3xl">📅</span>
             </div>
           )}
           <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Birebir Görüşme Ayarla"}</h1>
@@ -149,13 +149,13 @@ export default async function AddonPage({ params }: { params: Promise<{ username
   if (matchingAddon.addonType === "QA") {
     return (
       <div className="w-full min-h-screen bg-amber-50/30 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white p-8 rounded-[2rem] shadow-xl flex flex-col">
+        <div className="w-full max-w-md bg-white p-4 md:p-8 rounded-[2rem] shadow-xl flex flex-col">
           <div className="flex flex-col items-center text-center mb-8">
             {parsedConfig.avatarUrl ? (
               <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full object-cover shadow-sm mb-4" alt="Profile" />
             ) : (
               <div className="w-20 h-20 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mb-4">
-                <span className="text-3xl">❓</span>
+                <span className="text-xl md:text-3xl">❓</span>
               </div>
             )}
             <h1 className="text-2xl font-black text-slate-800">{parsedConfig.boxTitle || "Bana Soru Sor!"}</h1>
@@ -194,7 +194,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
               className="absolute inset-0 flex items-center justify-center z-10"
             >
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:bg-white/30 hover:scale-110 transition-all cursor-pointer">
-                <span className="text-3xl sm:text-4xl ml-2">▶</span>
+                <span className="text-xl md:text-3xl sm:text-4xl ml-2">▶</span>
               </div>
             </a>
           </div>
@@ -226,12 +226,12 @@ export default async function AddonPage({ params }: { params: Promise<{ username
   if (matchingAddon.addonType === "DONATION") {
     return (
       <div className="w-full min-h-screen bg-pink-50/30 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
+        <div className="w-full max-w-md bg-white p-4 md:p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
           {parsedConfig.avatarUrl ? (
             <img src={parsedConfig.avatarUrl} className="w-24 h-24 rounded-full object-cover shadow-md mb-6" alt="Profile" />
           ) : (
             <div className="w-24 h-24 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center mb-6">
-              <span className="text-3xl">☕</span>
+              <span className="text-xl md:text-3xl">☕</span>
             </div>
           )}
           <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Bana Kahve Ismarla"}</h1>
@@ -248,21 +248,21 @@ export default async function AddonPage({ params }: { params: Promise<{ username
     // Generate an aesthetic countdown layout
     return (
       <div className="w-full min-h-screen bg-gradient-to-br from-indigo-900 via-slate-900 to-black flex items-center justify-center p-4">
-        <div className="w-full max-w-lg bg-white/10 backdrop-blur-xl border border-white/20 p-10 rounded-[3rem] shadow-2xl flex flex-col items-center text-center">
+        <div className="w-full max-w-lg bg-white/10 backdrop-blur-xl border border-white/20 p-4 md:p-10 rounded-[3rem] shadow-2xl flex flex-col items-center text-center">
           {parsedConfig.avatarUrl ? (
             <img src={parsedConfig.avatarUrl} className="w-24 h-24 rounded-3xl object-cover shadow-[0_0_30px_rgba(255,255,255,0.2)] mb-8" alt="Profile" />
           ) : (
             <div className="w-24 h-24 rounded-3xl bg-white/10 text-indigo-300 flex items-center justify-center mb-8 border border-white/20 shadow-inner">
-              <span className="text-4xl">⏳</span>
+              <span className="text-2xl md:text-4xl">⏳</span>
             </div>
           )}
-          <h1 className="text-3xl font-black text-white tracking-tight mb-4">{parsedConfig.title || "Büyük Lansman"}</h1>
+          <h1 className="text-xl md:text-3xl font-black text-white tracking-tight mb-4">{parsedConfig.title || "Büyük Lansman"}</h1>
           <p className="text-indigo-200/80 mb-10 text-lg leading-relaxed">{parsedConfig.description || "Yeni ürünümüz çok yakında sizlerle!"}</p>
           
-          <div className="grid grid-cols-4 gap-4 w-full mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-10">
             {['Gün', 'Saat', 'Dk', 'Sn'].map((label, idx) => (
               <div key={label} className="bg-black/40 border border-white/10 rounded-2xl py-4 flex flex-col items-center justify-center">
-                <span className="text-3xl font-black text-white font-mono mb-1">{['14', '08', '45', '22'][idx]}</span>
+                <span className="text-xl md:text-3xl font-black text-white font-mono mb-1">{['14', '08', '45', '22'][idx]}</span>
                 <span className="text-[10px] uppercase tracking-widest text-indigo-300/70 font-bold">{label}</span>
               </div>
             ))}
@@ -279,17 +279,17 @@ export default async function AddonPage({ params }: { params: Promise<{ username
   if (matchingAddon.addonType === "PORTFOLIO") {
     return (
       <div className="w-full min-h-screen bg-[#f3f4f6] flex flex-col items-center py-12 px-4">
-        <div className="w-full max-w-2xl bg-white p-8 md:p-12 rounded-[2rem] shadow-xl">
+        <div className="w-full max-w-2xl bg-white p-4 md:p-8 md:p-12 rounded-[2rem] shadow-xl">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-10">
             {parsedConfig.avatarUrl ? (
               <img src={parsedConfig.avatarUrl} className="w-32 h-32 rounded-[2rem] object-cover shadow-lg shrink-0" alt="Profile" />
             ) : (
               <div className="w-32 h-32 rounded-[2rem] bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0 shadow-inner">
-                <span className="text-4xl">🎨</span>
+                <span className="text-2xl md:text-4xl">🎨</span>
               </div>
             )}
             <div className="text-center md:text-left flex-1">
-              <h1 className="text-3xl font-black text-slate-800 tracking-tight mb-3">{parsedConfig.title || "Benim Çalışmalarım"}</h1>
+              <h1 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight mb-3">{parsedConfig.title || "Benim Çalışmalarım"}</h1>
               <p className="text-slate-500 leading-relaxed font-medium">{parsedConfig.description || "Yaratıcı tasarımcı ve geliştirici."}</p>
             </div>
           </div>
@@ -301,7 +301,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
               { title: "GitHub", url: parsedConfig.githubUrl, icon: "💻", color: "bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200" }
             ].map(link => link.url ? (
               <a key={link.title} href={link.url} target="_blank" rel="noopener noreferrer" className={`flex flex-col items-center justify-center py-6 px-4 rounded-2xl border transition-all ${link.color}`}>
-                <span className="text-3xl mb-2">{link.icon}</span>
+                <span className="text-xl md:text-3xl mb-2">{link.icon}</span>
                 <span className="font-bold text-sm">{link.title}</span>
               </a>
             ) : null)}
@@ -323,16 +323,16 @@ export default async function AddonPage({ params }: { params: Promise<{ username
 
     return (
       <div className="w-full min-h-screen bg-emerald-50/50 flex flex-col items-center py-12 px-4">
-        <div className="w-full max-w-2xl bg-white p-8 md:p-12 rounded-[2rem] shadow-xl">
+        <div className="w-full max-w-2xl bg-white p-4 md:p-8 md:p-12 rounded-[2rem] shadow-xl">
           <div className="text-center mb-10">
             {parsedConfig.avatarUrl ? (
               <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full object-cover mx-auto shadow-md mb-6" alt="Profile" />
             ) : (
               <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-6">
-                <span className="text-3xl">💡</span>
+                <span className="text-xl md:text-3xl">💡</span>
               </div>
             )}
-            <h1 className="text-3xl font-black text-slate-800 tracking-tight">{parsedConfig.title || "Sıkça Sorulan Sorular"}</h1>
+            <h1 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight">{parsedConfig.title || "Sıkça Sorulan Sorular"}</h1>
           </div>
           
           <div className="space-y-4 mb-10">
@@ -366,7 +366,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
         <div className="w-full max-w-md bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col">
           <div className="h-48 bg-slate-200 relative">
             <div className="absolute inset-0 bg-blue-100/50 flex flex-col items-center justify-center text-blue-500">
-              <span className="text-5xl mb-2">🗺️</span>
+              <span className="text-3xl md:text-5xl mb-2">🗺️</span>
               <span className="font-bold text-sm tracking-widest uppercase opacity-50">Harita Yükleniyor...</span>
             </div>
             {parsedConfig.avatarUrl && (
@@ -374,7 +374,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
             )}
           </div>
           
-          <div className={`p-8 flex flex-col items-center text-center ${parsedConfig.avatarUrl ? 'pt-14' : 'pt-8'}`}>
+          <div className={`p-4 md:p-8 flex flex-col items-center text-center ${parsedConfig.avatarUrl ? 'pt-14' : 'pt-8'}`}>
             <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Bizi Ziyaret Edin"}</h1>
             <div className="inline-flex items-center gap-2 bg-zinc-100 text-slate-600 px-4 py-2.5 rounded-xl font-medium text-sm mb-8 max-w-full">
               <span className="text-red-500">📍</span>
@@ -399,7 +399,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
               <img src={parsedConfig.avatarUrl} className="w-20 h-20 rounded-full border-2 border-white/20 object-cover shadow-sm mb-4" alt="Profile" />
             ) : (
               <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-4">
-                <span className="text-3xl">💬</span>
+                <span className="text-xl md:text-3xl">💬</span>
               </div>
             )}
             <h1 className="text-xl font-bold tracking-wide">{parsedConfig.title || "WhatsApp İletişim"}</h1>

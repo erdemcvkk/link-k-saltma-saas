@@ -1523,7 +1523,7 @@ export default function DashboardClient({
       }`}>
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-fuchsia-500">
+            <h1 className="text-xl md:text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-fuchsia-500">
               {t.creatorStudioTitle}
             </h1>
             <span className="px-2.5 py-0.5 rounded-full bg-teal-400/20 border border-teal-500/30 text-[9px] font-extrabold text-teal-500 uppercase tracking-widest">
@@ -1759,7 +1759,7 @@ export default function DashboardClient({
               {activeSubTab === "profile" && (
                 <div className="w-full space-y-8 animate-in fade-in duration-200">
                   {/* Profile customizer */}
-                  <div className={`p-8 rounded-2xl border space-y-6 ${
+                  <div className={`p-4 md:p-8 rounded-2xl border space-y-6 ${
                     "bg-white border-zinc-200 shadow-sm"
                   }`}>
                     <div className="flex items-center justify-between">
@@ -1984,7 +1984,7 @@ export default function DashboardClient({
               {activeSubTab === "appearance" && (
                 <div className="w-full space-y-8 animate-in fade-in duration-200">
                   {/* Yazı Tipi Özelleştirici */}
-                  <div className={`p-8 rounded-2xl border space-y-6 ${
+                  <div className={`p-4 md:p-8 rounded-2xl border space-y-6 ${
                     "bg-white border-zinc-200 shadow-sm"
                   }`}>
                     <div className="flex items-center justify-between">
@@ -2194,7 +2194,7 @@ export default function DashboardClient({
                     <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Ücretsiz Arka Planlar (5 Adet)" : "Free Plan Backdrops (5 Colors)"}
                     </span>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-5 gap-3">
                       {FREE_BACKGROUNDS.map((bg) => (
                         <button
                           key={bg.id}
@@ -2247,7 +2247,7 @@ export default function DashboardClient({
                     <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Starter Paket Arka Planları (10 Adet)" : "Starter Plan Backdrops (10 Colors)"}
                     </span>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-5 gap-3">
                       {STARTER_BACKGROUNDS.map((bg) => (
                         <button
                           key={bg.id}
@@ -2323,7 +2323,7 @@ export default function DashboardClient({
                     <span className="text-[10px] text-teal-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Creator Plana Özel Arka Planlar (20 Adet)" : "Creator Exclusive Backdrops (20 Colors)"}
                     </span>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-5 gap-3">
                       {[...STARTER_BACKGROUNDS, ...CREATOR_BACKGROUNDS].map((bg) => (
                         <button
                           key={bg.id}
@@ -2440,7 +2440,7 @@ export default function DashboardClient({
                     </div>
 
                     {/* --- GLOBAL BUTTON PROPERTIES (Global Buton Özellikleri) --- */}
-                    <div className={`p-8 rounded-2xl border space-y-6 ${
+                    <div className={`p-4 md:p-8 rounded-2xl border space-y-6 ${
                       "bg-white border-zinc-200 shadow-sm"
                     }`}>
                       <div className="flex items-center justify-between">
@@ -2705,7 +2705,7 @@ export default function DashboardClient({
                           </p>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-4 gap-4">
                           {LINK_TEMPLATES.map((tmpl) => {
                             const Icon = tmpl.icon;
                             const unlocked = isLinkTemplateUnlocked(tmpl.tier);
@@ -3129,7 +3129,7 @@ export default function DashboardClient({
 
                 <div className="space-y-3">
                   {links.length === 0 ? (
-                    <div className={`p-8 text-center rounded-2xl border border-dashed text-sm text-slate-500 ${
+                    <div className={`p-4 md:p-8 text-center rounded-2xl border border-dashed text-sm text-slate-500 ${
                       "bg-white border-zinc-200 shadow-sm"
                     }`}>
                       {t.noLinks}
@@ -3555,7 +3555,7 @@ export default function DashboardClient({
                           </div>
 
                           {/* Secondary style controls grid */}
-                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 p-3.5 rounded-xl bg-gray-50 border border-gray-100">
+                          <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 p-3.5 rounded-xl bg-gray-50 border border-gray-100">
                             {/* Border Style */}
                             <div className="flex flex-col gap-1.5">
                               <label className="text-[9px] font-extrabold text-zinc-450 uppercase tracking-wider">
@@ -3997,7 +3997,7 @@ export default function DashboardClient({
               }`}>
                 <div className="space-y-1">
                   <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">{t.totalViews}</span>
-                  <div className={`text-3xl font-black ${"text-zinc-950"}`}>{totalViews}</div>
+                  <div className={`text-xl md:text-3xl font-black ${"text-zinc-950"}`}>{totalViews}</div>
                 </div>
                 <div className="p-3 rounded-xl bg-teal-400/10 border border-teal-500/20 text-teal-500">
                   <Eye className="h-5 w-5" />
@@ -4009,7 +4009,7 @@ export default function DashboardClient({
               }`}>
                 <div className="space-y-1">
                   <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">{t.totalClicks}</span>
-                  <div className={`text-3xl font-black ${"text-zinc-950"}`}>{totalClicks}</div>
+                  <div className={`text-xl md:text-3xl font-black ${"text-zinc-950"}`}>{totalClicks}</div>
                 </div>
                 <div className="p-3 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
                   <MousePointerClick className="h-5 w-5" />
@@ -4021,7 +4021,7 @@ export default function DashboardClient({
               }`}>
                 <div className="space-y-1">
                   <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">Average CTR</span>
-                  <div className="text-3xl font-black text-emerald-400">{averageCTR}%</div>
+                  <div className="text-xl md:text-3xl font-black text-emerald-400">{averageCTR}%</div>
                 </div>
                 <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
                   <Percent className="h-5 w-5" />
@@ -4044,7 +4044,7 @@ export default function DashboardClient({
             </div>
 
             {totalViews === 0 ? (
-              <div className={`p-12 text-center rounded-2xl border border-dashed space-y-3 ${
+              <div className={`p-4 md:p-12 text-center rounded-2xl border border-dashed space-y-3 ${
                 "bg-white border-zinc-200"
               }`}>
                 <div className="text-slate-500 text-sm font-semibold italic">
@@ -4358,7 +4358,7 @@ export default function DashboardClient({
                             </div>
 
                             {/* Download Action Bar */}
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                               <button
                                 onClick={() => {
                                   const link = document.createElement("a");
@@ -4475,7 +4475,7 @@ export default function DashboardClient({
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-4 gap-4">
                         {QR_TEMPLATES.map((tmpl) => {
                           const Icon = tmpl.icon;
                           const unlocked = isTemplateUnlocked(tmpl.tier);
@@ -4659,7 +4659,7 @@ export default function DashboardClient({
                           {/* DYNAMIC FORM: VCARD */}
                           {selectedTemplate === "VCARD" && (
                             <div className="space-y-4 pt-2">
-                              <div className="grid grid-cols-2 gap-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                   <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Tam İsim</label>
                                   <input
@@ -4686,7 +4686,7 @@ export default function DashboardClient({
                                 </div>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                   <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>E-posta Adresi</label>
                                   <input
@@ -4713,7 +4713,7 @@ export default function DashboardClient({
                                 </div>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                   <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>Başlık / Ünvan</label>
                                   <input
@@ -5160,7 +5160,7 @@ export default function DashboardClient({
           {activeTab === "addons" && (
             <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
               {addons.length === 0 ? (
-                <div className={`p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
+                <div className={`p-4 md:p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
                   "bg-white border-zinc-200 shadow-sm"
                 }`}>
                   <div className="h-16 w-16 rounded-3xl bg-rose-50 flex items-center justify-center mb-2">
@@ -5261,7 +5261,7 @@ export default function DashboardClient({
           {/* STORE TAB CONTENT */}
           {activeTab === "store" && (
             <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
-              <div className={`p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
+              <div className={`p-4 md:p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="h-16 w-16 rounded-3xl bg-indigo-50 flex items-center justify-center mb-2">
@@ -5511,7 +5511,7 @@ export default function DashboardClient({
                                     </select>
                                   </div>
 
-                                  <div className="grid grid-cols-2 gap-4 pt-2">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                                     <div className="space-y-1.5">
                                       <label className="text-[10px] font-bold text-slate-500 block">
                                         {lang === "tr" ? "İsim Rengi" : "Name Color"}
@@ -5560,7 +5560,7 @@ export default function DashboardClient({
                                     {lang === "tr" ? "Buton ve İkon Stili" : "Button & Icon Style"}
                                   </h5>
                                   
-                                  <div className="grid grid-cols-2 gap-x-4 gap-y-5">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
                                     <div className="space-y-1.5">
                                       <label className="text-[10px] font-bold text-slate-500 block">
                                         {lang === "tr" ? "Arka Plan" : "Background"}

@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
     >
       {/* Background glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-purple-900/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-full md:w-[500px] h-[300px] bg-purple-900/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/3 right-1/4 w-64 h-64 bg-blue-900/10 rounded-full blur-3xl" />
       </div>
 
@@ -65,7 +65,7 @@ export default function AdminLoginPage() {
             boxShadow:
               "0 0 60px rgba(139,92,246,0.08), 0 25px 50px rgba(0,0,0,0.6)",
           }}
-          className="p-8"
+          className="p-4 md:p-8"
         >
           {/* Header */}
           <div className="text-center mb-8">

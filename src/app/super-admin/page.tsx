@@ -45,7 +45,7 @@ export default function SuperAdminLoginPage() {
     }}>
       {/* Background glow effect */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-red-900/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-full md:w-96 h-96 bg-red-900/20 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-64 h-64 bg-red-800/10 rounded-full blur-3xl" />
       </div>
 
@@ -57,7 +57,7 @@ export default function SuperAdminLoginPage() {
           borderRadius: "16px",
           backdropFilter: "blur(20px)",
           boxShadow: "0 0 60px rgba(220,38,38,0.1), 0 25px 50px rgba(0,0,0,0.5)"
-        }} className="p-8">
+        }} className="p-4 md:p-8">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{

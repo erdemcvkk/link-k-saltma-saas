@@ -52,7 +52,7 @@ export default function FeatureZigzag({ features }: FeatureZigzagProps) {
                   <SparklesIcon className="h-3.5 w-3.5" />
                   <span>Feature 0{index + 1}</span>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+                <h2 className="text-2xl md:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
                   {feature.title.split(feature.highlightWords || 'MISSING').map((part, i, arr) => (
                     <React.Fragment key={i}>
                       {part}

@@ -158,7 +158,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
             <Sparkles className="h-3.5 w-3.5" />
             {lang === "tr" ? "Kreatör Keşif Gridi" : "Discover Community Grid"}
           </div>
-          <h1 className={`text-4xl md:text-5xl font-black tracking-tight leading-tight bg-clip-text text-transparent bg-gradient-to-r ${
+          <h1 className={`text-2xl md:text-4xl md:text-5xl font-black tracking-tight leading-tight bg-clip-text text-transparent bg-gradient-to-r ${
             isDark ? "from-zinc-100 via-zinc-300 to-zinc-500" : "from-zinc-900 via-zinc-700 to-zinc-500"
           }`}>
             {lang === "tr" ? "PREMIUM KREATÖRLERLE BAĞLANTI KURUN" : "CONNECT WITH MODERN CREATORS"}

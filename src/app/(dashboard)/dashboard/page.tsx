@@ -15,7 +15,7 @@ export default async function DashboardPage() {
   if (user.isBanned) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 text-center">
-        <div className="max-w-md p-8 rounded-3xl bg-zinc-950 border border-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.1)] space-y-6">
+        <div className="max-w-md p-4 md:p-8 rounded-3xl bg-zinc-950 border border-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.1)] space-y-6">
           <div className="w-16 h-16 rounded-full bg-red-950/20 border border-red-500/30 flex items-center justify-center mx-auto text-red-500 animate-pulse">
             <span className="text-xl font-bold">!</span>
           </div>

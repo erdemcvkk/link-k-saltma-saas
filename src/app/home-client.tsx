@@ -119,7 +119,7 @@ export default function HomeClient({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Hero Content */}
           <div className="text-left">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6">
+            <h1 className="text-3xl md:text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6">
               {heroTitle} <br />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-light-blue block mt-2">{heroHighlight}</span>
             </h1>
@@ -255,7 +255,7 @@ export default function HomeClient({
                 <TrendingUp className="h-3.5 w-3.5" />
                 <span>Gelişmiş Analizler</span>
               </div>
-              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+              <h2 className="text-2xl md:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
                 Kitlenizi Anlayın.<br/>
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-light-blue">Performansınızı Ölçün.</span>
               </h2>
@@ -313,7 +313,7 @@ export default function HomeClient({
                       <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#4158ff" strokeWidth="4.2" strokeDasharray="20 80" strokeDashoffset="115" />
                     </svg>
                   </div>
-                  <div className="w-full grid grid-cols-2 gap-1 text-[9px] font-bold text-slate-600 mt-1">
+                  <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-1 text-[9px] font-bold text-slate-600 mt-1">
                     <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-true-black"></span> %35 (18-24)</div>
                     <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-neon-blue"></span> %25 (25-34)</div>
                     <div className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-light-blue"></span> %20 (35-44)</div>
@@ -352,7 +352,7 @@ export default function HomeClient({
                 <div className="bg-neon-blue text-white text-center py-1 px-4 rounded-full text-[10px] font-bold tracking-wider w-fit mx-auto">
                   Bağlantı Tıklama Oranları
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-3 pt-2 text-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-5 gap-3 pt-2 text-center">
                   {[
                     { name: "Instagram", pct: 40, offset: 150 },
                     { name: "YouTube", pct: 25, offset: 190 },
@@ -411,7 +411,7 @@ export default function HomeClient({
       <section id="pricing" className="py-24 px-6 bg-gray-50 border-t border-gray-100">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
+            <h2 className="text-2xl md:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
               Basit ve Şeffaf Fiyatlandırma
             </h2>
             <p className="text-lg text-slate-500 max-w-2xl mx-auto">
@@ -421,10 +421,10 @@ export default function HomeClient({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {/* FREE TIER */}
-            <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col">
+            <div className="bg-white rounded-3xl p-4 md:p-8 border border-gray-100 shadow-sm flex flex-col">
               <div className="mb-6">
                 <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-full">Ücretsiz</span>
-                <h3 className="text-4xl font-extrabold text-slate-900 mt-4">0 ₺ <span className="text-base text-slate-500 font-medium">/ ömür boyu</span></h3>
+                <h3 className="text-2xl md:text-4xl font-extrabold text-slate-900 mt-4">0 ₺ <span className="text-base text-slate-500 font-medium">/ ömür boyu</span></h3>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
@@ -457,13 +457,13 @@ export default function HomeClient({
             </div>
 
             {/* STARTER TIER */}
-            <div className="bg-slate-900 rounded-3xl p-8 border-2 border-slate-900 shadow-xl flex flex-col relative transform md:-translate-y-4">
+            <div className="bg-slate-900 rounded-3xl p-4 md:p-8 border-2 border-slate-900 shadow-xl flex flex-col relative transform md:-translate-y-4">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-gradient-to-r from-neon-blue to-light-blue text-white text-xs font-black uppercase tracking-widest rounded-full">
                 En Popüler
               </div>
               <div className="mb-6 mt-2">
                 <span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold uppercase tracking-wider rounded-full">Başlangıç</span>
-                <h3 className="text-4xl font-extrabold text-white mt-4">{priceStarter} ₺ <span className="text-base text-slate-400 font-medium">/ ay</span></h3>
+                <h3 className="text-2xl md:text-4xl font-extrabold text-white mt-4">{priceStarter} ₺ <span className="text-base text-slate-400 font-medium">/ ay</span></h3>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-300 text-sm">
@@ -508,10 +508,10 @@ export default function HomeClient({
             </div>
 
             {/* CREATOR TIER */}
-            <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col">
+            <div className="bg-white rounded-3xl p-4 md:p-8 border border-gray-100 shadow-sm flex flex-col">
               <div className="mb-6">
                 <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-full">Üretici</span>
-                <h3 className="text-4xl font-extrabold text-slate-900 mt-4">{priceCreator} ₺ <span className="text-base text-slate-500 font-medium">/ ay</span></h3>
+                <h3 className="text-2xl md:text-4xl font-extrabold text-slate-900 mt-4">{priceCreator} ₺ <span className="text-base text-slate-500 font-medium">/ ay</span></h3>
               </div>
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-center gap-3 text-slate-600 text-sm">
@@ -564,8 +564,8 @@ export default function HomeClient({
 
       {/* Simple CTA Footer */}
       <section className="py-24 px-6 text-center bg-white border-t border-gray-100">
-        <div className="max-w-3xl mx-auto bg-gray-50 rounded-3xl p-12 shadow-sm border border-gray-100">
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6">
+        <div className="max-w-3xl mx-auto bg-gray-50 rounded-3xl p-4 md:p-12 shadow-sm border border-gray-100">
+          <h2 className="text-2xl md:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-6">
             Kitlenizi büyütmeye hazır mısınız?
           </h2>
           <p className="text-slate-500 mb-8 max-w-lg mx-auto">
@@ -573,7 +573,7 @@ export default function HomeClient({
           </p>
           <Link
             href="/sign-up"
-            className="inline-flex items-center space-x-2 px-8 py-4 rounded-full bg-slate-900 text-white font-bold text-base hover:bg-slate-800 transition-colors shadow-sm"
+            className="inline-flex items-center space-x-2 px-4 md:px-8 py-4 rounded-full bg-slate-900 text-white font-bold text-base hover:bg-slate-800 transition-colors shadow-sm"
           >
             <span>Ücretsiz Başla</span>
             <ArrowRight className="h-5 w-5" />

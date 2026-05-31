@@ -981,7 +981,7 @@ export default function AdminClient({
         <main className="flex-1 flex flex-col min-w-0">
           
           {/* Header Bar */}
-          <header className={`px-8 py-5 border-b flex items-center justify-between ${
+          <header className={`px-4 md:px-8 py-5 border-b flex items-center justify-between ${
             isDark ? "border-zinc-800" : "border-zinc-150"
           }`}>
             {/* Search Input matching top left search from mockup */}
@@ -1045,7 +1045,7 @@ export default function AdminClient({
           </header>
 
           {/* Body Content Container */}
-          <div className="p-8 flex-1 overflow-y-auto">
+          <div className="p-4 md:p-8 flex-1 overflow-y-auto">
             {/* Notifications */}
             {errorMsg && (
               <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-650 text-xs font-semibold mb-6">
@@ -1327,7 +1327,7 @@ export default function AdminClient({
                   <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm flex items-center justify-between">
                     <div className="space-y-1">
                       <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-black">{lang === "tr" ? "Toplam Kreatör" : "Total Creators"}</span>
-                      <div className="text-3xl font-black text-zinc-800">{stats.totalUsers}</div>
+                      <div className="text-xl md:text-3xl font-black text-zinc-800">{stats.totalUsers}</div>
                     </div>
                     <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500">
                       <Users className="h-6 w-6" />
@@ -1338,7 +1338,7 @@ export default function AdminClient({
                   <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm flex items-center justify-between">
                     <div className="space-y-1">
                       <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-black">{lang === "tr" ? "Starter Planlar" : "Starter Plans"}</span>
-                      <div className="text-3xl font-black text-purple-600">{stats.starterCount}</div>
+                      <div className="text-xl md:text-3xl font-black text-purple-600">{stats.starterCount}</div>
                     </div>
                     <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600">
                       <CreditCard className="h-6 w-6" />
@@ -1349,7 +1349,7 @@ export default function AdminClient({
                   <div className="p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm flex items-center justify-between">
                     <div className="space-y-1">
                       <span className="text-[10px] text-zinc-400 uppercase tracking-widest font-black">{lang === "tr" ? "Creator Planlar" : "Creator Plans"}</span>
-                      <div className="text-3xl font-black text-fuchsia-600">{stats.creatorCount}</div>
+                      <div className="text-xl md:text-3xl font-black text-fuchsia-600">{stats.creatorCount}</div>
                     </div>
                     <div className="w-12 h-12 rounded-2xl bg-fuchsia-50 flex items-center justify-center text-fuchsia-650">
                       <Sparkles className="h-6 w-6" />
@@ -1360,7 +1360,7 @@ export default function AdminClient({
                   <div className="p-6 bg-gradient-to-tr from-rose-500 to-pink-500 border-0 rounded-[24px] shadow-sm flex items-center justify-between text-white">
                     <div className="space-y-1">
                       <span className="text-[10px] text-rose-100 uppercase tracking-widest font-black">{lang === "tr" ? "Toplam Simüle Kazanç" : "Total Revenue"}</span>
-                      <div className="text-3xl font-black">{stats.totalRevenue}₺</div>
+                      <div className="text-xl md:text-3xl font-black">{stats.totalRevenue}₺</div>
                     </div>
                     <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-white">
                       <TrendingUp className="h-6 w-6" />
@@ -2831,7 +2831,7 @@ export default function AdminClient({
                                           <span className="text-[8px] font-black text-zinc-400 uppercase tracking-wider">
                                             🎨 {lang === "tr" ? "Hazır Kutu Şablonu Seç" : "Select Box Style"}
                                           </span>
-                                          <div className="grid grid-cols-5 gap-1 mt-1">
+                                          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-1 mt-1">
                                             {presets.map((p) => (
                                               <button
                                                 key={p.name}

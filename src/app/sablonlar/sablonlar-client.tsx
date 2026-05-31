@@ -178,11 +178,11 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
     <div className="min-h-screen bg-zinc-950 text-white font-sans relative overflow-hidden pb-16">
       <GlobalOverlayManager />
       
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-full md:w-96 h-96 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-1/4 w-full md:w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-[1800px] mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-full md:w-[1800px] mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="font-black text-xl tracking-tighter text-white">
             Link.SaaS
           </Link>
@@ -194,13 +194,13 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
         </div>
       </nav>
 
-      <div className="max-w-[1800px] mx-auto px-6 pt-16 pb-6">
+      <div className="max-w-full md:w-[1800px] mx-auto px-6 pt-16 pb-6">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 text-rose-500 font-bold text-sm mb-6">
             <Sparkles className="h-4 w-4" />
             <span>Premium Şablon Vitrini</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
+          <h1 className="text-2xl md:text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
             Sayfanıza <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">Güç Katın</span>
           </h1>
           <p className="text-lg text-zinc-400 font-medium">
@@ -209,7 +209,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
         </div>
       </div>
 
-      <div className="max-w-[1800px] mx-auto px-6 py-6 space-y-12">
+      <div className="max-w-full md:w-[1800px] mx-auto px-6 py-6 space-y-12">
         <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-zinc-900/40 p-4 rounded-3xl border border-zinc-800 backdrop-blur-sm max-w-5xl mx-auto">
           <div className="flex flex-wrap gap-2 justify-center md:justify-start w-full md:w-auto">
             {categories.map((cat) => (
@@ -311,7 +311,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
               <div className="flex justify-center pt-8">
                 <button
                   onClick={() => setVisibleCount(prev => prev + 4)}
-                  className="px-8 py-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800 text-white font-bold transition-all flex items-center gap-2"
+                  className="px-4 md:px-8 py-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800 text-white font-bold transition-all flex items-center gap-2"
                 >
                   Devamını Gör
                 </button>
@@ -349,7 +349,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
                       <CreditCard className="absolute left-3.5 top-3.5 h-4 w-4 text-zinc-500" />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Son Kullanma Tarihi</label>
                       <input type="text" placeholder="MM/YY" maxLength={5} value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue/50 outline-none text-white text-xs font-mono" required />

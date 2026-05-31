@@ -190,7 +190,7 @@ export default function GlobalOverlayManager({ onStateChange }: OverlayManagerPr
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-zinc-100">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-5 pt-4 border-t border-zinc-100">
             <button
               onClick={() => handleCookieConsent("none")}
               className="px-3 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-[10px] font-bold transition-all text-center"

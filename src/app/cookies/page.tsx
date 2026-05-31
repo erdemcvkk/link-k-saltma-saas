@@ -117,7 +117,7 @@ export default async function CookiePolicyPage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="bg-white rounded-3xl border border-zinc-100 shadow-sm p-10">
+        <div className="bg-white rounded-3xl border border-zinc-100 shadow-sm p-4 md:p-10">
           <div
             className="prose prose-zinc max-w-none prose-headings:font-black prose-headings:text-zinc-900 prose-p:text-zinc-600 prose-p:leading-relaxed prose-li:text-zinc-600 prose-a:text-amber-500 prose-a:no-underline hover:prose-a:underline prose-h2:text-lg prose-h2:mt-8 prose-h2:mb-3 prose-h3:text-base prose-h3:font-bold prose-h3:text-zinc-800 prose-h3:mt-5 prose-table:text-sm prose-thead:bg-zinc-50 prose-th:font-bold prose-th:text-zinc-700 prose-td:text-zinc-600 prose-code:text-amber-600 prose-code:bg-amber-50 prose-code:px-1 prose-code:rounded"
             dangerouslySetInnerHTML={{ __html: content }}

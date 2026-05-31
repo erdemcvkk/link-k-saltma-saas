@@ -195,17 +195,17 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
         </div>
       )}
 
-      <div className="w-full max-w-[1500px] h-[90vh] min-h-[800px] rounded-[32px] border border-white/10 bg-zinc-950 flex overflow-hidden shadow-2xl">
+      <div className="w-full max-w-full md:w-[1500px] h-[90vh] min-h-[800px] rounded-[32px] border border-white/10 bg-zinc-950 flex overflow-hidden shadow-2xl">
         
         {/* Left Control Panel */}
-        <div className="w-[600px] flex flex-col border-r border-white/5 bg-zinc-950 shrink-0 relative overflow-hidden">
+        <div className="w-full md:w-[600px] flex flex-col border-r border-white/5 bg-zinc-950 shrink-0 relative overflow-hidden">
           
-          <div className="p-8 border-b border-white/5 flex items-start justify-between">
+          <div className="p-4 md:p-8 border-b border-white/5 flex items-start justify-between">
             <div>
               <Link href="/admin" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-4 text-sm font-medium">
                 <ArrowLeft className="h-4 w-4" /> Admin Paneli
               </Link>
-              <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
+              <h1 className="text-xl md:text-3xl font-black text-white tracking-tight flex items-center gap-3">
                 <LayoutGrid className="h-7 w-7 text-neon-blue" /> Şablon Yönetimi
               </h1>
               <p className="text-sm text-zinc-400 font-medium mt-2">Sistemdeki genel ve özel şablonları yönetin.</p>
@@ -218,7 +218,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-8 relative no-scrollbar">
+          <div className="flex-1 overflow-y-auto p-4 md:p-8 relative no-scrollbar">
             <div className="space-y-6 animate-fadeIn">
               <div className="p-4 rounded-2xl bg-neon-blue/10 border border-neon-blue/20 flex items-start gap-3">
                 <Info className="h-5 w-5 text-neon-blue shrink-0 mt-0.5" />
@@ -240,7 +240,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
 
               <div className="space-y-3">
                 {templates.length === 0 ? (
-                   <div className="p-8 text-center border border-dashed border-zinc-800 rounded-2xl">
+                   <div className="p-4 md:p-8 text-center border border-dashed border-zinc-800 rounded-2xl">
                      <p className="text-zinc-500 text-sm">Henüz şablon bulunmuyor.</p>
                    </div>
                 ) : templates.map(template => {
@@ -342,7 +342,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                 </div>
 
                 <form onSubmit={handleAddTemplate} className="space-y-5">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Şablon Adı *</label>
                       <input
@@ -360,7 +360,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Kategori</label>
                       <select
@@ -468,7 +468,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
         {/* Right Live Simulator */}
         <div className="flex-1 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-black flex flex-col relative items-center justify-center overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-tr from-neon-blue/5 via-transparent to-purple-500/5" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-neon-blue/10 blur-[150px] rounded-full pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-[800px] h-[400px] bg-neon-blue/10 blur-[150px] rounded-full pointer-events-none" />
           
           <div className="absolute top-6 left-6 flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-zinc-900/90 backdrop-blur border border-white/10 z-10 shadow-2xl">
             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />

@@ -111,17 +111,17 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
         </div>
       )}
 
-      <div className="w-full max-w-[1500px] h-[90vh] min-h-[800px] rounded-[32px] border border-white/10 bg-zinc-950 flex overflow-hidden shadow-2xl">
+      <div className="w-full max-w-full md:w-[1500px] h-[90vh] min-h-[800px] rounded-[32px] border border-white/10 bg-zinc-950 flex overflow-hidden shadow-2xl">
         
         {/* Left Control Panel */}
-        <div className="w-[500px] flex flex-col border-r border-white/5 bg-zinc-950 shrink-0 relative">
+        <div className="w-full md:w-[500px] flex flex-col border-r border-white/5 bg-zinc-950 shrink-0 relative">
           
-          <div className="p-8 border-b border-white/5 flex items-start justify-between">
+          <div className="p-4 md:p-8 border-b border-white/5 flex items-start justify-between">
             <div>
               <Link href="/admin" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-4 text-sm font-medium">
                 <ArrowLeft className="h-4 w-4" /> Admin Paneli
               </Link>
-              <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-3">
+              <h1 className="text-xl md:text-3xl font-black text-white tracking-tight flex items-center gap-3">
                 <Store className="h-7 w-7 text-rose-500" /> Platform Temaları
               </h1>
               <p className="text-sm text-zinc-400 font-medium mt-2">Müşterilerinize sunduğunuz temaları ve eklentileri yönetin.</p>
@@ -147,7 +147,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-8 relative no-scrollbar">
+          <div className="flex-1 overflow-y-auto p-4 md:p-8 relative no-scrollbar">
             {activeTab === "themes" ? (
               <div className="space-y-6 animate-fadeIn">
                 <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-start gap-3">
@@ -297,11 +297,11 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
             <span className="text-xs font-black uppercase tracking-widest text-zinc-300">Live Simulator</span>
           </div>
 
-          <div className="flex-1 overflow-y-auto no-scrollbar relative flex items-center justify-center p-8 z-0">
+          <div className="flex-1 overflow-y-auto no-scrollbar relative flex items-center justify-center p-4 md:p-8 z-0">
             {/* A subtle glow behind the simulator */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-rose-500/10 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-[800px] h-[400px] bg-rose-500/10 blur-[120px] rounded-full pointer-events-none" />
             
-            <div className="w-[1600px] transform scale-[0.6] lg:scale-[0.8] 2xl:scale-[0.9] origin-center transition-transform duration-500">
+            <div className="w-full md:w-[1600px] transform scale-[0.6] lg:scale-[0.8] 2xl:scale-[0.9] origin-center transition-transform duration-500">
               <EklentilerClient products={initialProducts.filter(p => p.isActive)} settings={settings} />
             </div>
           </div>

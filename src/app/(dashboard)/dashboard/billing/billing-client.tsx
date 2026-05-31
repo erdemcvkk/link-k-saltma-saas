@@ -97,7 +97,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
             <Sparkles className="h-3 w-3" />
             Billing Portal
           </div>
-          <h1 className="text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-light-blue">
+          <h1 className="text-xl md:text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-light-blue">
             PLANS & BILLING
           </h1>
           <p className="text-zinc-500 text-sm">Manage your subscription and billing logs.</p>
@@ -166,7 +166,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
               {currentPlan === "FREE" && <span className="px-2 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">Active Plan</span>}
             </div>
             <h3 className="text-xl font-bold mb-1 text-zinc-900">FREE</h3>
-            <div className="text-3xl font-black mb-4 text-zinc-900">0₺ <span className="text-xs font-normal text-zinc-400">/ forever</span></div>
+            <div className="text-xl md:text-3xl font-black mb-4 text-zinc-900">0₺ <span className="text-xs font-normal text-zinc-400">/ forever</span></div>
             
             <ul className="space-y-3 text-xs text-zinc-600 border-t border-zinc-100 pt-4 mb-6">
               <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> 1 Adet Aktif Bio Link Sayfası (link.saas/kullaniciadi)</li>
@@ -195,7 +195,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
               {currentPlan === "STARTER" && <span className="px-2 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">Active Plan</span>}
             </div>
             <h3 className="text-xl font-bold mb-1 text-zinc-900">STARTER</h3>
-            <div className="text-3xl font-black mb-4 text-zinc-900">{priceStarter}₺ <span className="text-xs font-normal text-zinc-400">/ month</span></div>
+            <div className="text-xl md:text-3xl font-black mb-4 text-zinc-900">{priceStarter}₺ <span className="text-xs font-normal text-zinc-400">/ month</span></div>
             
             <ul className="space-y-3 text-xs text-zinc-600 border-t border-zinc-100 pt-4 mb-6">
               <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Ücretsiz Plandaki Tüm Özellikler</li>
@@ -235,7 +235,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
               {currentPlan === "CREATOR" && <span className="px-2 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">Active Plan</span>}
             </div>
             <h3 className="text-xl font-bold mb-1 text-zinc-900">CREATOR</h3>
-            <div className="text-3xl font-black mb-4 text-zinc-900">{priceCreator}₺ <span className="text-xs font-normal text-zinc-400">/ month</span></div>
+            <div className="text-xl md:text-3xl font-black mb-4 text-zinc-900">{priceCreator}₺ <span className="text-xs font-normal text-zinc-400">/ month</span></div>
             
             <ul className="space-y-3 text-xs text-zinc-600 border-t border-zinc-100 pt-4 mb-6">
               <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Başlangıç Planındaki Tüm Özellikler</li>
@@ -275,7 +275,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
         </div>
 
         {payments.length === 0 ? (
-          <div className="p-8 text-center text-xs text-zinc-400 italic border border-dashed border-zinc-200 rounded-xl">
+          <div className="p-4 md:p-8 text-center text-xs text-zinc-400 italic border border-dashed border-zinc-200 rounded-xl">
             No mock payments recorded yet. Upgrade your plan to create a transaction log.
           </div>
         ) : (

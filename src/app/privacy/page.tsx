@@ -87,7 +87,7 @@ export default async function PrivacyPolicyPage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="bg-white rounded-3xl border border-zinc-100 shadow-sm p-10">
+        <div className="bg-white rounded-3xl border border-zinc-100 shadow-sm p-4 md:p-10">
           <div
             className="prose prose-zinc max-w-none prose-headings:font-black prose-headings:text-zinc-900 prose-p:text-zinc-600 prose-p:leading-relaxed prose-li:text-zinc-600 prose-a:text-rose-500 prose-a:no-underline hover:prose-a:underline prose-h2:text-lg prose-h2:mt-8 prose-h2:mb-3 prose-ul:mt-2"
             dangerouslySetInnerHTML={{ __html: content }}
