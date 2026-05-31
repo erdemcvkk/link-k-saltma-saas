@@ -358,6 +358,8 @@ export default function DashboardClient({
   const [btnBorderRadius, setBtnBorderRadius] = useState(firstLink?.borderRadius || "12px");
   const [btnShadow, setBtnShadow] = useState(firstLink?.shadow || "none");
   const [btnFontWeight, setBtnFontWeight] = useState(firstLink?.fontWeight || "font-bold");
+  const [btnIconColor, setBtnIconColor] = useState("");
+  const [quickLinkIconColor, setQuickLinkIconColor] = useState("");
 
   useEffect(() => {
     if (customizingTemplateId) {
