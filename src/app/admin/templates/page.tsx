@@ -57,11 +57,21 @@ export default async function AdminTemplatesPage() {
  createdAt: t.createdAt.toISOString(),
  }));
 
+ const fonts = await db.managedFont.findMany({
+   orderBy: { name: "asc" },
+ });
+
+ const serializedFonts = fonts.map(f => ({
+   name: f.name,
+   value: f.value,
+ }));
+
  return (
  <TemplatesClient
  adminUserId={auth.id}
  adminRole={auth.role}
  initialTemplates={serializedTemplates}
+ fonts={serializedFonts}
  />
  );
 }
