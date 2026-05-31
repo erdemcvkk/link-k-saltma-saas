@@ -3788,13 +3788,13 @@ export default function DashboardClient({
                   </Link>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                   {ownedTemplates.map((template) => {
                     const isCurrentlyApplied = background === template.bgColor && fontStyle === template.fontStyle;
                     return (
                       <div 
                         key={template.id} 
-                        className={`p-5 rounded-2xl border transition-all flex flex-col justify-between gap-5 ${
+                        className={`w-full max-w-full overflow-hidden p-5 rounded-2xl border transition-all flex flex-col justify-between gap-5 ${
                           isCurrentlyApplied 
                             ? "bg-teal-50/20 border-teal-500 shadow-md shadow-teal-500/5" 
                             : "bg-zinc-50/50 border-zinc-200 hover:border-zinc-300 hover:shadow-sm"
@@ -5186,7 +5186,7 @@ export default function DashboardClient({
                   </a>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                   {addons.map(addon => {
                       const getDefaultSlug = (type: string) => {
                         if (type === "MINI_STORE") return "store";
