@@ -236,7 +236,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
         </div>
 
         {/* Grid List */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-4 md:gap-6">
           {filteredCreators.length === 0 ? (
             <div className={`md:col-span-3 text-center py-20 text-xs italic border rounded-3xl border-dashed ${
               isDark ? "text-zinc-500 bg-zinc-950/20 border-zinc-900" : "text-zinc-600 bg-zinc-100/30 border-zinc-300"
@@ -247,7 +247,7 @@ export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }:
             filteredCreators.map((creator) => (
               <div
                 key={creator.id}
-                className={`p-3 md:p-6 rounded-[2rem] border backdrop-blur-md flex flex-col justify-between gap-6 transition-all duration-300 relative overflow-hidden group ${
+                className={`p-3 md:p-6 rounded-[2rem] border backdrop-blur-md flex flex-col justify-between gap-4 md:gap-6 transition-all duration-300 relative overflow-hidden group ${
                   isDark ? "bg-zinc-950 border-zinc-900/60" : "bg-white border-zinc-200 shadow-sm"
                 } ${getCardHoverStyle(creator.theme)}`}
               >

@@ -23,7 +23,7 @@ export default function FloatingUpgradePrompt({ currentPlan, globalSettings }: F
 
   return (
     <div className="fixed bottom-4 right-4 z-50 max-w-sm w-full p-0.5 rounded-3xl bg-gradient-to-tr from-purple-600 via-fuchsia-500 to-indigo-500 shadow-[0_10px_30px_rgba(168,85,247,0.3)] hover:shadow-[0_12px_40px_rgba(168,85,247,0.45)] transition-all duration-300 animate-in fade-in slide-in-from-bottom-5">
-      <div className="relative bg-zinc-950 p-5 rounded-[22px] overflow-hidden space-y-4">
+      <div className="relative bg-zinc-950 p-4 md:p-5 rounded-[22px] overflow-hidden space-y-4">
         
         {/* Soft Ambient Light inside Card */}
         <div className="absolute -top-12 -right-12 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl pointer-events-none" />

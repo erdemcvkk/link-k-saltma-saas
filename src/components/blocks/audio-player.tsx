@@ -120,7 +120,7 @@ export default function AudioPlayer({ title, url, isDark = true, boxStyle, class
 
         {/* Dynamic Wave and Text */}
         <div className="flex-1 min-w-0 space-y-1">
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-[10px] font-black uppercase tracking-widest text-purple-400 flex items-center gap-1 truncate">
               <Music className="h-3.5 w-3.5" /> Ses / Demo Beat Oynatıcı
             </span>
@@ -161,7 +161,7 @@ export default function AudioPlayer({ title, url, isDark = true, boxStyle, class
         </div>
 
         {/* Time duration tags & Mute control */}
-        <div className="flex items-center justify-between text-[9px] font-bold text-zinc-500">
+        <div className="flex flex-wrap items-center justify-between text-[9px] font-bold text-zinc-500">
           <span>{formatTime(currentTime)}</span>
           <div className="flex items-center gap-2">
             <button

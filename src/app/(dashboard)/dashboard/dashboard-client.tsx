@@ -1512,7 +1512,7 @@ export default function DashboardClient({
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 p-3 md:p-6 max-w-7xl mx-auto flex flex-col gap-6 font-corporate overflow-x-hidden ${
+    <div className={`min-h-screen transition-colors duration-500 p-3 md:p-6 max-w-7xl mx-auto flex flex-col gap-4 md:gap-6 font-corporate overflow-x-hidden ${
       "bg-white text-zinc-900"
     }`}>
       <GlobalOverlayManager onStateChange={handleStateChange} />
@@ -1706,7 +1706,7 @@ export default function DashboardClient({
       )}
 
       {/* Core Tabs Workspaces */}
-      <div className="flex flex-col lg:flex-row gap-8 w-full items-start justify-start">
+      <div className="flex flex-col lg:flex-row gap-4 md:gap-8 w-full items-start justify-start">
         
         {/* LEFT COLUMN: ACTIVE WORKSPACE CONTENT */}
         <div className="flex-1 space-y-8 max-w-3xl w-full">
@@ -1762,7 +1762,7 @@ export default function DashboardClient({
                   <div className={`p-4 md:p-8 rounded-2xl border space-y-6 ${
                     "bg-white border-zinc-200 shadow-sm"
                   }`}>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between">
                       <div className="flex items-center gap-3">
                         <User className="h-5 w-5 text-teal-500" />
                         <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{t.profileCustomizer}</h2>
@@ -1779,7 +1779,7 @@ export default function DashboardClient({
                       </button>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid md:grid-cols-2 gap-4 md:gap-6">
                       <div className="space-y-2">
                         <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>{t.usernameLabel}</label>
                         <div className={`flex items-center rounded-xl border focus-within:border-teal-500/50 overflow-hidden px-3 ${
@@ -1800,7 +1800,7 @@ export default function DashboardClient({
                         <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>
                           {lang === "tr" ? "Profil Fotoğrafı Yükle" : "Upload Profile Photo"}
                         </label>
-                        <div className={`p-5 rounded-xl border flex items-center gap-5 ${
+                        <div className={`p-4 md:p-5 rounded-xl border flex items-center gap-5 ${
                           "bg-zinc-100 border-zinc-200"
                         }`}>
                           <div className={`w-16 h-16 rounded-full border flex items-center justify-center overflow-hidden shrink-0 ${
@@ -1883,7 +1883,7 @@ export default function DashboardClient({
                             : "Select custom colors for your username and bio details. 100% unlocked for all membership tiers!"}
                         </p>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                           {/* Username Color Selector */}
                           <div className={`p-4 rounded-xl border space-y-3 ${"bg-zinc-50 border-zinc-200"}`}>
                             <div className="flex justify-between items-center">
@@ -1987,7 +1987,7 @@ export default function DashboardClient({
                   <div className={`p-4 md:p-8 rounded-2xl border space-y-6 ${
                     "bg-white border-zinc-200 shadow-sm"
                   }`}>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between">
                       <div className="flex items-center gap-3">
                         <Sparkles className="h-5 w-5 text-teal-500" />
                         <div>
@@ -2075,7 +2075,7 @@ export default function DashboardClient({
                       </div>
 
                       {/* Canlı Tipografi Önizleme Kartı */}
-                      <div className={`p-5 rounded-xl border space-y-2 text-center transition-all ${
+                      <div className={`p-4 md:p-5 rounded-xl border space-y-2 text-center transition-all ${
                         "bg-zinc-50 border-zinc-150"
                       }`}>
                         <span className="text-[9px] font-black uppercase tracking-widest text-slate-500 block">
@@ -2172,7 +2172,7 @@ export default function DashboardClient({
               <div className={`p-3 md:p-6 rounded-2xl border space-y-4 relative overflow-hidden ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Laptop className="h-5 w-5 text-indigo-400" />
                     <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>
@@ -2194,7 +2194,7 @@ export default function DashboardClient({
                     <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Ücretsiz Arka Planlar (5 Adet)" : "Free Plan Backdrops (5 Colors)"}
                     </span>
-                    <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
                       {FREE_BACKGROUNDS.map((bg) => (
                         <button
                           key={bg.id}
@@ -2247,7 +2247,7 @@ export default function DashboardClient({
                     <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Starter Paket Arka Planları (10 Adet)" : "Starter Plan Backdrops (10 Colors)"}
                     </span>
-                    <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
                       {STARTER_BACKGROUNDS.map((bg) => (
                         <button
                           key={bg.id}
@@ -2323,7 +2323,7 @@ export default function DashboardClient({
                     <span className="text-[10px] text-teal-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Creator Plana Özel Arka Planlar (20 Adet)" : "Creator Exclusive Backdrops (20 Colors)"}
                     </span>
-                    <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
                       {[...STARTER_BACKGROUNDS, ...CREATOR_BACKGROUNDS].map((bg) => (
                         <button
                           key={bg.id}
@@ -2443,7 +2443,7 @@ export default function DashboardClient({
                     <div className={`p-4 md:p-8 rounded-2xl border space-y-6 ${
                       "bg-white border-zinc-200 shadow-sm"
                     }`}>
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap items-center justify-between">
                         <div className="flex items-center gap-3">
                           <MousePointerClick className="h-5 w-5 text-teal-500" />
                           <div>
@@ -2675,7 +2675,7 @@ export default function DashboardClient({
                   <div className={`p-3 md:p-6 rounded-2xl border space-y-6 ${
                     "bg-white border-zinc-200 shadow-sm"
                   }`}>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between">
                       <div className="flex items-center gap-3">
                         <Plus className="h-5 w-5 text-emerald-400" />
                         <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{t.addLink}</h2>
@@ -2726,7 +2726,7 @@ export default function DashboardClient({
                                   setLinkSelectedTemplate(tmpl.id);
                                   setNewTitle(tmpl.name);
                                 }}
-                                className={`p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-3 transition-all relative group cursor-pointer ${
+                                className={`p-4 md:p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-3 transition-all relative group cursor-pointer ${
                                   unlocked 
                                     ? "bg-white border-zinc-200 hover:border-emerald-350 hover:shadow-md"
                                     : "opacity-40 cursor-not-allowed"
@@ -3144,7 +3144,7 @@ export default function DashboardClient({
                             : "bg-zinc-50 border-zinc-100 opacity-60 text-slate-500"
                         }`}
                       >
-                        <div className="flex items-center justify-between gap-4">
+                        <div className="flex flex-wrap items-center justify-between gap-4">
                           <div
                             onClick={() => setExpandedLinkCard(expandedLinkCard === link.id ? null : link.id)}
                             className="flex items-center gap-3 cursor-pointer flex-1 min-w-0 select-none"
@@ -3234,7 +3234,7 @@ export default function DashboardClient({
 
                         {/* Box Style Customizations */}
                         <div className={`pt-4 border-t flex flex-col gap-3.5 ${"border-zinc-100"}`}>
-                          <div className="flex items-center justify-between">
+                          <div className="flex flex-wrap items-center justify-between">
                             <div className="flex items-center gap-1.5">
                               <Palette className="h-3.5 w-3.5 text-teal-500" />
                               <span className={`text-[10px] uppercase font-black tracking-wider ${"text-zinc-655"}`}>
@@ -3555,7 +3555,7 @@ export default function DashboardClient({
                           </div>
 
                           {/* Secondary style controls grid */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 p-3.5 rounded-xl bg-gray-50 border border-gray-100">
+                          <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-3.5 p-3.5 rounded-xl bg-gray-50 border border-gray-100">
                             {/* Border Style */}
                             <div className="flex flex-col gap-1.5">
                               <label className="text-[9px] font-extrabold text-zinc-450 uppercase tracking-wider">
@@ -3667,7 +3667,7 @@ export default function DashboardClient({
             <div className={`p-3 md:p-6 rounded-2xl border space-y-6 ${
               "bg-white border-zinc-200 shadow-sm"
             }`}>
-              <div className="flex items-center justify-between border-b border-zinc-150 pb-5">
+              <div className="flex flex-wrap items-center justify-between border-b border-zinc-150 pb-5">
                 <div className="flex items-center gap-3">
                   <Palette className="h-5 w-5 text-teal-500" />
                   <div>
@@ -3794,7 +3794,7 @@ export default function DashboardClient({
                     return (
                       <div 
                         key={template.id} 
-                        className={`w-full max-w-full overflow-hidden p-5 rounded-2xl border transition-all flex flex-col justify-between gap-5 ${
+                        className={`w-full max-w-full overflow-hidden p-4 md:p-5 rounded-2xl border transition-all flex flex-col justify-between gap-5 ${
                           isCurrentlyApplied 
                             ? "bg-teal-50/20 border-teal-500 shadow-md shadow-teal-500/5" 
                             : "bg-zinc-50/50 border-zinc-200 hover:border-zinc-300 hover:shadow-sm"
@@ -3863,7 +3863,7 @@ export default function DashboardClient({
                           </button>
                         </div>
 
-                        <div className="flex items-center justify-between p-3 rounded-xl bg-zinc-50/50 border border-zinc-100">
+                        <div className="flex flex-wrap items-center justify-between p-3 rounded-xl bg-zinc-50/50 border border-zinc-100">
                           <span className="text-xs font-extrabold text-zinc-700">
                             {lang === "tr" ? "Şablon Durumu" : "Template Status"}
                           </span>
@@ -3992,7 +3992,7 @@ export default function DashboardClient({
         {activeTab === "analytics" && (
           <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
             {/* Top Summaries Grids */}
-            <div className="grid md:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-4 gap-4 md:gap-6">
               <div className={`p-3 md:p-6 rounded-2xl border flex items-center justify-between ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
@@ -4084,7 +4084,7 @@ export default function DashboardClient({
                 </div>
 
                 {/* Sub aggregations grid */}
-                <div className="grid md:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-3 gap-4 md:gap-6">
                   {/* Device and Browser splits */}
                   <div className={`p-3 md:p-6 rounded-2xl border space-y-4 flex flex-col justify-between ${
                     "bg-white border-zinc-200 shadow-sm"
@@ -4244,7 +4244,7 @@ export default function DashboardClient({
           return (
             <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
               {/* Top Banner Alert / Quotas */}
-              <div className={`p-3 md:p-6 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden ${
+              <div className={`p-3 md:p-6 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 relative overflow-hidden ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
                 <div className="space-y-2 flex-1 w-full">
@@ -4300,7 +4300,7 @@ export default function DashboardClient({
               {qrMode === "catalog" && (
                 <>
                   {qrCodes.length === 0 ? (
-                    <div className={`p-16 rounded-2xl border text-center flex flex-col items-center gap-4 ${
+                    <div className={`p-6 md:p-16 rounded-2xl border text-center flex flex-col items-center gap-4 ${
                       "bg-white border-zinc-200 shadow-sm"
                     }`}>
                       <div className="h-16 w-16 rounded-full bg-teal-400/10 flex items-center justify-center border border-teal-500/20">
@@ -4318,14 +4318,14 @@ export default function DashboardClient({
                       </div>
                     </div>
                   ) : (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                       {qrCodes.map((qr) => {
                         const meta = getQrTypeMeta(qr.type);
                         const MetaIcon = meta.icon;
                         return (
                           <div 
                             key={qr.id} 
-                            className={`p-5 rounded-2xl border flex flex-col justify-between gap-5 relative overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md ${
+                            className={`p-4 md:p-5 rounded-2xl border flex flex-col justify-between gap-5 relative overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md ${
                               "bg-white border-zinc-200 shadow-sm hover:border-zinc-350"
                             }`}
                           >
@@ -4476,7 +4476,7 @@ export default function DashboardClient({
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         {QR_TEMPLATES.map((tmpl) => {
                           const Icon = tmpl.icon;
                           const unlocked = isTemplateUnlocked(tmpl.tier);
@@ -4493,7 +4493,7 @@ export default function DashboardClient({
                                 setSelectedTemplate(tmpl.id);
                                 setQrName(tmpl.name);
                               }}
-                              className={`p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-3 transition-all relative group cursor-pointer ${
+                              className={`p-4 md:p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-3 transition-all relative group cursor-pointer ${
                                 unlocked 
                                   ? "bg-white border-zinc-200 hover:border-emerald-350 hover:shadow-md"
                                   : "opacity-40 cursor-not-allowed"
@@ -4540,7 +4540,7 @@ export default function DashboardClient({
                     </div>
                   ) : (
                     /* 2. DYNAMIC TEMPLATE DESIGNER BUILDER */
-                    <div className="flex flex-col lg:flex-row gap-8">
+                    <div className="flex flex-col lg:flex-row gap-4 md:gap-8">
                       {/* Left: Input parameters */}
                       <div className="flex-1 space-y-6">
                         <div className={`p-3 md:p-6 rounded-2xl border space-y-6 ${
@@ -4772,10 +4772,10 @@ export default function DashboardClient({
                               {lang === "tr" ? "QR Kod Tasarımını Özelleştir" : "Customize QR Code Aesthetics"}
                             </h4>
 
-                            <div className="grid md:grid-cols-2 gap-6">
+                            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
                               {/* FG Color */}
                               <div className="space-y-2">
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-wrap items-center justify-between">
                                   <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>
                                     {lang === "tr" ? "Ön Plan Rengi" : "Foreground Color"}
                                   </label>
@@ -4803,7 +4803,7 @@ export default function DashboardClient({
 
                               {/* BG Color */}
                               <div className="space-y-2">
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-wrap items-center justify-between">
                                   <label className={`text-[10px] font-black uppercase tracking-wider block ${"text-zinc-550"}`}>
                                     {lang === "tr" ? "Arka Plan Rengi" : "Background Color"}
                                   </label>
@@ -4831,7 +4831,7 @@ export default function DashboardClient({
                             </div>
 
                             {/* Watermark Branding overlay checkbox */}
-                            <div className={`flex items-center justify-between p-3.5 rounded-xl border ${
+                            <div className={`flex flex-wrap items-center justify-between p-3.5 rounded-xl border ${
                               "bg-zinc-50 border-zinc-200 text-zinc-850"
                             }`}>
                               <div className="space-y-0.5">
@@ -4912,7 +4912,7 @@ export default function DashboardClient({
                       </div>
 
                       {/* Right: Live Responsive Preview Sticky Canvas */}
-                      <div className="w-full lg:w-[320px] shrink-0 sticky top-32 self-start flex flex-col items-center gap-6">
+                      <div className="w-full lg:w-[320px] shrink-0 sticky top-32 self-start flex flex-col items-center gap-4 md:gap-6">
                         <div className="text-center">
                           <span className={`inline-flex items-center gap-1.5 px-3 py-3 md:py-2.5 md:py-1 rounded-full border text-[9px] font-black uppercase tracking-wider ${
                             "bg-white border-zinc-200 text-zinc-700 shadow-sm"
@@ -5443,7 +5443,7 @@ export default function DashboardClient({
                               
                               <div className="space-y-6">
                                 {/* General Design */}
-                                <div className="space-y-4 bg-white p-5 rounded-xl border border-zinc-150 shadow-sm">
+                                <div className="space-y-4 bg-white p-4 md:p-5 rounded-xl border border-zinc-150 shadow-sm">
                                   <h5 className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-1">
                                     <Palette className="h-3.5 w-3.5" />
                                     {lang === "tr" ? "Genel Tasarım" : "General Design"}
@@ -5555,7 +5555,7 @@ export default function DashboardClient({
                                 </div>
 
                                 {/* Button & Icon Styles */}
-                                <div className="space-y-4 bg-white p-5 rounded-xl border border-zinc-150 shadow-sm">
+                                <div className="space-y-4 bg-white p-4 md:p-5 rounded-xl border border-zinc-150 shadow-sm">
                                   <h5 className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-1">
                                     <MousePointerClick className="h-3.5 w-3.5" />
                                     {lang === "tr" ? "Buton ve İkon Stili" : "Button & Icon Style"}
@@ -5664,7 +5664,7 @@ export default function DashboardClient({
 
                               {/* --- QUICK LINK ADDITION (Hızlı Link Ekleme) --- */}
                               <div className="pt-2">
-                                <div className="bg-white p-5 rounded-xl border border-indigo-100 shadow-sm space-y-4">
+                                <div className="bg-white p-4 md:p-5 rounded-xl border border-indigo-100 shadow-sm space-y-4">
                                   <h5 className="text-[11px] font-black text-indigo-600 uppercase tracking-widest flex items-center gap-1.5 mb-1">
                                     <Globe className="h-4 w-4" />
                                     {lang === "tr" ? "Yeni Link Ekle (Önizleme İçin)" : "Add New Link (For Preview)"}

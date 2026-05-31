@@ -194,7 +194,7 @@ export default function StoreThemesShowcase() {
       </nav>
 
       <main className="max-w-full md:w-[1800px] mx-auto px-6 py-12">
-        <div className="flex overflow-x-auto pb-12 gap-10 snap-x snap-mandatory no-scrollbar">
+        <div className="flex overflow-x-auto pb-12 gap-5 md:gap-10 snap-x snap-mandatory no-scrollbar">
           {THEMES.map((theme) => (
             <div key={theme.id} className="snap-center shrink-0 flex flex-col items-center">
 

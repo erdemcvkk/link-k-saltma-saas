@@ -44,7 +44,7 @@ export default function FeatureZigzag({ features }: FeatureZigzagProps) {
           return (
             <div 
               key={feature.id} 
-              className={`flex flex-col md:flex-row items-center gap-12 lg:gap-24 ${!isEven ? 'md:flex-row-reverse' : ''}`}
+              className={`flex flex-col md:flex-row items-center gap-6 md:gap-12 lg:gap-24 ${!isEven ? 'md:flex-row-reverse' : ''}`}
             >
               {/* Text Content */}
               <div className="flex-1 space-y-8">

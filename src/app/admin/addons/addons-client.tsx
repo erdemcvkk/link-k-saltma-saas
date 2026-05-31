@@ -157,7 +157,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between">
                   <h3 className="text-lg font-bold text-white flex items-center gap-2">
                     <LayoutGrid className="h-5 w-5 text-zinc-500" /> Tema Listesi ({ADDON_TYPES.length})
                   </h3>

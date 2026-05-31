@@ -280,7 +280,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
     return (
       <div className="w-full min-h-screen bg-[#f3f4f6] flex flex-col items-center py-12 px-4">
         <div className="w-full max-w-2xl bg-white p-4 md:p-8 md:p-12 rounded-[2rem] shadow-xl">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-10">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-8 mb-10">
             {parsedConfig.avatarUrl ? (
               <img src={parsedConfig.avatarUrl} className="w-32 h-32 rounded-[2rem] object-cover shadow-lg shrink-0" alt="Profile" />
             ) : (

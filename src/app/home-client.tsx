@@ -116,7 +116,7 @@ export default function HomeClient({
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-20 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-center">
           {/* Hero Content */}
           <div className="text-left">
             <h1 className="text-3xl md:text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6">
@@ -208,7 +208,7 @@ export default function HomeClient({
             <div className="relative w-full max-w-sm lg:w-[300px] h-[600px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl border-4 border-slate-900 overflow-hidden">
               <div className="absolute top-0 inset-x-0 h-6 bg-slate-900 z-20 rounded-b-3xl w-1/2 mx-auto" />
               
-              <div className="relative w-full h-full bg-gray-50 rounded-[2rem] overflow-hidden flex flex-col p-5 pt-12">
+              <div className="relative w-full h-full bg-gray-50 rounded-[2rem] overflow-hidden flex flex-col p-4 md:p-5 pt-12">
                 <h4 className="text-slate-900 font-extrabold text-lg mb-1">Analizler</h4>
                 <p className="text-slate-500 text-xs font-medium mb-3">Son 7 Günlük Performans</p>
                 
@@ -265,7 +265,7 @@ export default function HomeClient({
             </div>
 
             {/* High-fidelity analytics layout updated with brand colors */}
-            <div className="space-y-4 bg-neon-blue/5 p-5 rounded-[2.5rem] border border-neon-blue/10 shadow-inner">
+            <div className="space-y-4 bg-neon-blue/5 p-4 md:p-5 rounded-[2.5rem] border border-neon-blue/10 shadow-inner">
               
               {/* Row 1: 3 Column Grid */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -348,11 +348,11 @@ export default function HomeClient({
               </div>
 
               {/* Row 2: Competitive Market Share style arc meters */}
-              <div className="bg-white p-5 rounded-3xl border border-neon-blue/10 shadow-sm space-y-4">
+              <div className="bg-white p-4 md:p-5 rounded-3xl border border-neon-blue/10 shadow-sm space-y-4">
                 <div className="bg-neon-blue text-white text-center py-3 md:py-2.5 md:py-1 px-4 rounded-full text-[10px] font-bold tracking-wider w-fit mx-auto">
                   Bağlantı Tıklama Oranları
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-5 gap-3 pt-2 text-center">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-3 pt-2 text-center">
                   {[
                     { name: "Instagram", pct: 40, offset: 150 },
                     { name: "YouTube", pct: 25, offset: 190 },
@@ -419,7 +419,7 @@ export default function HomeClient({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-5xl mx-auto">
             {/* FREE TIER */}
             <div className="bg-white rounded-3xl p-4 md:p-8 border border-gray-100 shadow-sm flex flex-col">
               <div className="mb-6">

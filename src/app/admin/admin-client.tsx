@@ -1023,7 +1023,7 @@ export default function AdminClient({
             </div>
 
             {/* Right-aligned Notifications, profile badge */}
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4 md:gap-6">
               {/* Notification icon */}
               <div className="relative cursor-pointer">
                 <Bell className="h-4.5 w-4.5 text-zinc-500 hover:text-rose-500 transition-colors" />
@@ -1084,7 +1084,7 @@ export default function AdminClient({
 
                 {/* Filter tabs and Save Changes button */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-1 gap-4">
-                  <div className="flex gap-6 text-xs font-bold text-zinc-400">
+                  <div className="flex gap-4 md:gap-6 text-xs font-bold text-zinc-400">
                     <button
                       onClick={() => setPlanFilter("ALL")}
                       className={`pb-2.5 relative cursor-pointer ${planFilter === "ALL" ? "text-rose-500 border-b-2 border-rose-500 font-black" : "hover:text-zinc-700"}`}
@@ -1322,7 +1322,7 @@ export default function AdminClient({
                   <p className="text-xs text-zinc-400 font-bold mt-1">{lang === "tr" ? "SaaS gelirlerini ve kayıt dağılımlarını izleyin." : "Monitor SaaS mock revenues and registrations distribution."}</p>
                 </div>
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                   {/* Card 1 */}
                   <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm flex items-center justify-between">
                     <div className="space-y-1">
@@ -1385,7 +1385,7 @@ export default function AdminClient({
                     <h3 className="font-extrabold text-sm text-zinc-800">{lang === "tr" ? "Yeni Arka Plan Degradesi Oluştur" : "Create New Backdrop"}</h3>
                   </div>
                   
-                  <form onSubmit={handleAddBg} className="grid md:grid-cols-4 gap-6 items-end">
+                  <form onSubmit={handleAddBg} className="grid md:grid-cols-4 gap-4 md:gap-6 items-end">
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Arka Plan Adı" : "Backdrop Title"}</label>
                       <input
@@ -1433,7 +1433,7 @@ export default function AdminClient({
                 </div>
 
                 {/* List categories grid */}
-                <div className="grid lg:grid-cols-3 gap-6">
+                <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
                   {/* FREE section */}
                   <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
                     <div className="flex justify-between items-center border-b pb-3">
@@ -1756,7 +1756,7 @@ export default function AdminClient({
                     <span className="ml-auto px-2 py-0.5 rounded-full bg-red-50 border border-red-200 text-[9px] font-black text-red-500 uppercase tracking-wide">Süper Admin</span>
                   </div>
                   <form onSubmit={handleSaveSettings} className="space-y-6">
-                    <div className="grid md:grid-cols-3 gap-6 items-end">
+                    <div className="grid md:grid-cols-3 gap-4 md:gap-6 items-end">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Starter Plan Ödeme Bağlantısı" : "Starter Plan Checkout URL"}</label>
                         <input
@@ -1789,7 +1789,7 @@ export default function AdminClient({
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-4 gap-6 items-end">
+                    <div className="grid md:grid-cols-4 gap-4 md:gap-6 items-end">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Starter Plan Fiyatı (₺)" : "Starter Plan Price (₺)"}</label>
                         <input
@@ -1851,7 +1851,7 @@ export default function AdminClient({
                   </div>
 
                   <form onSubmit={handleSaveBrandingSettings} className="space-y-6">
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-3 gap-4 md:gap-6">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Site Başlığı" : "Site Title Name"}</label>
                         <input
@@ -1893,7 +1893,7 @@ export default function AdminClient({
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-3 gap-4 md:gap-6">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Birincil Neon Vurgu Rengi" : "Accent Neon Accent"}</label>
                         <select
@@ -1920,7 +1920,7 @@ export default function AdminClient({
                     </div>
 
                     {/* Background configuration */}
-                    <div className="grid md:grid-cols-3 gap-6 border-t pt-5 border-dashed border-zinc-150">
+                    <div className="grid md:grid-cols-3 gap-4 md:gap-6 border-t pt-5 border-dashed border-zinc-150">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Açık Tema Arkaplan Rengi (Hex)" : "Light Background Hex"}</label>
                         <div className="flex gap-2">
@@ -2038,7 +2038,7 @@ export default function AdminClient({
 
                 {/* Privacy Policy Editor */}
                 <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-wrap items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500">
                         <Shield className="h-4 w-4" />
@@ -2073,7 +2073,7 @@ export default function AdminClient({
 
                 {/* Cookie Policy Editor */}
                 <div className="p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-wrap items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500">
                         <Cookie className="h-4 w-4" />
@@ -2332,7 +2332,7 @@ export default function AdminClient({
                   </Link>
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-6">
+                <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
                   {/* Left Column: Add Font Form */}
                   <div className="lg:col-span-1 p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6 self-start">
                     <div>
@@ -2598,7 +2598,7 @@ export default function AdminClient({
                   </div>
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-6">
+                <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
                   {/* Left Column: Add Animation Form */}
                   <div className="lg:col-span-1 p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6 self-start">
                     <div>

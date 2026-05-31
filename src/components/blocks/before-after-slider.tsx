@@ -69,7 +69,7 @@ export default function BeforeAfterSlider({
       className={`w-full overflow-hidden transition-all duration-300 border flex flex-col justify-between p-3 select-none ${className}`}
     >
       {/* Label Title banner */}
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex flex-wrap items-center justify-between mb-2">
         <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500 flex items-center gap-1">
           <Sliders className="h-3 w-3 animate-pulse" /> Karşılaştırma Vitrini
         </span>

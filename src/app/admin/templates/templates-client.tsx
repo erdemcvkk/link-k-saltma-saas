@@ -227,7 +227,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
                 </p>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                   <LayoutGrid className="h-5 w-5 text-zinc-500" /> Şablon Listesi ({templates.length})
                 </h3>

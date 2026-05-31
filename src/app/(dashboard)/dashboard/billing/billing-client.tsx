@@ -155,13 +155,13 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
       )}
 
       {/* Plans Comparison */}
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-3 gap-4 md:gap-8">
         {/* FREE PLAN */}
         <div className={`p-3 md:p-6 rounded-2xl bg-white border transition-all ${
           currentPlan === "FREE" ? "border-neon-blue ring-1 ring-neon-blue/20 shadow-md" : "border-zinc-200"
         } flex flex-col justify-between`}>
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-center justify-between mb-4">
               <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">Free Tier</span>
               {currentPlan === "FREE" && <span className="px-2 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">Active Plan</span>}
             </div>
@@ -190,7 +190,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
           currentPlan === "STARTER" ? "border-neon-blue ring-1 ring-neon-blue/20 shadow-md" : "border-zinc-200"
         } flex flex-col justify-between`}>
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-center justify-between mb-4">
               <span className="text-xs font-bold uppercase tracking-wider text-neon-blue">Popular</span>
               {currentPlan === "STARTER" && <span className="px-2 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">Active Plan</span>}
             </div>
@@ -230,7 +230,7 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
           currentPlan === "CREATOR" ? "border-neon-blue ring-1 ring-neon-blue/20 shadow-md" : "border-zinc-200"
         } flex flex-col justify-between`}>
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-center justify-between mb-4">
               <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">Enterprise</span>
               {currentPlan === "CREATOR" && <span className="px-2 py-0.5 rounded-full bg-neon-blue/10 border border-neon-blue/20 text-[9px] font-bold text-neon-blue uppercase tracking-wide">Active Plan</span>}
             </div>

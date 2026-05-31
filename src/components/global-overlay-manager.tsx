@@ -123,7 +123,7 @@ export default function GlobalOverlayManager({ onStateChange }: OverlayManagerPr
 
       {/* 2. Location Permission Toast Alert (Top-Right Popup) */}
       {showLocationToast && (
-        <div className="fixed top-24 right-6 z-[9999] max-w-sm p-5 rounded-2xl bg-white border border-teal-500/20 text-zinc-800 backdrop-blur-xl shadow-[0_10px_40px_rgba(45,212,191,0.15)] transition-all animate-slide-in">
+        <div className="fixed top-24 right-6 z-[9999] max-w-sm p-4 md:p-5 rounded-2xl bg-white border border-teal-500/20 text-zinc-800 backdrop-blur-xl shadow-[0_10px_40px_rgba(45,212,191,0.15)] transition-all animate-slide-in">
           <div className="flex items-start gap-3">
             <div className="p-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-500">
               <MapPin className="h-5 w-5 animate-bounce" />

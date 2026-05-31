@@ -473,7 +473,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between">
                 <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                   <ShoppingBag className="h-4 w-4" />
                   {lang === "tr" ? "Ürün Yönetimi" : "Product Management"}
@@ -481,7 +481,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
               </div>
 
               {/* Add New Product Form */}
-              <div className="p-5 rounded-2xl border-2 border-dashed border-indigo-200 bg-indigo-50/50 space-y-4">
+              <div className="p-4 md:p-5 rounded-2xl border-2 border-dashed border-indigo-200 bg-indigo-50/50 space-y-4">
                 <h5 className="text-sm font-bold text-indigo-700 flex items-center gap-2">
                   <Plus className="h-4 w-4" />
                   {lang === "tr" ? "Yeni Ürün Ekle" : "Add New Product"}
@@ -589,7 +589,7 @@ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === 
                   </div>
                 ) : (
                   products.map(p => (
-                    <div key={p.id} className="flex items-center justify-between p-3 rounded-xl border border-zinc-200 bg-white shadow-sm">
+                    <div key={p.id} className="flex flex-wrap items-center justify-between p-3 rounded-xl border border-zinc-200 bg-white shadow-sm">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-lg bg-zinc-100 overflow-hidden flex-shrink-0">
                           {(p.imageUrl || p.fileUrl) ? (
