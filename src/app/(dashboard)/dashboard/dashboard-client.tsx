@@ -1512,7 +1512,7 @@ export default function DashboardClient({
  };
 
  return (
- <div className={`min-h-screen transition-colors duration-500 px-4 py-4 sm:p-4 md:p-6 max-w-7xl mx-auto flex flex-col gap-4 md:gap-6 font-corporate overflow-x-hidden ${
+ <div className={`min-h-screen w-full max-w-full md:max-w-7xl transition-colors duration-500 px-3 py-3 sm:p-4 md:p-6 mx-auto flex flex-col gap-3 sm:gap-4 md:gap-6 font-corporate overflow-x-hidden box-border ${
  "bg-white text-zinc-900"
  }`}>
  <GlobalOverlayManager onStateChange={handleStateChange} />
@@ -1523,17 +1523,17 @@ export default function DashboardClient({
  }`}>
  <div>
  <div className="flex items-center gap-2.5">
- <h1 className="text-xl md:text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-fuchsia-500 break-words">
+ <h1 className="text-lg sm:text-xl md:text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-fuchsia-500 break-words">
  {t.creatorStudioTitle}
  </h1>
  <span className="px-2.5 py-0.5 rounded-full bg-teal-400/20 border border-teal-500/30 text-[9px] font-extrabold text-teal-500 uppercase tracking-widest">
  {initialUser.plan}
  </span>
  </div>
- <p className={"text-slate-500 text-sm"}>{t.creatorStudioDesc}</p>
+ <p className={"text-slate-500 text-xs sm:text-sm break-words"}>{t.creatorStudioDesc}</p>
  </div>
 
- <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto mt-4 sm:mt-0">
+ <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
  {initialUser.role === "ADMIN" && (
  <Link
  href="/admin"
@@ -1706,21 +1706,21 @@ export default function DashboardClient({
  )}
 
  {/* Core Tabs Workspaces */}
- <div className="flex flex-col lg:flex-row gap-4 md:gap-8 w-full items-start justify-start">
+ <div className="flex flex-col lg:flex-row gap-4 md:gap-8 w-full max-w-full items-start justify-start overflow-hidden">
  
  {/* LEFT COLUMN: ACTIVE WORKSPACE CONTENT */}
- <div className="flex-1 space-y-6 md:space-y-8 max-w-3xl w-full min-w-0 overflow-hidden">
+ <div className="flex-1 space-y-5 md:space-y-8 w-full max-w-full md:max-w-3xl min-w-0 overflow-hidden">
  
  {/* TAB 1: LINKS & THEME EDITOR */}
  {activeTab === "editor" && (
- <div className="w-full space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
+ <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
  
  {/* SUB-TABS NAVIGATION */}
- <div className="flex gap-2 p-1.5 bg-zinc-100 rounded-2xl border border-zinc-200">
+ <div className="flex gap-1.5 sm:gap-2 p-1 sm:p-1.5 bg-zinc-100 rounded-2xl border border-zinc-200 w-full max-w-full overflow-hidden">
  <button
  type="button"
  onClick={() => setActiveSubTab("links")}
- className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+ className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-3.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
  activeSubTab === "links"
  ? "bg-white text-zinc-950 shadow-sm"
  : "text-zinc-650 hover:text-zinc-950"
@@ -1732,7 +1732,7 @@ export default function DashboardClient({
  <button
  type="button"
  onClick={() => setActiveSubTab("appearance")}
- className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+ className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-3.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
  activeSubTab === "appearance"
  ? "bg-white text-zinc-950 shadow-sm"
  : "text-zinc-650 hover:text-zinc-950"
@@ -1744,7 +1744,7 @@ export default function DashboardClient({
  <button
  type="button"
  onClick={() => setActiveSubTab("profile")}
- className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+ className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-3.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
  activeSubTab === "profile"
  ? "bg-white text-zinc-950 shadow-sm"
  : "text-zinc-650 hover:text-zinc-950"
@@ -1757,9 +1757,9 @@ export default function DashboardClient({
 
  {/* SUB-TAB CONTENT: PROFILE */}
  {activeSubTab === "profile" && (
- <div className="w-full space-y-6 md:space-y-8 animate-in fade-in duration-200 overflow-hidden">
+ <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in duration-200 overflow-hidden">
  {/* Profile customizer */}
- <div className={`p-4 md:p-8 rounded-2xl border space-y-6 ${
+ <div className={`p-3 sm:p-4 md:p-8 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden ${
  "bg-white border-zinc-200 shadow-sm"
  }`}>
  <div className="flex flex-wrap items-center justify-between">
@@ -1982,9 +1982,9 @@ export default function DashboardClient({
 
  {/* SUB-TAB CONTENT: APPEARANCE */}
  {activeSubTab === "appearance" && (
- <div className="w-full space-y-6 md:space-y-8 animate-in fade-in duration-200 overflow-hidden">
+ <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in duration-200 overflow-hidden">
  {/* Yazı Tipi Özelleştirici */}
- <div className={`p-4 md:p-8 rounded-2xl border space-y-6 ${
+ <div className={`p-3 sm:p-4 md:p-8 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden ${
  "bg-white border-zinc-200 shadow-sm"
  }`}>
  <div className="flex flex-wrap items-center justify-between">
@@ -2440,7 +2440,7 @@ export default function DashboardClient({
  </div>
 
  {/* --- GLOBAL BUTTON PROPERTIES (Global Buton Özellikleri) --- */}
- <div className={`p-4 md:p-8 rounded-2xl border space-y-6 ${
+ <div className={`p-3 sm:p-4 md:p-8 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden ${
  "bg-white border-zinc-200 shadow-sm"
  }`}>
  <div className="flex flex-wrap items-center justify-between">
@@ -2638,7 +2638,7 @@ export default function DashboardClient({
  )}
 
  {activeSubTab === "links" && (
- <div className="w-full space-y-6 md:space-y-8 animate-in fade-in duration-200 overflow-hidden">
+ <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in duration-200 overflow-hidden">
  {/* Add New Link */}
  {(() => {
  const LINK_TEMPLATES = [
@@ -2672,7 +2672,7 @@ export default function DashboardClient({
  };
 
  return (
- <div className={`p-3 md:p-6 rounded-2xl border space-y-6 ${
+ <div className={`p-3 md:p-6 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden ${
  "bg-white border-zinc-200 shadow-sm"
  }`}>
  <div className="flex flex-wrap items-center justify-between">
@@ -2705,7 +2705,7 @@ export default function DashboardClient({
  </p>
  </div>
 
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+ <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 w-full">
  {LINK_TEMPLATES.map((tmpl) => {
  const Icon = tmpl.icon;
  const unlocked = isLinkTemplateUnlocked(tmpl.tier);
@@ -2726,7 +2726,7 @@ export default function DashboardClient({
  setLinkSelectedTemplate(tmpl.id);
  setNewTitle(tmpl.name);
  }}
- className={`p-4 md:p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-3 transition-all relative group cursor-pointer ${
+ className={`p-3 sm:p-4 md:p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-2 sm:gap-3 transition-all relative group cursor-pointer overflow-hidden ${
  unlocked 
  ? "bg-white border-zinc-200 hover:border-emerald-350 hover:shadow-md"
  : "opacity-40 cursor-not-allowed"
@@ -3663,8 +3663,8 @@ export default function DashboardClient({
 
  {/* TAB 5: OWNED TEMPLATES (ŞABLONLARIM) */}
  {activeTab === "templates" && (
- <div className="w-full space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
- <div className={`p-3 md:p-6 rounded-2xl border space-y-6 ${
+ <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
+ <div className={`p-3 md:p-6 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden ${
  "bg-white border-zinc-200 shadow-sm"
  }`}>
  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-zinc-150 pb-4 md:pb-5">
@@ -3990,7 +3990,7 @@ export default function DashboardClient({
 
  {/* TAB 2: TRAFFIC ANALYTICS */}
  {activeTab === "analytics" && (
- <div className="w-full space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
+ <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
  {/* Top Summaries Grids */}
  <div className="grid md:grid-cols-4 gap-4 md:gap-6">
  <div className={`p-3 md:p-6 rounded-2xl border flex items-center justify-between ${
@@ -4242,7 +4242,7 @@ export default function DashboardClient({
  };
 
  return (
- <div className="w-full space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
+ <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
  {/* Top Banner Alert / Quotas */}
  <div className={`p-3 md:p-6 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 relative overflow-hidden ${
  "bg-white border-zinc-200 shadow-sm"
@@ -4493,7 +4493,7 @@ export default function DashboardClient({
  setSelectedTemplate(tmpl.id);
  setQrName(tmpl.name);
  }}
- className={`p-4 md:p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-3 transition-all relative group cursor-pointer ${
+ className={`p-3 sm:p-4 md:p-5 rounded-2xl border text-center flex flex-col items-center justify-center gap-2 sm:gap-3 transition-all relative group cursor-pointer overflow-hidden ${
  unlocked 
  ? "bg-white border-zinc-200 hover:border-emerald-350 hover:shadow-md"
  : "opacity-40 cursor-not-allowed"
@@ -4543,7 +4543,7 @@ export default function DashboardClient({
  <div className="flex flex-col lg:flex-row gap-4 md:gap-8">
  {/* Left: Input parameters */}
  <div className="flex-1 space-y-6">
- <div className={`p-3 md:p-6 rounded-2xl border space-y-6 ${
+ <div className={`p-3 md:p-6 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden ${
  "bg-white border-zinc-200 shadow-sm"
  }`}>
  <div className="border-b pb-3 flex items-center gap-3">
@@ -4966,10 +4966,10 @@ export default function DashboardClient({
 
  {/* TAB 4: SEO & CUSTOM DOMAINS */}
  {activeTab === "seo" && (
- <div className="w-full space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
+ <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
  
  {/* COLUMN 1: Social SEO Control */}
- <div className={`p-3 md:p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isPremium ? "min-h-[300px]" : ""} ${
+ <div className={`p-3 md:p-6 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden relative overflow-hidden ${!isPremium ? "min-h-[300px]" : ""} ${
  "bg-white border-zinc-200 shadow-sm"
  }`}>
  <div className="flex items-center gap-3">
@@ -5056,7 +5056,7 @@ export default function DashboardClient({
  </div>
 
  {/* COLUMN 2: Custom Domains Manager */}
- <div className={`p-3 md:p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isCreator ? "min-h-[300px]" : ""} ${
+ <div className={`p-3 md:p-6 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden relative overflow-hidden ${!isCreator ? "min-h-[300px]" : ""} ${
  "bg-white border-zinc-200 shadow-sm"
  }`}>
  <div className="flex items-center gap-3">
@@ -5159,7 +5159,7 @@ export default function DashboardClient({
 
  {/* ADDONS TAB CONTENT */}
  {activeTab === "addons" && (
- <div className="w-full space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
+ <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
  {addons.length === 0 ? (
  <div className={`p-4 md:p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
  "bg-white border-zinc-200 shadow-sm"
@@ -5261,7 +5261,7 @@ export default function DashboardClient({
 
  {/* STORE TAB CONTENT */}
  {activeTab === "store" && (
- <div className="w-full space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
+ <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
  <div className={`p-4 md:p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
  "bg-white border-zinc-200 shadow-sm"
  }`}>
@@ -5295,7 +5295,7 @@ export default function DashboardClient({
  {activeTab === "editor" || activeTab === "templates" ? (
  renderSimulator()
  ) : (
- <div className="hidden lg:block w-full max-w-sm lg:w-[360px] shrink-0 sticky top-32 self-start pointer-events-none opacity-0" />
+ <div className="hidden lg:block lg:w-[360px] shrink-0 sticky top-32 self-start pointer-events-none opacity-0" />
  )}
 
  </div>
@@ -5307,7 +5307,7 @@ export default function DashboardClient({
  {isShareModalOpen && (
  <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
  <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsShareModalOpen(false)} />
- <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+ <div className="relative w-full max-w-[calc(100vw-2rem)] sm:max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
  <div className="p-3 md:p-6 border-b border-zinc-100 flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="h-10 w-10 rounded-full bg-teal-50 flex items-center justify-center">
