@@ -3695,7 +3695,7 @@ export default function DashboardClient({
                   <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block">
                     {lang === "tr" ? "Şablon Önizleme Bağlantısı" : "Template Preview Link"}
                   </span>
-                  <div className="text-sm font-bold text-zinc-800 flex items-center gap-1.5">
+                  <div className="text-sm font-bold text-zinc-800 flex items-start sm:items-center gap-1.5 break-all">
                     <Globe className="h-4 w-4 text-teal-500" />
                     {(() => {
                       const baseUrl = initialUser.profile?.customDomain 
@@ -3928,14 +3928,15 @@ export default function DashboardClient({
                         </div>
 
                         {/* CUSTOM URL SETTING */}
-                        <div className="flex flex-col gap-2 p-3 rounded-xl bg-zinc-50/50 border border-zinc-100">
+                        <div className="flex flex-col gap-2 p-3 rounded-xl bg-zinc-50/50 border border-zinc-100 overflow-hidden w-full">
                           <span className="text-xs font-extrabold text-zinc-700">
                             {lang === "tr" ? "Özel Şablon Linki" : "Custom Template Link"}
                           </span>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold text-zinc-400">link-saas.vercel.app/</span>
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 overflow-hidden w-full">
+                            <span className="text-xs font-bold text-zinc-400 whitespace-nowrap">link-saas.vercel.app/</span>
                             <input
                               type="text"
+                              className="w-full min-w-0 bg-transparent border-b border-zinc-200 outline-none focus:border-teal-500 py-1 text-sm font-semibold"
                               placeholder={lang === "tr" ? "kampanyam" : "my-campaign"}
                               defaultValue={(ownedTemplates.find((ut: any) => ut.id === template.id) as any)?.customUrl || ""}
                               onBlur={(e) => {
