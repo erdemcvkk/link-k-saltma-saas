@@ -4009,7 +4009,15 @@ export default function DashboardClient({
                                           type="file"
                                           accept="image/*"
                                           className="hidden"
-                                          onChange={handleAvatarUpload}
+                                          onChange={async (e) => {
+                                          const file = e.target.files?.[0];
+                                          if (!file) return;
+                                          const reader = new FileReader();
+                                          reader.onload = (event) => {
+                                            if (event.target?.result) setAvatarUrl(event.target.result as string);
+                                          };
+                                          reader.readAsDataURL(file);
+                                        }}
                                         />
                                       </label>
                                     </div>
