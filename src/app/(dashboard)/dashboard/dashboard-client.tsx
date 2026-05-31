@@ -1512,13 +1512,13 @@ export default function DashboardClient({
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 p-3 md:p-6 max-w-7xl mx-auto flex flex-col gap-4 md:gap-6 font-corporate overflow-x-hidden ${
+    <div className={`min-h-screen transition-colors duration-500 p-0 sm:p-3 md:p-6 max-w-7xl mx-auto flex flex-col gap-4 md:gap-6 font-corporate overflow-x-hidden ${
       "bg-white text-zinc-900"
     }`}>
       <GlobalOverlayManager onStateChange={handleStateChange} />
 
       {/* Top Header */}
-      <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-6 ${
+      <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b px-4 pt-6 pb-4 md:p-0 md:pb-6 ${
         "border-zinc-200"
       }`}>
         <div>
@@ -1581,7 +1581,7 @@ export default function DashboardClient({
       </div>
 
       {/* Dynamic Tab Bar */}
-      <div className={`flex gap-2 border-b pb-3 overflow-x-auto scrollbar-none ${
+      <div className={`flex gap-2 border-b pb-3 px-4 md:px-0 overflow-x-auto scrollbar-none ${
         "border-zinc-200"
       }`}>
         <button
@@ -1713,7 +1713,7 @@ export default function DashboardClient({
           
           {/* TAB 1: LINKS & THEME EDITOR */}
           {activeTab === "editor" && (
-            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 px-4 md:px-0">
               
               {/* SUB-TABS NAVIGATION */}
               <div className="flex gap-2 p-1.5 bg-zinc-100 rounded-2xl border border-zinc-200">
@@ -2194,7 +2194,7 @@ export default function DashboardClient({
                     <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Ücretsiz Arka Planlar (5 Adet)" : "Free Plan Backdrops (5 Colors)"}
                     </span>
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                       {FREE_BACKGROUNDS.map((bg) => (
                         <button
                           key={bg.id}
@@ -2247,7 +2247,7 @@ export default function DashboardClient({
                     <span className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Starter Paket Arka Planları (10 Adet)" : "Starter Plan Backdrops (10 Colors)"}
                     </span>
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                       {STARTER_BACKGROUNDS.map((bg) => (
                         <button
                           key={bg.id}
@@ -2323,7 +2323,7 @@ export default function DashboardClient({
                     <span className="text-[10px] text-teal-500 uppercase tracking-wider font-extrabold block">
                       {lang === "tr" ? "Creator Plana Özel Arka Planlar (20 Adet)" : "Creator Exclusive Backdrops (20 Colors)"}
                     </span>
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                       {[...STARTER_BACKGROUNDS, ...CREATOR_BACKGROUNDS].map((bg) => (
                         <button
                           key={bg.id}
@@ -2339,7 +2339,7 @@ export default function DashboardClient({
                     </div>
 
                     {/* Creator: Custom Photo + Video Upload */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-3">
                       {/* Photo Upload */}
                       <div className={`p-4 rounded-xl border border-dashed flex flex-col gap-3 ${
                         "border-purple-200 bg-purple-50/50"
@@ -3663,7 +3663,7 @@ export default function DashboardClient({
 
           {/* TAB 5: OWNED TEMPLATES (ŞABLONLARIM) */}
         {activeTab === "templates" && (
-          <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+          <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 px-4 md:px-0">
             <div className={`p-3 md:p-6 rounded-2xl border space-y-6 ${
               "bg-white border-zinc-200 shadow-sm"
             }`}>
@@ -3990,7 +3990,7 @@ export default function DashboardClient({
 
         {/* TAB 2: TRAFFIC ANALYTICS */}
         {activeTab === "analytics" && (
-          <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+          <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 px-4 md:px-0">
             {/* Top Summaries Grids */}
             <div className="grid md:grid-cols-4 gap-4 md:gap-6">
               <div className={`p-3 md:p-6 rounded-2xl border flex items-center justify-between ${
@@ -4242,7 +4242,7 @@ export default function DashboardClient({
           };
 
           return (
-            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 px-4 md:px-0">
               {/* Top Banner Alert / Quotas */}
               <div className={`p-3 md:p-6 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 relative overflow-hidden ${
                 "bg-white border-zinc-200 shadow-sm"
@@ -4966,7 +4966,7 @@ export default function DashboardClient({
 
         {/* TAB 4: SEO & CUSTOM DOMAINS */}
         {activeTab === "seo" && (
-          <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+          <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 px-4 md:px-0">
             
             {/* COLUMN 1: Social SEO Control */}
             <div className={`p-3 md:p-6 rounded-2xl border space-y-6 relative overflow-hidden ${!isPremium ? "min-h-[300px]" : ""} ${
@@ -5159,7 +5159,7 @@ export default function DashboardClient({
 
           {/* ADDONS TAB CONTENT */}
           {activeTab === "addons" && (
-            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 px-4 md:px-0">
               {addons.length === 0 ? (
                 <div className={`p-4 md:p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
                   "bg-white border-zinc-200 shadow-sm"
@@ -5261,7 +5261,7 @@ export default function DashboardClient({
 
           {/* STORE TAB CONTENT */}
           {activeTab === "store" && (
-            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350">
+            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 px-4 md:px-0">
               <div className={`p-4 md:p-8 rounded-2xl border flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] ${
                 "bg-white border-zinc-200 shadow-sm"
               }`}>
