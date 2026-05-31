@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
  if (!user || !user.profile) return { title: "Not Found" };
 
  return {
- title: `${user.profile.displayName || user.username} - Addon`,
+ title: `${user.username || user.username} - Addon`,
  description: user.profile.bio || "Link-in-bio addon",
  };
 }
@@ -112,7 +112,7 @@ export default async function AddonPage({ params }: { params: Promise<{ username
  imageUrl: p.imageUrl || p.fileUrl,
  description: p.description || ""
  }))} 
- storeTitle={parsedConfig.storeTitle || user.profile.displayName || "Mağazam"}
+ storeTitle={parsedConfig.storeTitle || user.username || "Mağazam"}
  storeCoverUrl={parsedConfig.storeCoverUrl || user.profile.background || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&q=80"}
  avatarUrl={parsedConfig.storeAvatarUrl || user.profile.avatarUrl}
  username={parsedConfig.storeUsername || ("@" + user.username)}

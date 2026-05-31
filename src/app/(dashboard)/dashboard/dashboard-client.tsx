@@ -141,6 +141,8 @@ type UserProfile = {
  fontStyle?: string | null;
  bioColor?: string | null;
  usernameColor?: string | null;
+ customCss?: string | null;
+ buttonClass?: string | null;
 };
 
 type UserData = {
@@ -157,7 +159,7 @@ type ProductItem = {
  type: string;
  price: number;
  description: string | null;
- fileUrl: string;
+ fileUrl?: string;
  isActive: boolean;
  salesCount: number;
  createdAt: string;
@@ -3968,7 +3970,7 @@ export default function DashboardClient({
  }
  });
  }}
- className="flex-1 bg-white border border-zinc-200 rounded-lg px-2 py-2.5 text-xs font-bold text-zinc-800 outline-none focus:border-teal-500"
+
  />
  </div>
  <p className="text-[9px] text-zinc-500 leading-tight">
@@ -5413,7 +5415,7 @@ export default function DashboardClient({
  products={products}
  onClose={() => setEditingAddon(null)}
  lang={lang}
- username={initialUser.username}
+ username={initialUser.username || ""}
  />
  )}
 

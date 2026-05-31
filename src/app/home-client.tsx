@@ -13,6 +13,7 @@ interface HomeClientProps {
  heroTitle: string;
  heroHighlight: string;
  heroSubtitle: string;
+ creatorsData?: any;
  featuresData?: any[];
  sliderItems?: any[];
  paymentLinkStarter?: string;

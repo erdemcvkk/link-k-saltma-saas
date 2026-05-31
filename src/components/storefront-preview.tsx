@@ -14,7 +14,7 @@ export interface DummyProduct {
 
 export type StoreThemeType =
  | "dark-drill" | "glassmorphism" | "minimalist" | "vibrant-pop" | "classic"
- | "neo-brutalism" | "organic-earth" | "retro-arcade" | "dark-academia" | "y2k-holographic" | "premium-creator";
+ | "neo-brutalism" | "organic-earth" | "retro-arcade" | "dark-academia" | "y2k-holographic" | "premium-creator" | "premium-video";
 
 interface StorefrontPreviewProps {
  theme: StoreThemeType;

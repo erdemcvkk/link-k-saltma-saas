@@ -1725,8 +1725,8 @@ export default function AdminClient({
  
  setSuccessMsg("Landing Page ayarları başarıyla kaydedildi!");
  setTimeout(() => setSuccessMsg(""), 3000);
- } catch (e) {
- alert(e.message || "Kaydedilemedi");
+ } catch (e: any) {
+ alert(e?.message || "Kaydedilemedi");
  } finally {
  setIsSavingFeatures(false);
  }

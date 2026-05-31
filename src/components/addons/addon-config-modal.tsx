@@ -14,7 +14,7 @@ interface AddonConfigModalProps {
  config: string | null;
  };
  products?: any[];
- onClose: () => void;
+ onClose: (config?: string, isActive?: boolean) => void;
  lang: string;
  username: string;
 }
@@ -23,11 +23,11 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  const router = useRouter();
  const [isLoading, setIsLoading] = useState(false);
  const [isPending, startTransition] = useTransition();
- const [dialog, setDialog] = useState({ isOpen: false, type: "alert", message: "", onConfirm: null });
+ const [dialog, setDialog] = useState<{ isOpen: boolean; type: string; message: string; onConfirm: (() => void) | null }>({ isOpen: false, type: "alert", message: "", onConfirm: null });
 
- const showAlert = (message) => setDialog({ isOpen: true, type: "alert", message });
- const showConfirm = (message, onConfirm) => setDialog({ isOpen: true, type: "confirm", message, onConfirm });
- const closeDialog = () => setDialog({ isOpen: false, type: "alert", message: "" });
+ const showAlert = (message: string) => setDialog({ isOpen: true, type: "alert", message, onConfirm: null });
+ const showConfirm = (message: string, onConfirm: () => void) => setDialog({ isOpen: true, type: "confirm", message, onConfirm });
+ const closeDialog = () => setDialog({ isOpen: false, type: "alert", message: "", onConfirm: null });
  const [domain, setDomain] = useState("link-saas.com");
  
  useEffect(() => {
@@ -230,53 +230,11 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  case "Y2K":
  case "PREMIUM_CREATOR": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
  case "PREMIUM_VIDEO": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Premium Video" : "Premium Video" };
- case "BOOKING":
- return (
- <>
- {renderImageUpload("avatarUrl", lang === "tr" ? "Profil Fotoğrafı" : "Profile Photo")}
- {renderInput("title", lang === "tr" ? "Başlık" : "Title", lang === "tr" ? "Birebir Görüşme Ayarla" : "Book a 1:1 call")}
- {renderTextarea("description", lang === "tr" ? "Açıklama" : "Description", lang === "tr" ? "Sizinle tanışmak için sabırsızlanıyorum." : "Looking forward to meeting you.")}
- {renderInput("calendarLink", lang === "tr" ? "Takvim/Randevu Linki (Calendly vb.)" : "Calendar Link", "https://calendly.com/yourname")}
- {renderInput("buttonText", lang === "tr" ? "Buton Yazısı" : "Button Text", lang === "tr" ? "Takvimi Görüntüle" : "View Calendar")}
- </>
- );
- case "QA":
- return (
- <>
- {renderImageUpload("avatarUrl", lang === "tr" ? "Profil Fotoğrafı" : "Profile Photo")}
- {renderInput("boxTitle", lang === "tr" ? "Soru Kutusu Başlığı" : "Box Title", lang === "tr" ? "Bana Soru Sor!" : "Ask me anything!")}
- {renderTextarea("welcomeMessage", lang === "tr" ? "Hoş Geldin Mesajı" : "Welcome Message", lang === "tr" ? "Sorularınızı anonim olarak sorabilirsiniz." : "Ask anonymously.")}
- {renderInput("placeholderText", lang === "tr" ? "Kutu İçi Yer Tutucu Metin" : "Input Placeholder", lang === "tr" ? "Sorunuzu buraya yazın..." : "Type your question...")}
- {renderInput("buttonText", lang === "tr" ? "Buton Yazısı" : "Button Text", lang === "tr" ? "Gönder" : "Send")}
- <div className="flex items-center gap-2 mt-4">
- <input type="checkbox" id="allowAnonymous" className="rounded" checked={configData.allowAnonymous ?? true} onChange={(e) => setConfigData({ ...configData, allowAnonymous: e.target.checked })} />
- <label htmlFor="allowAnonymous" className="text-sm font-medium text-slate-700">
- {lang === "tr" ? "Anonim sorulara izin ver" : "Allow anonymous questions"}
- </label>
- </div>
- </>
- );
- case "NEWSLETTER":
- return (
- <>
- {renderImageUpload("avatarUrl", lang === "tr" ? "Profil Fotoğrafı" : "Profile Photo")}
- {renderInput("title", lang === "tr" ? "Başlık" : "Title", lang === "tr" ? "Haftalık Bülten" : "Weekly Newsletter")}
- {renderTextarea("incentiveMsg", lang === "tr" ? "Teşvik Mesajı" : "Incentive Message", lang === "tr" ? "Spam yok, sadece kaliteli içerik." : "No spam, just good content.")}
- {renderInput("serviceUrl", lang === "tr" ? "Mailchimp/Revue Abonelik Linki" : "Newsletter URL", "https://mailchimp.com/...")}
- {renderInput("buttonText", lang === "tr" ? "Buton Yazısı" : "Subscribe Button Text", lang === "tr" ? "Abone Ol" : "Subscribe")}
- </>
- );
- case "DONATION":
- return (
- <>
- {renderImageUpload("avatarUrl", lang === "tr" ? "Profil Fotoğrafı" : "Profile Photo")}
- {renderInput("title", lang === "tr" ? "Başlık" : "Title", lang === "tr" ? "Bana Kahve Ismarla" : "Buy me a coffee")}
- {renderTextarea("thankYouMsg", lang === "tr" ? "Açıklama / Teşekkür Mesajı" : "Description / Thank You", lang === "tr" ? "Desteğiniz için teşekkürler!" : "Thank you for your support!")}
- {renderInput("platformUrl", lang === "tr" ? "Bağış Platformu Linki (Örn: Patreon)" : "Donation URL", "https://patreon.com/yourname")}
- {renderInput("buttonText", lang === "tr" ? "Buton Yazısı" : "Button Text", lang === "tr" ? "Destek Ol" : "Support Me")}
- </>
- );
-case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === "tr" ? "Geri Sayım" : "Countdown" };
+ case "BOOKING": return { icon: <Calendar className="h-5 w-5" />, title: lang === "tr" ? "Randevu" : "Booking" };
+ case "QA": return { icon: <FileQuestion className="h-5 w-5" />, title: lang === "tr" ? "Soru-Cevap" : "Q&A" };
+ case "NEWSLETTER": return { icon: <Mail className="h-5 w-5" />, title: lang === "tr" ? "Bülten" : "Newsletter" };
+ case "DONATION": return { icon: <Heart className="h-5 w-5" />, title: lang === "tr" ? "Bağış" : "Donation" };
+ case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === "tr" ? "Geri Sayım" : "Countdown" };
  case "PORTFOLIO": return { icon: <Briefcase className="h-5 w-5" />, title: lang === "tr" ? "Portfolyo" : "Portfolio" };
  case "FAQ": return { icon: <HelpCircle className="h-5 w-5" />, title: "FAQ" };
  case "MAP": return { icon: <MapPin className="h-5 w-5" />, title: lang === "tr" ? "Harita" : "Map" };
@@ -917,7 +875,7 @@ case "FAQ":
  </button>
  
  <button
- onClick={onClose}
+ onClick={() => onClose()}
  className="p-3 rounded-2xl bg-zinc-100 hover:bg-zinc-200 text-zinc-600 transition-colors"
  >
  <X className="h-5 w-5" />

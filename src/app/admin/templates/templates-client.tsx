@@ -100,7 +100,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  try {
  const res = await seedTemplates(adminUserId);
  if (res.seeded) {
- showMsg(`Başarıyla ${res.count} adet örnek şablon eklendi!`, "success");
+ showMsg(res.message || "Örnek şablonlar başarıyla eklendi!", "success");
  setTimeout(() => window.location.reload(), 1500);
  } else {
  showMsg(res.message || "Zaten şablonlar mevcut.", "error");
