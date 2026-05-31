@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Search, Eye, ShoppingCart, X, Check, Laptop, Smartphone, ExternalLink, Sparkles, CreditCard, Lock, Loader2 } from "lucide-react";
+import { ArrowLeft, Search, Eye, ShoppingCart, X, Check, Laptop, Smartphone, ExternalLink, Sparkles, CreditCard, Lock, Loader2, ArrowUpDown, ChevronDown } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import { purchaseTemplate } from "@/app/actions";
 import UniversalProfile, { UniversalProfileData } from "@/components/universal-profile";
@@ -73,6 +73,7 @@ const getDummyData = (template: Template): UniversalProfileData => {
 export default function SablonlarClient({ initialTemplates, userId, initialOwnedTemplateIds = [] }: SablonlarClientProps) {
  const [searchQuery, setSearchQuery] = useState("");
  const [selectedCategory, setSelectedCategory] = useState("Tümü");
+ const [sortOption, setSortOption] = useState("default");
  const [purchaseSuccess, setPurchaseSuccess] = useState(false);
  const [ownedTemplateIds, setOwnedTemplateIds] = useState<string[]>(initialOwnedTemplateIds);
  const [isPending, setIsPending] = useState(false);
@@ -107,11 +108,23 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
 
  const categories = ["Tümü", ...Array.from(new Set(initialTemplates.map((t) => t.category)))];
 
- const filteredTemplates = initialTemplates.filter((t) => {
+ const filteredTemplates = initialTemplates
+ .filter((t) => {
  const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
  t.category.toLowerCase().includes(searchQuery.toLowerCase());
  const matchesCategory = selectedCategory === "Tümü" || t.category === selectedCategory;
  return matchesSearch && matchesCategory;
+ })
+ .sort((a, b) => {
+ switch (sortOption) {
+ case "name-asc": return a.name.localeCompare(b.name, "tr");
+ case "name-desc": return b.name.localeCompare(a.name, "tr");
+ case "price-asc": return a.price - b.price;
+ case "price-desc": return b.price - a.price;
+ case "newest": return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+ case "oldest": return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+ default: return 0;
+ }
  });
 
  const handlePurchase = (template: Template) => {
@@ -210,8 +223,9 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  </div>
 
  <div className="max-w-full md:w-[1800px] mx-auto px-6 py-6 space-y-12">
- <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-zinc-900/40 p-4 rounded-3xl border border-zinc-800 backdrop-blur-sm max-w-5xl mx-auto">
- <div className="flex flex-wrap gap-2 justify-center md:justify-start w-full md:w-auto">
+ <div className="flex flex-col gap-4 bg-zinc-900/40 p-4 rounded-3xl border border-zinc-800 backdrop-blur-sm max-w-5xl mx-auto">
+ {/* Category tabs */}
+ <div className="flex flex-wrap gap-2 justify-center">
  {categories.map((cat) => (
  <button
  key={cat}
@@ -230,7 +244,9 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  ))}
  </div>
 
- <div className="relative w-full md:w-72">
+ {/* Search + Sort row */}
+ <div className="flex flex-col sm:flex-row gap-3 items-center">
+ <div className="relative flex-1 w-full">
  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
  <Search className="h-4 w-4" />
  </span>
@@ -242,8 +258,35 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  setSearchQuery(e.target.value);
  setVisibleCount(12);
  }}
- className="w-full pl-10 pr-4 py-3 md:py-2 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white placeholder-zinc-500 transition-colors"
+ className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white placeholder-zinc-500 transition-colors"
  />
+ </div>
+
+ <div className="relative w-full sm:w-56">
+ <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
+ <select
+ value={sortOption}
+ onChange={(e) => {
+ setSortOption(e.target.value);
+ setVisibleCount(12);
+ }}
+ className="w-full pl-10 pr-8 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white appearance-none cursor-pointer transition-colors"
+ >
+ <option value="default">Varsayılan Sıralama</option>
+ <option value="name-asc">A → Z (İsim)</option>
+ <option value="name-desc">Z → A (İsim)</option>
+ <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
+ <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
+ <option value="newest">En Yeniler Önce</option>
+ <option value="oldest">En Eskiler Önce</option>
+ </select>
+ <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
+ </div>
+ </div>
+
+ {/* Result count */}
+ <div className="text-center">
+ <span className="text-xs font-bold text-zinc-500">{filteredTemplates.length} şablon bulundu</span>
  </div>
  </div>
 

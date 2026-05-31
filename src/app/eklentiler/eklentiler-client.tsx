@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ShoppingBag, Zap, CreditCard, ChevronRight } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Zap, CreditCard, ChevronRight, Search, ArrowUpDown, ChevronDown } from "lucide-react";
 import StorefrontPreview, { StoreThemeType, DummyProduct } from "@/components/storefront-preview";
 import { buyAddonAction } from "../actions";
 
@@ -211,6 +211,8 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
  const [purchasing, setPurchasing] = useState<string | null>(null);
  const [purchased, setPurchased] = useState<string[]>([]);
  const [visibleCount, setVisibleCount] = useState(12);
+ const [searchQuery, setSearchQuery] = useState("");
+ const [sortOption, setSortOption] = useState("default");
 
  const handlePurchase = async (addonType: string) => {
  setPurchasing(addonType);
@@ -254,8 +256,80 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
  </p>
  </div>
 
+ {/* Search + Sort bar */}
+ <div className="flex flex-col gap-4 bg-zinc-900/40 p-4 rounded-3xl border border-zinc-800 backdrop-blur-sm max-w-4xl mx-auto mb-12">
+ <div className="flex flex-col sm:flex-row gap-3 items-center">
+ <div className="relative flex-1 w-full">
+ <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+ <Search className="h-4 w-4" />
+ </span>
+ <input
+ type="text"
+ placeholder="Eklenti ara..."
+ value={searchQuery}
+ onChange={(e) => {
+ setSearchQuery(e.target.value);
+ setVisibleCount(12);
+ }}
+ className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white placeholder-zinc-500 transition-colors"
+ />
+ </div>
+
+ <div className="relative w-full sm:w-56">
+ <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
+ <select
+ value={sortOption}
+ onChange={(e) => {
+ setSortOption(e.target.value);
+ setVisibleCount(12);
+ }}
+ className="w-full pl-10 pr-8 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white appearance-none cursor-pointer transition-colors"
+ >
+ <option value="default">Varsayılan Sıralama</option>
+ <option value="name-asc">A → Z (İsim)</option>
+ <option value="name-desc">Z → A (İsim)</option>
+ <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
+ <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
+ </select>
+ <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
+ </div>
+ </div>
+
+ <div className="text-center">
+ <span className="text-xs font-bold text-zinc-500">
+ {(() => {
+ const filtered = ADDON_TYPES.filter(a => {
+ const name = (settings?.[`theme_NAME_${a.id}`] || a.name).toLowerCase();
+ const desc = (settings?.[`theme_DESC_${a.id}`] || a.desc).toLowerCase();
+ return name.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase());
+ });
+ return `${filtered.length} eklenti bulundu`;
+ })()}
+ </span>
+ </div>
+ </div>
+
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 pb-12">
- {ADDON_TYPES.slice(0, visibleCount).map((addon) => {
+ {ADDON_TYPES
+ .filter((addon) => {
+ const name = (settings?.[`theme_NAME_${addon.id}`] || addon.name).toLowerCase();
+ const desc = (settings?.[`theme_DESC_${addon.id}`] || addon.desc).toLowerCase();
+ return name.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase());
+ })
+ .sort((a, b) => {
+ const nameA = settings?.[`theme_NAME_${a.id}`] || a.name;
+ const nameB = settings?.[`theme_NAME_${b.id}`] || b.name;
+ const priceA = Number(settings?.[`theme_PRICE_${a.id}`] || a.price);
+ const priceB = Number(settings?.[`theme_PRICE_${b.id}`] || b.price);
+ switch (sortOption) {
+ case "name-asc": return nameA.localeCompare(nameB, "tr");
+ case "name-desc": return nameB.localeCompare(nameA, "tr");
+ case "price-asc": return priceA - priceB;
+ case "price-desc": return priceB - priceA;
+ default: return 0;
+ }
+ })
+ .slice(0, visibleCount).map((addon) => {
  const isPurchased = purchased.includes(addon.id);
  const isProcessing = purchasing === addon.id;
  
