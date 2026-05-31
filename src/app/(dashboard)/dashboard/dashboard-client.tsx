@@ -4039,7 +4039,7 @@ export default function DashboardClient({
                                       onChange={(e) => setFontStyle(e.target.value)}
                                       className="w-full px-3 py-2 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white transition-colors cursor-pointer appearance-none"
                                     >
-                                      {fonts.map(font => (
+                                      {initialFonts.map(font => (
                                         <option key={font.value} value={font.value}>{font.name}</option>
                                       ))}
                                     </select>
