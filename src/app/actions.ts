@@ -245,21 +245,36 @@ export async function updateAllLinksCustomStyle(
   borderWidth: string | null,
   borderRadius: string | null,
   shadow: string | null,
-  fontWeight: string | null
+  fontWeight: string | null,
+  iconColor?: string | null
 ) {
-  await db.link.updateMany({
-    where: { userId },
-    data: {
-      bgColor,
-      textColor,
-      borderColor,
-      borderStyle,
-      borderWidth,
-      borderRadius,
-      shadow,
-      fontWeight
-    },
+  const links = await db.link.findMany({ where: { userId } });
+  
+  const updates = links.map((link: any) => {
+    let meta: any = {};
+    if (link.metadata) {
+      try { meta = JSON.parse(link.metadata); } catch(e) {}
+    }
+    if (iconColor) meta.iconColor = iconColor;
+    else delete meta.iconColor;
+    
+    return db.link.update({
+      where: { id: link.id },
+      data: {
+        bgColor,
+        textColor,
+        borderColor,
+        borderStyle,
+        borderWidth,
+        borderRadius,
+        shadow,
+        fontWeight,
+        metadata: Object.keys(meta).length > 0 ? JSON.stringify(meta) : null
+      }
+    });
   });
+  
+  await db.$transaction(updates);
 
   revalidatePath("/dashboard");
   revalidatePath("/[username]", "page");

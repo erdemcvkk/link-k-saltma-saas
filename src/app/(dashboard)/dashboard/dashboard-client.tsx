@@ -1090,7 +1090,8 @@ export default function DashboardClient({
           btnBorderWidth || null,
           btnBorderRadius || null,
           btnShadow || null,
-          btnFontWeight || null
+          btnFontWeight || null,
+          btnIconColor || null
         );
         setSuccessMsg(lang === "tr" ? "Profil ayarlarınız başarıyla kaydedildi!" : "Profile saved successfully!");
       } catch (err: any) {
@@ -3975,427 +3976,378 @@ export default function DashboardClient({
                         </div>
 
                         {/* INLINE TEMPLATE CUSTOMIZATION CONTROL DRAWER */}
-                        {customizingTemplateId === template.id && (
-                          <div className="w-full p-4 rounded-xl border border-zinc-200 bg-white space-y-4 text-left animate-in fade-in duration-200">
-                            <h4 className="text-xs font-black text-zinc-900 uppercase tracking-wide border-b pb-2 flex items-center gap-1.5">
-                              <Settings className="h-3.5 w-3.5 text-teal-500" />
-                              {lang === "tr" ? "Şablon Tasarımını Özelleştir" : "Customize Template Design"}
-                            </h4>
-                            
-                            {/* Profile Image (Avatar) Input */}
-                            <div className="space-y-1.5">
-                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
-                                {lang === "tr" ? "Profil Fotoğrafı" : "Profile Picture"}
-                              </label>
-                              <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 rounded-full border border-zinc-200 overflow-hidden bg-slate-50 flex items-center justify-center shrink-0">
-                                  {avatarUrl ? (
-                                    <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" />
-                                  ) : (
-                                    <User className="h-5 w-5 text-slate-400" />
-                                  )}
-                                </div>
-                                <div className="flex gap-2">
-                                  <label className="px-3 py-1 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 text-[10px] font-bold transition-all cursor-pointer select-none text-zinc-700 flex items-center justify-center">
-                                    {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
+                          {customizingTemplateId === template.id && (
+                            <div className="w-full mt-2 p-5 rounded-2xl border border-zinc-200/60 bg-white/50 backdrop-blur-sm shadow-sm space-y-6 text-left animate-in fade-in duration-200">
+                              <h4 className="text-sm font-black text-zinc-900 uppercase tracking-widest border-b border-zinc-100 pb-3 flex items-center gap-2">
+                                <Settings className="h-4 w-4 text-indigo-500" />
+                                {lang === "tr" ? "Şablon Tasarımını Özelleştir" : "Customize Template Design"}
+                              </h4>
+                              
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Left Column: General Design */}
+                                <div className="space-y-5 bg-white p-4 rounded-xl border border-zinc-100 shadow-sm">
+                                  <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+                                    {lang === "tr" ? "Genel Tasarım" : "General Design"}
+                                  </h5>
+                                  
+                                  {/* Profile Image (Avatar) Input */}
+                                  <div className="space-y-2">
+                                    <label className="text-[10px] font-bold text-slate-600">
+                                      {lang === "tr" ? "Profil Fotoğrafı" : "Profile Picture"}
+                                    </label>
+                                    <div className="flex items-center gap-3">
+                                      <div className="h-12 w-12 rounded-full border border-zinc-200 overflow-hidden bg-slate-50 flex items-center justify-center shrink-0 shadow-sm">
+                                        {avatarUrl ? (
+                                          <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" />
+                                        ) : (
+                                          <User className="h-5 w-5 text-slate-400" />
+                                        )}
+                                      </div>
+                                      <label className="px-3 py-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-50 text-[10px] font-bold transition-all cursor-pointer select-none text-zinc-700 shadow-sm">
+                                        {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
+                                        <input
+                                          type="file"
+                                          accept="image/*"
+                                          className="hidden"
+                                          onChange={handleAvatarUpload}
+                                        />
+                                      </label>
+                                    </div>
+                                  </div>
+
+                                  {/* Background Input */}
+                                  <div className="space-y-2">
+                                    <label className="text-[10px] font-bold text-slate-600">
+                                      {lang === "tr" ? "Arka Plan (Renk veya CSS)" : "Background (Color/CSS)"}
+                                    </label>
                                     <input
-                                      type="file"
-                                      accept="image/*"
-                                      className="hidden"
-                                      onChange={(e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) {
-                                          if (file.size > 2.5 * 1024 * 1024) {
-                                            alert(lang === "tr" ? "Lütfen 2.5MB'den küçük bir fotoğraf seçin!" : "Please select an image smaller than 2.5MB!");
-                                            return;
-                                          }
-                                          const reader = new FileReader();
-                                          reader.onload = (event) => {
-                                            if (event.target?.result) {
-                                              setAvatarUrl(event.target.result as string);
-                                            }
-                                          };
-                                          reader.readAsDataURL(file);
-                                        }
-                                      }}
+                                      type="text"
+                                      placeholder="#f2f2f2 or linear-gradient(...)"
+                                      value={background || ""}
+                                      onChange={(e) => setBackground(e.target.value)}
+                                      className="w-full px-3 py-2 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white transition-colors"
                                     />
-                                  </label>
-                                  {avatarUrl && (
-                                    <button
-                                      type="button"
-                                      onClick={() => setAvatarUrl("")}
-                                      className="px-3 py-1 rounded-lg border border-red-250 bg-red-50 hover:bg-red-100 text-[10px] font-bold text-red-650 transition-all cursor-pointer select-none"
+                                  </div>
+
+                                  {/* Font Style */}
+                                  <div className="space-y-2">
+                                    <label className="text-[10px] font-bold text-slate-600">
+                                      {lang === "tr" ? "Yazı Tipi" : "Font Style"}
+                                    </label>
+                                    <select
+                                      value={fontStyle}
+                                      onChange={(e) => setFontStyle(e.target.value)}
+                                      className="w-full px-3 py-2 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white transition-colors cursor-pointer appearance-none"
                                     >
-                                      {lang === "tr" ? "Kaldır" : "Remove"}
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
+                                      {fonts.map(font => (
+                                        <option key={font.value} value={font.value}>{font.name}</option>
+                                      ))}
+                                    </select>
+                                  </div>
 
-                            {/* Background Input */}
-                            <div className="space-y-1">
-                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
-                                {lang === "tr" ? "Arka Plan (Renk veya Gradyan CSS)" : "Background (CSS Gradient or Color)"}
-                              </label>
-                              <input
-                                type="text"
-                                value={background || ""}
-                                onChange={(e) => setBackground(e.target.value)}
-                                className="w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-teal-500 outline-none"
-                                placeholder="e.g. #ffffff or linear-gradient(...)"
-                              />
-                            </div>
-
-                            {/* Font Select */}
-                            <div className="space-y-1">
-                              <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
-                                {lang === "tr" ? "Yazı Tipi" : "Typography Style"}
-                              </label>
-                              <select
-                                value={fontStyle}
-                                onChange={(e) => setFontStyle(e.target.value)}
-                                className="w-full px-2.5 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 focus:border-teal-500 outline-none bg-white"
-                              >
-                                {initialFonts.map((f) => (
-                                  <option key={f.value} value={f.value}>{f.name}</option>
-                                ))}
-                              </select>
-                            </div>
-
-                            {/* Colors Grid */}
-                            <div className="grid grid-cols-2 gap-3">
-                              <div className="space-y-1">
-                                <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
-                                  {lang === "tr" ? "Kullanıcı Adı Rengi" : "Username Color"}
-                                </label>
-                                <div className="flex gap-2">
-                                  <input
-                                    type="color"
-                                    value={usernameColor || "#ffffff"}
-                                    onChange={(e) => setUsernameColor(e.target.value)}
-                                    className="h-7 w-8 rounded border border-zinc-200 cursor-pointer animate-none"
-                                  />
-                                  <input
-                                    type="text"
-                                    value={usernameColor || ""}
-                                    onChange={(e) => setUsernameColor(e.target.value)}
-                                    className="flex-1 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
-                                  />
-                                </div>
-                              </div>
-
-                              <div className="space-y-1">
-                                <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider block">
-                                  {lang === "tr" ? "Biyografi Rengi" : "Bio Color"}
-                                </label>
-                                <div className="flex gap-2">
-                                  <input
-                                    type="color"
-                                    value={bioColor || "#888888"}
-                                    onChange={(e) => setBioColor(e.target.value)}
-                                    className="h-7 w-8 rounded border border-zinc-200 cursor-pointer animate-none"
-                                  />
-                                  <input
-                                    type="text"
-                                    value={bioColor || ""}
-                                    onChange={(e) => setBioColor(e.target.value)}
-                                    className="flex-1 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* --- BUTTON PROPERTIES (Buton Özellikleri) --- */}
-                            <div className="border-t pt-3 mt-1 space-y-3">
-                              <h5 className="text-[10px] font-black text-zinc-800 uppercase tracking-wider">
-                                {lang === "tr" ? "Buton Stil Özellikleri" : "Button Style Features"}
-                              </h5>
-
-                              {/* Button Colors Grid */}
-                              <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-1">
-                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
-                                    {lang === "tr" ? "Buton Arka Planı" : "Button Background"}
-                                  </label>
-                                  <div className="flex gap-1.5">
-                                    <input
-                                      type="color"
-                                      value={btnBgColor || "#ffffff"}
-                                      onChange={(e) => setBtnBgColor(e.target.value)}
-                                      className="h-7 w-7 rounded border border-zinc-200 cursor-pointer animate-none"
-                                    />
-                                    <input
-                                      type="text"
-                                      value={btnBgColor || ""}
-                                      onChange={(e) => setBtnBgColor(e.target.value)}
-                                      className="flex-1 min-w-0 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
-                                    />
+                                  <div className="grid grid-cols-2 gap-3">
+                                    <div className="space-y-2">
+                                      <label className="text-[10px] font-bold text-slate-600">
+                                        {lang === "tr" ? "İsim Rengi" : "Name Color"}
+                                      </label>
+                                      <div className="flex gap-1">
+                                        <input
+                                          type="color"
+                                          value={usernameColor || "#ffffff"}
+                                          onChange={(e) => setUsernameColor(e.target.value)}
+                                          className="h-8 w-8 rounded cursor-pointer border border-zinc-200"
+                                        />
+                                        <input
+                                          type="text"
+                                          value={usernameColor || ""}
+                                          onChange={(e) => setUsernameColor(e.target.value)}
+                                          className="flex-1 min-w-0 px-2 border border-zinc-200 rounded text-[10px] font-mono text-zinc-800 bg-slate-50"
+                                        />
+                                      </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                      <label className="text-[10px] font-bold text-slate-600">
+                                        {lang === "tr" ? "Biyografi Rengi" : "Bio Color"}
+                                      </label>
+                                      <div className="flex gap-1">
+                                        <input
+                                          type="color"
+                                          value={bioColor || "#888888"}
+                                          onChange={(e) => setBioColor(e.target.value)}
+                                          className="h-8 w-8 rounded cursor-pointer border border-zinc-200"
+                                        />
+                                        <input
+                                          type="text"
+                                          value={bioColor || ""}
+                                          onChange={(e) => setBioColor(e.target.value)}
+                                          className="flex-1 min-w-0 px-2 border border-zinc-200 rounded text-[10px] font-mono text-zinc-800 bg-slate-50"
+                                        />
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
 
-                                <div className="space-y-1">
-                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
-                                    {lang === "tr" ? "Buton Yazı Rengi" : "Button Text Color"}
-                                  </label>
-                                  <div className="flex gap-1.5">
-                                    <input
-                                      type="color"
-                                      value={btnTextColor || "#000000"}
-                                      onChange={(e) => setBtnTextColor(e.target.value)}
-                                      className="h-7 w-7 rounded border border-zinc-200 cursor-pointer animate-none"
-                                    />
-                                    <input
-                                      type="text"
-                                      value={btnTextColor || ""}
-                                      onChange={(e) => setBtnTextColor(e.target.value)}
-                                      className="flex-1 min-w-0 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
-                                    />
+                                {/* Right Column: Button & Icon Styles */}
+                                <div className="space-y-5 bg-white p-4 rounded-xl border border-zinc-100 shadow-sm">
+                                  <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+                                    {lang === "tr" ? "Buton Stili" : "Button Style"}
+                                  </h5>
+                                  
+                                  <div className="grid grid-cols-2 gap-3">
+                                    <div className="space-y-2">
+                                      <label className="text-[10px] font-bold text-slate-600">
+                                        {lang === "tr" ? "Buton Arka Planı" : "Background"}
+                                      </label>
+                                      <div className="flex gap-1">
+                                        <input
+                                          type="color"
+                                          value={btnBgColor || "#ffffff"}
+                                          onChange={(e) => setBtnBgColor(e.target.value)}
+                                          className="h-8 w-8 rounded cursor-pointer border border-zinc-200"
+                                        />
+                                        <input
+                                          type="text"
+                                          value={btnBgColor || ""}
+                                          onChange={(e) => setBtnBgColor(e.target.value)}
+                                          className="flex-1 min-w-0 px-2 border border-zinc-200 rounded text-[10px] font-mono text-zinc-800 bg-slate-50"
+                                        />
+                                      </div>
+                                    </div>
+                                    
+                                    <div className="space-y-2">
+                                      <label className="text-[10px] font-bold text-slate-600">
+                                        {lang === "tr" ? "Yazı Rengi" : "Text Color"}
+                                      </label>
+                                      <div className="flex gap-1">
+                                        <input
+                                          type="color"
+                                          value={btnTextColor || "#ffffff"}
+                                          onChange={(e) => setBtnTextColor(e.target.value)}
+                                          className="h-8 w-8 rounded cursor-pointer border border-zinc-200"
+                                        />
+                                        <input
+                                          type="text"
+                                          value={btnTextColor || ""}
+                                          onChange={(e) => setBtnTextColor(e.target.value)}
+                                          className="flex-1 min-w-0 px-2 border border-zinc-200 rounded text-[10px] font-mono text-zinc-800 bg-slate-50"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                      <label className="text-[10px] font-bold text-slate-600">
+                                        {lang === "tr" ? "İkon Rengi" : "Icon Color"}
+                                      </label>
+                                      <div className="flex gap-1">
+                                        <input
+                                          type="color"
+                                          value={btnIconColor || "#ffffff"}
+                                          onChange={(e) => setBtnIconColor(e.target.value)}
+                                          className="h-8 w-8 rounded cursor-pointer border border-zinc-200"
+                                        />
+                                        <input
+                                          type="text"
+                                          value={btnIconColor || ""}
+                                          onChange={(e) => setBtnIconColor(e.target.value)}
+                                          className="flex-1 min-w-0 px-2 border border-zinc-200 rounded text-[10px] font-mono text-zinc-800 bg-slate-50"
+                                          placeholder="Varsayılan"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                      <label className="text-[10px] font-bold text-slate-600">
+                                        {lang === "tr" ? "Çerçeve Rengi" : "Border Color"}
+                                      </label>
+                                      <div className="flex gap-1">
+                                        <input
+                                          type="color"
+                                          value={btnBorderColor || "#ffffff"}
+                                          onChange={(e) => setBtnBorderColor(e.target.value)}
+                                          className="h-8 w-8 rounded cursor-pointer border border-zinc-200"
+                                        />
+                                        <input
+                                          type="text"
+                                          value={btnBorderColor || ""}
+                                          onChange={(e) => setBtnBorderColor(e.target.value)}
+                                          className="flex-1 min-w-0 px-2 border border-zinc-200 rounded text-[10px] font-mono text-zinc-800 bg-slate-50"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="space-y-2 mt-3">
+                                    <label className="text-[10px] font-bold text-slate-600">
+                                      {lang === "tr" ? "Çerçeve Stili" : "Border Style"}
+                                    </label>
+                                    <select
+                                      value={btnBorderStyle || "solid"}
+                                      onChange={(e) => setBtnBorderStyle(e.target.value)}
+                                      className="w-full px-3 py-2 rounded-lg border border-zinc-200 text-xs text-zinc-900 outline-none bg-slate-50 hover:bg-white"
+                                    >
+                                      <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
+                                      <option value="dashed">{lang === "tr" ? "Kesik (Dashed)" : "Dashed"}</option>
+                                      <option value="dotted">{lang === "tr" ? "Noktalı (Dotted)" : "Dotted"}</option>
+                                      <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
+                                    </select>
                                   </div>
                                 </div>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-1">
-                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
-                                    {lang === "tr" ? "Çerçeve Rengi" : "Border Color"}
-                                  </label>
-                                  <div className="flex gap-1.5">
-                                    <input
-                                      type="color"
-                                      value={btnBorderColor || "#000000"}
-                                      onChange={(e) => setBtnBorderColor(e.target.value)}
-                                      className="h-7 w-7 rounded border border-zinc-200 cursor-pointer animate-none"
-                                    />
-                                    <input
-                                      type="text"
-                                      value={btnBorderColor || ""}
-                                      onChange={(e) => setBtnBorderColor(e.target.value)}
-                                      className="flex-1 min-w-0 px-1.5 border border-zinc-200 rounded text-[9px] font-mono text-zinc-800"
-                                    />
+                              {/* --- QUICK LINK ADDITION (Hızlı Link Ekleme) --- */}
+                              <div className="border-t border-zinc-100 pt-5 space-y-4">
+                                <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                                  <Globe className="h-3.5 w-3.5 text-indigo-400" />
+                                  {lang === "tr" ? "Yeni Link Ekle (Önizleme İçin)" : "Add New Link (For Preview)"}
+                                </h5>
+                                <div className="bg-white p-4 rounded-xl border border-zinc-100 shadow-sm">
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                                    <div className="space-y-1.5">
+                                      <label className="text-[10px] font-bold text-slate-600">{lang === "tr" ? "Başlık" : "Title"}</label>
+                                      <input
+                                        type="text"
+                                        placeholder="Link Başlığı"
+                                        value={quickLinkTitle}
+                                        onChange={(e) => setQuickLinkTitle(e.target.value)}
+                                        className="w-full px-3 py-2 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white"
+                                      />
+                                    </div>
+                                    <div className="space-y-1.5">
+                                      <label className="text-[10px] font-bold text-slate-600">{lang === "tr" ? "URL" : "URL"}</label>
+                                      <input
+                                        type="text"
+                                        placeholder="https://..."
+                                        value={quickLinkUrl}
+                                        onChange={(e) => setQuickLinkUrl(e.target.value)}
+                                        className="w-full px-3 py-2 rounded-lg border border-zinc-200 text-xs text-zinc-900 focus:border-indigo-500 outline-none bg-slate-50 hover:bg-white"
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-
-                                <div className="space-y-1">
-                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
-                                    {lang === "tr" ? "Çerçeve Stili" : "Border Style"}
-                                  </label>
-                                  <select
-                                    value={btnBorderStyle}
-                                    onChange={(e) => setBtnBorderStyle(e.target.value)}
-                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
-                                  >
-                                    <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
-                                    <option value="dashed">{lang === "tr" ? "Kesikli (Dashed)" : "Dashed"}</option>
-                                    <option value="double">{lang === "tr" ? "Çift (Double)" : "Double"}</option>
-                                    <option value="dotted">{lang === "tr" ? "Noktalı (Dotted)" : "Dotted"}</option>
-                                    <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-1">
-                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
-                                    {lang === "tr" ? "Çerçeve Kalınlığı" : "Border Width"}
-                                  </label>
-                                  <select
-                                    value={btnBorderWidth}
-                                    onChange={(e) => setBtnBorderWidth(e.target.value)}
-                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
-                                  >
-                                    <option value="0px">0px</option>
-                                    <option value="1px">1px</option>
-                                    <option value="2px">2px</option>
-                                    <option value="3px">3px</option>
-                                    <option value="4px">4px</option>
-                                    <option value="5px">5px</option>
-                                  </select>
-                                </div>
-
-                                <div className="space-y-1">
-                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
-                                    {lang === "tr" ? "Köşe Yuvarlaklığı" : "Border Radius"}
-                                  </label>
-                                  <select
-                                    value={btnBorderRadius}
-                                    onChange={(e) => setBtnBorderRadius(e.target.value)}
-                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
-                                  >
-                                    <option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp (0px)"}</option>
-                                    <option value="4px">4px</option>
-                                    <option value="8px">8px</option>
-                                    <option value="12px">12px</option>
-                                    <option value="16px">16px</option>
-                                    <option value="20px">20px</option>
-                                    <option value="24px">24px</option>
-                                    <option value="9999px">{lang === "tr" ? "Yuvarlak (Oval)" : "Round (Oval)"}</option>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-1">
-                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
-                                    {lang === "tr" ? "Gölge Efekti" : "Shadow Effect"}
-                                  </label>
-                                  <select
-                                    value={btnShadow}
-                                    onChange={(e) => setBtnShadow(e.target.value)}
-                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
-                                  >
-                                    <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
-                                    <option value="soft">{lang === "tr" ? "Yumuşak (Soft)" : "Soft"}</option>
-                                    <option value="glow-purple">{lang === "tr" ? "Mor Işıma (Glow)" : "Glow Purple"}</option>
-                                    <option value="glow-emerald">{lang === "tr" ? "Yeşil Işıma (Glow)" : "Glow Emerald"}</option>
-                                    <option value="hard-3d">{lang === "tr" ? "Sert 3D (Brutal)" : "Hard 3D"}</option>
-                                  </select>
-                                </div>
-
-                                <div className="space-y-1">
-                                  <label className="text-[8px] font-black text-slate-500 uppercase tracking-wider block">
-                                    {lang === "tr" ? "Yazı Kalınlığı" : "Font Weight"}
-                                  </label>
-                                  <select
-                                    value={btnFontWeight}
-                                    onChange={(e) => setBtnFontWeight(e.target.value)}
-                                    className="w-full px-2 py-1.5 rounded-lg border border-zinc-200 text-xs font-bold text-zinc-900 outline-none bg-white"
-                                  >
-                                    <option value="font-normal">{lang === "tr" ? "Normal" : "Normal"}</option>
-                                    <option value="font-medium">{lang === "tr" ? "Orta (Medium)" : "Medium"}</option>
-                                    <option value="font-bold">{lang === "tr" ? "Kalın (Bold)" : "Bold"}</option>
-                                    <option value="font-black">{lang === "tr" ? "Çok Kalın (Black)" : "Black"}</option>
-                                  </select>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* --- QUICK LINK ADDITION (Hızlı Link Ekleme) --- */}
-                            <div className="border-t pt-3 mt-1 space-y-3">
-                              <h5 className="text-[10px] font-black text-zinc-800 uppercase tracking-wider flex items-center gap-1">
-                                <span>🔗</span>
-                                {lang === "tr" ? "Yeni Link Ekle (Önizleme İçin)" : "Add New Link (For Preview)"}
-                              </h5>
-                              <div className="space-y-2 bg-slate-50 p-2.5 rounded-lg border border-zinc-150">
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div className="space-y-0.5">
-                                    <input
-                                      type="text"
-                                      placeholder={lang === "tr" ? "Link Başlığı" : "Link Title"}
-                                      value={quickLinkTitle}
-                                      onChange={(e) => setQuickLinkTitle(e.target.value)}
-                                      className="w-full px-2.5 py-1.5 rounded border border-zinc-200 text-[10px] text-zinc-900 focus:border-teal-500 outline-none bg-white"
-                                    />
+                                  
+                                  <div className="flex flex-col sm:flex-row gap-4 mb-4">
+                                    <div className="flex-1">
+                                      <label className="text-[10px] font-bold text-slate-600 mb-2 block">
+                                        {lang === "tr" ? "İkon Seçimi" : "Icon"}
+                                      </label>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        {[
+                                          { id: "WEBSITE", icon: Globe },
+                                          { id: "INSTAGRAM", icon: InstagramIcon },
+                                          { id: "WHATSAPP", icon: MessageCircle },
+                                          { id: "TIKTOK", icon: TiktokIcon },
+                                          { id: "PINTEREST", icon: PinterestIcon },
+                                          { id: "YOUTUBE", icon: YoutubeIcon },
+                                          { id: "X", icon: TwitterIcon },
+                                          { id: "REDDIT", icon: MessageCircle },
+                                          { id: "LINKEDIN", icon: LinkedinIcon },
+                                        ].map(iconOption => (
+                                          <button
+                                            key={iconOption.id}
+                                            type="button"
+                                            onClick={() => setQuickLinkIcon(iconOption.id)}
+                                            className={`p-2 rounded-lg flex items-center justify-center transition-all ${
+                                              quickLinkIcon === iconOption.id 
+                                                ? "bg-indigo-500 text-white shadow-md scale-110" 
+                                                : "bg-slate-50 border border-zinc-200 text-zinc-500 hover:bg-white"
+                                            }`}
+                                          >
+                                            <iconOption.icon className="h-4 w-4" />
+                                          </button>
+                                        ))}
+                                      </div>
+                                    </div>
+                                    <div className="w-full sm:w-32 shrink-0 space-y-2">
+                                      <label className="text-[10px] font-bold text-slate-600 block">
+                                        {lang === "tr" ? "İkon Rengi (Özel)" : "Icon Color"}
+                                      </label>
+                                      <div className="flex gap-1">
+                                        <input
+                                          type="color"
+                                          value={quickLinkIconColor || "#ffffff"}
+                                          onChange={(e) => setQuickLinkIconColor(e.target.value)}
+                                          className="h-8 w-8 rounded cursor-pointer border border-zinc-200"
+                                        />
+                                        <input
+                                          type="text"
+                                          value={quickLinkIconColor || ""}
+                                          onChange={(e) => setQuickLinkIconColor(e.target.value)}
+                                          className="flex-1 min-w-0 px-2 border border-zinc-200 rounded text-[10px] font-mono text-zinc-800 bg-slate-50"
+                                          placeholder="İsteğe Bağlı"
+                                        />
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div className="space-y-0.5">
-                                    <input
-                                      type="text"
-                                      placeholder={lang === "tr" ? "Link URL" : "Link URL"}
-                                      value={quickLinkUrl}
-                                      onChange={(e) => setQuickLinkUrl(e.target.value)}
-                                      className="w-full px-2.5 py-1.5 rounded border border-zinc-200 text-[10px] text-zinc-900 focus:border-teal-500 outline-none bg-white"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="pt-2 pb-2">
-                                  <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-2">
-                                    {lang === "tr" ? "İkon Seçimi" : "Icon Selection"}
-                                  </label>
-                                  <div className="flex flex-wrap gap-1.5">
-                                    {[
-                                      { id: "WEBSITE", icon: Globe },
-                                      { id: "INSTAGRAM", icon: InstagramIcon },
-                                      { id: "WHATSAPP", icon: MessageCircle },
-                                      { id: "TIKTOK", icon: TiktokIcon },
-                                      { id: "PINTEREST", icon: PinterestIcon },
-                                      { id: "YOUTUBE", icon: YoutubeIcon },
-                                      { id: "X", icon: TwitterIcon },
-                                      { id: "REDDIT", icon: MessageCircle },
-                                      { id: "LINKEDIN", icon: LinkedinIcon },
-                                    ].map(iconOption => (
-                                      <button
-                                        key={iconOption.id}
-                                        type="button"
-                                        onClick={() => setQuickLinkIcon(iconOption.id)}
-                                        className={`p-1.5 rounded-lg flex items-center justify-center transition-all ${
-                                          quickLinkIcon === iconOption.id 
-                                            ? "bg-emerald-500 text-white shadow-md" 
-                                            : "bg-white border border-zinc-200 text-zinc-600 hover:bg-zinc-100"
-                                        }`}
-                                      >
-                                        <iconOption.icon className="h-3.5 w-3.5" />
-                                      </button>
-                                    ))}
-                                  </div>
-                                </div>
-                                <button
-                                  type="button"
-                                  onClick={async () => {
-                                    if (!quickLinkTitle || !quickLinkUrl) return;
-                                    if (simulatedPlan === "FREE" && links.length >= 5) {
-                                      triggerUpgradeModal(
-                                        lang === "tr" ? "Link Sınırına Ulaştınız 🔒" : "Link Limit Reached 🔒",
-                                        lang === "tr" 
-                                          ? "Ücretsiz planda en fazla 5 link oluşturabilirsiniz. Sınırları kaldırmak için Premium pakete geçin!" 
-                                          : "Free tier is limited to 5 links. Upgrade your plan to add unlimited links!"
-                                      );
-                                      return;
-                                    }
-                                    startTransition(async () => {
-                                      try {
-                                        const res = await addLink(
-    initialUser.id,
-    quickLinkTitle,
-    quickLinkUrl,
-    quickLinkIcon,
-    "",
-    "TEXT_LINK",
-    null
-  );
-  if (res && res.error) {
-    throw new Error(res.error);
-  }
-                                        const tempId = Math.random().toString();
-                                        setLinks([
-                                          ...links,
-                                          {
-                                            id: tempId,
-                                            title: quickLinkTitle,
-                                            url: quickLinkUrl,
-                                            isActive: true,
-                                            type: quickLinkIcon,
-                                            clicks: [],
-                                            blockType: "TEXT_LINK",
-                                            metadata: null,
-                                            bgColor: btnBgColor || null,
-                                            textColor: btnTextColor || null,
-                                            borderColor: btnBorderColor || null,
-                                            borderStyle: btnBorderStyle || null,
-                                            borderWidth: btnBorderWidth || null,
-                                            borderRadius: btnBorderRadius || null,
-                                            shadow: btnShadow || null,
-                                            fontWeight: btnFontWeight || null
-                                          }
-                                        ]);
-                                        setQuickLinkTitle("");
-                                        setQuickLinkUrl("");
-                                        setQuickLinkIcon("WEBSITE");
-                                        setSuccessMsg(lang === "tr" ? "Link başarıyla eklendi!" : "Link added successfully!");
-                                        setTimeout(() => setSuccessMsg(""), 3000);
-                                      } catch (err: any) {
-                                        setErrorMsg(err.message || "Failed to add link");
-                                        setTimeout(() => setErrorMsg(""), 4000);
+
+                                  <button
+                                    type="button"
+                                    onClick={async () => {
+                                      if (!quickLinkTitle || !quickLinkUrl) return;
+                                      if (simulatedPlan === "FREE" && links.length >= 5) {
+                                        triggerUpgradeModal(
+                                          lang === "tr" ? "Link Sınırına Ulaştınız 🔒" : "Link Limit Reached 🔒",
+                                          lang === "tr" 
+                                            ? "Ücretsiz planda en fazla 5 link oluşturabilirsiniz. Sınırları kaldırmak için Premium pakete geçin!" 
+                                            : "Free tier is limited to 5 links. Upgrade your plan to add unlimited links!"
+                                        );
+                                        return;
                                       }
-                                    });
-                                  }}
-                                  className="w-full py-1.5 rounded bg-zinc-950 hover:bg-zinc-850 text-white text-[10px] font-black transition-colors cursor-pointer flex items-center justify-center gap-1 border-none"
-                                >
-                                  <span>{lang === "tr" ? "Listeye Ekle" : "Add to List"}</span>
-                                </button>
-                              </div>
-                            </div>
+                                      startTransition(async () => {
+                                        try {
+                                          const metaPayload = quickLinkIconColor ? JSON.stringify({ iconColor: quickLinkIconColor }) : null;
+                                          const res = await addLink(
+                                            initialUser.id,
+                                            quickLinkTitle,
+                                            quickLinkUrl,
+                                            quickLinkIcon,
+                                            "",
+                                            "TEXT_LINK",
+                                            metaPayload
+                                          );
+                                          if (res && res.error) throw new Error(res.error);
 
-                            {/* Action Buttons */}
+                                          const tempId = Math.random().toString();
+                                          setLinks([
+                                            ...links,
+                                            {
+                                              id: tempId,
+                                              title: quickLinkTitle,
+                                              url: quickLinkUrl,
+                                              isActive: true,
+                                              type: quickLinkIcon,
+                                              clicks: [],
+                                              blockType: "TEXT_LINK",
+                                              metadata: metaPayload,
+                                              bgColor: btnBgColor || null,
+                                              textColor: btnTextColor || null,
+                                              borderColor: btnBorderColor || null,
+                                              borderStyle: btnBorderStyle || null,
+                                              borderWidth: btnBorderWidth || null,
+                                              borderRadius: btnBorderRadius || null,
+                                              shadow: btnShadow || null,
+                                              fontWeight: btnFontWeight || null
+                                            }
+                                          ]);
+                                          setQuickLinkTitle("");
+                                          setQuickLinkUrl("");
+                                          setQuickLinkIcon("WEBSITE");
+                                          setQuickLinkIconColor("");
+                                          setSuccessMsg(lang === "tr" ? "Link başarıyla eklendi!" : "Link added successfully!");
+                                          setTimeout(() => setSuccessMsg(""), 3000);
+                                        } catch (err: any) {
+                                          setErrorMsg(err.message || "Failed to add link");
+                                          setTimeout(() => setErrorMsg(""), 4000);
+                                        }
+                                      });
+                                    }}
+                                    className="w-full py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm hover:shadow"
+                                  >
+                                    <Globe className="h-3.5 w-3.5" />
+                                    <span>{lang === "tr" ? "Listeye Ekle ve Önizle" : "Add to List & Preview"}</span>
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Action Buttons */}
                             <div className="pt-2 flex gap-1.5 border-t">
                               <button
                                 type="button"
@@ -4423,7 +4375,8 @@ export default function DashboardClient({
                                         btnBorderWidth || null,
                                         btnBorderRadius || null,
                                         btnShadow || null,
-                                        btnFontWeight || null
+                                        btnFontWeight || null,
+                                        btnIconColor || null
                                       );
                                       setSuccessMsg(lang === "tr" ? "Özelleştirilmiş tasarım kaydedildi!" : "Custom design saved successfully!");
                                       setCustomizingTemplateId(null);
@@ -4457,8 +4410,9 @@ export default function DashboardClient({
                                   setBtnBorderRadius("12px");
                                   setBtnShadow("none");
                                   setBtnFontWeight("font-bold");
-                                }}
-                                className="px-2 py-1.5 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-650 text-[9px] font-black cursor-pointer bg-white"
+                                    setBtnIconColor("");
+                                  }}
+                                  className="px-2 py-1.5 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-650 text-[9px] font-black cursor-pointer bg-white"
                               >
                                 {lang === "tr" ? "Sıfırla" : "Reset"}
                               </button>

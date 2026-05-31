@@ -269,7 +269,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
               return (
                 <a key={link.id} href={isCompactMode ? "#" : `/click/${link.id}`} target={isCompactMode ? "_self" : "_blank"} rel="noopener noreferrer" style={customStyle} className={`flex items-center justify-between p-3 text-sm transition-all hover:scale-[1.02] ${dynamicBlockClass}`}>
                   <div className="flex items-center gap-3 flex-1 overflow-hidden">
-                    <div className="h-8 w-8 rounded-full bg-black/10 flex items-center justify-center shrink-0 border border-white/5">
+                    <div className="h-8 w-8 rounded-full bg-black/10 flex items-center justify-center shrink-0 border border-white/5" style={blockMeta.iconColor ? { color: blockMeta.iconColor } : undefined}>
                       {getLinkIcon(link.type, link.url)}
                     </div>
                     <span className="link-title truncate flex-1 font-semibold" style={{ color: link.textColor || 'inherit', display: 'block', visibility: 'visible', opacity: 1 }}>{link.title}</span>
