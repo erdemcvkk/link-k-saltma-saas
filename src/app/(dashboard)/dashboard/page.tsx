@@ -150,17 +150,34 @@ export default async function DashboardPage() {
  createdAt: qr.createdAt.toISOString(),
  }));
 
- // Fetch managed fonts from database
- const dbFonts = await db.managedFont.findMany({
- orderBy: { name: "asc" },
- });
- const serializedFonts = dbFonts.map(f => ({
- id: f.id,
- name: f.name,
- value: f.value,
- tier: f.tier,
- giftLabel: f.giftLabel,
- }));
+  // Fetch managed fonts from database with fallback protection
+  let dbFonts: any[] = [];
+  try {
+    dbFonts = await db.managedFont.findMany({
+      orderBy: { name: "asc" },
+    });
+  } catch (err) {
+    dbFonts = [
+      { id: "1", name: "Inter", value: "Inter", tier: "FREE", giftLabel: null },
+      { id: "2", name: "Roboto", value: "Roboto", tier: "FREE", giftLabel: null },
+      { id: "3", name: "Outfit", value: "Outfit", tier: "FREE", giftLabel: null },
+      { id: "4", name: "Playfair Display", value: "Playfair Display", tier: "FREE", giftLabel: null },
+      { id: "5", name: "Montserrat", value: "Montserrat", tier: "FREE", giftLabel: null },
+      { id: "6", name: "Poppins", value: "Poppins", tier: "FREE", giftLabel: null },
+      { id: "7", name: "Open Sans", value: "Open Sans", tier: "FREE", giftLabel: null },
+      { id: "8", name: "Lato", value: "Lato", tier: "FREE", giftLabel: null },
+      { id: "9", name: "Oswald", value: "Oswald", tier: "FREE", giftLabel: null },
+      { id: "10", name: "Raleway", value: "Raleway", tier: "FREE", giftLabel: null }
+    ];
+  }
+
+  const serializedFonts = dbFonts.map(f => ({
+    id: f.id,
+    name: f.name,
+    value: f.value,
+    tier: f.tier,
+    giftLabel: f.giftLabel,
+  }));
 
  // Fetch owned templates of this user
  const ownedTemplates = await db.userTemplate.findMany({

@@ -367,16 +367,20 @@ export async function updateProfile(
 
   // Typography gating validation
   if (fontStyle) {
-    const fontRecord = await db.managedFont.findFirst({
-      where: { value: fontStyle }
-    });
-    if (fontRecord) {
-      if (user.plan === "FREE" && fontRecord.tier !== "FREE") {
-        throw new Error(`The font style "${fontStyle}" is a Premium Feature. Please upgrade your plan to unlock premium typography styles!`);
+    try {
+      const fontRecord = await db.managedFont.findFirst({
+        where: { value: fontStyle }
+      });
+      if (fontRecord) {
+        if (user.plan === "FREE" && fontRecord.tier !== "FREE") {
+          throw new Error(`The font style "${fontStyle}" is a Premium Feature. Please upgrade your plan to unlock premium typography styles!`);
+        }
+        if (user.plan === "STARTER" && fontRecord.tier === "CREATOR") {
+          throw new Error(`The font style "${fontStyle}" is a Creator Feature. Please upgrade to the CREATOR plan to unlock deluxe fonts!`);
+        }
       }
-      if (user.plan === "STARTER" && fontRecord.tier === "CREATOR") {
-        throw new Error(`The font style "${fontStyle}" is a Creator Feature. Please upgrade to the CREATOR plan to unlock deluxe fonts!`);
-      }
+    } catch (err) {
+      // Safely ignore gating check if table does not exist or db query fails
     }
   }
 

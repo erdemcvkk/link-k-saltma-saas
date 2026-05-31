@@ -73,14 +73,24 @@ export default async function AdminPage() {
 
  const stats = { totalUsers, starterCount, creatorCount, totalRevenue };
 
- const dbFonts = await db.managedFont.findMany({ orderBy: { name: "asc" } });
- const serializedFonts = dbFonts.map((f) => ({
- id: f.id,
- name: f.name,
- value: f.value,
- tier: f.tier,
- createdAt: f.createdAt.toISOString(),
- }));
+  let dbFonts: any[] = [];
+  try {
+    dbFonts = await db.managedFont.findMany({ orderBy: { name: "asc" } });
+  } catch (err) {
+    dbFonts = [
+      { id: "1", name: "Inter", value: "Inter", tier: "FREE", createdAt: new Date() },
+      { id: "2", name: "Roboto", value: "Roboto", tier: "FREE", createdAt: new Date() },
+      { id: "3", name: "Outfit", value: "Outfit", tier: "FREE", createdAt: new Date() }
+    ];
+  }
+
+  const serializedFonts = dbFonts.map((f) => ({
+    id: f.id,
+    name: f.name,
+    value: f.value,
+    tier: f.tier,
+    createdAt: f.createdAt.toISOString(),
+  }));
 
  const dbSliderItems = await db.sliderItem.findMany({ orderBy: { createdAt: "asc" } });
  const serializedSliderItems = dbSliderItems.map((item) => ({

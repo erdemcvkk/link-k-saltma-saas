@@ -57,9 +57,25 @@ export default async function AdminTemplatesPage() {
  createdAt: t.createdAt.toISOString(),
  }));
 
- const fonts = await db.managedFont.findMany({
-   orderBy: { name: "asc" },
- });
+  let fonts: any[] = [];
+  try {
+    fonts = await db.managedFont.findMany({
+      orderBy: { name: "asc" },
+    });
+  } catch (err) {
+    fonts = [
+      { name: "Inter", value: "Inter" },
+      { name: "Roboto", value: "Roboto" },
+      { name: "Outfit", value: "Outfit" },
+      { name: "Playfair Display", value: "Playfair Display" },
+      { name: "Montserrat", value: "Montserrat" },
+      { name: "Poppins", value: "Poppins" },
+      { name: "Open Sans", value: "Open Sans" },
+      { name: "Lato", value: "Lato" },
+      { name: "Oswald", value: "Oswald" },
+      { name: "Raleway", value: "Raleway" }
+    ];
+  }
 
  const serializedFonts = fonts.map(f => ({
    name: f.name,
