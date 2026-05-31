@@ -1523,7 +1523,7 @@ export default function DashboardClient({
       }`}>
         <div>
           <div className="flex items-center gap-2.5">
-            <h1 className="text-xl md:text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-fuchsia-500">
+            <h1 className="text-xl md:text-3xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-fuchsia-500 break-words">
               {t.creatorStudioTitle}
             </h1>
             <span className="px-2.5 py-0.5 rounded-full bg-teal-400/20 border border-teal-500/30 text-[9px] font-extrabold text-teal-500 uppercase tracking-widest">
@@ -1533,7 +1533,7 @@ export default function DashboardClient({
           <p className={"text-slate-500 text-sm"}>{t.creatorStudioDesc}</p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto mt-4 sm:mt-0">
           {initialUser.role === "ADMIN" && (
             <Link
               href="/admin"
