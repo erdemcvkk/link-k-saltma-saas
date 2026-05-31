@@ -1512,7 +1512,7 @@ export default function DashboardClient({
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 p-6 max-w-7xl mx-auto flex flex-col gap-6 font-corporate ${
+    <div className={`min-h-screen transition-colors duration-500 p-6 max-w-7xl mx-auto flex flex-col gap-6 font-corporate overflow-x-hidden ${
       "bg-white text-zinc-900"
     }`}>
       <GlobalOverlayManager onStateChange={handleStateChange} />
@@ -2705,7 +2705,7 @@ export default function DashboardClient({
                           </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                           {LINK_TEMPLATES.map((tmpl) => {
                             const Icon = tmpl.icon;
                             const unlocked = isLinkTemplateUnlocked(tmpl.tier);
