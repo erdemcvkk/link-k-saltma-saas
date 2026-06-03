@@ -40,7 +40,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 
  const {
  username, bio, avatarUrl, theme = "dark", customCss, background, fontStyle = "Inter",
- bioColor, usernameColor, plan, links = [], products = [], addons = []
+ bioColor, usernameColor, plan, links = [], products = [], addons = [], buttonClass
  } = data;
 
  const isDark = isDarkContext;
@@ -185,6 +185,9 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  }
  };
 
+ const isLayoutLeft = buttonClass?.includes("layout-left");
+ const isLayoutHero = buttonClass?.includes("layout-hero");
+
  return (
  <div 
  id={wrapperId}
@@ -207,6 +210,55 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 
  <main className="flex flex-col items-center justify-start w-full px-4 py-8 gap-4 max-w-md mx-auto relative z-10 overflow-x-hidden">
  {/* Profile Card */}
+ {isLayoutLeft ? (
+ <div className={`profile-card p-4 w-full rounded-3xl border backdrop-blur-md flex items-center gap-4 text-left ${currentStyles.cardBg}`} style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
+ <div className={`w-16 h-16 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-2 border-white/10 shadow-md flex items-center justify-center overflow-hidden shrink-0`}>
+ {avatarUrl ? (
+ <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+ ) : (
+ <User className="h-8 w-8 text-white" />
+ )}
+ </div>
+ <div className="space-y-0.5 flex-1 min-w-0">
+ <h1 style={usernameColor ? { color: usernameColor } : undefined} className={`text-base font-black truncate leading-tight ${currentStyles.glowText}`}>
+ @{username}
+ </h1>
+ {bio && (
+ <p style={bioColor ? { color: bioColor } : undefined} className={`text-xs leading-normal line-clamp-2 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
+ {bio}
+ </p>
+ )}
+ </div>
+ </div>
+ ) : isLayoutHero ? (
+ <div className={`profile-card w-full rounded-[2.5rem] border overflow-hidden backdrop-blur-md flex flex-col items-center pb-5 text-center ${currentStyles.cardBg}`} style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
+ {/* Banner Background */}
+ <div className="w-full h-24 bg-gradient-to-r from-teal-500/25 via-purple-500/25 to-pink-500/25 border-b border-white/5 relative flex items-center justify-center">
+ {avatarUrl && (
+ <div className="absolute inset-0 bg-cover bg-center opacity-30 blur-[2px]" style={{ backgroundImage: `url(${avatarUrl})` }} />
+ )}
+ </div>
+ 
+ <div className={`w-20 h-20 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/15 shadow-xl flex items-center justify-center overflow-hidden -mt-10 z-10`}>
+ {avatarUrl ? (
+ <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+ ) : (
+ <User className="h-10 w-10 text-white" />
+ )}
+ </div>
+ 
+ <div className="space-y-1 w-full px-4 mt-2">
+ <h1 style={usernameColor ? { color: usernameColor } : undefined} className={`text-lg font-black tracking-tight ${currentStyles.glowText}`}>
+ @{username}
+ </h1>
+ {bio && (
+ <p style={bioColor ? { color: bioColor } : undefined} className={`text-xs leading-relaxed max-w-xs mx-auto px-2 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
+ {bio}
+ </p>
+ )}
+ </div>
+ </div>
+ ) : (
  <div className={`profile-card p-3 md:p-6 w-full rounded-[2.5rem] border text-center backdrop-blur-md flex flex-col items-center gap-4 ${currentStyles.cardBg}`} style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
  <div className={`w-20 h-20 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/10 shadow-lg flex items-center justify-center overflow-hidden`}>
  {avatarUrl ? (
@@ -226,6 +278,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  )}
  </div>
  </div>
+ )}
 
  {/* Links Grid */}
  <div className="links-container w-full flex flex-col gap-3" style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>

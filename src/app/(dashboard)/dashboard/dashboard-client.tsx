@@ -540,6 +540,7 @@ export default function DashboardClient({
  const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
  const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo" | "templates" | "store" | "addons">("editor");
  const [activeSubTab, setActiveSubTab] = useState<"links" | "appearance" | "profile">("links");
+ const [activeAppSection, setActiveAppSection] = useState<"theme" | "header" | "typography" | "wallpaper" | "buttons" | "colors">("theme");
  const [expandedLinkCard, setExpandedLinkCard] = useState<string | null>(null);
 
  useEffect(() => {
@@ -1085,7 +1086,7 @@ export default function DashboardClient({
 
  startTransition(async () => {
  try {
- await updateProfile(initialUser.id, bio, theme, username, avatarUrl, background, fontStyle, bioColor, usernameColor, activeTemplateCss);
+ await updateProfile(initialUser.id, bio, theme, username, avatarUrl, background, fontStyle, bioColor, usernameColor, activeTemplateCss, buttonClass);
  await updateAllLinksCustomStyle(
  initialUser.id,
  btnBgColor || null,
@@ -1744,265 +1745,38 @@ export default function DashboardClient({
  </button>
  </div>
 
- {/* SUB-TAB CONTENT: PROFILE */}
- {activeSubTab === "profile" && (
- <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in duration-200 overflow-hidden">
- {/* Profile customizer */}
- <div className={`p-3 sm:p-4 md:p-8 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden ${
- "bg-white border-zinc-200 shadow-sm"
- }`}>
- <div className="flex flex-wrap items-center justify-between">
- <div className="flex items-center gap-3">
- <User className="h-5 w-5 text-teal-500" />
- <h2 className={`font-extrabold text-lg ${"text-zinc-950"}`}>{t.profileCustomizer}</h2>
- </div>
- <button
- onClick={handleSaveProfile}
- disabled={isPending}
- className={`flex items-center gap-1.5 px-4 py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer ${
- "bg-zinc-900 text-white hover:bg-zinc-800 shadow-md shadow-zinc-950/15"
- }`}
- >
- {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
- {t.saveChanges}
- </button>
- </div>
-
- <div className="grid md:grid-cols-2 gap-4 md:gap-6">
- <div className="space-y-2">
- <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>{t.usernameLabel}</label>
- <div className={`flex items-center rounded-xl border focus-within:border-teal-500/50 overflow-hidden px-3 ${
- "bg-zinc-100 border-zinc-200"
- }`}>
- <span className="text-slate-500 text-[11px] sm:text-sm shrink-0">link-saas.vercel.app/</span>
- <input
- type="text"
- value={username}
- onChange={(e) => setUsername(e.target.value)}
- className={`flex-1 bg-transparent py-2.5 outline-none text-sm ${"text-zinc-900"}`}
- placeholder="username"
- />
- </div>
- </div>
-
- <div className="space-y-2 md:col-span-2">
- <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>
- {lang === "tr" ? "Profil Fotoğrafı Yükle" : "Upload Profile Photo"}
- </label>
- <div className={`p-4 md:p-5 rounded-xl border flex items-center gap-5 ${
- "bg-zinc-100 border-zinc-200"
- }`}>
- <div className={`w-16 h-16 rounded-full border flex items-center justify-center overflow-hidden shrink-0 ${
- "bg-white border-zinc-300 shadow-inner"
- }`}>
- {avatarUrl ? (
- <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" />
- ) : (
- <User className="h-6 w-6 text-slate-500" />
- )}
- </div>
- <div className="space-y-1.5">
- <div className="flex gap-2">
- <label className={`px-3.5 py-2.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
- "bg-white hover:bg-zinc-55 border-zinc-300 text-zinc-700 shadow-sm"
- }`}>
- {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
- <input
- type="file"
- accept="image/*"
- className="hidden"
- onChange={(e) => {
- const file = e.target.files?.[0];
- if (file) {
- if (file.size > 2.5 * 1024 * 1024) {
- alert(lang === "tr" ? "Lütfen 2.5MB'den küçük bir fotoğraf seçin!" : "Please select an image smaller than 2.5MB!");
- return;
- }
- const reader = new FileReader();
- reader.onload = (event) => {
- if (event.target?.result) {
- setAvatarUrl(event.target.result as string);
- }
- };
- reader.readAsDataURL(file);
- }
- }}
- />
- </label>
- {avatarUrl && (
- <button
- type="button"
- onClick={() => setAvatarUrl("")}
- className={`px-3.5 py-2.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none ${
- "bg-red-50 hover:bg-red-100 border-red-200 text-red-600"
- }`}
- >
- {lang === "tr" ? "Kaldır" : "Remove"}
- </button>
- )}
- </div>
- <p className="text-[10px] text-slate-500 font-semibold">
- {lang === "tr" ? "Maksimum 2.5MB (PNG, JPG). Fotoğraf veri tabanına güvenle işlenecektir." : "Max 2.5MB (PNG, JPG). Image will be safely encrypted."}
- </p>
- </div>
- </div>
- </div>
-
- <div className="space-y-2">
- <label className={`text-xs font-semibold uppercase tracking-wider block ${"text-slate-500"}`}>{t.bioLabel}</label>
- <textarea
- value={bio}
- onChange={(e) => setBio(e.target.value)}
- className={`w-full px-4 py-2.5 rounded-xl border focus:border-teal-500/50 outline-none text-sm ${
- "bg-zinc-100 border-zinc-200 text-zinc-900"
- }`}
- placeholder={t.bioPlaceholder}
- rows={2}
- />
- </div>
-
- {/* Custom Colors Palette Selector */}
- <div className="space-y-4 md:col-span-2 border-t border-zinc-200/50 pt-5">
- <h3 className={`text-xs font-black uppercase tracking-wider ${"text-slate-500"}`}>
- {lang === "tr" ? "Kişisel Renk Paletiniz" : "Personal Typography Color Palette"}
- </h3>
- <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
- {lang === "tr" 
- ? "@Kullanıcı adı ve Biyografi yazınızın renklerini özgürce seçin. Tüm üyelik planları için tamamen ücretsizdir!" 
- : "Select custom colors for your username and bio details. 100% unlocked for all membership tiers!"}
- </p>
-
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
- {/* Username Color Selector */}
- <div className={`p-4 rounded-xl border space-y-3 ${"bg-zinc-50 border-zinc-200"}`}>
- <div className="flex justify-between items-center">
- <label className={`text-[10px] font-black uppercase ${"text-zinc-650"}`}>
- {lang === "tr" ? "@ Kullanıcı Adı Rengi" : "@ Username Text Color"}
- </label>
- 
- {/* Color Hex Input & Custom Color Picker */}
- <div className="flex items-center gap-1.5">
- <input 
- type="text" 
- value={usernameColor} 
- onChange={(e) => setUsernameColor(e.target.value)}
- className={`w-16 px-1.5 py-0.5 border border-zinc-300/40 rounded bg-transparent font-mono text-[10px] font-bold text-center ${
- "text-zinc-800"
- }`}
- />
- <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 cursor-pointer shrink-0">
- <input 
- type="color" 
- value={usernameColor} 
- onChange={(e) => setUsernameColor(e.target.value)}
- className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150"
- />
- </div>
- </div>
- </div>
-
- {/* Fast Select Brand Palette */}
- <div className="flex flex-wrap gap-2 pt-1">
- {["#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6", "#ef4444"].map((c) => (
- <button
- key={c}
- type="button"
- onClick={() => setUsernameColor(c)}
- className={`w-6.5 h-6.5 rounded-full border border-white/30 shadow-sm transition-transform cursor-pointer hover:scale-110 ${
- usernameColor === c ? "ring-2 ring-purple-500 scale-105" : ""
- }`}
- style={{ backgroundColor: c }}
- title={c}
- />
- ))}
- </div>
- </div>
-
- {/* Bio Color Selector */}
- <div className={`p-4 rounded-xl border space-y-3 ${"bg-zinc-50 border-zinc-200"}`}>
- <div className="flex justify-between items-center">
- <label className={`text-[10px] font-black uppercase ${"text-zinc-650"}`}>
- {lang === "tr" ? "Biyografi Yazı Rengi" : "Bio Paragraph Color"}
- </label>
-
- {/* Color Hex Input & Custom Color Picker */}
- <div className="flex items-center gap-1.5">
- <input 
- type="text" 
- value={bioColor} 
- onChange={(e) => setBioColor(e.target.value)}
- className={`w-16 px-1.5 py-0.5 border border-zinc-300/40 rounded bg-transparent font-mono text-[10px] font-bold text-center ${
- "text-zinc-800"
- }`}
- />
- <div className="relative w-5 h-5 rounded-full overflow-hidden border border-white/20 cursor-pointer shrink-0">
- <input 
- type="color" 
- value={bioColor} 
- onChange={(e) => setBioColor(e.target.value)}
- className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150"
- />
- </div>
- </div>
- </div>
-
- {/* Fast Select Brand Palette */}
- <div className="flex flex-wrap gap-2 pt-1">
- {["#888888", "#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6"].map((c) => (
- <button
- key={c}
- type="button"
- onClick={() => setBioColor(c)}
- className={`w-6.5 h-6.5 rounded-full border border-white/30 shadow-sm transition-transform cursor-pointer hover:scale-110 ${
- bioColor === c ? "ring-2 ring-purple-500 scale-105" : ""
- }`}
- style={{ backgroundColor: c }}
- title={c}
- />
- ))}
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
- )}
-
  {/* SUB-TAB CONTENT: APPEARANCE */}
- {activeSubTab === "appearance" && (
- <div className="w-full max-w-full animate-in fade-in duration-200 overflow-hidden">
- {(() => {
- const [activeAppSection, setActiveAppSection] = React.useState<"typography" | "wallpaper" | "buttons" | "colors">("typography");
- const sidebarItems: { id: typeof activeAppSection; label: string; labelEn: string; icon: React.ReactNode }[] = [
- { id: "typography", label: "Yazı Tipi", labelEn: "Text", icon: <Type className="h-4 w-4" /> },
- { id: "wallpaper", label: "Arka Plan", labelEn: "Wallpaper", icon: <Laptop className="h-4 w-4" /> },
- { id: "buttons", label: "Butonlar", labelEn: "Buttons", icon: <MousePointerClick className="h-4 w-4" /> },
- { id: "colors", label: "Renkler", labelEn: "Colors", icon: <Palette className="h-4 w-4" /> },
- ];
- return (
- <div className="flex gap-0 rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden min-h-[520px]">
- {/* Vertical Sidebar */}
- <div className="w-[140px] md:w-[160px] shrink-0 border-r border-zinc-100 bg-gray-50/60 py-4 px-2 space-y-1">
- {sidebarItems.map((item) => (
- <button key={item.id} type="button" onClick={() => setActiveAppSection(item.id)}
- className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer text-left ${
- activeAppSection === item.id
- ? "bg-white text-slate-900 shadow-sm border border-zinc-200"
- : "text-slate-500 hover:bg-white/70 hover:text-slate-800 border border-transparent"
- }`}>
- <span className={activeAppSection === item.id ? "text-teal-500" : "text-slate-400"}>{item.icon}</span>
- {lang === "tr" ? item.label : item.labelEn}
- </button>
- ))}
- <div className="border-t border-zinc-200 pt-3 mt-3 px-1">
- <button type="button" onClick={handleSaveProfile} disabled={isPending}
- className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-[11px] hover:bg-slate-800 transition-all disabled:opacity-50 cursor-pointer shadow-sm">
- {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
- {t.saveChanges}
- </button>
- </div>
- </div>
+  {activeSubTab === "appearance" && (
+    <div className="w-full max-w-full animate-in fade-in duration-200 overflow-hidden">
+      <div className="flex gap-0 rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden min-h-[520px]">
+        {/* Vertical Sidebar */}
+        <div className="w-[140px] md:w-[160px] shrink-0 border-r border-zinc-100 bg-gray-50/60 py-4 px-2 space-y-1">
+          {([
+            { id: "theme" as const, label: "Şablon", labelEn: "Theme", icon: <Palette className="h-4 w-4" /> },
+            { id: "header" as const, label: "Profil", labelEn: "Header", icon: <User className="h-4 w-4" /> },
+            { id: "wallpaper" as const, label: "Arka Plan", labelEn: "Wallpaper", icon: <Image className="h-4 w-4" /> },
+            { id: "typography" as const, label: "Yazı Tipi", labelEn: "Text", icon: <Type className="h-4 w-4" /> },
+            { id: "buttons" as const, label: "Butonlar", labelEn: "Buttons", icon: <MousePointerClick className="h-4 w-4" /> },
+            { id: "colors" as const, label: "Renkler", labelEn: "Colors", icon: <Sparkles className="h-4 w-4" /> }
+          ]).map((item) => (
+            <button key={item.id} type="button" onClick={() => setActiveAppSection(item.id)}
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer text-left ${
+                activeAppSection === item.id
+                  ? "bg-white text-slate-900 shadow-sm border border-zinc-200"
+                  : "text-slate-500 hover:bg-white/70 hover:text-slate-800 border border-transparent"
+              }`}>
+              <span className={activeAppSection === item.id ? "text-teal-500" : "text-slate-400"}>{item.icon}</span>
+              {lang === "tr" ? item.label : item.labelEn}
+            </button>
+          ))}
+          <div className="border-t border-zinc-200 pt-3 mt-3 px-1">
+            <button type="button" onClick={handleSaveProfile} disabled={isPending}
+              className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-[11px] hover:bg-slate-800 transition-all disabled:opacity-50 cursor-pointer shadow-sm">
+              {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
+              {t.saveChanges}
+            </button>
+          </div>
+        </div>
  {/* Form Content */}
  <div className="flex-1 p-5 md:p-8 overflow-y-auto max-h-[75vh]">
 
@@ -2180,8 +1954,6 @@ export default function DashboardClient({
 
  </div>
  </div>
- );
- })()}
  </div>
  )}
 

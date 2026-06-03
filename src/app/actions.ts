@@ -309,7 +309,8 @@ export async function updateProfile(
   fontStyle?: string,
   bioColor?: string,
   usernameColor?: string,
-  customCss?: string | null
+  customCss?: string | null,
+  buttonClass?: string | null
 ) {
   // Get user plan
   const user = await db.user.findUnique({
@@ -408,7 +409,7 @@ export async function updateProfile(
   // Update or create profile
   await db.profile.upsert({
     where: { userId },
-    update: { bio, theme, avatarUrl, background, fontStyle, bioColor, usernameColor },
+    update: { bio, theme, avatarUrl, background, fontStyle, bioColor, usernameColor, customCss, buttonClass },
     create: { 
       userId, 
       bio, 
@@ -417,7 +418,9 @@ export async function updateProfile(
       background, 
       fontStyle: fontStyle || "Inter", 
       bioColor: bioColor || null,
-      usernameColor: usernameColor || null
+      usernameColor: usernameColor || null,
+      customCss: customCss || null,
+      buttonClass: buttonClass || null
     },
   });
 
