@@ -84,6 +84,10 @@ export default function HomeClient({
  Eklentiler
  <span className="px-1.5 py-0.5 rounded-md bg-rose-100 text-rose-600 text-[9px] font-black uppercase tracking-wider">Yeni</span>
  </Link>
+ <Link href="/qr-olusturucu" className="hover:text-slate-900 transition-colors flex items-center gap-1">
+ QR Oluşturucu
+ <span className="px-1.5 py-0.5 rounded-md bg-neon-blue/10 text-neon-blue text-[9px] font-black uppercase tracking-wider">Ücretsiz</span>
+ </Link>
  </nav>
 
  <div className="flex items-center space-x-4">
