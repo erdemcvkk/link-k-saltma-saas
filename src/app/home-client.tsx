@@ -88,6 +88,10 @@ export default function HomeClient({
  QR Oluşturucu
  <span className="px-1.5 py-0.5 rounded-md bg-neon-blue/10 text-neon-blue text-[9px] font-black uppercase tracking-wider">Ücretsiz</span>
  </Link>
+ <Link href="/ozel-tasarlat" className="hover:text-slate-900 transition-colors flex items-center gap-1">
+ Özel Tasarlat
+ <span className="px-1.5 py-0.5 rounded-md bg-violet-100 text-violet-600 text-[9px] font-black uppercase tracking-wider">Tasarım</span>
+ </Link>
  </nav>
 
  <div className="flex items-center space-x-4">
