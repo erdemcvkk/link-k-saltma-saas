@@ -53,9 +53,9 @@ export default function HomeClient({
  const handleCreate = (e: React.FormEvent) => {
  e.preventDefault();
  if (usernameInput.trim()) {
- window.location.href = `/sign-up?username=${encodeURIComponent(usernameInput.trim())}`;
+ window.location.href = `/sign-in?username=${encodeURIComponent(usernameInput.trim())}`;
  } else {
- window.location.href = `/sign-up`;
+ window.location.href = `/sign-in`;
  }
  };
 
@@ -108,7 +108,7 @@ export default function HomeClient({
  Giriş Yap
  </Link>
  <Link
- href="/sign-up"
+ href="/sign-in"
  className="px-5 py-3 md:py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
  >
  Hemen Başla
@@ -454,7 +454,7 @@ export default function HomeClient({
  </li>
  </ul>
  <Link
- href="/sign-up"
+ href="/sign-in"
  className="w-full py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-900 font-bold text-center hover:border-slate-900 transition-colors"
  >
  Hemen Başla
@@ -577,7 +577,7 @@ export default function HomeClient({
  Takipçilerini müşteriye ve sadık bir kitleye dönüştüren binlerce üreticiye katılın.
  </p>
  <Link
- href="/sign-up"
+ href="/sign-in"
  className="inline-flex items-center space-x-2 px-4 md:px-8 py-4 rounded-full bg-slate-900 text-white font-bold text-base hover:bg-slate-800 transition-colors shadow-sm"
  >
  <span>Ücretsiz Başla</span>
