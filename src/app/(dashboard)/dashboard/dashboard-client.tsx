@@ -10,7 +10,7 @@ import {
  deleteLink,
  toggleLinkActive,
  updateProfile,
- generateMockTraffic,
+ 
  saveSeoProfile,
  saveCustomDomain,
  addProduct,
@@ -782,7 +782,7 @@ export default function DashboardClient({
  // Analytics
  performanceInsights: lang === "tr" ? "Performans İstatistikleri" : "Performance Insights",
  trafficOverTime: lang === "tr" ? "Zaman İçindeki Ziyaret ve Tıklanmalar" : "Views & Clicks Over Time",
- simTraffic: lang === "tr" ? "Trafik Simülasyonu Çalıştır" : "Simulate Traffic Action",
+ 
  totalViews: lang === "tr" ? "Toplam Profil Ziyareti" : "Total Profile Views",
  totalClicks: lang === "tr" ? "Toplam Link Tıklanması" : "Total Link Clicks",
  referrers: lang === "tr" ? "Ziyaret Kaynakları (Referrers)" : "Referral Traffic",
@@ -1134,21 +1134,7 @@ export default function DashboardClient({
  });
  };
 
- const handleMockTraffic = () => {
- setErrorMsg("");
- setSuccessMsg("");
-
- startTransition(async () => {
- try {
- await generateMockTraffic(initialUser.id);
- setSuccessMsg("Simulated traffic logs successfully generated! Refreshing page charts...");
- // Fast reload page
- window.location.reload();
- } catch (err: any) {
- setErrorMsg(err.message || "Mock traffic generation failed");
- }
- });
- };
+ 
 
  const handleAddProduct = async (e: React.FormEvent) => {
  e.preventDefault();
@@ -3994,7 +3980,7 @@ export default function DashboardClient({
  {activeTab === "analytics" && (
  <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
  {/* Top Summaries Grids */}
- <div className="grid md:grid-cols-4 gap-4 md:gap-6">
+ <div className="grid md:grid-cols-3 gap-4 md:gap-6">
  <div className={`p-3 md:p-6 rounded-2xl border flex items-center justify-between ${
  "bg-white border-zinc-200 shadow-sm"
  }`}>
@@ -4031,19 +4017,7 @@ export default function DashboardClient({
  </div>
  </div>
 
- <div className={`p-3 md:p-6 rounded-2xl border flex flex-col justify-center space-y-2 ${
- "bg-white border-zinc-200 shadow-sm"
- }`}>
- <span className="text-xs text-slate-500 uppercase font-bold tracking-wider block">{lang === "tr" ? "Test Araçları" : "Verification Testing"}</span>
- <button
- onClick={handleMockTraffic}
- disabled={isPending}
- className="w-full flex items-center justify-center gap-2 py-2.5 md:py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 font-extrabold text-xs transition-colors cursor-pointer shadow-[0_0_15px_rgba(45,212,191,0.25)]"
- >
- {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
- {t.simTraffic}
- </button>
- </div>
+ 
  </div>
 
  {totalViews === 0 ? (
@@ -4051,7 +4025,7 @@ export default function DashboardClient({
  "bg-white border-zinc-200"
  }`}>
  <div className="text-slate-500 text-sm font-semibold italic">
- {lang === "tr" ? "Henüz trafik kaydı bulunmuyor. Sayfa linkinizi paylaşarak veya yukarıdaki 'Trafik Simülasyonu Çalıştır' butonuna tıklayarak grafikleri anında inceleyebilirsiniz!" : "No traffic logged yet. Promote your link page or click the 'Simulate Traffic Action' button to see analytics charts instantly!"}
+ {lang === "tr" ? "Henüz trafik kaydı bulunmuyor. Sayfa linkinizi paylaşarak grafikleri anında inceleyebilirsiniz!" : "No traffic logged yet. Promote your link page to see analytics charts instantly!"}
  </div>
  </div>
  ) : (
