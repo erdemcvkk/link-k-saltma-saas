@@ -1,8 +1,17 @@
 import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { Sparkles, QrCode, Link as LinkIcon, BarChart3, ShoppingBag } from "lucide-react";
+import { db } from "@/lib/db";
 
-export default function Page() {
+export default async function Page() {
+  const settings = await db.globalSetting.findMany();
+  const serializedSettings = settings.reduce((acc, curr) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {} as Record<string, string>);
+
+  const loginBg = serializedSettings["login_bg"] || "/login-bg.png";
+
   return (
     <div className="flex min-h-screen w-full bg-white text-slate-900">
       {/* Left side: Visual Brand Showcase */}
@@ -10,7 +19,7 @@ export default function Page() {
         {/* Background Image with Overlay */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.08] mix-blend-multiply"
-          style={{ backgroundImage: "url('/login-bg.png')" }}
+          style={{ backgroundImage: `url('${loginBg}')` }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-50/80 via-transparent to-transparent" />
         

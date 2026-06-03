@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { adminToggleBanUser, adminChangeUserPlan, adminToggleUserRole, saveGlobalSetting, adminClearCache, adminDeleteGlobalSetting, adminAddFont, adminDeleteFont, adminUpdateFont, addSliderItem, deleteSliderItem } from "@/app/actions";
 import {
@@ -254,6 +254,30 @@ export default function AdminClient({
  // Brand Asset Settings State
  const [siteTitle, setSiteTitle] = useState(initialSettings["site_title"] || "CREATOR.HUB");
  const [siteLogo, setSiteLogo] = useState(initialSettings["site_logo"] || "");
+  const [loginBg, setLoginBg] = useState(initialSettings["login_bg"] || "");
+  const [isUploadingLoginBg, setIsUploadingLoginBg] = useState(false);
+  const loginBgInputRef = useRef<HTMLInputElement>(null);
+
+  const handleLoginBgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingLoginBg(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await fetch('/api/media', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!res.ok) throw new Error('Upload failed');
+      const data = await res.json();
+      setLoginBg(data.url);
+    } catch (err: any) {
+      alert(err.message || 'Görsel yüklenemedi.');
+    } finally {
+      setIsUploadingLoginBg(false);
+    }
+  };
  const [siteFavicon, setSiteFavicon] = useState(initialSettings["site_favicon"] || "/favicon.ico");
  const [heroTitle, setHeroTitle] = useState(initialSettings["hero_title"] || "ONE LINK FOR YOUR DIGITAL EMPIRE");
  const [heroSubtitle, setHeroSubtitle] = useState(initialSettings["hero_subtitle"] || "Craft premium glassmorphic personal hubs, sell beats & presets, host sample packs, and leverage robust real-time analytics.");
@@ -640,6 +664,7 @@ export default function AdminClient({
  try {
  await saveGlobalSetting(adminUserId, "site_title", siteTitle);
  await saveGlobalSetting(adminUserId, "site_logo", siteLogo);
+      await saveGlobalSetting(adminUserId, "login_bg", loginBg);
  await saveGlobalSetting(adminUserId, "site_favicon", siteFavicon);
  await saveGlobalSetting(adminUserId, "hero_title", heroTitle);
  await saveGlobalSetting(adminUserId, "hero_subtitle", heroSubtitle);
@@ -1882,6 +1907,44 @@ export default function AdminClient({
  : "PNG format with transparent background is highly recommended. Ideal size: 40px height, max 240px width. File size must be under 2MB."}
  </p>
  </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase text-zinc-400 block flex items-center justify-between">
+                <span>{lang === "tr" ? "Giriş Sayfası Görseli (login_bg)" : "Login Page Image (login_bg)"}</span>
+                <span className="text-[9px] text-rose-500 font-extrabold uppercase select-none">
+                  {lang === "tr" ? "Maks: 5MB" : "Max: 5MB"}
+                </span>
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={loginBg}
+                  onChange={(e) => setLoginBg(e.target.value)}
+                  placeholder={lang === "tr" ? "Örn: https://site.com/bg.png" : "e.g., https://site.com/bg.png"}
+                  className="flex-1 px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
+                />
+                <button
+                  type="button"
+                  onClick={() => loginBgInputRef.current?.click()}
+                  disabled={isUploadingLoginBg}
+                  className="px-4 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl font-bold text-xs cursor-pointer flex items-center gap-1.5 transition-colors disabled:opacity-50 whitespace-nowrap"
+                >
+                  {isUploadingLoginBg && <Loader2 className="h-3 w-3 animate-spin" />}
+                  {lang === "tr" ? "Görsel Seç" : "Select Image"}
+                </button>
+                <input
+                  type="file"
+                  ref={loginBgInputRef}
+                  className="hidden"
+                  onChange={handleLoginBgUpload}
+                  accept="image/*"
+                />
+              </div>
+              <p className="text-[9px] text-zinc-400 font-bold leading-normal">
+                {lang === "tr" 
+                  ? "Giriş sayfalarının sol tarafında yer alacak arka plan görselidir. Görsel seç butonunu kullanarak doğrudan yükleme yapabilirsiniz." 
+                  : "The background image displayed on the left side of sign-in/up pages. You can upload directly via the select button."}
+              </p>
+            </div>
  <div className="space-y-1.5">
  <label className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Favicon Adresi" : "Browser Favicon URL"}</label>
  <input
