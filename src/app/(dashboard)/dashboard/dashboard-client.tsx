@@ -84,7 +84,7 @@ import {
  Users,
  Mail,
  Puzzle,
- Type
+ Type, Link2
 } from "lucide-react";
 import { YoutubeIcon, TwitterIcon, LinkedinIcon, TiktokIcon, PinterestIcon, InstagramIcon } from "@/components/brand-icons";
 import AddonConfigModal from "@/components/addons/addon-config-modal";
@@ -539,8 +539,8 @@ export default function DashboardClient({
  const [addons, setAddons] = useState<AddonItem[]>(initialAddons || []);
  const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
  const [activeTab, setActiveTab] = useState<"editor" | "analytics" | "qr" | "seo" | "templates" | "store" | "addons">("editor");
- const [activeSubTab, setActiveSubTab] = useState<"links" | "appearance" | "profile">("links");
- const [activeAppSection, setActiveAppSection] = useState<"theme" | "header" | "typography" | "wallpaper" | "buttons" | "colors">("theme");
+ const [activeSubTab, setActiveSubTab] = useState<"links" | "appearance" | "profile">("appearance");
+ const [activeAppSection, setActiveAppSection] = useState<"links" | "theme" | "typography" | "wallpaper" | "buttons" | "colors">("links");
  const [expandedLinkCard, setExpandedLinkCard] = useState<string | null>(null);
 
  useEffect(() => {
@@ -1709,18 +1709,6 @@ export default function DashboardClient({
  <div className="flex gap-1.5 sm:gap-2 p-1 sm:p-1.5 bg-zinc-100 rounded-2xl border border-zinc-200 w-full max-w-full overflow-hidden">
  <button
  type="button"
- onClick={() => setActiveSubTab("links")}
- className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-3.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
- activeSubTab === "links"
- ? "bg-white text-zinc-950 shadow-sm"
- : "text-zinc-650 hover:text-zinc-950"
- }`}
- >
- <Plus className="h-3.5 w-3.5 text-teal-500" />
- {lang === "tr" ? "Linkler" : "Links"}
- </button>
- <button
- type="button"
  onClick={() => setActiveSubTab("appearance")}
  className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-3.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
  activeSubTab === "appearance"
@@ -1753,7 +1741,7 @@ export default function DashboardClient({
         <div className="w-[140px] md:w-[160px] shrink-0 border-r border-zinc-100 bg-gray-50/60 py-4 px-2 space-y-1">
           {([
             { id: "theme" as const, label: "Şablon", labelEn: "Theme", icon: <Palette className="h-4 w-4" /> },
-            { id: "header" as const, label: "Profil", labelEn: "Header", icon: <User className="h-4 w-4" /> },
+            { id: "links" as const, label: "Linkler", labelEn: "Links", icon: <Link2 className="h-4 w-4" /> },
             { id: "wallpaper" as const, label: "Arka Plan", labelEn: "Wallpaper", icon: <Image className="h-4 w-4" /> },
             { id: "typography" as const, label: "Yazı Tipi", labelEn: "Text", icon: <Type className="h-4 w-4" /> },
             { id: "buttons" as const, label: "Butonlar", labelEn: "Buttons", icon: <MousePointerClick className="h-4 w-4" /> },
@@ -1780,184 +1768,7 @@ export default function DashboardClient({
  {/* Form Content */}
  <div className="flex-1 p-5 md:p-8 overflow-y-auto max-h-[75vh]">
 
- {/* TYPOGRAPHY */}
- {activeAppSection === "typography" && (
- <div className="space-y-6 animate-in fade-in duration-150">
- <div>
- <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Yazı Tipi" : "Typography"}</h3>
- <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Kreatör profilinizin ve bağlantı kartlarınızın yazı tipini seçin." : "Choose the typography style for your profile and link cards."}</p>
- </div>
- <div className="space-y-2">
- <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Yazı Tipi Seçin" : "Select Font"}</label>
- <select value={fontStyle} onChange={(e) => {
- const selectedVal = e.target.value;
- const selected = initialFonts.find(f => f.value === selectedVal);
- if (selected) {
- const locked = (selected.tier === "STARTER" && simulatedPlan === "FREE") || (selected.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS");
- if (locked) { setErrorMsg(lang === "tr" ? `🔒 "${selected.name}" yazı tipi planınızda kilitlidir.` : `🔒 "${selected.name}" is locked on your plan.`); setSuccessMsg(""); } else { setErrorMsg(""); }
- setFontStyle(selectedVal);
- }
- }} className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none text-sm font-semibold text-slate-900 bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all">
- <optgroup label={lang === "tr" ? "Ücretsiz (FREE)" : "Free Fonts (FREE)"}>{initialFonts.filter(f => f.tier === "FREE").map(f => (<option key={f.value} value={f.value}>{f.giftLabel ? `⭐ ${f.name} (${f.giftLabel})` : f.name}</option>))}</optgroup>
- <optgroup label={lang === "tr" ? "Starter (STARTER)" : "Starter (STARTER)"}>{initialFonts.filter(f => f.tier === "STARTER").map(f => (<option key={f.value} value={f.value}>{simulatedPlan === "FREE" ? "🔒 " : ""}{f.name}</option>))}</optgroup>
- <optgroup label={lang === "tr" ? "Creator (CREATOR)" : "Creator (CREATOR)"}>{initialFonts.filter(f => f.tier === "CREATOR").map(f => (<option key={f.value} value={f.value}>{(initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS") ? "🔒 " : ""}{f.name}</option>))}</optgroup>
- </select>
- </div>
- <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 text-center space-y-2">
- <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block">{lang === "tr" ? "Canlı Önizleme" : "Live Preview"}</span>
- <div style={{ fontFamily: fontStyle }} className="text-xl md:text-2xl py-2 font-bold text-slate-800 tracking-tight">Abcde 12345 — {fontStyle}</div>
- <p style={{ fontFamily: fontStyle }} className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">{lang === "tr" ? "Hızlı kahverengi tilki tembel köpeğin üstünden atlar." : "The quick brown fox jumps over the lazy dog."}</p>
- </div>
- {(() => {
- const activeFont = initialFonts.find(f => f.value === fontStyle);
- const locked = activeFont && ((activeFont.tier === "STARTER" && simulatedPlan === "FREE") || (activeFont.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS"));
- if (!locked || !activeFont) return null;
- return (<div className="p-4 rounded-xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
- <div className="space-y-1"><span className="text-xs font-bold text-amber-700 flex items-center gap-1.5"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "Plan Yükseltme Gerekli" : "Upgrade Required"}</span><p className="text-[11px] text-slate-600 font-medium">{lang === "tr" ? `"${activeFont.name}" ${activeFont.tier} paketine özeldir.` : `"${activeFont.name}" is exclusive to ${activeFont.tier}.`}</p></div>
- <Link href="/dashboard/billing" className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-lg transition-all whitespace-nowrap">{lang === "tr" ? "Yükselt" : "Upgrade"}</Link>
- </div>);
- })()}
- <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
- <div className="space-y-0.5"><div className="text-xs font-bold text-slate-700 flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-teal-500" />{lang === "tr" ? "Plan Simülatörü" : "Plan Simulator"}</div></div>
- <div className="flex gap-1.5">{["FREE", "STARTER", "CREATOR"].filter((p) => { if (initialUser.plan === "FREE") return p === "FREE"; if (initialUser.plan === "STARTER") return p === "FREE" || p === "STARTER"; return true; }).map((p) => (
- <button key={p} type="button" onClick={() => setSimulatedPlan(p)} className={`px-3 py-2 rounded-lg text-[11px] font-bold transition-all border cursor-pointer ${simulatedPlan === p ? "bg-teal-500 border-teal-500 text-white shadow-sm" : "bg-white border-gray-200 text-slate-600 hover:bg-gray-50"}`}>{p}</button>
- ))}</div>
- </div>
- </div>
- )}
-
- {/* WALLPAPER */}
- {activeAppSection === "wallpaper" && (
- <div className="space-y-6 animate-in fade-in duration-150">
- <div className="flex items-center justify-between">
- <div>
- <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Arka Plan" : "Wallpaper"}</h3>
- <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Profil sayfanızın arka plan gradyanını veya görselini seçin." : "Choose a background gradient or image."}</p>
- </div>
- {background && (<button onClick={() => setBackground("")} className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-slate-600 font-bold text-[11px] transition-all cursor-pointer">{lang === "tr" ? "Sıfırla" : "Reset"}</button>)}
- </div>
-
- {simulatedPlan === "FREE" && (
- <div className="space-y-4">
- <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Ücretsiz Arka Planlar" : "Free Backgrounds"} <span className="text-slate-400 font-normal text-xs">(5)</span></label>
- <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{FREE_BACKGROUNDS.map((bg) => (
- <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
- <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
- ))}</div>
- <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
- <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-600"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}<span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-[8px] text-amber-600 uppercase tracking-wide font-black"><Lock className="h-2 w-2" /> PREMIUM</span></div></div>
- <button type="button" onClick={() => triggerUpgradeModal(lang === "tr" ? "Özel Arka Plan Kilidi 🔒" : "Custom Background Locked 🔒", lang === "tr" ? "Kendi özel resimlerinizi veya videolarınızı arka plan olarak kullanmak Premium pakete özeldir." : "Custom backgrounds are exclusive to Premium plans.")} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs transition-all cursor-pointer"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "Yükselt" : "Upgrade"}</button>
- </div>
- </div>
- )}
-
- {simulatedPlan === "STARTER" && (
- <div className="space-y-4">
- <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Starter Arka Planları" : "Starter Backgrounds"} <span className="text-slate-400 font-normal text-xs">(10)</span></label>
- <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{STARTER_BACKGROUNDS.map((bg) => (
- <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
- <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
- ))}</div>
- <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center gap-4">
- <div className="flex-1 space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-700"><Image className="h-3.5 w-3.5 text-indigo-500" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG veya JPEG — Maks. 1 MB" : "PNG or JPEG — Max 1 MB"}</p>{customBgError && (<p className="text-[10px] text-red-500 font-bold mt-1">{customBgError}</p>)}</div>
- <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
- <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "Dosya boyutu 1 MB'ı geçemez!" : "File must be under 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
- {background?.startsWith("custom-img::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
- </div>
- </div>
- )}
-
- {(simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS") && (
- <div className="space-y-4">
- <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Creator Arka Planları" : "Creator Backgrounds"} <span className="text-slate-400 font-normal text-xs">(20)</span></label>
- <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{[...STARTER_BACKGROUNDS, ...CREATOR_BACKGROUNDS].map((bg) => (
- <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
- <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
- ))}</div>
- <div className="grid sm:grid-cols-2 gap-3">
- <div className="p-4 rounded-2xl border border-dashed border-purple-200 bg-purple-50/30 flex flex-col gap-3">
- <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-purple-700"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG / JPEG / WebP — Maks. 1 MB" : "Max 1 MB"}</p>{customBgError && customBgError.includes("foto") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
- <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-purple-200 bg-purple-100 hover:bg-purple-200 text-purple-800 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
- <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "📷 Fotoğraf 1 MB sınırını aşıyor!" : "📷 Photo exceeds 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
- {background?.startsWith("custom-img::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer text-center">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
- </div>
- <div className="p-4 rounded-2xl border border-dashed border-amber-200 bg-amber-50/30 flex flex-col gap-3">
- <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-amber-700"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Video" : "Custom Video"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "MP4 / WebM — Maks. 5 MB" : "Max 5 MB"}</p>{customBgError && customBgError.includes("video") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
- <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-100 hover:bg-amber-200 text-amber-800 cursor-pointer font-bold text-xs transition-all"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Video Seç" : "Choose Video"}
- <input type="file" accept="video/mp4,video/webm" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 5 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "🎬 Video 5 MB sınırını aşıyor!" : "🎬 Video exceeds 5 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-video::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
- {background?.startsWith("custom-video::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer text-center">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
- </div>
- </div>
- </div>
- )}
-
- <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
- <div className="text-xs font-bold text-slate-700 flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-teal-500" />{lang === "tr" ? "Plan Simülatörü" : "Plan Simulator"}</div>
- <div className="flex gap-1.5">{["FREE", "STARTER", "CREATOR"].filter((p) => { if (initialUser.plan === "FREE") return p === "FREE"; if (initialUser.plan === "STARTER") return p === "FREE" || p === "STARTER"; return true; }).map((p) => (
- <button key={p} type="button" onClick={() => setSimulatedPlan(p)} className={`px-3 py-2 rounded-lg text-[11px] font-bold transition-all border cursor-pointer ${simulatedPlan === p ? "bg-teal-500 border-teal-500 text-white shadow-sm" : "bg-white border-gray-200 text-slate-600 hover:bg-gray-50"}`}>{p}</button>
- ))}</div>
- </div>
- </div>
- )}
-
- {/* BUTTONS */}
- {activeAppSection === "buttons" && (
- <div className="space-y-6 animate-in fade-in duration-150">
- <div>
- <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Buton Stilleri" : "Button Styles"}</h3>
- <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Bağlantı kartlarınızın varsayılan görünümünü belirleyin." : "Set the default appearance for all your link cards."}</p>
- </div>
- <div className="space-y-5">
- <div className="grid sm:grid-cols-2 gap-5">
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Buton Arka Planı" : "Button Background"}</label><div className="flex gap-2"><input type="color" value={btnBgColor || "#ffffff"} onChange={(e) => setBtnBgColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnBgColor || ""} onChange={(e) => setBtnBgColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Buton Yazı Rengi" : "Button Text"}</label><div className="flex gap-2"><input type="color" value={btnTextColor || "#000000"} onChange={(e) => setBtnTextColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnTextColor || ""} onChange={(e) => setBtnTextColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
- </div>
- <div className="grid sm:grid-cols-2 gap-5">
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Çerçeve Rengi" : "Border Color"}</label><div className="flex gap-2"><input type="color" value={btnBorderColor || "#000000"} onChange={(e) => setBtnBorderColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnBorderColor || ""} onChange={(e) => setBtnBorderColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Çerçeve Stili" : "Border Style"}</label><select value={btnBorderStyle} onChange={(e) => setBtnBorderStyle(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option><option value="dashed">{lang === "tr" ? "Kesikli" : "Dashed"}</option><option value="double">{lang === "tr" ? "Çift" : "Double"}</option><option value="dotted">{lang === "tr" ? "Noktalı" : "Dotted"}</option><option value="none">{lang === "tr" ? "Yok" : "None"}</option></select></div>
- </div>
- <div className="grid sm:grid-cols-2 gap-5">
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Çerçeve Kalınlığı" : "Border Width"}</label><select value={btnBorderWidth} onChange={(e) => setBtnBorderWidth(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="0px">0px</option><option value="1px">1px</option><option value="2px">2px</option><option value="3px">3px</option><option value="4px">4px</option><option value="5px">5px</option></select></div>
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Köşe Yuvarlaklığı" : "Border Radius"}</label><select value={btnBorderRadius} onChange={(e) => setBtnBorderRadius(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp"}</option><option value="4px">4px</option><option value="8px">8px</option><option value="12px">12px</option><option value="16px">16px</option><option value="20px">20px</option><option value="24px">24px</option><option value="9999px">{lang === "tr" ? "Yuvarlak" : "Round"}</option></select></div>
- </div>
- <div className="grid sm:grid-cols-2 gap-5">
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Gölge Efekti" : "Shadow"}</label><select value={btnShadow} onChange={(e) => setBtnShadow(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="none">{lang === "tr" ? "Yok" : "None"}</option><option value="soft">{lang === "tr" ? "Yumuşak" : "Soft"}</option><option value="glow-purple">{lang === "tr" ? "Mor Işıma" : "Glow Purple"}</option><option value="glow-emerald">{lang === "tr" ? "Yeşil Işıma" : "Glow Emerald"}</option><option value="hard-3d">{lang === "tr" ? "Sert 3D" : "Hard 3D"}</option></select></div>
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Yazı Kalınlığı" : "Font Weight"}</label><select value={btnFontWeight} onChange={(e) => setBtnFontWeight(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="font-normal">Normal</option><option value="font-medium">Medium</option><option value="font-bold">Bold</option><option value="font-black">Black</option></select></div>
- </div>
- </div>
- <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 space-y-3">
- <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block text-center">{lang === "tr" ? "Buton Önizlemesi" : "Button Preview"}</span>
- <div className="flex justify-center"><div className={`px-6 py-3 text-sm ${btnFontWeight || "font-bold"}`} style={{ backgroundColor: btnBgColor || "#ffffff", color: btnTextColor || "#000000", borderColor: btnBorderColor || "#000000", borderStyle: btnBorderStyle || "solid", borderWidth: btnBorderWidth || "1px", borderRadius: btnBorderRadius || "12px", boxShadow: btnShadow === "soft" ? "0 4px 12px rgba(0,0,0,0.1)" : btnShadow === "glow-purple" ? "0 0 20px rgba(168,85,247,0.4)" : btnShadow === "glow-emerald" ? "0 0 20px rgba(16,185,129,0.4)" : btnShadow === "hard-3d" ? "4px 4px 0px rgba(0,0,0,0.8)" : "none" }}>{lang === "tr" ? "Örnek Buton" : "Sample Button"}</div></div>
- </div>
- </div>
- )}
-
- {/* COLORS */}
- {activeAppSection === "colors" && (
- <div className="space-y-6 animate-in fade-in duration-150">
- <div>
- <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Renk Paleti" : "Color Palette"}</h3>
- <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Kullanıcı adı ve biyografi yazı renklerini özgürce seçin." : "Customize your username and bio text colors."}</p>
- </div>
- <div className="grid sm:grid-cols-2 gap-6">
- <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 space-y-4">
- <div className="flex justify-between items-center"><label className="text-sm font-semibold text-slate-800">{lang === "tr" ? "Kullanıcı Adı Rengi" : "Username Color"}</label><div className="flex items-center gap-1.5"><input type="text" value={usernameColor} onChange={(e) => setUsernameColor(e.target.value)} className="w-[72px] px-2 py-1 border border-gray-200 rounded-lg bg-white font-mono text-[11px] font-bold text-center text-slate-800 outline-none focus:border-teal-500" /><div className="relative w-6 h-6 rounded-full overflow-hidden border border-gray-200 cursor-pointer shrink-0"><input type="color" value={usernameColor} onChange={(e) => setUsernameColor(e.target.value)} className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150" /></div></div></div>
- <div className="flex flex-wrap gap-2">{["#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6", "#ef4444"].map((c) => (<button key={c} type="button" onClick={() => setUsernameColor(c)} className={`w-7 h-7 rounded-full border-2 shadow-sm transition-transform cursor-pointer hover:scale-110 ${usernameColor === c ? "ring-2 ring-teal-500 ring-offset-2 scale-105" : "border-gray-200"}`} style={{ backgroundColor: c }} title={c} />))}</div>
- </div>
- <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 space-y-4">
- <div className="flex justify-between items-center"><label className="text-sm font-semibold text-slate-800">{lang === "tr" ? "Biyografi Rengi" : "Bio Color"}</label><div className="flex items-center gap-1.5"><input type="text" value={bioColor} onChange={(e) => setBioColor(e.target.value)} className="w-[72px] px-2 py-1 border border-gray-200 rounded-lg bg-white font-mono text-[11px] font-bold text-center text-slate-800 outline-none focus:border-teal-500" /><div className="relative w-6 h-6 rounded-full overflow-hidden border border-gray-200 cursor-pointer shrink-0"><input type="color" value={bioColor} onChange={(e) => setBioColor(e.target.value)} className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150" /></div></div></div>
- <div className="flex flex-wrap gap-2">{["#888888", "#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6"].map((c) => (<button key={c} type="button" onClick={() => setBioColor(c)} className={`w-7 h-7 rounded-full border-2 shadow-sm transition-transform cursor-pointer hover:scale-110 ${bioColor === c ? "ring-2 ring-teal-500 ring-offset-2 scale-105" : "border-gray-200"}`} style={{ backgroundColor: c }} title={c} />))}</div>
- </div>
- </div>
- </div>
- )}
-
- </div>
- </div>
- </div>
- )}
-
- {activeSubTab === "links" && (
+          {activeAppSection === "links" && (
  <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in duration-200 overflow-hidden">
  {/* Add New Link */}
  {(() => {
@@ -2978,6 +2789,288 @@ export default function DashboardClient({
  </div>
  </div>
  )}
+ {/* TYPOGRAPHY */}
+ {activeAppSection === "typography" && (
+ <div className="space-y-6 animate-in fade-in duration-150">
+ <div>
+ <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Yazı Tipi" : "Typography"}</h3>
+ <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Kreatör profilinizin ve bağlantı kartlarınızın yazı tipini seçin." : "Choose the typography style for your profile and link cards."}</p>
+ </div>
+ <div className="space-y-2">
+ <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Yazı Tipi Seçin" : "Select Font"}</label>
+ <select value={fontStyle} onChange={(e) => {
+ const selectedVal = e.target.value;
+ const selected = initialFonts.find(f => f.value === selectedVal);
+ if (selected) {
+ const locked = (selected.tier === "STARTER" && simulatedPlan === "FREE") || (selected.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS");
+ if (locked) { setErrorMsg(lang === "tr" ? `🔒 "${selected.name}" yazı tipi planınızda kilitlidir.` : `🔒 "${selected.name}" is locked on your plan.`); setSuccessMsg(""); } else { setErrorMsg(""); }
+ setFontStyle(selectedVal);
+ }
+ }} className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none text-sm font-semibold text-slate-900 bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all">
+ <optgroup label={lang === "tr" ? "Ücretsiz (FREE)" : "Free Fonts (FREE)"}>{initialFonts.filter(f => f.tier === "FREE").map(f => (<option key={f.value} value={f.value}>{f.giftLabel ? `⭐ ${f.name} (${f.giftLabel})` : f.name}</option>))}</optgroup>
+ <optgroup label={lang === "tr" ? "Starter (STARTER)" : "Starter (STARTER)"}>{initialFonts.filter(f => f.tier === "STARTER").map(f => (<option key={f.value} value={f.value}>{simulatedPlan === "FREE" ? "🔒 " : ""}{f.name}</option>))}</optgroup>
+ <optgroup label={lang === "tr" ? "Creator (CREATOR)" : "Creator (CREATOR)"}>{initialFonts.filter(f => f.tier === "CREATOR").map(f => (<option key={f.value} value={f.value}>{(initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS") ? "🔒 " : ""}{f.name}</option>))}</optgroup>
+ </select>
+ </div>
+ <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 text-center space-y-2">
+ <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block">{lang === "tr" ? "Canlı Önizleme" : "Live Preview"}</span>
+ <div style={{ fontFamily: fontStyle }} className="text-xl md:text-2xl py-2 font-bold text-slate-800 tracking-tight">Abcde 12345 — {fontStyle}</div>
+ <p style={{ fontFamily: fontStyle }} className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">{lang === "tr" ? "Hızlı kahverengi tilki tembel köpeğin üstünden atlar." : "The quick brown fox jumps over the lazy dog."}</p>
+ </div>
+ {(() => {
+ const activeFont = initialFonts.find(f => f.value === fontStyle);
+ const locked = activeFont && ((activeFont.tier === "STARTER" && simulatedPlan === "FREE") || (activeFont.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS"));
+ if (!locked || !activeFont) return null;
+ return (<div className="p-4 rounded-xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+ <div className="space-y-1"><span className="text-xs font-bold text-amber-700 flex items-center gap-1.5"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "Plan Yükseltme Gerekli" : "Upgrade Required"}</span><p className="text-[11px] text-slate-600 font-medium">{lang === "tr" ? `"${activeFont.name}" ${activeFont.tier} paketine özeldir.` : `"${activeFont.name}" is exclusive to ${activeFont.tier}.`}</p></div>
+ <Link href="/dashboard/billing" className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-lg transition-all whitespace-nowrap">{lang === "tr" ? "Yükselt" : "Upgrade"}</Link>
+ </div>);
+ })()}
+ <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+ <div className="space-y-0.5"><div className="text-xs font-bold text-slate-700 flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-teal-500" />{lang === "tr" ? "Plan Simülatörü" : "Plan Simulator"}</div></div>
+ <div className="flex gap-1.5">{["FREE", "STARTER", "CREATOR"].filter((p) => { if (initialUser.plan === "FREE") return p === "FREE"; if (initialUser.plan === "STARTER") return p === "FREE" || p === "STARTER"; return true; }).map((p) => (
+ <button key={p} type="button" onClick={() => setSimulatedPlan(p)} className={`px-3 py-2 rounded-lg text-[11px] font-bold transition-all border cursor-pointer ${simulatedPlan === p ? "bg-teal-500 border-teal-500 text-white shadow-sm" : "bg-white border-gray-200 text-slate-600 hover:bg-gray-50"}`}>{p}</button>
+ ))}</div>
+ </div>
+ </div>
+ )}
+
+ {/* WALLPAPER */}
+ {activeAppSection === "wallpaper" && (
+ <div className="space-y-6 animate-in fade-in duration-150">
+ <div className="flex items-center justify-between">
+ <div>
+ <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Arka Plan" : "Wallpaper"}</h3>
+ <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Profil sayfanızın arka plan gradyanını veya görselini seçin." : "Choose a background gradient or image."}</p>
+ </div>
+ {background && (<button onClick={() => setBackground("")} className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-slate-600 font-bold text-[11px] transition-all cursor-pointer">{lang === "tr" ? "Sıfırla" : "Reset"}</button>)}
+ </div>
+
+ {simulatedPlan === "FREE" && (
+ <div className="space-y-4">
+ <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Ücretsiz Arka Planlar" : "Free Backgrounds"} <span className="text-slate-400 font-normal text-xs">(5)</span></label>
+ <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{FREE_BACKGROUNDS.map((bg) => (
+ <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
+ <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
+ ))}</div>
+ <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+ <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-600"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}<span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-[8px] text-amber-600 uppercase tracking-wide font-black"><Lock className="h-2 w-2" /> PREMIUM</span></div></div>
+ <button type="button" onClick={() => triggerUpgradeModal(lang === "tr" ? "Özel Arka Plan Kilidi 🔒" : "Custom Background Locked 🔒", lang === "tr" ? "Kendi özel resimlerinizi veya videolarınızı arka plan olarak kullanmak Premium pakete özeldir." : "Custom backgrounds are exclusive to Premium plans.")} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs transition-all cursor-pointer"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "Yükselt" : "Upgrade"}</button>
+ </div>
+ </div>
+ )}
+
+ {simulatedPlan === "STARTER" && (
+ <div className="space-y-4">
+ <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Starter Arka Planları" : "Starter Backgrounds"} <span className="text-slate-400 font-normal text-xs">(10)</span></label>
+ <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{STARTER_BACKGROUNDS.map((bg) => (
+ <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
+ <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
+ ))}</div>
+ <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+ <div className="flex-1 space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-700"><Image className="h-3.5 w-3.5 text-indigo-500" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG veya JPEG — Maks. 1 MB" : "PNG or JPEG — Max 1 MB"}</p>{customBgError && (<p className="text-[10px] text-red-500 font-bold mt-1">{customBgError}</p>)}</div>
+ <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
+ <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "Dosya boyutu 1 MB'ı geçemez!" : "File must be under 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
+ {background?.startsWith("custom-img::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
+ </div>
+ </div>
+ )}
+
+ {(simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS") && (
+ <div className="space-y-4">
+ <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Creator Arka Planları" : "Creator Backgrounds"} <span className="text-slate-400 font-normal text-xs">(20)</span></label>
+ <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{[...STARTER_BACKGROUNDS, ...CREATOR_BACKGROUNDS].map((bg) => (
+ <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
+ <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
+ ))}</div>
+ <div className="grid sm:grid-cols-2 gap-3">
+ <div className="p-4 rounded-2xl border border-dashed border-purple-200 bg-purple-50/30 flex flex-col gap-3">
+ <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-purple-700"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG / JPEG / WebP — Maks. 1 MB" : "Max 1 MB"}</p>{customBgError && customBgError.includes("foto") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
+ <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-purple-200 bg-purple-100 hover:bg-purple-200 text-purple-800 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
+ <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "📷 Fotoğraf 1 MB sınırını aşıyor!" : "📷 Photo exceeds 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
+ {background?.startsWith("custom-img::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer text-center">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
+ </div>
+ <div className="p-4 rounded-2xl border border-dashed border-amber-200 bg-amber-50/30 flex flex-col gap-3">
+ <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-amber-700"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Video" : "Custom Video"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "MP4 / WebM — Maks. 5 MB" : "Max 5 MB"}</p>{customBgError && customBgError.includes("video") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
+ <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-100 hover:bg-amber-200 text-amber-800 cursor-pointer font-bold text-xs transition-all"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Video Seç" : "Choose Video"}
+ <input type="file" accept="video/mp4,video/webm" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 5 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "🎬 Video 5 MB sınırını aşıyor!" : "🎬 Video exceeds 5 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-video::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
+ {background?.startsWith("custom-video::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer text-center">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
+ </div>
+ </div>
+ </div>
+ )}
+
+ <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+ <div className="text-xs font-bold text-slate-700 flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-teal-500" />{lang === "tr" ? "Plan Simülatörü" : "Plan Simulator"}</div>
+ <div className="flex gap-1.5">{["FREE", "STARTER", "CREATOR"].filter((p) => { if (initialUser.plan === "FREE") return p === "FREE"; if (initialUser.plan === "STARTER") return p === "FREE" || p === "STARTER"; return true; }).map((p) => (
+ <button key={p} type="button" onClick={() => setSimulatedPlan(p)} className={`px-3 py-2 rounded-lg text-[11px] font-bold transition-all border cursor-pointer ${simulatedPlan === p ? "bg-teal-500 border-teal-500 text-white shadow-sm" : "bg-white border-gray-200 text-slate-600 hover:bg-gray-50"}`}>{p}</button>
+ ))}</div>
+ </div>
+ </div>
+ )}
+
+ {/* BUTTONS */}
+ {activeAppSection === "buttons" && (
+ <div className="space-y-6 animate-in fade-in duration-150">
+ <div>
+ <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Buton Stilleri" : "Button Styles"}</h3>
+ <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Bağlantı kartlarınızın varsayılan görünümünü belirleyin." : "Set the default appearance for all your link cards."}</p>
+ </div>
+ <div className="space-y-5">
+ <div className="grid sm:grid-cols-2 gap-5">
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Buton Arka Planı" : "Button Background"}</label><div className="flex gap-2"><input type="color" value={btnBgColor || "#ffffff"} onChange={(e) => setBtnBgColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnBgColor || ""} onChange={(e) => setBtnBgColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Buton Yazı Rengi" : "Button Text"}</label><div className="flex gap-2"><input type="color" value={btnTextColor || "#000000"} onChange={(e) => setBtnTextColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnTextColor || ""} onChange={(e) => setBtnTextColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
+ </div>
+ <div className="grid sm:grid-cols-2 gap-5">
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Çerçeve Rengi" : "Border Color"}</label><div className="flex gap-2"><input type="color" value={btnBorderColor || "#000000"} onChange={(e) => setBtnBorderColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnBorderColor || ""} onChange={(e) => setBtnBorderColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Çerçeve Stili" : "Border Style"}</label><select value={btnBorderStyle} onChange={(e) => setBtnBorderStyle(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option><option value="dashed">{lang === "tr" ? "Kesikli" : "Dashed"}</option><option value="double">{lang === "tr" ? "Çift" : "Double"}</option><option value="dotted">{lang === "tr" ? "Noktalı" : "Dotted"}</option><option value="none">{lang === "tr" ? "Yok" : "None"}</option></select></div>
+ </div>
+ <div className="grid sm:grid-cols-2 gap-5">
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Çerçeve Kalınlığı" : "Border Width"}</label><select value={btnBorderWidth} onChange={(e) => setBtnBorderWidth(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="0px">0px</option><option value="1px">1px</option><option value="2px">2px</option><option value="3px">3px</option><option value="4px">4px</option><option value="5px">5px</option></select></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Köşe Yuvarlaklığı" : "Border Radius"}</label><select value={btnBorderRadius} onChange={(e) => setBtnBorderRadius(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp"}</option><option value="4px">4px</option><option value="8px">8px</option><option value="12px">12px</option><option value="16px">16px</option><option value="20px">20px</option><option value="24px">24px</option><option value="9999px">{lang === "tr" ? "Yuvarlak" : "Round"}</option></select></div>
+ </div>
+ <div className="grid sm:grid-cols-2 gap-5">
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Gölge Efekti" : "Shadow"}</label><select value={btnShadow} onChange={(e) => setBtnShadow(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="none">{lang === "tr" ? "Yok" : "None"}</option><option value="soft">{lang === "tr" ? "Yumuşak" : "Soft"}</option><option value="glow-purple">{lang === "tr" ? "Mor Işıma" : "Glow Purple"}</option><option value="glow-emerald">{lang === "tr" ? "Yeşil Işıma" : "Glow Emerald"}</option><option value="hard-3d">{lang === "tr" ? "Sert 3D" : "Hard 3D"}</option></select></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Yazı Kalınlığı" : "Font Weight"}</label><select value={btnFontWeight} onChange={(e) => setBtnFontWeight(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="font-normal">Normal</option><option value="font-medium">Medium</option><option value="font-bold">Bold</option><option value="font-black">Black</option></select></div>
+ </div>
+ </div>
+ <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 space-y-3">
+ <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block text-center">{lang === "tr" ? "Buton Önizlemesi" : "Button Preview"}</span>
+ <div className="flex justify-center"><div className={`px-6 py-3 text-sm ${btnFontWeight || "font-bold"}`} style={{ backgroundColor: btnBgColor || "#ffffff", color: btnTextColor || "#000000", borderColor: btnBorderColor || "#000000", borderStyle: btnBorderStyle || "solid", borderWidth: btnBorderWidth || "1px", borderRadius: btnBorderRadius || "12px", boxShadow: btnShadow === "soft" ? "0 4px 12px rgba(0,0,0,0.1)" : btnShadow === "glow-purple" ? "0 0 20px rgba(168,85,247,0.4)" : btnShadow === "glow-emerald" ? "0 0 20px rgba(16,185,129,0.4)" : btnShadow === "hard-3d" ? "4px 4px 0px rgba(0,0,0,0.8)" : "none" }}>{lang === "tr" ? "Örnek Buton" : "Sample Button"}</div></div>
+ </div>
+ </div>
+ )}
+
+ {/* COLORS */}
+ {activeAppSection === "colors" && (
+ <div className="space-y-6 animate-in fade-in duration-150">
+ <div>
+ <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Renk Paleti" : "Color Palette"}</h3>
+ <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Kullanıcı adı ve biyografi yazı renklerini özgürce seçin." : "Customize your username and bio text colors."}</p>
+ </div>
+ <div className="grid sm:grid-cols-2 gap-6">
+ <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 space-y-4">
+ <div className="flex justify-between items-center"><label className="text-sm font-semibold text-slate-800">{lang === "tr" ? "Kullanıcı Adı Rengi" : "Username Color"}</label><div className="flex items-center gap-1.5"><input type="text" value={usernameColor} onChange={(e) => setUsernameColor(e.target.value)} className="w-[72px] px-2 py-1 border border-gray-200 rounded-lg bg-white font-mono text-[11px] font-bold text-center text-slate-800 outline-none focus:border-teal-500" /><div className="relative w-6 h-6 rounded-full overflow-hidden border border-gray-200 cursor-pointer shrink-0"><input type="color" value={usernameColor} onChange={(e) => setUsernameColor(e.target.value)} className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150" /></div></div></div>
+ <div className="flex flex-wrap gap-2">{["#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6", "#ef4444"].map((c) => (<button key={c} type="button" onClick={() => setUsernameColor(c)} className={`w-7 h-7 rounded-full border-2 shadow-sm transition-transform cursor-pointer hover:scale-110 ${usernameColor === c ? "ring-2 ring-teal-500 ring-offset-2 scale-105" : "border-gray-200"}`} style={{ backgroundColor: c }} title={c} />))}</div>
+ </div>
+ <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 space-y-4">
+ <div className="flex justify-between items-center"><label className="text-sm font-semibold text-slate-800">{lang === "tr" ? "Biyografi Rengi" : "Bio Color"}</label><div className="flex items-center gap-1.5"><input type="text" value={bioColor} onChange={(e) => setBioColor(e.target.value)} className="w-[72px] px-2 py-1 border border-gray-200 rounded-lg bg-white font-mono text-[11px] font-bold text-center text-slate-800 outline-none focus:border-teal-500" /><div className="relative w-6 h-6 rounded-full overflow-hidden border border-gray-200 cursor-pointer shrink-0"><input type="color" value={bioColor} onChange={(e) => setBioColor(e.target.value)} className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150" /></div></div></div>
+ <div className="flex flex-wrap gap-2">{["#888888", "#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6"].map((c) => (<button key={c} type="button" onClick={() => setBioColor(c)} className={`w-7 h-7 rounded-full border-2 shadow-sm transition-transform cursor-pointer hover:scale-110 ${bioColor === c ? "ring-2 ring-teal-500 ring-offset-2 scale-105" : "border-gray-200"}`} style={{ backgroundColor: c }} title={c} />))}</div>
+ </div>
+ </div>
+ </div>
+ )}
+
+ </div>
+ </div>
+ </div>
+ )}
+
+
+  {activeSubTab === "profile" && (
+    <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in duration-200 overflow-hidden">
+      {/* Profile customizer */}
+      <div className="p-3 sm:p-4 md:p-8 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden bg-white border-zinc-200 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between">
+          <div className="flex items-center gap-3">
+            <User className="h-5 w-5 text-teal-500" />
+            <h2 className="font-extrabold text-lg text-zinc-950">{t.profileCustomizer}</h2>
+          </div>
+          <button
+            onClick={handleSaveProfile}
+            disabled={isPending}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-full font-extrabold text-xs transition-all disabled:opacity-50 cursor-pointer bg-zinc-900 text-white hover:bg-zinc-800 shadow-md shadow-zinc-950/15"
+          >
+            {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+            {t.saveChanges}
+          </button>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+          <div className="space-y-2">
+            <label className="text-xs font-semibold uppercase tracking-wider block text-slate-500">{t.usernameLabel}</label>
+            <div className="flex items-center rounded-xl border focus-within:border-teal-500/50 overflow-hidden px-3 bg-zinc-100 border-zinc-200">
+              <span className="text-slate-500 text-[11px] sm:text-sm shrink-0">link-saas.vercel.app/</span>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="flex-1 bg-transparent py-2.5 outline-none text-sm text-zinc-900"
+                placeholder="username"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <label className="text-xs font-semibold uppercase tracking-wider block text-slate-500">
+              {lang === "tr" ? "Profil Fotoğrafı Yükle" : "Upload Profile Photo"}
+            </label>
+            <div className="p-4 md:p-5 rounded-xl border flex items-center gap-5 bg-zinc-100 border-zinc-200">
+              <div className="w-16 h-16 rounded-full border flex items-center justify-center overflow-hidden shrink-0 bg-white border-zinc-300 shadow-inner">
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="h-6 w-6 text-slate-500" />
+                )}
+              </div>
+              <div className="space-y-1.5">
+                <div className="flex gap-2">
+                  <label className="px-3.5 py-2.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none bg-white hover:bg-zinc-50 border-zinc-300 text-zinc-700 shadow-sm">
+                    {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          if (file.size > 2.5 * 1024 * 1024) {
+                            alert(lang === "tr" ? "Lütfen 2.5MB'den küçük bir fotoğraf seçin!" : "Please select an image smaller than 2.5MB!");
+                            return;
+                          }
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            if (event.target?.result) {
+                              setAvatarUrl(event.target.result as string);
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
+                  {avatarUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setAvatarUrl("")}
+                      className="px-3.5 py-2.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none bg-red-50 hover:bg-red-100 border-red-200 text-red-600"
+                    >
+                      {lang === "tr" ? "Kaldır" : "Remove"}
+                    </button>
+                  )}
+                </div>
+                <p className="text-[10px] text-slate-500 font-semibold">
+                  {lang === "tr" ? "Maksimum 2.5MB (PNG, JPG). Fotoğraf veri tabanına güvenle işlenecektir." : "Max 2.5MB (PNG, JPG). Image will be safely encrypted."}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <label className="text-xs font-semibold uppercase tracking-wider block text-slate-500">{t.bioLabel}</label>
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl border focus:outline-none focus:border-teal-500/50 text-sm bg-zinc-100 border-zinc-200 text-zinc-900"
+              placeholder={t.bioPlaceholder}
+              rows={3}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  )}
+
  </div>
  )}
 
