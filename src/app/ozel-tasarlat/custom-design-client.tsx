@@ -3,22 +3,14 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
-  Sparkles, 
-  QrCode, 
-  Link as LinkIcon, 
-  BarChart3, 
-  ShoppingBag, 
-  ArrowLeft, 
   ArrowRight,
-  CheckCircle2, 
   Send,
   Loader2,
-  Phone,
-  Laptop,
   Palette,
   Layers,
   Zap,
-  Globe
+  Globe,
+  CheckCircle2
 } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 
@@ -28,19 +20,82 @@ interface CustomDesignClientProps {
   siteLogo: string;
 }
 
-type StylePreset = {
+type MockupPreset = {
   id: string;
   name: string;
   bgColor: string;
-  textColor: string;
-  accentColor: string;
   bgGradient: string;
-  btnStyle: string;
-  fontFamily: string;
-  badgeText: string;
+  accentColor: string;
+  textColor: string;
+  headingColor: string;
+  btnBg: string;
+  btnText: string;
+  btnBorder: string;
   avatarUrl: string;
-  links: { title: string; subtitle?: string; anim?: string }[];
+  displayName: string;
+  bio: string;
+  scriptHeading: string;
+  links: string[];
+  leafColor: string;
+  leafOpacity: number;
 };
+
+/* Decorative Leaf SVG component */
+function LeafDecoration({ color, opacity, className, flip }: { color: string; opacity: number; className?: string; flip?: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 120 180"
+      fill="none"
+      className={className}
+      style={{ opacity, transform: flip ? "scaleX(-1)" : undefined }}
+    >
+      <path
+        d="M60 10C30 40 10 80 15 130C20 160 40 175 60 170C80 175 100 160 105 130C110 80 90 40 60 10Z"
+        fill={color}
+        fillOpacity={0.15}
+      />
+      <path
+        d="M60 10C60 60 60 110 60 170"
+        stroke={color}
+        strokeOpacity={0.25}
+        strokeWidth={1.5}
+      />
+      <path
+        d="M60 50C45 65 30 80 25 100"
+        stroke={color}
+        strokeOpacity={0.18}
+        strokeWidth={1}
+      />
+      <path
+        d="M60 70C75 85 90 95 95 110"
+        stroke={color}
+        strokeOpacity={0.18}
+        strokeWidth={1}
+      />
+      <path
+        d="M60 100C50 110 38 118 30 130"
+        stroke={color}
+        strokeOpacity={0.15}
+        strokeWidth={1}
+      />
+    </svg>
+  );
+}
+
+/* Small branch/twig decoration */
+function TwigDecoration({ color, opacity, className }: { color: string; opacity: number; className?: string }) {
+  return (
+    <svg viewBox="0 0 60 80" fill="none" className={className} style={{ opacity }}>
+      <path d="M30 75C30 50 30 25 30 5" stroke={color} strokeOpacity={0.3} strokeWidth={1.2} />
+      <path d="M30 20C22 12 15 8 8 6" stroke={color} strokeOpacity={0.25} strokeWidth={1} />
+      <path d="M30 35C38 27 45 23 52 21" stroke={color} strokeOpacity={0.25} strokeWidth={1} />
+      <path d="M30 50C24 44 18 40 12 38" stroke={color} strokeOpacity={0.2} strokeWidth={1} />
+      <circle cx="8" cy="6" r="3" fill={color} fillOpacity={0.12} />
+      <circle cx="52" cy="21" r="3" fill={color} fillOpacity={0.12} />
+      <circle cx="12" cy="38" r="2.5" fill={color} fillOpacity={0.1} />
+    </svg>
+  );
+}
 
 export default function CustomDesignClient({ userId, siteTitle, siteLogo }: CustomDesignClientProps) {
   const [activePresetIndex, setActivePresetIndex] = useState(0);
@@ -53,74 +108,82 @@ export default function CustomDesignClient({ userId, siteTitle, siteLogo }: Cust
   const [socialLink, setSocialLink] = useState("");
   const [details, setDetails] = useState("");
 
-  const presets: StylePreset[] = [
+  const presets: MockupPreset[] = [
     {
-      id: "glassmorphism",
-      name: "Glassmorphism",
-      bgColor: "#0f172a",
-      textColor: "#ffffff",
-      accentColor: "#38bdf8",
-      bgGradient: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
-      btnStyle: "bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 shadow-lg shadow-black/10",
-      fontFamily: "'Inter', sans-serif",
-      badgeText: "Lüks & Derinlik",
-      avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&fit=crop",
-      links: [
-        { title: "⚡ Yeni Teklimi Dinleyin", subtitle: "Tüm platformlarda yayında" },
-        { title: "📸 Son Instagram Paylaşımlarım" },
-        { title: "🎧 Spotify Çalma Listem" }
-      ]
-    },
-    {
-      id: "synthwave",
-      name: "Neon Synthwave",
-      bgColor: "#09090b",
-      textColor: "#ffffff",
-      accentColor: "#f43f5e",
-      bgGradient: "radial-gradient(circle at center, #1e1b4b 0%, #09090b 100%)",
-      btnStyle: "bg-black border border-rose-500 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:bg-rose-500 hover:text-white transition-all duration-300",
-      fontFamily: "'Courier New', monospace",
-      badgeText: "Retro & Enerjik",
-      avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&h=150&fit=crop",
-      links: [
-        { title: "🔥 RGB Sound Kit v2 (Çıktı!)", subtitle: "Sınırlı sayıda lisans" },
-        { title: "📺 YouTube Beat Videoları" },
-        { title: "💬 Discord Topluluğumuz" }
-      ]
-    },
-    {
-      id: "cyberpunk",
-      name: "3D Cyberpunk",
-      bgColor: "#000000",
-      textColor: "#00ffcc",
-      accentColor: "#ff007f",
-      bgGradient: "linear-gradient(180deg, #000000 0%, #0c0a09 100%)",
-      btnStyle: "bg-zinc-900 border-2 border-[#00ffcc] text-[#00ffcc] shadow-[4px_4px_0px_#ff007f] hover:translate-x-1 hover:translate-y-1 hover:shadow-none duration-150",
-      fontFamily: "system-ui, sans-serif",
-      badgeText: "Fütüristik & Dikkat Çekici",
-      avatarUrl: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&h=150&fit=crop",
-      links: [
-        { title: "💎 1-on-1 Beatmaster Eğitim", subtitle: "Sınırlı Kontenjan" },
-        { title: "🛍️ Shopier Dijital Mağazam" },
-        { title: "✨ Soundcloud Demolarım" }
-      ]
-    },
-    {
-      id: "minimalist",
-      name: "Nordic Minimalist",
-      bgColor: "#ffffff",
-      textColor: "#0f172a",
-      accentColor: "#0f172a",
-      bgGradient: "linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)",
-      btnStyle: "bg-white border border-slate-200 text-slate-800 hover:border-slate-900 shadow-sm",
-      fontFamily: "'Outfit', sans-serif",
-      badgeText: "Sade & Profesyonel",
+      id: "sage",
+      name: "Sage Garden",
+      bgColor: "#f0f5f0",
+      bgGradient: "linear-gradient(180deg, #e8f0e8 0%, #f5f9f5 40%, #ffffff 100%)",
+      accentColor: "#7ab38a",
+      textColor: "#3d5a45",
+      headingColor: "#2d4a35",
+      btnBg: "#ffffff",
+      btnText: "#3d5a45",
+      btnBorder: "#c8dcc8",
       avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&h=150&fit=crop",
-      links: [
-        { title: "📖 E-Kitap: Bağımsız Müzik Dağıtımı", subtitle: "Hemen İndirin" },
-        { title: "✉️ Haftalık Bültene Abone Ol" },
-        { title: "💼 LinkedIn Profilim" }
-      ]
+      displayName: "Ayşe Demir",
+      bio: "İçerik Üretici & Blogger ✨",
+      scriptHeading: "hello!",
+      links: ["Web Sitem", "Blog Yazılarım", "Mağazam", "İletişim"],
+      leafColor: "#7ab38a",
+      leafOpacity: 0.7
+    },
+    {
+      id: "mint",
+      name: "Mint Breeze",
+      bgColor: "#f0faf6",
+      bgGradient: "linear-gradient(180deg, #e0f5ed 0%, #f0faf6 40%, #ffffff 100%)",
+      accentColor: "#48b88c",
+      textColor: "#2a5448",
+      headingColor: "#1d4038",
+      btnBg: "#2a5448",
+      btnText: "#ffffff",
+      btnBorder: "#2a5448",
+      avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&fit=crop",
+      displayName: "Zeynep Kaya",
+      bio: "Dijital Pazarlama & Sosyal Medya",
+      scriptHeading: "freebies",
+      links: ["Ücretsiz Rehber", "YouTube Kanalım", "Podcast", "Hakkımda"],
+      leafColor: "#48b88c",
+      leafOpacity: 0.65
+    },
+    {
+      id: "olive",
+      name: "Olive Elegance",
+      bgColor: "#f5f3ee",
+      bgGradient: "linear-gradient(180deg, #eae7df 0%, #f5f3ee 40%, #faf9f6 100%)",
+      accentColor: "#8a9a6c",
+      textColor: "#4a5240",
+      headingColor: "#3a4230",
+      btnBg: "#ffffff",
+      btnText: "#4a5240",
+      btnBorder: "#c4ccb8",
+      avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&h=150&fit=crop",
+      displayName: "Emre Yılmaz",
+      bio: "Fotoğrafçı & Görsel Sanatçı",
+      scriptHeading: "welcome",
+      links: ["Portfolyo", "Randevu Al", "Galeri", "Fiyatlar"],
+      leafColor: "#8a9a6c",
+      leafOpacity: 0.6
+    },
+    {
+      id: "rose",
+      name: "Rose Petal",
+      bgColor: "#fdf2f5",
+      bgGradient: "linear-gradient(180deg, #fce8ee 0%, #fdf2f5 40%, #ffffff 100%)",
+      accentColor: "#d4728c",
+      textColor: "#6b3a4a",
+      headingColor: "#5a2a3a",
+      btnBg: "#ffffff",
+      btnText: "#6b3a4a",
+      btnBorder: "#e8c0cc",
+      avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&fit=crop",
+      displayName: "Selin Arslan",
+      bio: "Güzellik & Yaşam Koçu 🌸",
+      scriptHeading: "beauty",
+      links: ["Online Kurs", "E-Kitap", "Instagram", "Randevu"],
+      leafColor: "#d4728c",
+      leafOpacity: 0.55
     }
   ];
 
@@ -130,6 +193,7 @@ export default function CustomDesignClient({ userId, siteTitle, siteLogo }: Cust
       setActivePresetIndex((prev) => (prev + 1) % presets.length);
     }, 5000);
     return () => clearInterval(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -281,7 +345,7 @@ export default function CustomDesignClient({ userId, siteTitle, siteLogo }: Cust
 
           {/* Right: Interactive, Animated Smartphone Mockup */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center relative">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-violet-100 rounded-full blur-3xl opacity-50 -z-10" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] rounded-full blur-3xl opacity-40 -z-10 transition-colors duration-700" style={{ backgroundColor: `${activePreset.accentColor}30` }} />
 
             {/* Presets Selector tabs */}
             <div className="flex flex-wrap gap-1.5 mb-6 bg-slate-100 p-1 rounded-full relative z-10">
@@ -301,66 +365,159 @@ export default function CustomDesignClient({ userId, siteTitle, siteLogo }: Cust
             </div>
 
             {/* Smartphone Container */}
-            <div className="relative w-full max-w-sm lg:w-[280px] h-[550px] bg-slate-900 rounded-[2.5rem] p-2.5 shadow-2xl border-4 border-slate-800 overflow-hidden transition-all duration-500">
+            <div className="relative w-full max-w-sm lg:w-[280px] h-[560px] bg-slate-900 rounded-[2.5rem] p-2.5 shadow-2xl border-4 border-slate-800 overflow-hidden transition-all duration-500">
               {/* Speaker Notch */}
-              <div className="absolute top-0 inset-x-0 h-5 bg-slate-900 z-20 rounded-b-2xl w-1/3 mx-auto" />
+              <div className="absolute top-0 inset-x-0 h-6 bg-slate-900 z-20 rounded-b-2xl w-1/3 mx-auto" />
 
-              {/* Dynamic Styled Screen View */}
+              {/* Dynamic Styled Screen View - Bio Link Template */}
               <div 
-                className="relative w-full h-full rounded-[1.8rem] overflow-hidden flex flex-col items-center pt-12 px-4 transition-all duration-700"
+                className="relative w-full h-full rounded-[1.8rem] overflow-hidden flex flex-col items-center transition-all duration-700"
                 style={{ 
                   background: activePreset.bgGradient,
                   backgroundColor: activePreset.bgColor,
-                  color: activePreset.textColor,
-                  fontFamily: activePreset.fontFamily
+                  color: activePreset.textColor
                 }}
               >
-                {/* Visual Accent Badge */}
-                <div 
-                  className="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider mb-4 border"
-                  style={{ 
-                    borderColor: `${activePreset.accentColor}30`, 
-                    color: activePreset.accentColor,
-                    backgroundColor: `${activePreset.accentColor}08`
-                  }}
-                >
-                  {activePreset.badgeText}
-                </div>
+                {/* Decorative Leaf SVGs */}
+                <LeafDecoration 
+                  color={activePreset.leafColor} 
+                  opacity={activePreset.leafOpacity} 
+                  className="absolute -top-2 -left-3 w-16 h-24 pointer-events-none"
+                />
+                <LeafDecoration 
+                  color={activePreset.leafColor} 
+                  opacity={activePreset.leafOpacity} 
+                  className="absolute -top-2 -right-3 w-16 h-24 pointer-events-none"
+                  flip
+                />
+                <TwigDecoration 
+                  color={activePreset.leafColor} 
+                  opacity={activePreset.leafOpacity * 0.7} 
+                  className="absolute top-16 -right-1 w-10 h-14 pointer-events-none"
+                />
+                <TwigDecoration 
+                  color={activePreset.leafColor} 
+                  opacity={activePreset.leafOpacity * 0.5} 
+                  className="absolute bottom-28 -left-1 w-8 h-12 pointer-events-none rotate-[30deg]"
+                />
 
-                {/* Avatar with dynamic outline */}
-                <div 
-                  className="w-16 h-16 rounded-full overflow-hidden border-2 shadow-md mb-2 shrink-0 transition-transform duration-500 hover:scale-105"
-                  style={{ borderColor: activePreset.accentColor }}
-                >
-                  <img src={activePreset.avatarUrl} alt="Avatar Mockup" className="w-full h-full object-cover" />
-                </div>
+                {/* Scattered gold dots */}
+                <div className="absolute top-10 right-6 w-1 h-1 rounded-full opacity-40" style={{ backgroundColor: activePreset.accentColor }} />
+                <div className="absolute top-20 left-5 w-1.5 h-1.5 rounded-full opacity-25" style={{ backgroundColor: activePreset.accentColor }} />
+                <div className="absolute bottom-36 right-8 w-1 h-1 rounded-full opacity-30" style={{ backgroundColor: activePreset.accentColor }} />
 
-                {/* Bio Details */}
-                <div className="text-center mb-6 space-y-1">
-                  <div className="text-xs font-black tracking-tight" style={{ color: activePreset.textColor }}>@kreator.hub</div>
-                  <div className="text-[9px] opacity-70 max-w-[180px] mx-auto leading-normal">
-                    Size özel tasarlanmış tamamen dinamik, göz alıcı biyo linki.
+                {/* Content area */}
+                <div className="relative z-10 flex flex-col items-center w-full h-full pt-10 pb-4 px-5">
+                  
+                  {/* Script-style heading */}
+                  <div 
+                    className="text-2xl mb-3 italic tracking-wide"
+                    style={{ 
+                      fontFamily: "'Georgia', 'Times New Roman', serif",
+                      color: activePreset.headingColor,
+                      fontWeight: 400,
+                      letterSpacing: "0.02em"
+                    }}
+                  >
+                    {activePreset.scriptHeading}
                   </div>
-                </div>
 
-                {/* Simulated Custom Designed Buttons */}
-                <div className="w-full space-y-3 flex-1 overflow-y-auto pr-0.5 scrollbar-thin">
-                  {activePreset.links.map((link, idx) => (
-                    <div
-                      key={idx}
-                      className={`w-full p-2.5 rounded-xl flex flex-col items-center justify-center text-center transition-all ${activePreset.btnStyle}`}
+                  {/* Avatar with decorative ring */}
+                  <div className="relative mb-2 shrink-0">
+                    {/* Outer decorative circle */}
+                    <div 
+                      className="absolute -inset-1.5 rounded-full"
+                      style={{ 
+                        border: `2px solid ${activePreset.accentColor}40`,
+                        background: `${activePreset.accentColor}08`
+                      }}
+                    />
+                    <div 
+                      className="relative w-16 h-16 rounded-full overflow-hidden border-[2.5px] shadow-lg"
+                      style={{ borderColor: activePreset.accentColor }}
                     >
-                      <span className="text-[10px] font-extrabold tracking-tight truncate max-w-full">{link.title}</span>
-                      {link.subtitle && (
-                        <span className="text-[8px] opacity-60 mt-0.5 truncate max-w-full font-medium">{link.subtitle}</span>
-                      )}
+                      <img src={activePreset.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                     </div>
-                  ))}
-                </div>
+                    {/* Small accent dot on avatar */}
+                    <div 
+                      className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center text-white text-[7px] font-black shadow-sm"
+                      style={{ backgroundColor: activePreset.accentColor }}
+                    >
+                      ✓
+                    </div>
+                  </div>
 
-                {/* System Watermark */}
-                <div className="mt-auto pb-4 pt-2 text-[8px] opacity-40 uppercase tracking-widest font-black">
-                  {siteTitle}
+                  {/* Name & Bio */}
+                  <div className="text-center mb-1 mt-1">
+                    <div 
+                      className="text-[11px] font-black tracking-tight uppercase"
+                      style={{ color: activePreset.headingColor }}
+                    >
+                      {activePreset.displayName}
+                    </div>
+                  </div>
+                  <div 
+                    className="text-[8px] text-center mb-4 max-w-[160px] leading-relaxed font-medium"
+                    style={{ color: `${activePreset.textColor}aa` }}
+                  >
+                    {activePreset.bio}
+                  </div>
+
+                  {/* Link Buttons */}
+                  <div className="w-full space-y-2.5 flex-1">
+                    {activePreset.links.map((link, idx) => (
+                      <div
+                        key={idx}
+                        className="w-full py-2.5 px-3 rounded-lg flex items-center justify-center text-center transition-all duration-200 cursor-pointer hover:scale-[1.02] hover:shadow-md"
+                        style={{
+                          backgroundColor: activePreset.btnBg,
+                          color: activePreset.btnText,
+                          border: `1.5px solid ${activePreset.btnBorder}`,
+                          boxShadow: "0 1px 3px rgba(0,0,0,0.06)"
+                        }}
+                      >
+                        <span className="text-[10px] font-bold tracking-tight">{link}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Social Icons Row */}
+                  <div className="flex items-center justify-center gap-3 mt-3 mb-1">
+                    {/* Facebook */}
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${activePreset.accentColor}20` }}>
+                      <svg viewBox="0 0 24 24" className="w-2.5 h-2.5" fill={activePreset.accentColor}>
+                        <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                      </svg>
+                    </div>
+                    {/* Instagram */}
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${activePreset.accentColor}20` }}>
+                      <svg viewBox="0 0 24 24" className="w-2.5 h-2.5" fill="none" stroke={activePreset.accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                        <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                      </svg>
+                    </div>
+                    {/* Twitter/X */}
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${activePreset.accentColor}20` }}>
+                      <svg viewBox="0 0 24 24" className="w-2.5 h-2.5" fill={activePreset.accentColor}>
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    </div>
+                    {/* Pinterest */}
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${activePreset.accentColor}20` }}>
+                      <svg viewBox="0 0 24 24" className="w-2.5 h-2.5" fill={activePreset.accentColor}>
+                        <path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/>
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Watermark */}
+                  <div 
+                    className="text-[7px] uppercase tracking-[0.2em] font-bold mt-1 pb-1"
+                    style={{ color: `${activePreset.textColor}50` }}
+                  >
+                    {siteTitle}
+                  </div>
                 </div>
               </div>
             </div>
