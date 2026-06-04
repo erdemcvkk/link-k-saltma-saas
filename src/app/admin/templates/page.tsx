@@ -37,8 +37,11 @@ export default async function AdminTemplatesPage() {
  }
 
  const templates = await db.template.findMany({
- orderBy: { createdAt: "desc" },
- });
+    where: {
+      category: { not: "Özel" }
+    },
+    orderBy: { createdAt: "desc" },
+  });
 
  const serializedTemplates = templates.map((t) => ({
  id: t.id,

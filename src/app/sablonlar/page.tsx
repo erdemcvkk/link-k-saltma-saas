@@ -13,8 +13,11 @@ export default async function SablonlarPage() {
 
  // Fetch all active templates
  const templates = await db.template.findMany({
- where: { isActive: true },
- orderBy: { createdAt: "desc" },
+   where: {
+     isActive: true,
+     category: { not: "Özel" }
+   },
+   orderBy: { createdAt: "desc" },
  });
 
  // Fetch owned templates of this user
