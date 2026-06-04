@@ -2016,3 +2016,63 @@ export async function deleteAddonProduct(productId: string) {
   revalidatePath("/[username]", "page");
   return true;
 }
+
+export async function saveUserCustomTemplate(
+  userId: string,
+  name: string,
+  bgColor: string,
+  fontStyle: string,
+  buttonStyle: string,
+  customCss: string | null
+) {
+  if (!userId || !name) {
+    throw new Error("Missing parameters");
+  }
+
+  // Create Template record in DB
+  const template = await db.template.create({
+    data: {
+      name: name.trim(),
+      price: 0,
+      category: "Özel",
+      coverUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=400&h=300&fit=crop",
+      bgColor: bgColor,
+      fontStyle: fontStyle,
+      buttonStyle: buttonStyle,
+      isActive: true,
+      isCoded: !!customCss,
+      customCss: customCss,
+    }
+  });
+
+  // Link it to the user
+  const userTemplate = await db.userTemplate.create({
+    data: {
+      userId,
+      templateId: template.id,
+      isActive: false
+    }
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/sablonlar");
+  return {
+    success: true,
+    template: {
+      userTemplateId: userTemplate.id,
+      isActive: userTemplate.isActive,
+      customUrl: userTemplate.customUrl,
+      id: template.id,
+      name: template.name,
+      price: template.price,
+      category: template.category,
+      coverUrl: template.coverUrl,
+      bgColor: template.bgColor,
+      fontStyle: template.fontStyle,
+      buttonStyle: template.buttonStyle,
+      isCoded: template.isCoded,
+      customCss: template.customCss,
+      configJson: template.configJson,
+    }
+  };
+}

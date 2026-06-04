@@ -49,5 +49,35 @@ export default async function EditorPage() {
     })),
   }));
 
-  return <EditorClient initialLinks={serializedLinks} />;
+  // Fetch owned templates of this user
+  const ownedTemplates = await db.userTemplate.findMany({
+    where: { userId: user.id },
+    include: {
+      template: true,
+    },
+  });
+
+  const serializedOwnedTemplates = ownedTemplates.map((ot) => ({
+    userTemplateId: ot.id,
+    isActive: ot.isActive,
+    customUrl: ot.customUrl,
+    id: ot.template.id,
+    name: ot.template.name,
+    price: ot.template.price,
+    category: ot.template.category,
+    coverUrl: ot.template.coverUrl,
+    bgColor: ot.template.bgColor,
+    fontStyle: ot.template.fontStyle,
+    buttonStyle: ot.template.buttonStyle,
+    isCoded: ot.template.isCoded,
+    customCss: ot.template.customCss,
+    configJson: ot.template.configJson,
+  }));
+
+  return (
+    <EditorClient
+      initialLinks={serializedLinks}
+      initialOwnedTemplates={serializedOwnedTemplates}
+    />
+  );
 }

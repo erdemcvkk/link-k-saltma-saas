@@ -11,7 +11,9 @@ import {
   updateProfile,
   updateLinkAnimation,
   updateLinkCustomStyle,
-  updateAllLinksCustomStyle
+  updateAllLinksCustomStyle,
+  toggleUserTemplateActive,
+  saveUserCustomTemplate
 } from "@/app/actions";
 import {
   Trash2,
@@ -179,11 +181,29 @@ const getLinkIconHelper = (type: string | undefined, url: string | undefined) =>
 };
 
 
+type TemplateItem = {
+  userTemplateId: string;
+  isActive: boolean;
+  customUrl: string | null;
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  coverUrl: string;
+  bgColor: string;
+  fontStyle: string;
+  buttonStyle: string;
+  isCoded: boolean;
+  customCss: string | null;
+  configJson: string | null;
+};
+
 interface EditorClientProps {
   initialLinks: LinkItem[];
+  initialOwnedTemplates?: TemplateItem[];
 }
 
-export default function EditorClient({ initialLinks }: EditorClientProps) {
+export default function EditorClient({ initialLinks, initialOwnedTemplates }: EditorClientProps) {
   const {
     user,
     globalSettings,
@@ -198,7 +218,8 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
     isPending,
     startTransition,
     fonts,
-    activeTemplate
+    activeTemplate,
+    setActiveTemplate
   } = useDashboard();
 
   const initialUser = user;
@@ -206,6 +227,10 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
 
   // Local States
   const [links, setLinks] = useState<LinkItem[]>(initialLinks);
+  const [ownedTemplates, setOwnedTemplates] = useState<TemplateItem[]>(initialOwnedTemplates || []);
+  const [isSaveTemplateModalOpen, setIsSaveTemplateModalOpen] = useState(false);
+  const [templateSaveName, setTemplateSaveName] = useState("");
+  const [saveTemplateError, setSaveTemplateError] = useState("");
   const [bio, setBio] = useState(user.profile?.bio ?? "");
   const [avatarUrl, setAvatarUrl] = useState(user.profile?.avatarUrl ?? "");
   const [background, setBackground] = useState(user.profile?.background ?? "");
@@ -616,6 +641,134 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  }
  });
  };
+
+  const handleToggleTemplate = async (templateId: string, currentActive: boolean) => {
+    setErrorMsg("");
+    setSuccessMsg("");
+    startTransition(async () => {
+      try {
+        const nextActive = !currentActive;
+        const res = await toggleUserTemplateActive(initialUser.id, templateId, nextActive);
+        if (res && res.success) {
+          setOwnedTemplates(prev =>
+            prev.map(t => ({
+              ...t,
+              isActive: t.id === templateId ? nextActive : false
+            }))
+          );
+
+          if (nextActive) {
+            const matched = ownedTemplates.find(t => t.id === templateId);
+            if (matched) {
+              setActiveTemplate({
+                id: matched.id,
+                name: matched.name,
+                bgColor: matched.bgColor,
+                fontStyle: matched.fontStyle,
+                buttonStyle: matched.buttonStyle,
+                isCoded: matched.isCoded,
+                customCss: matched.customCss,
+                configJson: matched.configJson
+              });
+
+              setBackground(matched.bgColor || "");
+              setFontStyle(matched.fontStyle || "Inter");
+              setActiveTemplateCss(matched.customCss || null);
+
+              if (matched.buttonStyle) {
+                const parsedBtn = parseButtonStyle(matched.buttonStyle);
+                setBtnBgColor(parsedBtn.bgColor || "");
+                setBtnTextColor(parsedBtn.textColor || "");
+                setBtnBorderColor(parsedBtn.borderColor || "");
+                setBtnBorderStyle(parsedBtn.borderStyle || "solid");
+                setBtnBorderWidth(parsedBtn.borderWidth || "1px");
+                setBtnBorderRadius(parsedBtn.borderRadius || "12px");
+                setBtnShadow(parsedBtn.shadow || "none");
+                setBtnFontWeight(parsedBtn.fontWeight || "font-bold");
+              }
+            }
+            setSuccessMsg(lang === "tr" ? "Şablon başarıyla aktifleştirildi!" : "Template successfully activated!");
+          } else {
+            setActiveTemplate(null);
+            setBackground("");
+            setFontStyle("Inter");
+            setActiveTemplateCss(null);
+            setBtnBgColor("");
+            setBtnTextColor("");
+            setBtnBorderColor("");
+            setBtnBorderStyle("solid");
+            setBtnBorderWidth("1px");
+            setBtnBorderRadius("12px");
+            setBtnShadow("none");
+            setBtnFontWeight("font-bold");
+            setSuccessMsg(lang === "tr" ? "Şablon devre dışı bırakıldı." : "Template deactivated.");
+          }
+        }
+      } catch (err: any) {
+        setErrorMsg(err.message || "Failed to toggle template");
+      }
+    });
+  };
+
+  const handleSaveAsTemplateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!templateSaveName.trim()) return;
+
+    setErrorMsg("");
+    setSuccessMsg("");
+    setSaveTemplateError("");
+
+    const buttonStyleJson = JSON.stringify({
+      bgColor: btnBgColor || null,
+      textColor: btnTextColor || null,
+      borderColor: btnBorderColor || null,
+      borderStyle: btnBorderStyle || null,
+      borderWidth: btnBorderWidth || null,
+      borderRadius: btnBorderRadius || null,
+      shadow: btnShadow || null,
+      fontWeight: btnFontWeight || null,
+    });
+
+    startTransition(async () => {
+      try {
+        const res = await saveUserCustomTemplate(
+          initialUser.id,
+          templateSaveName.trim(),
+          background || "",
+          fontStyle || "Inter",
+          buttonStyleJson,
+          activeTemplateCss
+        );
+
+        if (res && res.success && res.template) {
+          const newTmpl: TemplateItem = {
+            userTemplateId: res.template.userTemplateId,
+            isActive: res.template.isActive,
+            customUrl: res.template.customUrl,
+            id: res.template.id,
+            name: res.template.name,
+            price: res.template.price,
+            category: res.template.category,
+            coverUrl: res.template.coverUrl,
+            bgColor: res.template.bgColor,
+            fontStyle: res.template.fontStyle,
+            buttonStyle: res.template.buttonStyle,
+            isCoded: res.template.isCoded,
+            customCss: res.template.customCss,
+            configJson: res.template.configJson,
+          };
+
+          setOwnedTemplates(prev => [...prev, newTmpl]);
+          setTemplateSaveName("");
+          setIsSaveTemplateModalOpen(false);
+          setSuccessMsg(lang === "tr" ? "Tasarımınız şablon olarak başarıyla kaydedildi!" : "Your design has been saved as a template!");
+        }
+      } catch (err: any) {
+        setSaveTemplateError(err.message || "Failed to save template");
+      }
+    });
+  };
+
    const handleGenerateAiSuggestions = async () => {
  if (!aiPrompt) return;
  setErrorMsg("");
@@ -770,18 +923,161 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
               {lang === "tr" ? item.label : item.labelEn}
             </button>
           ))}
-          <div className="border-t border-zinc-200 pt-3 mt-3 px-1">
+          <div className="border-t border-zinc-200 pt-3 mt-3 px-1 space-y-2">
             <button type="button" onClick={handleSaveProfile} disabled={isPending}
               className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-[11px] hover:bg-slate-800 transition-all disabled:opacity-50 cursor-pointer shadow-sm">
               {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
               {t.saveChanges}
+            </button>
+            <button type="button" onClick={() => {
+              setTemplateSaveName("");
+              setSaveTemplateError("");
+              setIsSaveTemplateModalOpen(true);
+            }} disabled={isPending}
+              className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-teal-600 text-white font-bold text-[11px] hover:bg-teal-500 transition-all disabled:opacity-50 cursor-pointer shadow-sm">
+              <Sparkles className="h-3 w-3" />
+              {lang === "tr" ? "Şablonu Kaydet" : "Save as Template"}
             </button>
           </div>
         </div>
  {/* Form Content */}
  <div className="flex-1 p-5 md:p-8 overflow-y-auto max-h-[75vh]">
 
-          {activeAppSection === "links" && (
+          {activeAppSection === "theme" && (
+            <div className="space-y-6 animate-in fade-in duration-150">
+              <div>
+                <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">
+                  {lang === "tr" ? "Şablonlarım" : "My Templates"}
+                </h3>
+                <p className="text-xs text-slate-500 font-medium mt-1">
+                  {lang === "tr" 
+                    ? "Kayıtlı şablonlarınızı yönetin ve profilinize anında uygulayın." 
+                    : "Manage your saved templates and apply them instantly to your profile."}
+                </p>
+              </div>
+
+              {ownedTemplates.length === 0 ? (
+                <div className="p-8 text-center rounded-2xl border border-dashed border-zinc-200 bg-white shadow-sm text-sm text-slate-500">
+                  {lang === "tr" 
+                    ? "Henüz kaydedilmiş bir özel şablonunuz bulunmuyor. Görünüm panelinden tasarımınızı özelleştirip 'Şablonu Kaydet' butonuyla şablon oluşturabilirsiniz." 
+                    : "You don't have any custom templates saved yet. Customize your look and use 'Save as Template' button to create one."}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {ownedTemplates.map((tmpl) => {
+                    const isSelected = activeTemplate?.id === tmpl.id || (tmpl.isActive);
+                    let btnPreviewBg = "#ffffff";
+                    let btnPreviewText = "#000000";
+                    let btnPreviewBorder = "#e4e4e7";
+                    try {
+                      if (tmpl.buttonStyle) {
+                        const parsed = parseButtonStyle(tmpl.buttonStyle);
+                        btnPreviewBg = parsed.bgColor || "#ffffff";
+                        btnPreviewText = parsed.textColor || "#000000";
+                        btnPreviewBorder = parsed.borderColor || "#e4e4e7";
+                      }
+                    } catch (e) {}
+
+                    const renderBgPreviewClass = () => {
+                      if (tmpl.bgColor) {
+                        if (tmpl.bgColor.startsWith("custom-img::")) {
+                          return { backgroundImage: `url(${tmpl.bgColor.replace("custom-img::", "")})`, backgroundSize: "cover", backgroundPosition: "center" };
+                        } else if (tmpl.bgColor.startsWith("custom-video::")) {
+                          return { backgroundColor: "#1e293b" };
+                        } else if (tmpl.bgColor.startsWith("bg-")) {
+                          return {};
+                        } else {
+                          return { backgroundColor: tmpl.bgColor };
+                        }
+                      }
+                      return { backgroundColor: "#0f172a" };
+                    };
+
+                    const bgPreviewStyles = renderBgPreviewClass();
+                    const isTailwindBg = tmpl.bgColor && tmpl.bgColor.startsWith("bg-");
+
+                    return (
+                      <div
+                        key={tmpl.id}
+                        className={`rounded-2xl border bg-white shadow-sm overflow-hidden flex flex-col transition-all duration-200 ${
+                          isSelected ? "border-teal-500 ring-2 ring-teal-500/10" : "border-zinc-200 hover:border-zinc-300"
+                        }`}
+                      >
+                        <div 
+                          className={`h-24 relative flex items-center justify-center border-b border-zinc-100 ${
+                            isTailwindBg ? tmpl.bgColor : ""
+                          }`}
+                          style={bgPreviewStyles}
+                        >
+                          <div className="space-y-1.5 text-center px-4 max-w-full">
+                            <div className="w-6 h-6 rounded-full bg-zinc-200 border border-white mx-auto shadow-sm" />
+                            <div className="w-12 h-2 rounded bg-white/40 mx-auto" />
+                            <div className="w-16 h-1.5 rounded bg-white/20 mx-auto" />
+                            
+                            <div 
+                              className="px-4 py-1.5 rounded-md text-[6px] font-black w-24 mx-auto truncate border"
+                              style={{ 
+                                backgroundColor: btnPreviewBg === "transparent" ? "rgba(255,255,255,0.15)" : btnPreviewBg, 
+                                color: btnPreviewText, 
+                                borderColor: btnPreviewBorder 
+                              }}
+                            >
+                              Sample Link
+                            </div>
+                          </div>
+                          
+                          {isSelected && (
+                            <span className="absolute top-2 right-2 px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider bg-teal-500 text-white shadow-sm flex items-center gap-0.5">
+                              <Check className="h-2 w-2" />
+                              {lang === "tr" ? "Aktif" : "Active"}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="p-4 flex-1 flex flex-col justify-between space-y-3 bg-white">
+                          <div>
+                            <h4 className="font-extrabold text-xs text-zinc-900 truncate">{tmpl.name}</h4>
+                            <div className="flex items-center gap-1.5 mt-1 text-[10px] text-slate-500 font-semibold">
+                              <span>Font: <span className="font-bold text-zinc-700">{tmpl.fontStyle}</span></span>
+                              <span>•</span>
+                              <span>{tmpl.isCoded ? "Custom CSS" : "Standart"}</span>
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => handleToggleTemplate(tmpl.id, isSelected)}
+                            disabled={isPending}
+                            className={`w-full py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border shadow-sm ${
+                              isSelected
+                                ? "bg-red-50 border-red-200 text-red-600 hover:bg-red-100"
+                                : "bg-zinc-950 border-zinc-900 text-white hover:bg-zinc-800"
+                            }`}
+                          >
+                            {isPending ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            ) : isSelected ? (
+                              <>
+                                <X className="h-3.5 w-3.5" />
+                                {lang === "tr" ? "Şablonu Devre Dışı Bırak" : "Deactivate Template"}
+                              </>
+                            ) : (
+                              <>
+                                <Check className="h-3.5 w-3.5" />
+                                {lang === "tr" ? "Şablonu Aktifleştir" : "Activate Template"}
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+           {activeAppSection === "links" && (
  <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in duration-200 overflow-hidden">
  {/* Add New Link */}
  {(() => {
@@ -2093,6 +2389,63 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
 
       {/* RIGHT COLUMN: STICKY SIMULATOR PREVIEW */}
       <PhonePreview mode="editor" data={previewData} />
+
+      {isSaveTemplateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl border border-zinc-200 p-6 w-full max-w-md mx-4 shadow-xl space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between">
+              <h3 className="font-extrabold text-lg text-zinc-950 flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-teal-500" />
+                {lang === "tr" ? "Şablon Olarak Kaydet" : "Save as Template"}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsSaveTemplateModalOpen(false)}
+                className="p-1 rounded-lg hover:bg-gray-100 text-zinc-500 transition-all cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSaveAsTemplateSubmit} className="space-y-4">
+              <div>
+                <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">
+                  {lang === "tr" ? "Şablon Adı" : "Template Name"}
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={templateSaveName}
+                  onChange={(e) => setTemplateSaveName(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-zinc-200 focus:border-teal-500/50 outline-none text-sm bg-zinc-50 text-zinc-900 font-medium"
+                  placeholder={lang === "tr" ? "Örn: Yaz Temam" : "e.g. My Summer Theme"}
+                />
+              </div>
+
+              {saveTemplateError && (
+                <p className="text-xs font-bold text-red-500">{saveTemplateError}</p>
+              )}
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsSaveTemplateModalOpen(false)}
+                  className="flex-1 py-3 rounded-xl border border-zinc-200 hover:bg-gray-50 text-zinc-700 font-bold text-sm transition-all cursor-pointer"
+                >
+                  {lang === "tr" ? "İptal" : "Cancel"}
+                </button>
+                <button
+                  type="submit"
+                  disabled={isPending || !templateSaveName.trim()}
+                  className="flex-1 py-3 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-black text-sm transition-all disabled:opacity-50 cursor-pointer shadow-md shadow-teal-500/10"
+                >
+                  {isPending ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : (lang === "tr" ? "Kaydet" : "Save")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

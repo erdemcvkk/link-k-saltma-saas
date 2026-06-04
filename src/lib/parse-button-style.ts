@@ -60,6 +60,25 @@ export interface ParsedButtonStyle {
 }
 
 export function parseButtonStyle(buttonStyleStr: string): ParsedButtonStyle {
+  if (buttonStyleStr && buttonStyleStr.trim().startsWith("{")) {
+    try {
+      const parsed = JSON.parse(buttonStyleStr);
+      if (parsed && typeof parsed === "object") {
+        return {
+          bgColor: parsed.bgColor || "",
+          textColor: parsed.textColor || "",
+          borderColor: parsed.borderColor || "",
+          borderStyle: parsed.borderStyle || "solid",
+          borderWidth: parsed.borderWidth || "1px",
+          borderRadius: parsed.borderRadius || "12px",
+          shadow: parsed.shadow || "none",
+          fontWeight: parsed.fontWeight || "font-bold",
+          animation: parsed.animation || ""
+        };
+      }
+    } catch (e) {}
+  }
+
   let bgColor = "";
   let textColor = "";
   let borderColor = "";
