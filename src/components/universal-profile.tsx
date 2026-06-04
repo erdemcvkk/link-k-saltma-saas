@@ -292,18 +292,18 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  let blockMeta: any = {};
  if (link.metadata) try { blockMeta = JSON.parse(link.metadata); } catch(e) {}
 
- const customStyle: React.CSSProperties = data.buttonClass ? {} : {
- backgroundColor: link.bgColor || undefined,
- color: link.textColor || undefined,
- borderColor: link.borderColor || undefined,
- borderStyle: link.borderStyle as any || undefined,
- borderWidth: link.borderWidth || undefined,
- borderRadius: link.borderRadius || undefined,
- boxShadow: link.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
- : link.shadow === "glow-emerald" ? "0 0 15px rgba(16,185,129,0.5)"
- : link.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
- : undefined
- };
+  const customStyle: React.CSSProperties = {
+  backgroundColor: link.bgColor || undefined,
+  color: link.textColor || undefined,
+  borderColor: link.borderColor || undefined,
+  borderStyle: link.borderStyle as any || undefined,
+  borderWidth: link.borderWidth || undefined,
+  borderRadius: link.borderRadius || undefined,
+  boxShadow: link.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
+  : link.shadow === "glow-emerald" ? "0 0 15px rgba(16,185,129,0.5)"
+  : link.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
+  : undefined
+  };
 
  const dynamicBlockClass = data.buttonClass 
  ? `link-item btn-link ${data.buttonClass} ${link.animation || ""} ${link.fontWeight || ""}`
