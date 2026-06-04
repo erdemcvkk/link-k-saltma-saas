@@ -82,7 +82,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  };
  default:
  // If it's a coded template, we force the baseline to dark/transparent to avoid a glaring white box in light mode.
- const effectiveDark = customCss ? true : isDark;
+ const effectiveDark = (customCss || theme !== "light") ? true : isDark;
  return {
  bg: effectiveDark ? "bg-black text-zinc-200" : "bg-zinc-50 text-zinc-800",
  cardBg: effectiveDark ? "bg-zinc-900/40 border-zinc-800" : "bg-white/60 border-white/20 backdrop-blur-md shadow-md",
