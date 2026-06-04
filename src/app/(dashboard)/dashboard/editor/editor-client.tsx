@@ -956,7 +956,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates }: Ed
                 </p>
               </div>
 
-              {ownedTemplates.length === 0 ? (
+              {ownedTemplates.filter(t => t.category === "Özel").length === 0 ? (
                 <div className="p-8 text-center rounded-2xl border border-dashed border-zinc-200 bg-white shadow-sm text-sm text-slate-500">
                   {lang === "tr" 
                     ? "Henüz kaydedilmiş bir özel şablonunuz bulunmuyor. Görünüm panelinden tasarımınızı özelleştirip 'Şablonu Kaydet' butonuyla şablon oluşturabilirsiniz." 
@@ -964,7 +964,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates }: Ed
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {ownedTemplates.map((tmpl) => {
+                  {ownedTemplates.filter(t => t.category === "Özel").map((tmpl) => {
                     const isSelected = activeTemplate?.id === tmpl.id || (tmpl.isActive);
                     let btnPreviewBg = "#ffffff";
                     let btnPreviewText = "#000000";
