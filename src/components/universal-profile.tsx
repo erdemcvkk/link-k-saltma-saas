@@ -541,41 +541,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
    case "ACADEMIA":
    case "Y2K":
    case "PREMIUM_CREATOR":
-     return (
-       <div key={addon.id} className={cardClassName}>
-         <div className="flex items-center gap-3">
-           <div className="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center shrink-0">
-             <Store className="h-5 w-5 text-indigo-500" />
-           </div>
-           <div>
-             <h4 className="text-sm font-bold text-slate-800">{configData.storeTitle || "Mağazam"}</h4>
-             <p className="text-xs opacity-70 mt-0.5">{configData.storeBio || "Ürünlerimi inceleyin"}</p>
-           </div>
-         </div>
-         {products && products.length > 0 ? (
-           <div className="grid grid-cols-2 gap-2 mt-2">
-             {products.slice(0, 2).map((p: any) => (
-               <div key={p.id} className="bg-black/5 p-2 rounded-xl flex flex-col justify-between border border-black/5">
-                 <div className="w-full aspect-square rounded-lg bg-zinc-250 overflow-hidden shrink-0">
-                   {p.imageUrl ? (
-                     <img src={p.imageUrl} alt={p.title} className="w-full h-full object-cover" />
-                   ) : (
-                     <div className="w-full h-full bg-zinc-300 flex items-center justify-center text-xs text-zinc-500">Shop</div>
-                   )}
-                 </div>
-                 <p className="text-[11px] font-bold truncate mt-1 text-slate-850">{p.title}</p>
-                 <p className="text-[10px] font-bold text-emerald-600 mt-0.5">{p.price} ₺</p>
-               </div>
-             ))}
-           </div>
-         ) : (
-           <p className="text-[11px] opacity-50">Henüz ürün bulunmuyor.</p>
-         )}
-         <div className={btnClassName}>
-           {configData.buyButtonText || "Mağazaya Git"}
-         </div>
-       </div>
-     );
+     return null;
    default:
      return null;
  }
