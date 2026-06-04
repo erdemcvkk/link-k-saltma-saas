@@ -718,7 +718,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  }`}
  >
  <Palette className="h-3.5 w-3.5 text-teal-500" />
- {lang === "tr" ? "GÃ¶rÃ¼nÃ¼m" : "Look"}
+ {lang === "tr" ? "Görünüm" : "Look"}
  </button>
  <button
  type="button"
@@ -741,10 +741,10 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
         {/* Vertical Sidebar */}
         <div className="w-[140px] md:w-[160px] shrink-0 border-r border-zinc-100 bg-gray-50/60 py-4 px-2 space-y-1">
           {([
-            { id: "theme" as const, label: "Åžablon", labelEn: "Theme", icon: <Palette className="h-4 w-4" /> },
+            { id: "theme" as const, label: "Şablon", labelEn: "Theme", icon: <Palette className="h-4 w-4" /> },
             { id: "links" as const, label: "Linkler", labelEn: "Links", icon: <Link2 className="h-4 w-4" /> },
             { id: "wallpaper" as const, label: "Arka Plan", labelEn: "Wallpaper", icon: <Image className="h-4 w-4" /> },
-            { id: "typography" as const, label: "YazÄ± Tipi", labelEn: "Text", icon: <Type className="h-4 w-4" /> },
+            { id: "typography" as const, label: "Yazı Tipi", labelEn: "Text", icon: <Type className="h-4 w-4" /> },
             { id: "buttons" as const, label: "Butonlar", labelEn: "Buttons", icon: <MousePointerClick className="h-4 w-4" /> },
             { id: "colors" as const, label: "Renkler", labelEn: "Colors", icon: <Sparkles className="h-4 w-4" /> }
           ]).map((item) => (
@@ -774,22 +774,22 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  {/* Add New Link */}
  {(() => {
  const LINK_TEMPLATES = [
- { id: "WEBSITE", name: lang === "tr" ? "Ä°nternet sitesi" : "Website", desc: lang === "tr" ? "Herhangi bir web sitesi URL'sine baÄŸlantÄ±" : "Link to any website URL", icon: Globe, tier: "FREE" },
- { id: "PDF", name: "PDF", desc: lang === "tr" ? "PDF gÃ¶ster" : "Display a PDF", icon: FileText, tier: "CREATOR" },
- { id: "LINK_LIST", name: lang === "tr" ? "BaÄŸlantÄ±larÄ±n Listesi" : "Link List", desc: lang === "tr" ? "Birden fazla baÄŸlantÄ± paylaÅŸÄ±n" : "Share multiple links", icon: List, tier: "CREATOR" },
- { id: "VCARD", name: "vCard", desc: lang === "tr" ? "Elektronik kartvizitinizi paylaÅŸÄ±n" : "Share contact vCard", icon: User, tier: "STARTER" },
- { id: "BUSINESS", name: lang === "tr" ? "Ä°ÅŸletme" : "Business", desc: lang === "tr" ? "Ä°ÅŸletmenizle ilgili bilgileri paylaÅŸÄ±n" : "Share business info", icon: Briefcase, tier: "CREATOR" },
- { id: "VIDEO", name: "Video", desc: lang === "tr" ? "Bir video gÃ¶ster" : "Display a video", icon: Play, tier: "STARTER" },
- { id: "IMAGES", name: lang === "tr" ? "GÃ¶rseller" : "Images", desc: lang === "tr" ? "Birden fazla gÃ¶rsel paylaÅŸÄ±n" : "Share multiple images", icon: Image, tier: "STARTER" },
- { id: "FACEBOOK", name: "Facebook", desc: lang === "tr" ? "Facebook sayfanÄ±zÄ± paylaÅŸÄ±n" : "Share Facebook page", icon: Globe, tier: "FREE" },
- { id: "INSTAGRAM", name: "Instagram", desc: lang === "tr" ? "Instagram'Ä±nÄ±zÄ± paylaÅŸÄ±n" : "Share Instagram page", icon: Globe, tier: "FREE" },
- { id: "SOCIAL_MEDIA", name: lang === "tr" ? "Sosyal medya" : "Social Media", desc: lang === "tr" ? "Sosyal kanallarÄ±nÄ±zÄ± paylaÅŸÄ±n" : "Share social channels", icon: MessageCircle, tier: "STARTER" },
- { id: "WHATSAPP", name: "WhatsApp", desc: lang === "tr" ? "WhatsApp mesajlarÄ±nÄ± alÄ±n" : "Receive WhatsApp messages", icon: MessageCircle, tier: "FREE" },
- { id: "MP3", name: "MP3", desc: lang === "tr" ? "Bir ses dosyasÄ± paylaÅŸ" : "Share an audio file", icon: Music, tier: "CREATOR" },
- { id: "MENU", name: lang === "tr" ? "MenÃ¼" : "Menu", desc: lang === "tr" ? "Bir restoran menÃ¼sÃ¼ oluÅŸturun" : "Create restaurant menu", icon: Utensils, tier: "CREATOR" },
- { id: "APPS", name: lang === "tr" ? "Uygulamalar" : "Apps", desc: lang === "tr" ? "Bir uygulama maÄŸazasÄ±na yÃ¶nlendir" : "Redirect to app store", icon: Smartphone, tier: "CREATOR" },
- { id: "COUPON", name: lang === "tr" ? "Kupon" : "Coupon", desc: lang === "tr" ? "Kupon paylaÅŸ" : "Share promotional coupons", icon: Percent, tier: "STARTER" },
- { id: "WIFI", name: "Wifi", desc: lang === "tr" ? "Bir Wi-Fi aÄŸÄ±na baÄŸlanÄ±n" : "Connect to a Wi-Fi network", icon: Wifi, tier: "FREE" },
+ { id: "WEBSITE", name: lang === "tr" ? "İnternet sitesi" : "Website", desc: lang === "tr" ? "Herhangi bir web sitesi URL'sine bağlantı" : "Link to any website URL", icon: Globe, tier: "FREE" },
+ { id: "PDF", name: "PDF", desc: lang === "tr" ? "PDF göster" : "Display a PDF", icon: FileText, tier: "CREATOR" },
+ { id: "LINK_LIST", name: lang === "tr" ? "Bağlantıların Listesi" : "Link List", desc: lang === "tr" ? "Birden fazla bağlantı paylaşın" : "Share multiple links", icon: List, tier: "CREATOR" },
+ { id: "VCARD", name: "vCard", desc: lang === "tr" ? "Elektronik kartvizitinizi paylaşın" : "Share contact vCard", icon: User, tier: "STARTER" },
+ { id: "BUSINESS", name: lang === "tr" ? "İşletme" : "Business", desc: lang === "tr" ? "İşletmenizle ilgili bilgileri paylaşın" : "Share business info", icon: Briefcase, tier: "CREATOR" },
+ { id: "VIDEO", name: "Video", desc: lang === "tr" ? "Bir video göster" : "Display a video", icon: Play, tier: "STARTER" },
+ { id: "IMAGES", name: lang === "tr" ? "Görseller" : "Images", desc: lang === "tr" ? "Birden fazla görsel paylaşın" : "Share multiple images", icon: Image, tier: "STARTER" },
+ { id: "FACEBOOK", name: "Facebook", desc: lang === "tr" ? "Facebook sayfanızı paylaşın" : "Share Facebook page", icon: Globe, tier: "FREE" },
+ { id: "INSTAGRAM", name: "Instagram", desc: lang === "tr" ? "Instagram'ınızı paylaşın" : "Share Instagram page", icon: Globe, tier: "FREE" },
+ { id: "SOCIAL_MEDIA", name: lang === "tr" ? "Sosyal medya" : "Social Media", desc: lang === "tr" ? "Sosyal kanallarınızı paylaşın" : "Share social channels", icon: MessageCircle, tier: "STARTER" },
+ { id: "WHATSAPP", name: "WhatsApp", desc: lang === "tr" ? "WhatsApp mesajlarını alın" : "Receive WhatsApp messages", icon: MessageCircle, tier: "FREE" },
+ { id: "MP3", name: "MP3", desc: lang === "tr" ? "Bir ses dosyası paylaş" : "Share an audio file", icon: Music, tier: "CREATOR" },
+ { id: "MENU", name: lang === "tr" ? "Menü" : "Menu", desc: lang === "tr" ? "Bir restoran menüsü oluşturun" : "Create restaurant menu", icon: Utensils, tier: "CREATOR" },
+ { id: "APPS", name: lang === "tr" ? "Uygulamalar" : "Apps", desc: lang === "tr" ? "Bir uygulama mağazasına yönlendir" : "Redirect to app store", icon: Smartphone, tier: "CREATOR" },
+ { id: "COUPON", name: lang === "tr" ? "Kupon" : "Coupon", desc: lang === "tr" ? "Kupon paylaş" : "Share promotional coupons", icon: Percent, tier: "STARTER" },
+ { id: "WIFI", name: "Wifi", desc: lang === "tr" ? "Bir Wi-Fi ağına bağlanın" : "Connect to a Wi-Fi network", icon: Wifi, tier: "FREE" },
  ];
 
  const userPlan = initialUser.plan || "FREE";
@@ -822,7 +822,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  }}
  className="px-3 py-2 rounded bg-gray-50 hover:bg-zinc-700 text-zinc-300 font-extrabold text-[10px] transition-all cursor-pointer"
  >
- {lang === "tr" ? "Åžablon SeÃ§imine DÃ¶n" : "Change Template"}
+ {lang === "tr" ? "Şablon Seçimine Dön" : "Change Template"}
  </button>
  )}
  </div>
@@ -832,7 +832,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  <div className="border-b pb-2 border-gray-100">
  <p className="text-xs text-slate-500 font-semibold">
  {lang === "tr" 
- ? "KreatÃ¶r profilinize Ã¶zel premium ÅŸablonlardan birini seÃ§erek baÅŸlayÄ±n."
+ ? "Kreatör profilinize özel premium şablonlardan birini seçerek başlayın."
  : "Start by selecting one of the premium green templates for your creator profile."}
  </p>
  </div>
@@ -848,9 +848,9 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  onClick={() => {
  if (!unlocked) {
  triggerUpgradeModal(
- lang === "tr" ? "Åžablon Kilitli ðŸ”’" : "Template Locked ðŸ”’",
+ lang === "tr" ? "Şablon Kilitli ðŸ”’" : "Template Locked ðŸ”’",
  lang === "tr"
- ? `Bu premium ÅŸablon (${tmpl.name}) sadece ${tmpl.tier} ve Ã¼zeri paketlerde kullanÄ±labilir. SÄ±nÄ±rlarÄ± kaldÄ±rmak iÃ§in yÃ¼kseltin!`
+ ? `Bu premium şablon (${tmpl.name}) sadece ${tmpl.tier} ve üzeri paketlerde kullanılabilir. Sınırları kaldırmak için yükseltin!`
  : `This premium template (${tmpl.name}) requires the ${tmpl.tier} plan or higher. Upgrade now to unlock!`
  );
  return;
@@ -902,7 +902,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  })()}
  </div>
  <div>
- <div className="text-xs font-black uppercase tracking-wider">{lang === "tr" ? "SeÃ§ilen Åžablon" : "Selected Template"}</div>
+ <div className="text-xs font-black uppercase tracking-wider">{lang === "tr" ? "Seçilen Şablon" : "Selected Template"}</div>
  <div className="text-sm font-extrabold">{LINK_TEMPLATES.find(t => t.id === linkSelectedTemplate)?.name}</div>
  </div>
  </div>
@@ -910,7 +910,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  <div className="grid grid-cols-1 gap-4">
  <div>
  <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">
- {lang === "tr" ? "BaÄŸlantÄ± BaÅŸlÄ±ÄŸÄ±" : "Link Title"}
+ {lang === "tr" ? "Bağlantı Başlığı" : "Link Title"}
  </label>
  <input
  type="text"
@@ -934,11 +934,11 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
  "bg-zinc-100 border-zinc-200 text-zinc-900"
  }`}
- placeholder="SSID (AÄŸ AdÄ±)"
+ placeholder="SSID (Ağ Adı)"
  />
  </div>
  <div>
- <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Wi-Fi Åžifresi" : "Wi-Fi Password"}</label>
+ <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Wi-Fi Şifresi" : "Wi-Fi Password"}</label>
  <input
  type="password"
  value={wifiPassword}
@@ -950,7 +950,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  />
  </div>
  <div>
- <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Åžifreleme" : "Encryption"}</label>
+ <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Şifreleme" : "Encryption"}</label>
  <select
  value={wifiEncryption}
  onChange={(e: any) => setWifiEncryption(e.target.value)}
@@ -960,7 +960,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  >
  <option value="WPA">WPA/WPA2</option>
  <option value="WEP">WEP</option>
- <option value="nopass">{lang === "tr" ? "Åžifresiz" : "Unsecured"}</option>
+ <option value="nopass">{lang === "tr" ? "Şifresiz" : "Unsecured"}</option>
  </select>
  </div>
  </div>
@@ -969,7 +969,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  {linkSelectedTemplate === "WHATSAPP" && (
  <div className="grid md:grid-cols-2 gap-4">
  <div>
- <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Telefon NumarasÄ±" : "Phone Number"}</label>
+ <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Telefon Numarası" : "Phone Number"}</label>
  <input
  type="text"
  value={whatsAppPhone}
@@ -981,7 +981,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  />
  </div>
  <div>
- <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "VarsayÄ±lan Mesaj" : "Default Message"}</label>
+ <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Varsayılan Mesaj" : "Default Message"}</label>
  <input
  type="text"
  value={whatsAppMessage}
@@ -989,7 +989,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  className={`w-full px-4 py-3 rounded-xl border focus:border-emerald-500/50 outline-none text-sm ${
  "bg-zinc-100 border-zinc-200 text-zinc-900"
  }`}
- placeholder={lang === "tr" ? "Ã–rn: Merhaba, bilgi almak istiyorum." : "e.g. Hi! I want more info."}
+ placeholder={lang === "tr" ? "Örn: Merhaba, bilgi almak istiyorum." : "e.g. Hi! I want more info."}
  />
  </div>
  </div>
@@ -1034,7 +1034,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  />
  </div>
  <div>
- <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Åžirket / Organizasyon" : "Company / Org"}</label>
+ <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Şirket / Organizasyon" : "Company / Org"}</label>
  <input
  type="text"
  value={vCardOrg}
@@ -1046,7 +1046,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  />
  </div>
  <div>
- <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Ãœnvan" : "Job Title"}</label>
+ <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">{lang === "tr" ? "Ünvan" : "Job Title"}</label>
  <input
  type="text"
  value={vCardTitle}
@@ -1076,7 +1076,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  <div className="grid grid-cols-1 gap-4">
  <div>
  <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">
- {lang === "tr" ? "GeliÅŸmiÅŸ Ä°Ã§erik KartÄ± TÃ¼rÃ¼" : "Advanced Content Block Type"}
+ {lang === "tr" ? "Gelişmiş İçerik Kartı Türü" : "Advanced Content Block Type"}
  </label>
  <select
  value={blockType}
@@ -1088,10 +1088,10 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  "bg-zinc-100 border-zinc-200 text-zinc-900"
  }`}
  >
- <option value="TEXT_LINK">ðŸ”— {lang === "tr" ? "Standart BaÄŸlantÄ± (Text)" : "Standard Link"}</option>
- <option value="VIDEO_PLAYER">ðŸŽ¬ {lang === "tr" ? "Sinematik Video Blok" : "Cinematic Video"}</option>
- <option value="AUDIO_PLAYER">ðŸŽµ {lang === "tr" ? "Ses / Beat OynatÄ±cÄ±" : "Audio / Beat Player"}</option>
- <option value="BEFORE_AFTER">â†•ï¸ {lang === "tr" ? "Ã–nce/Sonra GÃ¶rsel KarÅŸÄ±laÅŸtÄ±rma" : "Before/After Image Comparison"}</option>
+ <option value="TEXT_LINK">ðŸ”— {lang === "tr" ? "Standart Bağlantı (Text)" : "Standard Link"}</option>
+ <option value="VIDEO_PLAYER">🎬 {lang === "tr" ? "Sinematik Video Blok" : "Cinematic Video"}</option>
+ <option value="AUDIO_PLAYER">ðŸŽµ {lang === "tr" ? "Ses / Beat Oynatıcı" : "Audio / Beat Player"}</option>
+ <option value="BEFORE_AFTER">â†•ï¸ {lang === "tr" ? "Önce/Sonra Görsel Karşılaştırma" : "Before/After Image Comparison"}</option>
  </select>
  </div>
  </div>
@@ -1101,7 +1101,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  <div className="grid md:grid-cols-2 gap-4 p-4 rounded-xl border border-dashed border-gray-100 bg-white">
  <div>
  <label className="text-[10px] text-teal-500 uppercase tracking-wider font-extrabold block mb-1">
- {lang === "tr" ? "Ã–nceki GÃ¶rsel (Before - Sol)" : "Before Image (Left)"}
+ {lang === "tr" ? "Önceki Görsel (Before - Sol)" : "Before Image (Left)"}
  </label>
  {beforeImage ? (
  <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-100 bg-gray-50 mb-2">
@@ -1122,7 +1122,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  const file = e.target.files?.[0];
  if (file) {
  if (file.size > 1024 * 1024) { // 1MB limit for starter plans
- setBlockFileError(lang === "tr" ? "GÃ¶rsel boyutu 1MB'Ä± aÅŸamaz!" : "Image size must not exceed 1MB!");
+ setBlockFileError(lang === "tr" ? "Görsel boyutu 1MB'ı aşamaz!" : "Image size must not exceed 1MB!");
  return;
  }
  const reader = new FileReader();
@@ -1139,7 +1139,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
 
  <div>
  <label className="text-[10px] text-teal-500 uppercase tracking-wider font-extrabold block mb-1">
- {lang === "tr" ? "Sonraki GÃ¶rsel (After - SaÄŸ)" : "After Image (Right)"}
+ {lang === "tr" ? "Sonraki Görsel (After - Sağ)" : "After Image (Right)"}
  </label>
  {afterImage ? (
  <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-100 bg-gray-50 mb-2">
@@ -1160,7 +1160,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  const file = e.target.files?.[0];
  if (file) {
  if (file.size > 1024 * 1024) {
- setBlockFileError(lang === "tr" ? "GÃ¶rsel boyutu 1MB'Ä± aÅŸamaz!" : "Image size must not exceed 1MB!");
+ setBlockFileError(lang === "tr" ? "Görsel boyutu 1MB'ı aşamaz!" : "Image size must not exceed 1MB!");
  return;
  }
  const reader = new FileReader();
@@ -1185,9 +1185,9 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  <div>
  <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1">
  {blockType === "VIDEO_PLAYER" 
- ? (lang === "tr" ? "Video PaylaÅŸÄ±m BaÄŸlantÄ±sÄ± (Youtube / Vimeo / Direct URL)" : "Video Showcase Link (Youtube / Vimeo / Direct URL)")
+ ? (lang === "tr" ? "Video Paylaşım Bağlantısı (Youtube / Vimeo / Direct URL)" : "Video Showcase Link (Youtube / Vimeo / Direct URL)")
  : blockType === "AUDIO_PLAYER"
- ? (lang === "tr" ? "MÃ¼zik / Beat Ses Linki (MP3/WAV/DataURL)" : "Audio / Beat Sound Link (MP3/WAV/DataURL)")
+ ? (lang === "tr" ? "Müzik / Beat Ses Linki (MP3/WAV/DataURL)" : "Audio / Beat Sound Link (MP3/WAV/DataURL)")
  : (lang === "tr" ? "Hedef URL Adresi" : "Target URL Link")
  }
  </label>
@@ -1210,7 +1210,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
 
  <div className="pt-2 pb-3">
  <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-2">
- {lang === "tr" ? "Ä°kon SeÃ§imi" : "Icon Selection"}
+ {lang === "tr" ? "İkon Seçimi" : "Icon Selection"}
  </label>
  <div className="flex flex-wrap gap-2">
  {[
@@ -1338,7 +1338,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  onClick={() => {
  if (!isUnlocked) {
  setErrorMsg(lang === "tr" 
- ? `Bu animasyon ${anim.tier} paketine Ã¶zeldir. LÃ¼tfen paketinizi yÃ¼kseltin!` 
+ ? `Bu animasyon ${anim.tier} paketine özeldir. Lütfen paketinizi yükseltin!` 
  : `This animation requires the ${anim.tier} plan. Please upgrade to unlock!`
  );
  return;
@@ -1370,7 +1370,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  <div className="flex items-center gap-1.5">
  <Palette className="h-3.5 w-3.5 text-teal-500" />
  <span className={`text-[10px] uppercase font-black tracking-wider ${"text-zinc-655"}`}>
- {lang === "tr" ? "KUTU TASARIM Ã–ZELLEÅžTÄ°RME" : "BOX STYLING CUSTOMIZATION"}
+ {lang === "tr" ? "KUTU TASARIM ÖZELLEŞTİRME" : "BOX STYLING CUSTOMIZATION"}
  </span>
  {simulatedPlan === "FREE" && initialUser.role !== "ADMIN" && (
  <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-purple-100 text-teal-500 uppercase flex items-center gap-0.5 animate-pulse">
@@ -1380,14 +1380,14 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  )}
  </div>
  <span className="text-[9px] text-slate-500">
- {lang === "tr" ? "(Starter ve Creator Paketleri Ä°Ã§in)" : "(For Starter & Creator Plans)"}
+ {lang === "tr" ? "(Starter ve Creator Paketleri İçin)" : "(For Starter & Creator Plans)"}
  </span>
  </div>
 
  {/* 1-Click Preset Themes */}
  <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-white border border-gray-100">
  <span className="text-[9px] font-extrabold text-slate-500 uppercase tracking-wider block">
- {lang === "tr" ? "âš¡ Tek TÄ±kla HazÄ±r Temalar" : "âš¡ 1-Click Preset Themes"}
+ {lang === "tr" ? "âš¡ Tek Tıkla Hazır Temalar" : "âš¡ 1-Click Preset Themes"}
  </span>
  <div className="flex flex-wrap gap-2 mt-1">
  {[
@@ -1403,7 +1403,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  fontWeight: "font-bold",
  },
  {
- name: lang === "tr" ? "Siber YeÅŸil" : "Cyber Emerald",
+ name: lang === "tr" ? "Siber Yeşil" : "Cyber Emerald",
  bgColor: "#000000",
  textColor: "#10b981",
  borderColor: "#10b981",
@@ -1436,7 +1436,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  fontWeight: "font-medium",
  },
  {
- name: lang === "tr" ? "Lavanta RÃ¼yasÄ±" : "Lavender Dream",
+ name: lang === "tr" ? "Lavanta Rüyası" : "Lavender Dream",
  bgColor: "#f3e8ff",
  textColor: "#6b21a8",
  borderColor: "#d8b4fe",
@@ -1461,17 +1461,17 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  </div>
  </div>
 
- {/* HazÄ±r Renk Paleti KombinasyonlarÄ± */}
+ {/* Hazır Renk Paleti Kombinasyonları */}
  <div className="flex flex-col gap-2">
  <div className="flex items-center gap-1.5">
  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
- ðŸŽ¨ {lang === "tr" ? "HazÄ±r Renk Paleti ÅžablonlarÄ±" : "Preset Color Palettes"}
+ ðŸŽ¨ {lang === "tr" ? "Hazır Renk Paleti Şablonları" : "Preset Color Palettes"}
  </span>
  </div>
  <div className="flex flex-wrap gap-2">
  {[
  {
- name: lang === "tr" ? "Okyanus RÃ¼zgarÄ±" : "Ocean Breeze",
+ name: lang === "tr" ? "Okyanus Rüzgarı" : "Ocean Breeze",
  bgColor: "#0ea5e9",
  textColor: "#ffffff",
  borderColor: "#38bdf8",
@@ -1483,7 +1483,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  borderColor: "#10b981",
  },
  {
- name: lang === "tr" ? "Kiraz Ã‡iÃ§eÄŸi" : "Cherry Blossom",
+ name: lang === "tr" ? "Kiraz Çiçeği" : "Cherry Blossom",
  bgColor: "#fdf2f8",
  textColor: "#be185d",
  borderColor: "#fbcfe8",
@@ -1561,14 +1561,14 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  {link.bgColor === "transparent" && <div className="absolute inset-0 bg-[linear-gradient(45deg,#ccc_25%,transparent_25%),linear-gradient(-45deg,#ccc_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#ccc_75%),linear-gradient(-45deg,transparent_75%,#ccc_75%)] bg-[size:8px_8px] bg-[position:0_0,0_4px,4px_-4px,-4px_0]" />}
  </div>
  <div className="flex flex-col">
- <span className="text-[10px] font-mono font-bold text-slate-500 uppercase">{link.bgColor || (lang === "tr" ? "VarsayÄ±lan" : "Default")}</span>
+ <span className="text-[10px] font-mono font-bold text-slate-500 uppercase">{link.bgColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
  <button
  type="button"
  disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
  onClick={() => handleUpdateLinkStyle(link.id, "bgColor", null)}
  className="text-[9px] font-bold text-teal-500 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
  >
- {lang === "tr" ? "SÄ±fÄ±rla" : "Reset"}
+ {lang === "tr" ? "Sıfırla" : "Reset"}
  </button>
  </div>
  </div>
@@ -1609,14 +1609,14 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  />
  </div>
  <div className="flex flex-col">
- <span className="text-[10px] font-mono font-bold text-slate-500 uppercase">{link.textColor || (lang === "tr" ? "VarsayÄ±lan" : "Default")}</span>
+ <span className="text-[10px] font-mono font-bold text-slate-500 uppercase">{link.textColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
  <button
  type="button"
  disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
  onClick={() => handleUpdateLinkStyle(link.id, "textColor", null)}
  className="text-[9px] font-bold text-teal-500 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
  >
- {lang === "tr" ? "SÄ±fÄ±rla" : "Reset"}
+ {lang === "tr" ? "Sıfırla" : "Reset"}
  </button>
  </div>
  </div>
@@ -1642,7 +1642,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  {/* Border Color Customization */}
  <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-gray-50 border border-gray-100">
  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
- {lang === "tr" ? "KenarlÄ±k Rengi" : "Border Color"}
+ {lang === "tr" ? "Kenarlık Rengi" : "Border Color"}
  </label>
  <div className="flex items-center gap-2">
  <div className="relative h-8 w-8 rounded-full border border-zinc-700 overflow-hidden cursor-pointer flex items-center justify-center bg-zinc-850 shadow-sm hover:scale-105 transition-transform" style={{ backgroundColor: link.borderColor || "#e4e4e7" }}>
@@ -1655,14 +1655,14 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  />
  </div>
  <div className="flex flex-col">
- <span className="text-[10px] font-mono font-bold text-slate-500 uppercase">{link.borderColor || (lang === "tr" ? "VarsayÄ±lan" : "Default")}</span>
+ <span className="text-[10px] font-mono font-bold text-slate-500 uppercase">{link.borderColor || (lang === "tr" ? "Varsayılan" : "Default")}</span>
  <button
  type="button"
  disabled={simulatedPlan === "FREE" && initialUser.role !== "ADMIN"}
  onClick={() => handleUpdateLinkStyle(link.id, "borderColor", null)}
  className="text-[9px] font-bold text-teal-500 hover:text-purple-300 underline text-left disabled:opacity-50 cursor-pointer"
  >
- {lang === "tr" ? "SÄ±fÄ±rla" : "Reset"}
+ {lang === "tr" ? "Sıfırla" : "Reset"}
  </button>
  </div>
  </div>
@@ -1691,7 +1691,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  {/* Border Style */}
  <div className="flex flex-col gap-1.5">
  <label className="text-[9px] font-extrabold text-zinc-450 uppercase tracking-wider">
- {lang === "tr" ? "KenarlÄ±k Stili" : "Border Style"}
+ {lang === "tr" ? "Kenarlık Stili" : "Border Style"}
  </label>
  <select
  value={link.borderStyle || "solid"}
@@ -1699,10 +1699,10 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  onChange={(e) => handleUpdateLinkStyle(link.id, "borderStyle", e.target.value)}
  className="text-[10px] font-bold py-2.5 md:py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
  >
- <option value="solid">{lang === "tr" ? "DÃ¼z (Solid)" : "Solid"}</option>
+ <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
  <option value="dashed">{lang === "tr" ? "Kesikli (Dashed)" : "Dashed"}</option>
- <option value="dotted">{lang === "tr" ? "NoktalÄ± (Dotted)" : "Dotted"}</option>
- <option value="double">{lang === "tr" ? "Ã‡ift (Double)" : "Double"}</option>
+ <option value="dotted">{lang === "tr" ? "Noktalı (Dotted)" : "Dotted"}</option>
+ <option value="double">{lang === "tr" ? "Çift (Double)" : "Double"}</option>
  <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
  </select>
  </div>
@@ -1710,7 +1710,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  {/* Border Width */}
  <div className="flex flex-col gap-1.5">
  <label className="text-[9px] font-extrabold text-zinc-455 uppercase tracking-wider">
- {lang === "tr" ? "KenarlÄ±k KalÄ±nlÄ±ÄŸÄ±" : "Border Width"}
+ {lang === "tr" ? "Kenarlık Kalınlığı" : "Border Width"}
  </label>
  <select
  value={link.borderWidth || "1px"}
@@ -1728,7 +1728,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  {/* Border Radius */}
  <div className="flex flex-col gap-1.5">
  <label className="text-[9px] font-extrabold text-zinc-455 uppercase tracking-wider">
- {lang === "tr" ? "KÃ¶ÅŸe YumuÅŸaklÄ±ÄŸÄ±" : "Border Radius"}
+ {lang === "tr" ? "Köşe Yumuşaklığı" : "Border Radius"}
  </label>
  <select
  value={link.borderRadius || "12px"}
@@ -1747,7 +1747,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  {/* Box Shadow Effect */}
  <div className="flex flex-col gap-1.5">
  <label className="text-[9px] font-extrabold text-zinc-455 uppercase tracking-wider">
- {lang === "tr" ? "GÃ¶lge Efekti" : "Shadow Effect"}
+ {lang === "tr" ? "Gölge Efekti" : "Shadow Effect"}
  </label>
  <select
  value={link.shadow || "none"}
@@ -1755,18 +1755,18 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  onChange={(e) => handleUpdateLinkStyle(link.id, "shadow", e.target.value)}
  className="text-[10px] font-bold py-2.5 md:py-2 px-2.5 rounded-lg border focus:outline-none focus:ring-1 focus:ring-teal-500 bg-gray-50 border-gray-100 text-slate-900 disabled:opacity-50 cursor-pointer"
  >
- <option value="none">{lang === "tr" ? "GÃ¶lgesiz" : "No Shadow"}</option>
- <option value="soft">{lang === "tr" ? "YumuÅŸak GÃ¶lge" : "Soft Shadow"}</option>
- <option value="hard-3d">{lang === "tr" ? "Retro 3D GÃ¶lge" : "Retro 3D Shadow"}</option>
- <option value="glow-purple">{lang === "tr" ? "Neon Mor IÅŸÄ±ma" : "Neon Purple Glow"}</option>
- <option value="glow-emerald">{lang === "tr" ? "Neon YeÅŸil IÅŸÄ±ma" : "Neon Emerald Glow"}</option>
+ <option value="none">{lang === "tr" ? "Gölgesiz" : "No Shadow"}</option>
+ <option value="soft">{lang === "tr" ? "Yumuşak Gölge" : "Soft Shadow"}</option>
+ <option value="hard-3d">{lang === "tr" ? "Retro 3D Gölge" : "Retro 3D Shadow"}</option>
+ <option value="glow-purple">{lang === "tr" ? "Neon Mor Işıma" : "Neon Purple Glow"}</option>
+ <option value="glow-emerald">{lang === "tr" ? "Neon Yeşil Işıma" : "Neon Emerald Glow"}</option>
  </select>
  </div>
 
  {/* Font Weight Style */}
  <div className="flex flex-col gap-1.5">
  <label className="text-[9px] font-extrabold text-zinc-455 uppercase tracking-wider">
- {lang === "tr" ? "YazÄ± KalÄ±nlÄ±ÄŸÄ±" : "Font Weight"}
+ {lang === "tr" ? "Yazı Kalınlığı" : "Font Weight"}
  </label>
  <select
  value={link.fontWeight || "font-bold"}
@@ -1776,7 +1776,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  >
  <option value="font-normal">{lang === "tr" ? "Normal" : "Normal"}</option>
  <option value="font-medium">{lang === "tr" ? "Orta (Medium)" : "Medium"}</option>
- <option value="font-bold">{lang === "tr" ? "KalÄ±n (Bold)" : "Bold"}</option>
+ <option value="font-bold">{lang === "tr" ? "Kalın (Bold)" : "Bold"}</option>
  </select>
  </div>
  </div>
@@ -1794,41 +1794,41 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  {activeAppSection === "typography" && (
  <div className="space-y-6 animate-in fade-in duration-150">
  <div>
- <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "YazÄ± Tipi" : "Typography"}</h3>
- <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "KreatÃ¶r profilinizin ve baÄŸlantÄ± kartlarÄ±nÄ±zÄ±n yazÄ± tipini seÃ§in." : "Choose the typography style for your profile and link cards."}</p>
+ <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Yazı Tipi" : "Typography"}</h3>
+ <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Kreatör profilinizin ve bağlantı kartlarınızın yazı tipini seçin." : "Choose the typography style for your profile and link cards."}</p>
  </div>
  <div className="space-y-2">
- <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "YazÄ± Tipi SeÃ§in" : "Select Font"}</label>
+ <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Yazı Tipi Seçin" : "Select Font"}</label>
  <select value={fontStyle} onChange={(e) => {
  const selectedVal = e.target.value;
  const selected = initialFonts.find(f => f.value === selectedVal);
  if (selected) {
  const locked = (selected.tier === "STARTER" && simulatedPlan === "FREE") || (selected.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS");
- if (locked) { setErrorMsg(lang === "tr" ? `ðŸ”’ "${selected.name}" yazÄ± tipi planÄ±nÄ±zda kilitlidir.` : `ðŸ”’ "${selected.name}" is locked on your plan.`); setSuccessMsg(""); } else { setErrorMsg(""); }
+ if (locked) { setErrorMsg(lang === "tr" ? `ðŸ”’ "${selected.name}" yazı tipi planınızda kilitlidir.` : `ðŸ”’ "${selected.name}" is locked on your plan.`); setSuccessMsg(""); } else { setErrorMsg(""); }
  setFontStyle(selectedVal);
  }
  }} className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none text-sm font-semibold text-slate-900 bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all">
- <optgroup label={lang === "tr" ? "Ãœcretsiz (FREE)" : "Free Fonts (FREE)"}>{initialFonts.filter(f => f.tier === "FREE").map(f => (<option key={f.value} value={f.value}>{f.giftLabel ? `â­ ${f.name} (${f.giftLabel})` : f.name}</option>))}</optgroup>
+ <optgroup label={lang === "tr" ? "Ücretsiz (FREE)" : "Free Fonts (FREE)"}>{initialFonts.filter(f => f.tier === "FREE").map(f => (<option key={f.value} value={f.value}>{f.giftLabel ? `â­ ${f.name} (${f.giftLabel})` : f.name}</option>))}</optgroup>
  <optgroup label={lang === "tr" ? "Starter (STARTER)" : "Starter (STARTER)"}>{initialFonts.filter(f => f.tier === "STARTER").map(f => (<option key={f.value} value={f.value}>{simulatedPlan === "FREE" ? "ðŸ”’ " : ""}{f.name}</option>))}</optgroup>
  <optgroup label={lang === "tr" ? "Creator (CREATOR)" : "Creator (CREATOR)"}>{initialFonts.filter(f => f.tier === "CREATOR").map(f => (<option key={f.value} value={f.value}>{(initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS") ? "ðŸ”’ " : ""}{f.name}</option>))}</optgroup>
  </select>
  </div>
  <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 text-center space-y-2">
- <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block">{lang === "tr" ? "CanlÄ± Ã–nizleme" : "Live Preview"}</span>
+ <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block">{lang === "tr" ? "Canlı Önizleme" : "Live Preview"}</span>
  <div style={{ fontFamily: fontStyle }} className="text-xl md:text-2xl py-2 font-bold text-slate-800 tracking-tight">Abcde 12345 â€” {fontStyle}</div>
- <p style={{ fontFamily: fontStyle }} className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">{lang === "tr" ? "HÄ±zlÄ± kahverengi tilki tembel kÃ¶peÄŸin Ã¼stÃ¼nden atlar." : "The quick brown fox jumps over the lazy dog."}</p>
+ <p style={{ fontFamily: fontStyle }} className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">{lang === "tr" ? "Hızlı kahverengi tilki tembel köpeğin üstünden atlar." : "The quick brown fox jumps over the lazy dog."}</p>
  </div>
  {(() => {
  const activeFont = initialFonts.find(f => f.value === fontStyle);
  const locked = activeFont && ((activeFont.tier === "STARTER" && simulatedPlan === "FREE") || (activeFont.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS"));
  if (!locked || !activeFont) return null;
  return (<div className="p-4 rounded-xl bg-amber-50 border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
- <div className="space-y-1"><span className="text-xs font-bold text-amber-700 flex items-center gap-1.5"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "Plan YÃ¼kseltme Gerekli" : "Upgrade Required"}</span><p className="text-[11px] text-slate-600 font-medium">{lang === "tr" ? `"${activeFont.name}" ${activeFont.tier} paketine Ã¶zeldir.` : `"${activeFont.name}" is exclusive to ${activeFont.tier}.`}</p></div>
- <Link href="/dashboard/billing" className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-lg transition-all whitespace-nowrap">{lang === "tr" ? "YÃ¼kselt" : "Upgrade"}</Link>
+ <div className="space-y-1"><span className="text-xs font-bold text-amber-700 flex items-center gap-1.5"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "Plan Yükseltme Gerekli" : "Upgrade Required"}</span><p className="text-[11px] text-slate-600 font-medium">{lang === "tr" ? `"${activeFont.name}" ${activeFont.tier} paketine özeldir.` : `"${activeFont.name}" is exclusive to ${activeFont.tier}.`}</p></div>
+ <Link href="/dashboard/billing" className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-lg transition-all whitespace-nowrap">{lang === "tr" ? "Yükselt" : "Upgrade"}</Link>
  </div>);
  })()}
  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
- <div className="space-y-0.5"><div className="text-xs font-bold text-slate-700 flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-teal-500" />{lang === "tr" ? "Plan SimÃ¼latÃ¶rÃ¼" : "Plan Simulator"}</div></div>
+ <div className="space-y-0.5"><div className="text-xs font-bold text-slate-700 flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-teal-500" />{lang === "tr" ? "Plan Simülatörü" : "Plan Simulator"}</div></div>
  <div className="flex gap-1.5">{["FREE", "STARTER", "CREATOR"].filter((p) => { if (initialUser.plan === "FREE") return p === "FREE"; if (initialUser.plan === "STARTER") return p === "FREE" || p === "STARTER"; return true; }).map((p) => (
  <button key={p} type="button" onClick={() => setSimulatedPlan(p)} className={`px-3 py-2 rounded-lg text-[11px] font-bold transition-all border cursor-pointer ${simulatedPlan === p ? "bg-teal-500 border-teal-500 text-white shadow-sm" : "bg-white border-gray-200 text-slate-600 hover:bg-gray-50"}`}>{p}</button>
  ))}</div>
@@ -1842,67 +1842,67 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  <div className="flex items-center justify-between">
  <div>
  <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Arka Plan" : "Wallpaper"}</h3>
- <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Profil sayfanÄ±zÄ±n arka plan gradyanÄ±nÄ± veya gÃ¶rselini seÃ§in." : "Choose a background gradient or image."}</p>
+ <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Profil sayfanızın arka plan gradyanını veya görselini seçin." : "Choose a background gradient or image."}</p>
  </div>
- {background && (<button onClick={() => setBackground("")} className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-slate-600 font-bold text-[11px] transition-all cursor-pointer">{lang === "tr" ? "SÄ±fÄ±rla" : "Reset"}</button>)}
+ {background && (<button onClick={() => setBackground("")} className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-slate-600 font-bold text-[11px] transition-all cursor-pointer">{lang === "tr" ? "Sıfırla" : "Reset"}</button>)}
  </div>
 
  {simulatedPlan === "FREE" && (
  <div className="space-y-4">
- <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Ãœcretsiz Arka Planlar" : "Free Backgrounds"} <span className="text-slate-400 font-normal text-xs">(5)</span></label>
+ <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Ücretsiz Arka Planlar" : "Free Backgrounds"} <span className="text-slate-400 font-normal text-xs">(5)</span></label>
  <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{FREE_BACKGROUNDS.map((bg: any) => (
  <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
  <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
  ))}</div>
  <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
- <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-600"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Ã–zel FotoÄŸraf YÃ¼kle" : "Custom Photo"}<span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-[8px] text-amber-600 uppercase tracking-wide font-black"><Lock className="h-2 w-2" /> PREMIUM</span></div></div>
- <button type="button" onClick={() => triggerUpgradeModal(lang === "tr" ? "Ã–zel Arka Plan Kilidi ðŸ”’" : "Custom Background Locked ðŸ”’", lang === "tr" ? "Kendi Ã¶zel resimlerinizi veya videolarÄ±nÄ±zÄ± arka plan olarak kullanmak Premium pakete Ã¶zeldir." : "Custom backgrounds are exclusive to Premium plans.")} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs transition-all cursor-pointer"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "YÃ¼kselt" : "Upgrade"}</button>
+ <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-600"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}<span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-[8px] text-amber-600 uppercase tracking-wide font-black"><Lock className="h-2 w-2" /> PREMIUM</span></div></div>
+ <button type="button" onClick={() => triggerUpgradeModal(lang === "tr" ? "Özel Arka Plan Kilidi ðŸ”’" : "Custom Background Locked ðŸ”’", lang === "tr" ? "Kendi özel resimlerinizi veya videolarınızı arka plan olarak kullanmak Premium pakete özeldir." : "Custom backgrounds are exclusive to Premium plans.")} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs transition-all cursor-pointer"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "Yükselt" : "Upgrade"}</button>
  </div>
  </div>
  )}
 
  {simulatedPlan === "STARTER" && (
  <div className="space-y-4">
- <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Starter Arka PlanlarÄ±" : "Starter Backgrounds"} <span className="text-slate-400 font-normal text-xs">(10)</span></label>
+ <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Starter Arka Planları" : "Starter Backgrounds"} <span className="text-slate-400 font-normal text-xs">(10)</span></label>
  <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{STARTER_BACKGROUNDS.map((bg: any) => (
  <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
  <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
  ))}</div>
  <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center gap-4">
- <div className="flex-1 space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-700"><Image className="h-3.5 w-3.5 text-indigo-500" />{lang === "tr" ? "Ã–zel FotoÄŸraf YÃ¼kle" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG veya JPEG â€” Maks. 1 MB" : "PNG or JPEG â€” Max 1 MB"}</p>{customBgError && (<p className="text-[10px] text-red-500 font-bold mt-1">{customBgError}</p>)}</div>
- <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "FotoÄŸraf SeÃ§" : "Choose Photo"}
- <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "Dosya boyutu 1 MB'Ä± geÃ§emez!" : "File must be under 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
- {background?.startsWith("custom-img::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer">âœ• {lang === "tr" ? "KaldÄ±r" : "Remove"}</button>)}
+ <div className="flex-1 space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-700"><Image className="h-3.5 w-3.5 text-indigo-500" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG veya JPEG â€” Maks. 1 MB" : "PNG or JPEG â€” Max 1 MB"}</p>{customBgError && (<p className="text-[10px] text-red-500 font-bold mt-1">{customBgError}</p>)}</div>
+ <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
+ <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "Dosya boyutu 1 MB'ı geçemez!" : "File must be under 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
+ {background?.startsWith("custom-img::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
  </div>
  </div>
  )}
 
  {(simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS") && (
  <div className="space-y-4">
- <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Creator Arka PlanlarÄ±" : "Creator Backgrounds"} <span className="text-slate-400 font-normal text-xs">(20)</span></label>
+ <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Creator Arka Planları" : "Creator Backgrounds"} <span className="text-slate-400 font-normal text-xs">(20)</span></label>
  <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{[...STARTER_BACKGROUNDS, ...CREATOR_BACKGROUNDS].map((bg) => (
  <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
  <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
  ))}</div>
  <div className="grid sm:grid-cols-2 gap-3">
  <div className="p-4 rounded-2xl border border-dashed border-purple-200 bg-purple-50/30 flex flex-col gap-3">
- <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-purple-700"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Ã–zel FotoÄŸraf" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG / JPEG / WebP â€” Maks. 1 MB" : "Max 1 MB"}</p>{customBgError && customBgError.includes("foto") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
- <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-purple-200 bg-purple-100 hover:bg-purple-200 text-purple-800 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "FotoÄŸraf SeÃ§" : "Choose Photo"}
- <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "ðŸ“· FotoÄŸraf 1 MB sÄ±nÄ±rÄ±nÄ± aÅŸÄ±yor!" : "ðŸ“· Photo exceeds 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
- {background?.startsWith("custom-img::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer text-center">âœ• {lang === "tr" ? "KaldÄ±r" : "Remove"}</button>)}
+ <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-purple-700"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG / JPEG / WebP â€” Maks. 1 MB" : "Max 1 MB"}</p>{customBgError && customBgError.includes("foto") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
+ <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-purple-200 bg-purple-100 hover:bg-purple-200 text-purple-800 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
+ <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "ðŸ“· Fotoğraf 1 MB sınırını aşıyor!" : "ðŸ“· Photo exceeds 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
+ {background?.startsWith("custom-img::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer text-center">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
  </div>
  <div className="p-4 rounded-2xl border border-dashed border-amber-200 bg-amber-50/30 flex flex-col gap-3">
- <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-amber-700"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Ã–zel Video" : "Custom Video"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "MP4 / WebM â€” Maks. 5 MB" : "Max 5 MB"}</p>{customBgError && customBgError.includes("video") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
- <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-100 hover:bg-amber-200 text-amber-800 cursor-pointer font-bold text-xs transition-all"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Video SeÃ§" : "Choose Video"}
- <input type="file" accept="video/mp4,video/webm" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 5 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "ðŸŽ¬ Video 5 MB sÄ±nÄ±rÄ±nÄ± aÅŸÄ±yor!" : "ðŸŽ¬ Video exceeds 5 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-video::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
- {background?.startsWith("custom-video::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer text-center">âœ• {lang === "tr" ? "KaldÄ±r" : "Remove"}</button>)}
+ <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-amber-700"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Video" : "Custom Video"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "MP4 / WebM â€” Maks. 5 MB" : "Max 5 MB"}</p>{customBgError && customBgError.includes("video") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
+ <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-100 hover:bg-amber-200 text-amber-800 cursor-pointer font-bold text-xs transition-all"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Video Seç" : "Choose Video"}
+ <input type="file" accept="video/mp4,video/webm" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 5 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "🎬 Video 5 MB sınırını aşıyor!" : "🎬 Video exceeds 5 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-video::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
+ {background?.startsWith("custom-video::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer text-center">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
  </div>
  </div>
  </div>
  )}
 
  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
- <div className="text-xs font-bold text-slate-700 flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-teal-500" />{lang === "tr" ? "Plan SimÃ¼latÃ¶rÃ¼" : "Plan Simulator"}</div>
+ <div className="text-xs font-bold text-slate-700 flex items-center gap-1.5"><Sparkles className="h-3.5 w-3.5 text-teal-500" />{lang === "tr" ? "Plan Simülatörü" : "Plan Simulator"}</div>
  <div className="flex gap-1.5">{["FREE", "STARTER", "CREATOR"].filter((p) => { if (initialUser.plan === "FREE") return p === "FREE"; if (initialUser.plan === "STARTER") return p === "FREE" || p === "STARTER"; return true; }).map((p) => (
  <button key={p} type="button" onClick={() => setSimulatedPlan(p)} className={`px-3 py-2 rounded-lg text-[11px] font-bold transition-all border cursor-pointer ${simulatedPlan === p ? "bg-teal-500 border-teal-500 text-white shadow-sm" : "bg-white border-gray-200 text-slate-600 hover:bg-gray-50"}`}>{p}</button>
  ))}</div>
@@ -1915,29 +1915,29 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  <div className="space-y-6 animate-in fade-in duration-150">
  <div>
  <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Buton Stilleri" : "Button Styles"}</h3>
- <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "BaÄŸlantÄ± kartlarÄ±nÄ±zÄ±n varsayÄ±lan gÃ¶rÃ¼nÃ¼mÃ¼nÃ¼ belirleyin." : "Set the default appearance for all your link cards."}</p>
+ <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Bağlantı kartlarınızın varsayılan görünümünü belirleyin." : "Set the default appearance for all your link cards."}</p>
  </div>
  <div className="space-y-5">
  <div className="grid sm:grid-cols-2 gap-5">
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Buton Arka PlanÄ±" : "Button Background"}</label><div className="flex gap-2"><input type="color" value={btnBgColor || "#ffffff"} onChange={(e) => setBtnBgColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnBgColor || ""} onChange={(e) => setBtnBgColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Buton YazÄ± Rengi" : "Button Text"}</label><div className="flex gap-2"><input type="color" value={btnTextColor || "#000000"} onChange={(e) => setBtnTextColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnTextColor || ""} onChange={(e) => setBtnTextColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Buton Arka Planı" : "Button Background"}</label><div className="flex gap-2"><input type="color" value={btnBgColor || "#ffffff"} onChange={(e) => setBtnBgColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnBgColor || ""} onChange={(e) => setBtnBgColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Buton Yazı Rengi" : "Button Text"}</label><div className="flex gap-2"><input type="color" value={btnTextColor || "#000000"} onChange={(e) => setBtnTextColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnTextColor || ""} onChange={(e) => setBtnTextColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
  </div>
  <div className="grid sm:grid-cols-2 gap-5">
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Ã‡erÃ§eve Rengi" : "Border Color"}</label><div className="flex gap-2"><input type="color" value={btnBorderColor || "#000000"} onChange={(e) => setBtnBorderColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnBorderColor || ""} onChange={(e) => setBtnBorderColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Ã‡erÃ§eve Stili" : "Border Style"}</label><select value={btnBorderStyle} onChange={(e) => setBtnBorderStyle(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="solid">{lang === "tr" ? "DÃ¼z (Solid)" : "Solid"}</option><option value="dashed">{lang === "tr" ? "Kesikli" : "Dashed"}</option><option value="double">{lang === "tr" ? "Ã‡ift" : "Double"}</option><option value="dotted">{lang === "tr" ? "NoktalÄ±" : "Dotted"}</option><option value="none">{lang === "tr" ? "Yok" : "None"}</option></select></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Çerçeve Rengi" : "Border Color"}</label><div className="flex gap-2"><input type="color" value={btnBorderColor || "#000000"} onChange={(e) => setBtnBorderColor(e.target.value)} className="h-10 w-12 rounded-xl border border-gray-200 cursor-pointer" /><input type="text" value={btnBorderColor || ""} onChange={(e) => setBtnBorderColor(e.target.value)} className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono text-slate-800 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none bg-white transition-all" /></div></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Çerçeve Stili" : "Border Style"}</label><select value={btnBorderStyle} onChange={(e) => setBtnBorderStyle(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option><option value="dashed">{lang === "tr" ? "Kesikli" : "Dashed"}</option><option value="double">{lang === "tr" ? "Çift" : "Double"}</option><option value="dotted">{lang === "tr" ? "Noktalı" : "Dotted"}</option><option value="none">{lang === "tr" ? "Yok" : "None"}</option></select></div>
  </div>
  <div className="grid sm:grid-cols-2 gap-5">
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Ã‡erÃ§eve KalÄ±nlÄ±ÄŸÄ±" : "Border Width"}</label><select value={btnBorderWidth} onChange={(e) => setBtnBorderWidth(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="0px">0px</option><option value="1px">1px</option><option value="2px">2px</option><option value="3px">3px</option><option value="4px">4px</option><option value="5px">5px</option></select></div>
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "KÃ¶ÅŸe YuvarlaklÄ±ÄŸÄ±" : "Border Radius"}</label><select value={btnBorderRadius} onChange={(e) => setBtnBorderRadius(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp"}</option><option value="4px">4px</option><option value="8px">8px</option><option value="12px">12px</option><option value="16px">16px</option><option value="20px">20px</option><option value="24px">24px</option><option value="9999px">{lang === "tr" ? "Yuvarlak" : "Round"}</option></select></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Çerçeve Kalınlığı" : "Border Width"}</label><select value={btnBorderWidth} onChange={(e) => setBtnBorderWidth(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="0px">0px</option><option value="1px">1px</option><option value="2px">2px</option><option value="3px">3px</option><option value="4px">4px</option><option value="5px">5px</option></select></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Köşe Yuvarlaklığı" : "Border Radius"}</label><select value={btnBorderRadius} onChange={(e) => setBtnBorderRadius(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="0px">{lang === "tr" ? "Keskin (0px)" : "Sharp"}</option><option value="4px">4px</option><option value="8px">8px</option><option value="12px">12px</option><option value="16px">16px</option><option value="20px">20px</option><option value="24px">24px</option><option value="9999px">{lang === "tr" ? "Yuvarlak" : "Round"}</option></select></div>
  </div>
  <div className="grid sm:grid-cols-2 gap-5">
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "GÃ¶lge Efekti" : "Shadow"}</label><select value={btnShadow} onChange={(e) => setBtnShadow(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="none">{lang === "tr" ? "Yok" : "None"}</option><option value="soft">{lang === "tr" ? "YumuÅŸak" : "Soft"}</option><option value="glow-purple">{lang === "tr" ? "Mor IÅŸÄ±ma" : "Glow Purple"}</option><option value="glow-emerald">{lang === "tr" ? "YeÅŸil IÅŸÄ±ma" : "Glow Emerald"}</option><option value="hard-3d">{lang === "tr" ? "Sert 3D" : "Hard 3D"}</option></select></div>
- <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "YazÄ± KalÄ±nlÄ±ÄŸÄ±" : "Font Weight"}</label><select value={btnFontWeight} onChange={(e) => setBtnFontWeight(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="font-normal">Normal</option><option value="font-medium">Medium</option><option value="font-bold">Bold</option><option value="font-black">Black</option></select></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Gölge Efekti" : "Shadow"}</label><select value={btnShadow} onChange={(e) => setBtnShadow(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="none">{lang === "tr" ? "Yok" : "None"}</option><option value="soft">{lang === "tr" ? "Yumuşak" : "Soft"}</option><option value="glow-purple">{lang === "tr" ? "Mor Işıma" : "Glow Purple"}</option><option value="glow-emerald">{lang === "tr" ? "Yeşil Işıma" : "Glow Emerald"}</option><option value="hard-3d">{lang === "tr" ? "Sert 3D" : "Hard 3D"}</option></select></div>
+ <div className="space-y-2"><label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Yazı Kalınlığı" : "Font Weight"}</label><select value={btnFontWeight} onChange={(e) => setBtnFontWeight(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-slate-900 outline-none bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="font-normal">Normal</option><option value="font-medium">Medium</option><option value="font-bold">Bold</option><option value="font-black">Black</option></select></div>
  </div>
  </div>
  <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 space-y-3">
- <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block text-center">{lang === "tr" ? "Buton Ã–nizlemesi" : "Button Preview"}</span>
- <div className="flex justify-center"><div className={`px-6 py-3 text-sm ${btnFontWeight || "font-bold"}`} style={{ backgroundColor: btnBgColor || "#ffffff", color: btnTextColor || "#000000", borderColor: btnBorderColor || "#000000", borderStyle: btnBorderStyle || "solid", borderWidth: btnBorderWidth || "1px", borderRadius: btnBorderRadius || "12px", boxShadow: btnShadow === "soft" ? "0 4px 12px rgba(0,0,0,0.1)" : btnShadow === "glow-purple" ? "0 0 20px rgba(168,85,247,0.4)" : btnShadow === "glow-emerald" ? "0 0 20px rgba(16,185,129,0.4)" : btnShadow === "hard-3d" ? "4px 4px 0px rgba(0,0,0,0.8)" : "none" }}>{lang === "tr" ? "Ã–rnek Buton" : "Sample Button"}</div></div>
+ <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block text-center">{lang === "tr" ? "Buton Önizlemesi" : "Button Preview"}</span>
+ <div className="flex justify-center"><div className={`px-6 py-3 text-sm ${btnFontWeight || "font-bold"}`} style={{ backgroundColor: btnBgColor || "#ffffff", color: btnTextColor || "#000000", borderColor: btnBorderColor || "#000000", borderStyle: btnBorderStyle || "solid", borderWidth: btnBorderWidth || "1px", borderRadius: btnBorderRadius || "12px", boxShadow: btnShadow === "soft" ? "0 4px 12px rgba(0,0,0,0.1)" : btnShadow === "glow-purple" ? "0 0 20px rgba(168,85,247,0.4)" : btnShadow === "glow-emerald" ? "0 0 20px rgba(16,185,129,0.4)" : btnShadow === "hard-3d" ? "4px 4px 0px rgba(0,0,0,0.8)" : "none" }}>{lang === "tr" ? "Örnek Buton" : "Sample Button"}</div></div>
  </div>
  </div>
  )}
@@ -1947,11 +1947,11 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  <div className="space-y-6 animate-in fade-in duration-150">
  <div>
  <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">{lang === "tr" ? "Renk Paleti" : "Color Palette"}</h3>
- <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "KullanÄ±cÄ± adÄ± ve biyografi yazÄ± renklerini Ã¶zgÃ¼rce seÃ§in." : "Customize your username and bio text colors."}</p>
+ <p className="text-xs text-slate-500 font-medium mt-1">{lang === "tr" ? "Kullanıcı adı ve biyografi yazı renklerini özgürce seçin." : "Customize your username and bio text colors."}</p>
  </div>
  <div className="grid sm:grid-cols-2 gap-6">
  <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 space-y-4">
- <div className="flex justify-between items-center"><label className="text-sm font-semibold text-slate-800">{lang === "tr" ? "KullanÄ±cÄ± AdÄ± Rengi" : "Username Color"}</label><div className="flex items-center gap-1.5"><input type="text" value={usernameColor} onChange={(e) => setUsernameColor(e.target.value)} className="w-[72px] px-2 py-1 border border-gray-200 rounded-lg bg-white font-mono text-[11px] font-bold text-center text-slate-800 outline-none focus:border-teal-500" /><div className="relative w-6 h-6 rounded-full overflow-hidden border border-gray-200 cursor-pointer shrink-0"><input type="color" value={usernameColor} onChange={(e) => setUsernameColor(e.target.value)} className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150" /></div></div></div>
+ <div className="flex justify-between items-center"><label className="text-sm font-semibold text-slate-800">{lang === "tr" ? "Kullanıcı Adı Rengi" : "Username Color"}</label><div className="flex items-center gap-1.5"><input type="text" value={usernameColor} onChange={(e) => setUsernameColor(e.target.value)} className="w-[72px] px-2 py-1 border border-gray-200 rounded-lg bg-white font-mono text-[11px] font-bold text-center text-slate-800 outline-none focus:border-teal-500" /><div className="relative w-6 h-6 rounded-full overflow-hidden border border-gray-200 cursor-pointer shrink-0"><input type="color" value={usernameColor} onChange={(e) => setUsernameColor(e.target.value)} className="absolute inset-0 w-full h-full p-0 border-none cursor-pointer scale-150" /></div></div></div>
  <div className="flex flex-wrap gap-2">{["#ffffff", "#000000", "#f59e0b", "#ec4899", "#22c55e", "#a855f7", "#3b82f6", "#ef4444"].map((c) => (<button key={c} type="button" onClick={() => setUsernameColor(c)} className={`w-7 h-7 rounded-full border-2 shadow-sm transition-transform cursor-pointer hover:scale-110 ${usernameColor === c ? "ring-2 ring-teal-500 ring-offset-2 scale-105" : "border-gray-200"}`} style={{ backgroundColor: c }} title={c} />))}</div>
  </div>
  <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 space-y-4">
@@ -2004,7 +2004,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
 
           <div className="space-y-2 md:col-span-2">
             <label className="text-xs font-semibold uppercase tracking-wider block text-slate-500">
-              {lang === "tr" ? "Profil FotoÄŸrafÄ± YÃ¼kle" : "Upload Profile Photo"}
+              {lang === "tr" ? "Profil Fotoğrafı Yükle" : "Upload Profile Photo"}
             </label>
             <div className="p-4 md:p-5 rounded-xl border flex items-center gap-5 bg-zinc-100 border-zinc-200">
               <div className="w-16 h-16 rounded-full border flex items-center justify-center overflow-hidden shrink-0 bg-white border-zinc-300 shadow-inner">
@@ -2017,7 +2017,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
               <div className="space-y-1.5">
                 <div className="flex gap-2">
                   <label className="px-3.5 py-2.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none bg-white hover:bg-zinc-50 border-zinc-300 text-zinc-700 shadow-sm">
-                    {lang === "tr" ? "FotoÄŸraf SeÃ§" : "Select Photo"}
+                    {lang === "tr" ? "Fotoğraf Seç" : "Select Photo"}
                     <input
                       type="file"
                       accept="image/*"
@@ -2026,7 +2026,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
                         const file = e.target.files?.[0];
                         if (file) {
                           if (file.size > 2.5 * 1024 * 1024) {
-                            alert(lang === "tr" ? "LÃ¼tfen 2.5MB'den kÃ¼Ã§Ã¼k bir fotoÄŸraf seÃ§in!" : "Please select an image smaller than 2.5MB!");
+                            alert(lang === "tr" ? "Lütfen 2.5MB'den küçük bir fotoğraf seçin!" : "Please select an image smaller than 2.5MB!");
                             return;
                           }
                           const reader = new FileReader();
@@ -2046,12 +2046,12 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
                       onClick={() => setAvatarUrl("")}
                       className="px-3.5 py-2.5 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none bg-red-50 hover:bg-red-100 border-red-200 text-red-600"
                     >
-                      {lang === "tr" ? "KaldÄ±r" : "Remove"}
+                      {lang === "tr" ? "Kaldır" : "Remove"}
                     </button>
                   )}
                 </div>
                 <p className="text-[10px] text-slate-500 font-semibold">
-                  {lang === "tr" ? "Maksimum 2.5MB (PNG, JPG). FotoÄŸraf veri tabanÄ±na gÃ¼venle iÅŸlenecektir." : "Max 2.5MB (PNG, JPG). Image will be safely encrypted."}
+                  {lang === "tr" ? "Maksimum 2.5MB (PNG, JPG). Fotoğraf veri tabanına güvenle işlenecektir." : "Max 2.5MB (PNG, JPG). Image will be safely encrypted."}
                 </p>
               </div>
             </div>
@@ -2075,7 +2075,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
  </div>
  )})()}
 
- {/* TAB 5: OWNED TEMPLATES (ÅžABLONLARIM) */}
+ {/* TAB 5: OWNED TEMPLATES (ŞABLONLARIM) */}
 
       </div>
 
