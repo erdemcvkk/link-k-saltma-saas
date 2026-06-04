@@ -85,10 +85,10 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  const effectiveDark = customCss ? true : isDark;
  return {
  bg: effectiveDark ? "bg-black text-zinc-200" : "bg-zinc-50 text-zinc-800",
- cardBg: effectiveDark ? "bg-zinc-900/40 border-zinc-800" : "bg-white border-zinc-200 shadow-md",
+ cardBg: effectiveDark ? "bg-zinc-900/40 border-zinc-800" : "bg-white/60 border-white/20 backdrop-blur-md shadow-md",
  glowText: effectiveDark ? "text-white" : "text-zinc-900 font-bold",
  avatarBg: "from-zinc-400 to-zinc-500",
- btnClass: effectiveDark ? "bg-zinc-900/50 border border-zinc-800 text-zinc-200" : "bg-white border border-zinc-200 text-zinc-700"
+ btnClass: effectiveDark ? "bg-zinc-900/50 border border-zinc-800 text-zinc-200" : "bg-white/70 border border-white/20 backdrop-blur-md text-zinc-700 hover:bg-white/80"
  };
  }
  };
