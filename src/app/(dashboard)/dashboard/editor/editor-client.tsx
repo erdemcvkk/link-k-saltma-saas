@@ -197,7 +197,8 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
     setErrorMsg,
     isPending,
     startTransition,
-    fonts
+    fonts,
+    activeTemplate
   } = useDashboard();
 
   const initialUser = user;
@@ -669,10 +670,20 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
   };
 
   // Preview Data computation
+  const activeTemplateButtonOverrides = (activeTemplate && activeTemplate.buttonStyle)
+    ? parseButtonStyle(activeTemplate.buttonStyle)
+    : {};
+
+  const effectiveTheme = activeTemplate ? activeTemplate.name : theme;
+  const effectiveBackground = activeTemplate ? activeTemplate.bgColor : background;
+  const effectiveFontStyle = activeTemplate ? activeTemplate.fontStyle : fontStyle;
+  const effectiveButtonClass = activeTemplate ? activeTemplate.buttonStyle : buttonClass;
+  const effectiveCustomCss = activeTemplate ? (activeTemplate.isCoded ? activeTemplate.customCss : null) : activeTemplateCss;
+
   const isLight = [
     "Minimalist Light", "Pastel Dream", "Abstract Fluid", 
     "Vintage Paper", "Vintage Journal", "Holographic Glass", "Aura Hologram"
-  ].includes(theme);
+  ].includes(effectiveTheme);
 
   const mappedLinks = links.map(link => {
     let blockMeta = {};
@@ -681,6 +692,7 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
     }
     return {
       ...link,
+      ...(activeTemplate ? activeTemplateButtonOverrides : {}),
       metadata: blockMeta
     };
   });
@@ -689,11 +701,11 @@ export default function EditorClient({ initialLinks }: EditorClientProps) {
     username: username || "username",
     bio: bio || "Enter profile bio details...",
     avatarUrl: avatarUrl,
-    theme: theme,
-    customCss: activeTemplateCss,
-    background: background,
-    buttonClass: buttonClass,
-    fontStyle: fontStyle,
+    theme: effectiveTheme,
+    customCss: effectiveCustomCss,
+    background: effectiveBackground,
+    buttonClass: effectiveButtonClass,
+    fontStyle: effectiveFontStyle,
     usernameColor: usernameColor || (isLight ? "#0f172a" : "#ffffff"),
     bioColor: bioColor || (isLight ? "#475569" : "rgba(255,255,255,0.7)"),
     links: mappedLinks,

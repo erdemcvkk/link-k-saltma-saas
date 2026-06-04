@@ -106,12 +106,30 @@ export default async function DashboardLayout({
     plans: f.plans.map(p => p.plan)
   }));
 
+  // Fetch active user template
+  const activeUserTemplate = await db.userTemplate.findFirst({
+    where: { userId: user.id, isActive: true },
+    include: { template: true }
+  });
+
+  const serializedActiveTemplate = activeUserTemplate ? {
+    id: activeUserTemplate.template.id,
+    name: activeUserTemplate.template.name,
+    bgColor: activeUserTemplate.template.bgColor,
+    fontStyle: activeUserTemplate.template.fontStyle,
+    buttonStyle: activeUserTemplate.template.buttonStyle,
+    isCoded: activeUserTemplate.template.isCoded,
+    customCss: activeUserTemplate.template.customCss,
+    configJson: activeUserTemplate.template.configJson
+  } : null;
+
   return (
     <DashboardProvider
       initialUser={serializedUser}
       globalSettings={serializedSettings}
       initialFonts={serializedFonts}
       initialFeatures={serializedFeatures}
+      initialActiveTemplate={serializedActiveTemplate}
     >
       <DashboardLayoutClient>{children}</DashboardLayoutClient>
     </DashboardProvider>

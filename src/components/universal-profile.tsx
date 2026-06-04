@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useId } from "react";
-import { User, Globe, MessageCircle, ArrowUpRight, Play, Image, Utensils, Smartphone, Percent, Wifi, Music, ShoppingBag, FileText, List, Briefcase, Zap } from "lucide-react";
+import { User, Globe, MessageCircle, ArrowUpRight, Play, Image, Utensils, Smartphone, Percent, Wifi, Music, ShoppingBag, FileText, List, Briefcase, Zap, Calendar, FileQuestion, Mail, Heart, Clock, HelpCircle, MapPin, Store } from "lucide-react";
 import { YoutubeIcon, TwitterIcon, LinkedinIcon, TiktokIcon, PinterestIcon, InstagramIcon } from "@/components/brand-icons";
 import VideoPlayer from "@/components/blocks/video-player";
 import BeforeAfterSlider from "@/components/blocks/before-after-slider";
@@ -333,6 +333,13 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  })
  )}
  </div>
+
+ {/* Addons Grid */}
+ {addons && addons.length > 0 && (
+   <div className="addons-container w-full flex flex-col gap-4 mt-6" style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
+     {addons.map((addon: any) => renderAddonBlockHelper(addon, currentStyles.cardBg, currentStyles.btnClass, isDark, products))}
+   </div>
+ )}
  </main>
 
  {(plan !== "CREATOR" && plan !== "PRO_BUSINESS" && !isCompactMode) && (
@@ -342,4 +349,234 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  )}
  </div>
  );
+}
+
+function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, isDark: boolean, products: any[]) {
+ let configData: any = {};
+ try {
+   if (addon.config) configData = JSON.parse(addon.config);
+ } catch (e) {}
+
+ const type = addon.addonType;
+
+ const cardClassName = `p-4 w-full rounded-2xl border backdrop-blur-md flex flex-col gap-3 text-left ${cardBg}`;
+ const btnClassName = `w-full py-2.5 rounded-xl text-xs font-bold text-center transition-all ${btnClass}`;
+ 
+ switch (type) {
+   case "BOOKING":
+     return (
+       <div key={addon.id} className={cardClassName}>
+         <div className="flex items-center gap-3">
+           <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
+             <Calendar className="h-5 w-5 text-blue-500" />
+           </div>
+           <div>
+             <h4 className="text-sm font-bold text-slate-800">{configData.title || (isDark ? "Book a 1:1 Call" : "Birebir Görüşme Ayarla")}</h4>
+             <p className="text-xs opacity-70 mt-0.5">{configData.description || "Sizinle tanışmak için sabırsızlanıyorum."}</p>
+           </div>
+         </div>
+         <div className={btnClassName}>
+           {configData.buttonText || "Takvimi Görüntüle"}
+         </div>
+       </div>
+     );
+   case "QA":
+     return (
+       <div key={addon.id} className={cardClassName}>
+         <div className="flex items-center gap-3">
+           <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center shrink-0">
+             <FileQuestion className="h-5 w-5 text-amber-500" />
+           </div>
+           <h4 className="text-sm font-bold text-slate-800">{configData.boxTitle || "Bana Soru Sor!"}</h4>
+         </div>
+         <p className="text-xs opacity-75 bg-black/5 p-2 rounded-lg">
+           {configData.welcomeMessage || "Sorularınızı anonim olarak sorabilirsiniz."}
+         </p>
+         <div className="w-full bg-black/5 border border-black/10 rounded-lg p-2 h-16">
+           <span className="text-[10px] opacity-45">{configData.placeholderText || "Sorunuzu buraya yazın..."}</span>
+         </div>
+         <div className={btnClassName}>
+           {configData.buttonText || "Gönder"}
+         </div>
+       </div>
+     );
+   case "DONATION":
+     return (
+       <div key={addon.id} className={cardClassName}>
+         <div className="flex items-center gap-3">
+           <div className="w-10 h-10 rounded-full bg-pink-500/10 flex items-center justify-center shrink-0">
+             <Heart className="h-5 w-5 text-pink-500" />
+           </div>
+           <div>
+             <h4 className="text-sm font-bold text-slate-800">{configData.title || "Bana Kahve Ismarla"}</h4>
+             <p className="text-xs opacity-70 mt-0.5">{configData.thankYouMsg || "Desteğiniz için teşekkürler!"}</p>
+           </div>
+         </div>
+         <div className={btnClassName}>
+           {configData.buttonText || "Destek Ol"}
+         </div>
+       </div>
+     );
+   case "NEWSLETTER":
+     return (
+       <div key={addon.id} className={cardClassName}>
+         <div className="flex items-center gap-3">
+           <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+             <Mail className="h-5 w-5 text-emerald-500" />
+           </div>
+           <div>
+             <h4 className="text-sm font-bold text-slate-800">{configData.title || "Haftalık Bülten"}</h4>
+             <p className="text-xs opacity-70 mt-0.5">{configData.incentiveMsg || "Spam yok, sadece kaliteli içerik."}</p>
+           </div>
+         </div>
+         <div className="w-full bg-black/5 border border-black/10 rounded-lg p-2 h-10 flex items-center">
+           <span className="text-xs opacity-45">email@example.com</span>
+         </div>
+         <div className={btnClassName}>
+           {configData.buttonText || "Abone Ol"}
+         </div>
+       </div>
+     );
+   case "PREMIUM_VIDEO":
+     return (
+       <div key={addon.id} className={cardClassName}>
+         <div className="w-full aspect-video rounded-xl bg-zinc-900 overflow-hidden relative border border-white/5">
+           {configData.coverUrl ? (
+             <img src={configData.coverUrl} alt="Cover" className="w-full h-full object-cover opacity-80" />
+           ) : (
+             <div className="absolute inset-0 flex items-center justify-center text-zinc-650">
+               <Play className="h-8 w-8" />
+             </div>
+           )}
+           <div className="absolute inset-0 flex items-center justify-center">
+             <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30">
+               <span className="ml-1">▶</span>
+             </div>
+           </div>
+         </div>
+         <h4 className="text-sm font-bold text-slate-800">{configData.title || "Premium Video"}</h4>
+         <p className="text-xs opacity-70">{configData.description || "Video açıklaması."}</p>
+         <div className={btnClassName}>
+           {configData.buttonText || "Tamamını İzle"}
+         </div>
+       </div>
+     );
+   case "COUNTDOWN":
+     return (
+       <div key={addon.id} className={cardClassName}>
+         <div className="flex items-center gap-3">
+           <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center shrink-0">
+             <Clock className="h-5 w-5 text-purple-500" />
+           </div>
+           <h4 className="text-sm font-bold text-slate-800">{configData.title || "Geri Sayım"}</h4>
+         </div>
+         <p className="text-xs opacity-70">{configData.description}</p>
+         <div className="grid grid-cols-4 gap-2 w-full">
+           {['14', '08', '45', '22'].map((val, i) => (
+             <div key={i} className="bg-black/10 rounded-lg py-2 flex flex-col items-center">
+               <span className="text-sm font-bold font-mono">{val}</span>
+               <span className="text-[8px] opacity-60">{['Gün', 'Saat', 'Dk', 'Sn'][i]}</span>
+             </div>
+           ))}
+         </div>
+         {configData.buttonText && (
+           <div className={btnClassName}>
+             {configData.buttonText}
+           </div>
+         )}
+       </div>
+     );
+   case "FAQ":
+     const qas = (configData.questionsText || "Soru Örneği?|Cevap Örneği.;")
+       .split(';')
+       .map((pair: string) => pair.split('|'))
+       .filter((pair: string[]) => pair.length === 2 && pair[0].trim() !== "");
+     return (
+       <div key={addon.id} className={cardClassName}>
+         <h4 className="text-sm font-bold text-slate-800">{configData.title || "FAQ"}</h4>
+         <div className="space-y-2 w-full">
+           {qas.map(([q, a]: [string, string], i: number) => (
+             <div key={i} className="bg-black/5 p-2 rounded-lg">
+               <p className="text-xs font-bold text-slate-800">{q.trim()}</p>
+               <p className="text-[11px] opacity-75 mt-0.5">{a.trim()}</p>
+             </div>
+           ))}
+         </div>
+         {configData.contactUrl && (
+           <div className={btnClassName}>
+             {configData.buttonText || "Bize Ulaşın"}
+           </div>
+         )}
+       </div>
+     );
+   case "MAP":
+     return (
+       <div key={addon.id} className={cardClassName}>
+         <h4 className="text-sm font-bold text-slate-800">{configData.title || "Bizi Ziyaret Edin"}</h4>
+         <div className="bg-black/5 p-2 rounded-lg flex items-center gap-2">
+           <span className="text-red-500">📍</span>
+           <span className="text-xs truncate">{configData.address || "İstanbul, Türkiye"}</span>
+         </div>
+         <div className={btnClassName}>
+           {configData.buttonText || "Yol Tarifi Al"}
+         </div>
+       </div>
+     );
+   case "WHATSAPP":
+     return (
+       <div key={addon.id} className={cardClassName}>
+         <h4 className="text-sm font-bold text-slate-800">{configData.title || "WhatsApp İletişim"}</h4>
+         <p className="text-xs opacity-70 bg-green-500/5 p-2 rounded-lg border border-green-500/10 text-green-600">
+           {configData.welcomeMessage || "Merhaba, size nasıl yardımcı olabilirim?"}
+         </p>
+         <div className={btnClassName}>
+           {configData.buttonText || "Sohbete Başla"}
+         </div>
+       </div>
+     );
+   case "MINI_STORE":
+   case "NEO_BRUTAL":
+   case "ORGANIC":
+   case "RETRO":
+   case "ACADEMIA":
+   case "Y2K":
+   case "PREMIUM_CREATOR":
+     return (
+       <div key={addon.id} className={cardClassName}>
+         <div className="flex items-center gap-3">
+           <div className="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center shrink-0">
+             <Store className="h-5 w-5 text-indigo-500" />
+           </div>
+           <div>
+             <h4 className="text-sm font-bold text-slate-800">{configData.storeTitle || "Mağazam"}</h4>
+             <p className="text-xs opacity-70 mt-0.5">{configData.storeBio || "Ürünlerimi inceleyin"}</p>
+           </div>
+         </div>
+         {products && products.length > 0 ? (
+           <div className="grid grid-cols-2 gap-2 mt-2">
+             {products.slice(0, 2).map((p: any) => (
+               <div key={p.id} className="bg-black/5 p-2 rounded-xl flex flex-col justify-between border border-black/5">
+                 <div className="w-full aspect-square rounded-lg bg-zinc-250 overflow-hidden shrink-0">
+                   {p.imageUrl ? (
+                     <img src={p.imageUrl} alt={p.title} className="w-full h-full object-cover" />
+                   ) : (
+                     <div className="w-full h-full bg-zinc-300 flex items-center justify-center text-xs text-zinc-500">Shop</div>
+                   )}
+                 </div>
+                 <p className="text-[11px] font-bold truncate mt-1 text-slate-850">{p.title}</p>
+                 <p className="text-[10px] font-bold text-emerald-600 mt-0.5">{p.price} ₺</p>
+               </div>
+             ))}
+           </div>
+         ) : (
+           <p className="text-[11px] opacity-50">Henüz ürün bulunmuyor.</p>
+         )}
+         <div className={btnClassName}>
+           {configData.buyButtonText || "Mağazaya Git"}
+         </div>
+       </div>
+     );
+   default:
+     return null;
+ }
 }

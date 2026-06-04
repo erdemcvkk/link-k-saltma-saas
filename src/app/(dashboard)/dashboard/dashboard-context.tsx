@@ -39,6 +39,17 @@ export type FeatureItem = {
   plans: string[];
 };
 
+export type ActiveTemplateType = {
+  id: string;
+  name: string;
+  bgColor: string;
+  fontStyle: string;
+  buttonStyle: string;
+  isCoded: boolean;
+  customCss?: string | null;
+  configJson?: string | null;
+} | null;
+
 interface DashboardContextType {
   user: UserData;
   globalSettings: Record<string, string>;
@@ -46,6 +57,8 @@ interface DashboardContextType {
   setLang: (lang: "tr" | "en") => void;
   activeTheme: "dark" | "light";
   setActiveTheme: (theme: "dark" | "light") => void;
+  activeTemplate: ActiveTemplateType;
+  setActiveTemplate: (template: ActiveTemplateType) => void;
   simulatedPlan: string;
   setSimulatedPlan: (plan: string) => void;
   features: FeatureItem[];
@@ -74,15 +87,18 @@ export function DashboardProvider({
   globalSettings = {},
   initialFeatures = [],
   initialFonts = [],
+  initialActiveTemplate = null,
 }: {
   children: React.ReactNode;
   initialUser: UserData;
   globalSettings?: Record<string, string>;
   initialFeatures?: FeatureItem[];
   initialFonts?: FontItem[];
+  initialActiveTemplate?: ActiveTemplateType;
 }) {
   const [lang, setLang] = useState<"tr" | "en">("en");
   const [activeTheme, setActiveTheme] = useState<"dark" | "light">("light");
+  const [activeTemplate, setActiveTemplate] = useState<ActiveTemplateType>(initialActiveTemplate);
   const [simulatedPlan, setSimulatedPlan] = useState<string>(initialUser.plan);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -118,6 +134,8 @@ export function DashboardProvider({
         setLang,
         activeTheme,
         setActiveTheme,
+        activeTemplate,
+        setActiveTemplate,
         simulatedPlan,
         setSimulatedPlan,
         features: initialFeatures,

@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { Puzzle, ShoppingBag, Settings, Globe } from "lucide-react";
 import AddonConfigModal from "@/components/addons/addon-config-modal";
+import PhonePreview from "@/components/dashboard/phone-preview";
+import { parseButtonStyle } from "@/lib/parse-button-style";
 import { useDashboard } from "../dashboard-context";
 
 interface AddonItem {
@@ -27,13 +29,15 @@ interface ProductItem {
 interface PluginsClientProps {
   initialAddons: AddonItem[];
   initialProducts: ProductItem[];
+  initialLinks?: any[];
 }
 
 export default function PluginsClient({
   initialAddons,
   initialProducts,
+  initialLinks = [],
 }: PluginsClientProps) {
-  const { user, lang } = useDashboard();
+  const { user, lang, activeTemplate } = useDashboard();
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons);
   const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
 
@@ -168,9 +172,54 @@ export default function PluginsClient({
         </div>
 
       </div>
+ 
+      {/* RIGHT COLUMN: PREVIEW */}
+      {(() => {
+        const activeTemplateButtonOverrides = (activeTemplate && activeTemplate.buttonStyle)
+          ? parseButtonStyle(activeTemplate.buttonStyle)
+          : {};
 
-      {/* RIGHT COLUMN: INVISIBLE SPACER */}
-      <div className="hidden lg:block lg:w-[360px] shrink-0 sticky top-32 self-start pointer-events-none opacity-0" />
+        const effectiveTheme = activeTemplate ? activeTemplate.name : (user.profile?.theme ?? "dark");
+        const effectiveBackground = activeTemplate ? activeTemplate.bgColor : (user.profile?.background ?? "");
+        const effectiveFontStyle = activeTemplate ? activeTemplate.fontStyle : (user.profile?.fontStyle ?? "Inter");
+        const effectiveButtonClass = activeTemplate ? activeTemplate.buttonStyle : (user.profile?.buttonClass ?? null);
+        const effectiveCustomCss = activeTemplate ? (activeTemplate.isCoded ? activeTemplate.customCss : null) : (user.profile?.customCss ?? null);
+
+        const isLight = [
+          "Minimalist Light", "Pastel Dream", "Abstract Fluid", 
+          "Vintage Paper", "Vintage Journal", "Holographic Glass", "Aura Hologram"
+        ].includes(effectiveTheme);
+
+        const mappedLinks = (initialLinks || []).map((link: any) => {
+          let blockMeta = {};
+          if (link.metadata) {
+            try { blockMeta = JSON.parse(link.metadata); } catch (e) {}
+          }
+          return {
+            ...link,
+            ...(activeTemplate ? activeTemplateButtonOverrides : {}),
+            metadata: blockMeta
+          };
+        });
+
+        const previewData = {
+          username: user.username || "username",
+          bio: user.profile?.bio || "Enter profile bio details...",
+          avatarUrl: user.profile?.avatarUrl,
+          theme: effectiveTheme,
+          customCss: effectiveCustomCss,
+          background: effectiveBackground,
+          buttonClass: effectiveButtonClass,
+          fontStyle: effectiveFontStyle,
+          usernameColor: isLight ? "#0f172a" : "#ffffff",
+          bioColor: isLight ? "#475569" : "rgba(255,255,255,0.7)",
+          links: mappedLinks,
+          addons: addons.filter(a => a.isActive),
+          products: initialProducts,
+        };
+
+        return <PhonePreview mode="plugin" data={previewData} label={lang === "tr" ? "Eklenti Sandbox Önizleme" : "Add-on Sandbox Preview"} />;
+      })()}
 
       {editingAddon && (
         <AddonConfigModal

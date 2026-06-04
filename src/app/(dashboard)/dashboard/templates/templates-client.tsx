@@ -12,7 +12,8 @@ import {
   ExternalLink,
   ArrowRight,
   Eye,
-  Settings
+  Settings,
+  Check
 } from "lucide-react";
 import PhonePreview from "@/components/dashboard/phone-preview";
 import { useDashboard } from "../dashboard-context";
@@ -69,7 +70,9 @@ export default function TemplatesClient({
     setSuccessMsg,
     setErrorMsg,
     isPending,
-    startTransition
+    startTransition,
+    activeTemplate,
+    setActiveTemplate
   } = useDashboard();
 
   const initialUser = user;
@@ -332,6 +335,11 @@ export default function TemplatesClient({
  <div>
  <div className="flex items-center gap-2">
  <h3 className="text-sm font-black text-zinc-900">{template.name}</h3>
+ {activeTemplate?.id === template.id && (
+  <span className="text-[9px] font-black text-teal-700 bg-teal-400/20 border border-teal-500/30 px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">
+  {lang === "tr" ? "Aktif" : "Active"}
+  </span>
+  )}
  </div>
  {(ownedTemplates.find((ut: any) => ut.id === template.id)?.isActive) ? (
  <div className="text-[10px] font-bold text-emerald-500 mt-0.5 px-2 py-0.5 rounded-md bg-emerald-50 inline-block border border-emerald-100">
@@ -387,69 +395,83 @@ export default function TemplatesClient({
  </button>
  </div>
 
- <div className="flex flex-wrap items-center justify-between p-3 rounded-xl bg-zinc-50/50 border border-zinc-100">
- <span className="text-xs font-extrabold text-zinc-700">
- {lang === "tr" ? "Şablon Durumu" : "Template Status"}
- </span>
  <button
- type="button"
- disabled={isPending}
- onClick={() => {
- startTransition(async () => {
- try {
- // Find the UserTemplate relation to toggle it from local state
- const userTemplateRecord = ownedTemplates.find((ut: any) => ut.id === template.id);
- const currentActiveStatus = userTemplateRecord?.isActive || false;
+  type="button"
+  disabled={isPending}
+  onClick={() => {
+  startTransition(async () => {
+  try {
+  // Find the UserTemplate relation to toggle it from local state
+  const userTemplateRecord = ownedTemplates.find((ut: any) => ut.id === template.id);
+  const currentActiveStatus = userTemplateRecord?.isActive || false;
+  
+  const res = await toggleUserTemplateActive(initialUser.id, template.id, !currentActiveStatus);
+  if (res.success) {
+  // Update local state visually
+  setOwnedTemplates(prev => prev.map(t => ({
+  ...t,
+  isActive: t.id === template.id ? res.isActive : false
+  })));
  
- const res = await toggleUserTemplateActive(initialUser.id, template.id, !currentActiveStatus);
- if (res.success) {
- // Update local state visually
- setOwnedTemplates(prev => prev.map(t => ({
- ...t,
- isActive: t.id === template.id ? res.isActive : false
- })));
+  if (res.isActive) {
+  // Update global activeTemplate state
+  setActiveTemplate({
+    id: template.id,
+    name: template.name,
+    bgColor: template.bgColor,
+    fontStyle: template.fontStyle,
+    buttonStyle: template.buttonStyle,
+    isCoded: template.isCoded,
+    customCss: template.customCss || null,
+    configJson: template.configJson || null
+  });
 
- if (res.isActive) {
- setBackground(template.bgColor);
- if (template.fontStyle) setFontStyle(template.fontStyle);
- setTheme(template.name);
- if (template.buttonStyle) {
- const parsed = parseButtonStyle(template.buttonStyle);
- setBtnBgColor(parsed.bgColor);
- setBtnTextColor(parsed.textColor);
- setBtnBorderColor(parsed.borderColor);
- setBtnBorderStyle(parsed.borderStyle);
- setBtnBorderWidth(parsed.borderWidth);
- setBtnBorderRadius(parsed.borderRadius);
- setBtnShadow(parsed.shadow);
- setBtnFontWeight(parsed.fontWeight);
- setLinks(prev => prev.map(l => ({
- ...l, ...parsed
- })));
- }
- setSuccessMsg(lang === "tr" ? "Şablon başarıyla aktifleştirildi!" : "Template activated!");
- } else {
- setSuccessMsg(lang === "tr" ? "Şablon taslağa alındı." : "Template moved to draft.");
- }
- setTimeout(() => setSuccessMsg(""), 3000);
- }
- } catch (e: any) {
- setErrorMsg(e.message || "An error occurred");
- setTimeout(() => setErrorMsg(""), 4000);
- }
- });
- }}
- className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 ${
- (ownedTemplates.find((ut: any) => ut.id === template.id)?.isActive) ? 'bg-teal-500' : 'bg-zinc-300'
- }`}
- >
- <span
- className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
- (ownedTemplates.find((ut: any) => ut.id === template.id)?.isActive) ? 'translate-x-6' : 'translate-x-1'
- }`}
- />
- </button>
- </div>
+  setBackground(template.bgColor);
+  if (template.fontStyle) setFontStyle(template.fontStyle);
+  setTheme(template.name);
+  if (template.buttonStyle) {
+  const parsed = parseButtonStyle(template.buttonStyle);
+  setBtnBgColor(parsed.bgColor);
+  setBtnTextColor(parsed.textColor);
+  setBtnBorderColor(parsed.borderColor);
+  setBtnBorderStyle(parsed.borderStyle);
+  setBtnBorderWidth(parsed.borderWidth);
+  setBtnBorderRadius(parsed.borderRadius);
+  setBtnShadow(parsed.shadow);
+  setBtnFontWeight(parsed.fontWeight);
+  setLinks(prev => prev.map(l => ({
+  ...l, ...parsed
+  })));
+  }
+  setSuccessMsg(lang === "tr" ? "Şablon başarıyla aktifleştirildi!" : "Template activated!");
+  } else {
+  // Deactivate template - set global activeTemplate to null
+  setActiveTemplate(null);
+  setSuccessMsg(lang === "tr" ? "Şablon taslağa alındı." : "Template moved to draft.");
+  }
+  setTimeout(() => setSuccessMsg(""), 3000);
+  }
+  } catch (e: any) {
+  setErrorMsg(e.message || "An error occurred");
+  setTimeout(() => setErrorMsg(""), 4000);
+  }
+  });
+  }}
+  className={`w-full py-3 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
+    activeTemplate?.id === template.id
+    ? "bg-teal-500 border-teal-500 hover:bg-teal-400 text-slate-900 shadow-md shadow-teal-500/10"
+    : "bg-zinc-900 border-zinc-900 hover:bg-zinc-800 text-white shadow-sm"
+  }`}
+  >
+  {activeTemplate?.id === template.id ? (
+    <>
+      <Check className="h-4 w-4" />
+      <span>{lang === "tr" ? "Aktif Şablon (Devre Dışı Bırak)" : "Active Template (Deactivate)"}</span>
+    </>
+  ) : (
+    <span>{lang === "tr" ? "Şablonu Aktifleştir" : "Activate Template"}</span>
+  )}
+  </button>
 
  {/* CUSTOM URL SETTING */}
  <div className="flex flex-col gap-2 p-3 rounded-xl bg-zinc-50/50 border border-zinc-100 overflow-hidden w-full">

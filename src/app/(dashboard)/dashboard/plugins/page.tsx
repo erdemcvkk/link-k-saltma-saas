@@ -42,10 +42,36 @@ export default async function PluginsPage() {
     createdAt: p.createdAt.toISOString(),
   }));
 
+  // Fetch user's links for preview
+  const links = await db.link.findMany({
+    where: { userId: user.id },
+    orderBy: { order: "asc" },
+  });
+
+  const serializedLinks = links.map((l) => ({
+    id: l.id,
+    title: l.title,
+    url: l.url,
+    isActive: l.isActive,
+    type: l.type,
+    animation: l.animation || "",
+    bgColor: l.bgColor ?? null,
+    textColor: l.textColor ?? null,
+    borderColor: l.borderColor ?? null,
+    borderStyle: l.borderStyle ?? null,
+    borderWidth: l.borderWidth ?? null,
+    borderRadius: l.borderRadius ?? null,
+    shadow: l.shadow ?? null,
+    fontWeight: l.fontWeight ?? null,
+    blockType: l.blockType || "TEXT_LINK",
+    metadata: l.metadata ?? null,
+  }));
+
   return (
     <PluginsClient
       initialAddons={serializedAddons}
       initialProducts={serializedProducts}
+      initialLinks={serializedLinks}
     />
   );
 }
