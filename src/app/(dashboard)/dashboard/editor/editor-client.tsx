@@ -869,6 +869,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
     bioColor: bioColor || (isLight ? "#475569" : "rgba(255,255,255,0.7)"),
     links: mappedLinks,
     systemSettings: systemSettings,
+    plan: simulatedPlan,
   };
 
   return (

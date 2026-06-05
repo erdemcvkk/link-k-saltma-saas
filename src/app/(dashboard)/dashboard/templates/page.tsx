@@ -62,10 +62,19 @@ export default async function TemplatesPage() {
     metadata: l.metadata ?? null,
   }));
 
+  const systemSettings = await db.systemSettings.findFirst();
+  const serializedSystemSettings = systemSettings ? {
+    adScript: systemSettings.adScript,
+    customImageUrl: systemSettings.customImageUrl,
+    customTargetUrl: systemSettings.customTargetUrl,
+    isActive: systemSettings.isActive
+  } : null;
+
   return (
     <TemplatesClient
       initialOwnedTemplates={serializedOwnedTemplates}
       initialLinks={serializedLinks}
+      systemSettings={serializedSystemSettings}
     />
   );
 }

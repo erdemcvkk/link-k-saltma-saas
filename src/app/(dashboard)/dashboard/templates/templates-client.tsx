@@ -58,11 +58,18 @@ interface TemplateItem {
 interface TemplatesClientProps {
   initialOwnedTemplates: TemplateItem[];
   initialLinks: LinkItem[];
+  systemSettings?: {
+    adScript?: string | null;
+    customImageUrl?: string | null;
+    customTargetUrl?: string | null;
+    isActive: boolean;
+  } | null;
 }
 
 export default function TemplatesClient({
   initialOwnedTemplates,
-  initialLinks
+  initialLinks,
+  systemSettings
 }: TemplatesClientProps) {
   const {
     user,
@@ -72,7 +79,8 @@ export default function TemplatesClient({
     isPending,
     startTransition,
     activeTemplate,
-    setActiveTemplate
+    setActiveTemplate,
+    simulatedPlan
   } = useDashboard();
 
   const initialUser = user;
@@ -183,6 +191,8 @@ export default function TemplatesClient({
     usernameColor: isLight ? "#0f172a" : "#ffffff",
     bioColor: isLight ? "#475569" : "rgba(255,255,255,0.7)",
     links: mappedLinks,
+    systemSettings: systemSettings,
+    plan: simulatedPlan,
   };
 
   return (

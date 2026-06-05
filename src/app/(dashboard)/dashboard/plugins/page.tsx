@@ -67,11 +67,20 @@ export default async function PluginsPage() {
     metadata: l.metadata ?? null,
   }));
 
+  const systemSettings = await db.systemSettings.findFirst();
+  const serializedSystemSettings = systemSettings ? {
+    adScript: systemSettings.adScript,
+    customImageUrl: systemSettings.customImageUrl,
+    customTargetUrl: systemSettings.customTargetUrl,
+    isActive: systemSettings.isActive
+  } : null;
+
   return (
     <PluginsClient
       initialAddons={serializedAddons}
       initialProducts={serializedProducts}
       initialLinks={serializedLinks}
+      systemSettings={serializedSystemSettings}
     />
   );
 }

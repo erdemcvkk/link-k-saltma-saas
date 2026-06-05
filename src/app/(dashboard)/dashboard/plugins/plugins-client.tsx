@@ -30,14 +30,21 @@ interface PluginsClientProps {
   initialAddons: AddonItem[];
   initialProducts: ProductItem[];
   initialLinks?: any[];
+  systemSettings?: {
+    adScript?: string | null;
+    customImageUrl?: string | null;
+    customTargetUrl?: string | null;
+    isActive: boolean;
+  } | null;
 }
 
 export default function PluginsClient({
   initialAddons,
   initialProducts,
   initialLinks = [],
+  systemSettings,
 }: PluginsClientProps) {
-  const { user, lang, activeTemplate } = useDashboard();
+  const { user, lang, activeTemplate, simulatedPlan } = useDashboard();
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons);
   const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
 
@@ -216,6 +223,8 @@ export default function PluginsClient({
           links: mappedLinks,
           addons: addons.filter(a => a.isActive),
           products: initialProducts,
+          systemSettings: systemSettings,
+          plan: simulatedPlan,
         };
 
         return <PhonePreview mode="plugin" data={previewData} label={lang === "tr" ? "Eklenti Sandbox Önizleme" : "Add-on Sandbox Preview"} />;
