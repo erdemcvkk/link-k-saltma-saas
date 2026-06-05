@@ -243,6 +243,14 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  config: a.config
  }));
 
+ const systemSettings = await db.systemSettings.findFirst();
+ const serializedSystemSettings = systemSettings ? {
+  adScript: systemSettings.adScript,
+  customImageUrl: systemSettings.customImageUrl,
+  customTargetUrl: systemSettings.customTargetUrl,
+  isActive: systemSettings.isActive
+ } : null;
+
  return (
  <ProfileClient
  username={activeUser.username!}
@@ -262,6 +270,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  storeLayout={activeUser.profile?.storeLayout ?? "GRID"}
  customCss={customCss}
  buttonClass={activeTemplate ? activeTemplate.buttonStyle : (activeUser.profile?.buttonClass ?? null)}
+ systemSettings={serializedSystemSettings}
  />
  );
 }

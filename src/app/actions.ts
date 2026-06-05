@@ -2076,3 +2076,61 @@ export async function saveUserCustomTemplate(
     }
   };
 }
+
+export async function getSystemSettings() {
+  try {
+    let settings = await db.systemSettings.findFirst();
+    if (!settings) {
+      settings = await db.systemSettings.create({
+        data: {
+          adScript: "",
+          customImageUrl: "",
+          customTargetUrl: "",
+          isActive: false,
+        },
+      });
+    }
+    return settings;
+  } catch (error) {
+    console.error("Error fetching system settings:", error);
+    return null;
+  }
+}
+
+export async function saveSystemSettings(
+  adminUserId: string,
+  adScript: string | null,
+  customImageUrl: string | null,
+  customTargetUrl: string | null,
+  isActive: boolean
+) {
+  await ensureAdmin(adminUserId);
+
+  let settings = await db.systemSettings.findFirst();
+  if (settings) {
+    settings = await db.systemSettings.update({
+      where: { id: settings.id },
+      data: {
+        adScript,
+        customImageUrl,
+        customTargetUrl,
+        isActive,
+      },
+    });
+  } else {
+    settings = await db.systemSettings.create({
+      data: {
+        adScript,
+        customImageUrl,
+        customTargetUrl,
+        isActive,
+      },
+    });
+  }
+
+  try {
+    revalidatePath("/admin");
+    revalidatePath("/[username]", "page");
+  } catch (err) {}
+  return settings;
+}

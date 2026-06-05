@@ -25,6 +25,12 @@ export interface UniversalProfileData {
  links: any[];
  products?: any[];
  addons?: any[];
+ systemSettings?: {
+   adScript?: string | null;
+   customImageUrl?: string | null;
+   customTargetUrl?: string | null;
+   isActive: boolean;
+ } | null;
 }
 
 interface UniversalProfileProps {
@@ -186,71 +192,119 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  }
  };
 
-  const renderSponsoredBlock = () => {
-    const defaultLinkForStyle = links[0] || {};
-    const adCustomStyle: React.CSSProperties = data.buttonClass ? {} : {
-      backgroundColor: defaultLinkForStyle.bgColor || undefined,
-      color: defaultLinkForStyle.textColor || undefined,
-      borderColor: defaultLinkForStyle.borderColor || undefined,
-      borderStyle: defaultLinkForStyle.borderStyle as any || undefined,
-      borderWidth: defaultLinkForStyle.borderWidth || undefined,
-      borderRadius: defaultLinkForStyle.borderRadius || undefined,
-      boxShadow: defaultLinkForStyle.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
-        : defaultLinkForStyle.shadow === "glow-emerald" ? "0 0 15px rgba(16,185,129,0.5)"
-        : defaultLinkForStyle.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
-        : undefined
-    };
+   const renderSponsoredBlock = () => {
+     const settings = data.systemSettings;
+     // Eğer reklam global olarak kapalıysa reklam alanını tamamen gizle
+     if (settings && !settings.isActive) {
+       return null;
+     }
 
-    const adDynamicBlockClass = data.buttonClass 
-      ? `link-item btn-link ${data.buttonClass} ${defaultLinkForStyle.animation || ""} ${defaultLinkForStyle.fontWeight || ""}`
-      : `link-item btn-link ${!defaultLinkForStyle.bgColor ? currentStyles.btnClass : ""} ${!defaultLinkForStyle.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-2xl") : ""} ${defaultLinkForStyle.animation || ""} ${defaultLinkForStyle.fontWeight || "font-bold"}`;
+     const defaultLinkForStyle = links[0] || {};
+     const adCustomStyle: React.CSSProperties = data.buttonClass ? {} : {
+       backgroundColor: defaultLinkForStyle.bgColor || undefined,
+       color: defaultLinkForStyle.textColor || undefined,
+       borderColor: defaultLinkForStyle.borderColor || undefined,
+       borderStyle: defaultLinkForStyle.borderStyle as any || undefined,
+       borderWidth: defaultLinkForStyle.borderWidth || undefined,
+       borderRadius: defaultLinkForStyle.borderRadius || undefined,
+       boxShadow: defaultLinkForStyle.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
+         : defaultLinkForStyle.shadow === "glow-emerald" ? "0 0 15px rgba(16,185,129,0.5)"
+         : defaultLinkForStyle.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
+         : undefined
+     };
 
-    const handleUpgradeRedirect = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      e.preventDefault();
-      if (isCompactMode) {
-        alert(lang === "tr" ? "Bu özellik planınızı yükseltmenizi gerektirir." : "This feature requires upgrading your plan.");
-      } else {
-        window.location.href = "/dashboard/billing";
-      }
-    };
+     const adDynamicBlockClass = data.buttonClass 
+       ? `link-item btn-link ${data.buttonClass} ${defaultLinkForStyle.animation || ""} ${defaultLinkForStyle.fontWeight || ""}`
+       : `link-item btn-link ${!defaultLinkForStyle.bgColor ? currentStyles.btnClass : ""} ${!defaultLinkForStyle.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-2xl") : ""} ${defaultLinkForStyle.animation || ""} ${defaultLinkForStyle.fontWeight || "font-bold"}`;
 
-    return (
-      <div 
-        style={adCustomStyle} 
-        className={`flex flex-col p-4 text-xs transition-all relative overflow-hidden group ${adDynamicBlockClass}`}
-      >
-        <div className="absolute top-2.5 right-3 flex items-center gap-1 z-20">
-          <span 
-            onClick={handleUpgradeRedirect}
-            className="text-[8.5px] font-semibold text-zinc-400 hover:text-zinc-350 cursor-pointer underline transition-colors"
-          >
-            {lang === "tr" ? "Reklamı Kaldır" : "Remove Ad"}
-          </span>
-          <span className="h-3 w-[1px] bg-zinc-500/20" />
-          <span className="text-[7.5px] font-bold tracking-wider uppercase bg-zinc-400/10 text-zinc-400 px-1 py-0.2 rounded border border-zinc-500/10">
-            Ad
-          </span>
-        </div>
+     const handleUpgradeRedirect = (e: React.MouseEvent) => {
+       e.stopPropagation();
+       e.preventDefault();
+       if (isCompactMode) {
+         alert(lang === "tr" ? "Bu özellik planınızı yükseltmenizi gerektirir." : "This feature requires upgrading your plan.");
+       } else {
+         window.location.href = "/dashboard/billing";
+       }
+     };
 
-        <div className="flex items-start gap-3 mt-1 text-left w-full pr-16">
-          <div className="h-9 w-9 rounded-full bg-teal-500/10 text-teal-400 flex items-center justify-center shrink-0 border border-teal-500/20">
-            <Zap className="h-4.5 w-4.5 animate-pulse text-teal-500" />
-          </div>
-          <div className="space-y-0.5">
-            <h4 className="font-extrabold text-xs tracking-tight" style={{ color: defaultLinkForStyle.textColor || 'inherit' }}>
-              {lang === "tr" ? "Kendi Biyo Link Sayfanı Ücretsiz Oluştur!" : "Build Your Free Link Bio Page!"}
-            </h4>
-            <p className="text-[10px] leading-snug opacity-75" style={{ color: defaultLinkForStyle.textColor || 'inherit' }}>
-              {lang === "tr" 
-                ? "Saniyeler içinde sosyal medya hesaplarını tek bir yerde topla ve analiz et." 
-                : "Unify all your social links and view page traffic metrics in seconds."}
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  };
+     // 1. Google AdSense / Script Entegrasyonu
+     if (settings?.adScript) {
+       return (
+         <div 
+           className="w-full flex justify-center overflow-hidden" 
+           dangerouslySetInnerHTML={{ __html: settings.adScript }} 
+         />
+       );
+     }
+
+     // 2. Özel Banner Reklamı
+     if (settings?.customImageUrl) {
+       return (
+         <a 
+           href={isCompactMode ? "#" : (settings.customTargetUrl || "/dashboard/billing")} 
+           target={isCompactMode ? "_self" : "_blank"} 
+           rel="noopener noreferrer" 
+           style={adCustomStyle} 
+           className={`flex flex-col p-0 overflow-hidden relative group ${adDynamicBlockClass}`}
+         >
+           <div className="absolute top-2.5 right-3 flex items-center gap-1 z-20 bg-black/40 backdrop-blur-md px-1.5 py-0.5 rounded border border-white/10">
+             <span 
+               onClick={handleUpgradeRedirect}
+               className="text-[8.5px] font-semibold text-zinc-350 hover:text-white cursor-pointer underline transition-colors"
+             >
+               {lang === "tr" ? "Reklamı Kaldır" : "Remove Ad"}
+             </span>
+             <span className="h-3 w-[1px] bg-zinc-500/20" />
+             <span className="text-[7.5px] font-bold tracking-wider uppercase text-zinc-300">
+               Ad
+             </span>
+           </div>
+           <img 
+             src={settings.customImageUrl} 
+             alt="Sponsored Ad" 
+             className="w-full h-auto object-cover max-h-32 transition-transform duration-300 group-hover:scale-105" 
+           />
+         </a>
+       );
+     }
+
+     // 3. Yedek Plan: Varsayılan Native Reklam
+     return (
+       <div 
+         style={adCustomStyle} 
+         className={`flex flex-col p-4 text-xs transition-all relative overflow-hidden group ${adDynamicBlockClass}`}
+       >
+         <div className="absolute top-2.5 right-3 flex items-center gap-1 z-20">
+           <span 
+             onClick={handleUpgradeRedirect}
+             className="text-[8.5px] font-semibold text-zinc-400 hover:text-zinc-350 cursor-pointer underline transition-colors"
+           >
+             {lang === "tr" ? "Reklamı Kaldır" : "Remove Ad"}
+           </span>
+           <span className="h-3 w-[1px] bg-zinc-500/20" />
+           <span className="text-[7.5px] font-bold tracking-wider uppercase bg-zinc-400/10 text-zinc-400 px-1 py-0.2 rounded border border-zinc-500/10">
+             Ad
+           </span>
+         </div>
+
+         <div className="flex items-start gap-3 mt-1 text-left w-full pr-16">
+           <div className="h-9 w-9 rounded-full bg-teal-500/10 text-teal-400 flex items-center justify-center shrink-0 border border-teal-500/20">
+             <Zap className="h-4.5 w-4.5 animate-pulse text-teal-500" />
+           </div>
+           <div className="space-y-0.5">
+             <h4 className="font-extrabold text-xs tracking-tight" style={{ color: defaultLinkForStyle.textColor || 'inherit' }}>
+               {lang === "tr" ? "Kendi Biyo Link Sayfanı Ücretsiz Oluştur!" : "Build Your Free Link Bio Page!"}
+             </h4>
+             <p className="text-[10px] leading-snug opacity-75" style={{ color: defaultLinkForStyle.textColor || 'inherit' }}>
+               {lang === "tr" 
+                 ? "Saniyeler içinde sosyal medya hesaplarını tek bir yerde topla ve analiz et." 
+                 : "Unify all your social links and view page traffic metrics in seconds."}
+             </p>
+           </div>
+         </div>
+       </div>
+     );
+   };
 
   const isLayoutLeft = buttonClass?.includes("layout-left");
   const isLayoutHero = buttonClass?.includes("layout-hero");

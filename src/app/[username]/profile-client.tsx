@@ -54,9 +54,15 @@ interface ProfileClientProps {
  storeLayout?: string | null;
  customCss?: string | null;
  buttonClass?: string | null;
+ systemSettings?: {
+   adScript?: string | null;
+   customImageUrl?: string | null;
+   customTargetUrl?: string | null;
+   isActive: boolean;
+ } | null;
 }
 
-export default function ProfileClient({ username, bio, theme, links, products, addons = [], avatarUrl, background, fontStyle, bioColor, usernameColor, plan, storeTitle, storeCoverUrl, storeLayout, customCss, buttonClass }: ProfileClientProps) {
+export default function ProfileClient({ username, bio, theme, links, products, addons = [], avatarUrl, background, fontStyle, bioColor, usernameColor, plan, storeTitle, storeCoverUrl, storeLayout, customCss, buttonClass, systemSettings }: ProfileClientProps) {
  const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
  const [cardNumber, setCardNumber] = useState("");
  const [cardExpiry, setCardExpiry] = useState("");
@@ -134,13 +140,14 @@ export default function ProfileClient({ username, bio, theme, links, products, a
  storeCoverUrl,
  storeLayout,
  customCss,
- buttonClass
+ buttonClass,
+ systemSettings
  };
 
  return (
  <>
  <GlobalOverlayManager onStateChange={handleStateChange} />
- <UniversalProfile data={profileData} isDarkContext={activeTheme === "dark"} />
+ <UniversalProfile data={profileData} isDarkContext={activeTheme === "dark"} lang={lang} />
  
  {/* Product Modals */}
  {selectedProduct && (
