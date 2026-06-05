@@ -30,7 +30,7 @@ export default async function AddonPage({
   const resolvedParams = await params;
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const previewAddons = resolvedSearchParams.previewAddons;
-  const username = resolvedParams.username.replace("%40", "");
+  const username = resolvedParams.username.replace("%40", "").replace(/^@/, "");
   const addonSlug = resolvedParams.addonSlug;
 
   const user = await db.user.findUnique({
