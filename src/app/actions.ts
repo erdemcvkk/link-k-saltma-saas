@@ -2145,6 +2145,10 @@ export async function getSystemSettings() {
           customImageUrl: "",
           customTargetUrl: "",
           isActive: false,
+          qrAdScript: "",
+          qrCustomImageUrl: "/promo-banner.png",
+          qrCustomTargetUrl: "/dashboard/billing",
+          isQrActive: true,
         },
       });
     }
