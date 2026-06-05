@@ -52,12 +52,20 @@ export default async function AdminAdsPage() {
         customImageUrl: settings.customImageUrl || "",
         customTargetUrl: settings.customTargetUrl || "",
         isActive: settings.isActive,
+        qrAdScript: settings.qrAdScript || "",
+        qrCustomImageUrl: settings.qrCustomImageUrl || "",
+        qrCustomTargetUrl: settings.qrCustomTargetUrl || "",
+        isQrActive: settings.isQrActive !== undefined ? settings.isQrActive : true,
       } : {
         id: "",
         adScript: "",
         customImageUrl: "",
         customTargetUrl: "",
         isActive: false,
+        qrAdScript: "",
+        qrCustomImageUrl: "",
+        qrCustomTargetUrl: "",
+        isQrActive: true,
       }} 
     />
   );

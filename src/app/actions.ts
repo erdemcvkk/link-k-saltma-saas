@@ -2160,7 +2160,11 @@ export async function saveSystemSettings(
   adScript: string | null,
   customImageUrl: string | null,
   customTargetUrl: string | null,
-  isActive: boolean
+  isActive: boolean,
+  qrAdScript?: string | null,
+  qrCustomImageUrl?: string | null,
+  qrCustomTargetUrl?: string | null,
+  isQrActive?: boolean
 ) {
   await ensureAdmin(adminUserId);
 
@@ -2173,6 +2177,10 @@ export async function saveSystemSettings(
         customImageUrl,
         customTargetUrl,
         isActive,
+        qrAdScript,
+        qrCustomImageUrl,
+        qrCustomTargetUrl,
+        isQrActive: isQrActive !== undefined ? isQrActive : true,
       },
     });
   } else {
@@ -2182,6 +2190,10 @@ export async function saveSystemSettings(
         customImageUrl,
         customTargetUrl,
         isActive,
+        qrAdScript,
+        qrCustomImageUrl,
+        qrCustomTargetUrl,
+        isQrActive: isQrActive !== undefined ? isQrActive : true,
       },
     });
   }
@@ -2189,6 +2201,7 @@ export async function saveSystemSettings(
   try {
     revalidatePath("/admin");
     revalidatePath("/[username]", "page");
+    revalidatePath("/qr-olusturucu");
   } catch (err) {}
   return settings;
 }

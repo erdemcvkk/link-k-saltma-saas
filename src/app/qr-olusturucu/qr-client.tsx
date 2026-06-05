@@ -94,6 +94,10 @@ interface QrClientProps {
     customImageUrl: string | null;
     customTargetUrl: string | null;
     isActive: boolean;
+    qrAdScript?: string | null;
+    qrCustomImageUrl?: string | null;
+    qrCustomTargetUrl?: string | null;
+    isQrActive?: boolean;
   } | null;
 }
 
@@ -379,23 +383,23 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
   };
 
   const renderAdBox = (position: "left" | "right" | "bottom") => {
-    if (!systemSettings || !systemSettings.isActive) return null;
+    if (!systemSettings || !systemSettings.isQrActive) return null;
 
     // 1. Script Ad
-    if (systemSettings.adScript) {
+    if (systemSettings.qrAdScript) {
       return (
         <div 
           className="w-full flex justify-center overflow-hidden bg-zinc-950/50 border border-zinc-900 rounded-3xl p-3 shadow-md"
-          dangerouslySetInnerHTML={{ __html: systemSettings.adScript }}
+          dangerouslySetInnerHTML={{ __html: systemSettings.qrAdScript }}
         />
       );
     }
 
     // 2. Custom Banner Ad
-    if (systemSettings.customImageUrl) {
+    if (systemSettings.qrCustomImageUrl) {
       return (
         <a 
-          href={systemSettings.customTargetUrl || "/dashboard/billing"} 
+          href={systemSettings.qrCustomTargetUrl || "/dashboard/billing"} 
           target="_blank" 
           rel="noopener noreferrer" 
           className={`flex flex-col overflow-hidden relative group rounded-3xl border border-zinc-900 bg-zinc-950/40 hover:border-zinc-800 transition-all duration-300 w-full ${
@@ -403,7 +407,7 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
           }`}
         >
           <img 
-            src={systemSettings.customImageUrl} 
+            src={systemSettings.qrCustomImageUrl} 
             alt="Reklam" 
             className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" 
           />
@@ -450,7 +454,7 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
 
       <div className="w-full max-w-[1650px] mx-auto px-4 md:px-6 py-12 flex flex-col xl:flex-row gap-8 items-start justify-center">
         {/* Sol Reklam Alanı (Left Ad) */}
-        {systemSettings && systemSettings.isActive && (
+        {systemSettings && systemSettings.isQrActive && (
           <div className="hidden xl:block w-[160px] sticky top-28 shrink-0">
             {renderAdBox("left")}
           </div>
@@ -929,7 +933,7 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
           </div>
         </div>
           {/* Mobil/Tablet Alt Reklam Alanı */}
-          {systemSettings && systemSettings.isActive && (
+          {systemSettings && systemSettings.isQrActive && (
             <div className="block xl:hidden mt-12 pt-6 border-t border-zinc-900 w-full text-center">
               {renderAdBox("bottom")}
             </div>
@@ -937,7 +941,7 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
         </main>
 
         {/* Sağ Reklam Alanı (Right Ad) */}
-        {systemSettings && systemSettings.isActive && (
+        {systemSettings && systemSettings.isQrActive && (
           <div className="hidden xl:block w-[160px] sticky top-28 shrink-0">
             {renderAdBox("right")}
           </div>
