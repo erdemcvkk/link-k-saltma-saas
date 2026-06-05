@@ -38,6 +38,7 @@ model Profile {
   theme          String    @default("dark") // default to dark
   bio            String?
   avatarUrl      String?
+  avatarShape    String    @default("circle")
   background     String?
   fontStyle      String    @default("Inter")
   bioColor       String?   @default("#888888")

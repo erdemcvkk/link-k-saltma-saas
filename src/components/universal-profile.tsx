@@ -54,6 +54,7 @@ export interface UniversalProfileData {
  storeCoverUrl?: string | null;
  storeLayout?: string | null;
  buttonClass?: string | null;
+  avatarShape?: string | null;
  links: any[];
  products?: any[];
  addons?: any[];
@@ -73,6 +74,22 @@ interface UniversalProfileProps {
  isDashboardPreview?: boolean;
 }
 
+const getAvatarShapeClass = (shape: string | undefined | null) => {
+  switch (shape) {
+    case "squircle":
+      return "rounded-2xl";
+    case "square":
+      return "rounded-none";
+    case "leaf":
+      return "rounded-tl-3xl rounded-br-3xl";
+    case "arch":
+      return "rounded-t-full rounded-b-xl";
+    case "circle":
+    default:
+      return "rounded-full";
+  }
+};
+
 export default function UniversalProfile({ data, isCompactMode = false, isDarkContext = true, lang = "tr", isDashboardPreview = false }: UniversalProfileProps) {
  // Generate a unique ID to safely scope CSS per instance
  const rawId = useId();
@@ -80,7 +97,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 
  const {
  username, bio, avatarUrl, theme = "dark", customCss, background, fontStyle = "Inter",
- bioColor, usernameColor, plan, links = [], products = [], addons = [], buttonClass
+ bioColor, usernameColor, plan, links = [], products = [], addons = [], buttonClass, avatarShape = "circle"
  } = data;
 
  const isDark = isDarkContext;
@@ -371,7 +388,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  {/* Profile Card */}
  {isLayoutLeft ? (
  <div className={`profile-card p-4 w-full rounded-3xl border backdrop-blur-md flex items-center gap-4 text-left ${currentStyles.cardBg}`} style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
- <div className={`w-16 h-16 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-2 border-white/10 shadow-md flex items-center justify-center overflow-hidden shrink-0`}>
+ <div className={`w-16 h-16 ${getAvatarShapeClass(avatarShape)} bg-gradient-to-tr ${currentStyles.avatarBg} border-2 border-white/10 shadow-md flex items-center justify-center overflow-hidden shrink-0`}>
  {avatarUrl ? (
  <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
  ) : (
@@ -398,7 +415,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  )}
  </div>
  
- <div className={`w-20 h-20 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/15 shadow-xl flex items-center justify-center overflow-hidden -mt-10 z-10`}>
+ <div className={`w-20 h-20 ${getAvatarShapeClass(avatarShape)} bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/15 shadow-xl flex items-center justify-center overflow-hidden -mt-10 z-10`}>
  {avatarUrl ? (
  <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
  ) : (
@@ -419,7 +436,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  </div>
  ) : (
  <div className={`profile-card p-3 md:p-6 w-full rounded-[2.5rem] border text-center backdrop-blur-md flex flex-col items-center gap-4 ${currentStyles.cardBg}`} style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
- <div className={`w-20 h-20 rounded-full bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/10 shadow-lg flex items-center justify-center overflow-hidden`}>
+ <div className={`w-20 h-20 ${getAvatarShapeClass(avatarShape)} bg-gradient-to-tr ${currentStyles.avatarBg} border-4 border-white/10 shadow-lg flex items-center justify-center overflow-hidden`}>
  {avatarUrl ? (
  <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
  ) : (

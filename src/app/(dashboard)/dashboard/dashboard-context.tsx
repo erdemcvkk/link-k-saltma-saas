@@ -16,6 +16,7 @@ export type UserProfile = {
   usernameColor?: string | null;
   customCss?: string | null;
   buttonClass?: string | null;
+  avatarShape?: string | null;
 };
 
 export type UserData = {

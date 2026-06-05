@@ -240,6 +240,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
   const [saveTemplateError, setSaveTemplateError] = useState("");
   const [bio, setBio] = useState(user.profile?.bio ?? "");
   const [avatarUrl, setAvatarUrl] = useState(user.profile?.avatarUrl ?? "");
+  const [avatarShape, setAvatarShape] = useState(user.profile?.avatarShape ?? "circle");
   const [background, setBackground] = useState(user.profile?.background ?? "");
   const [activeTemplateCss, setActiveTemplateCss] = useState<string | null>(user.profile?.customCss ?? null);
   const [buttonClass, setButtonClass] = useState<string | null>(user.profile?.buttonClass ?? null);
@@ -629,7 +630,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
 
  startTransition(async () => {
  try {
- await updateProfile(initialUser.id, bio, theme, username, avatarUrl, background, fontStyle, bioColor, usernameColor, activeTemplateCss, buttonClass);
+ await updateProfile(initialUser.id, bio, theme, username, avatarUrl, background, fontStyle, bioColor, usernameColor, activeTemplateCss, buttonClass, avatarShape);
  await updateAllLinksCustomStyle(
  initialUser.id,
  btnBgColor || null,
@@ -905,6 +906,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
     links: mappedLinks,
     systemSettings: systemSettings,
     plan: simulatedPlan,
+    avatarShape: avatarShape,
   };
 
   return (
@@ -1223,7 +1225,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  onClick={() => {
  if (!unlocked) {
  triggerUpgradeModal(
- lang === "tr" ? "Şablon Kilitli ðŸ”’" : "Template Locked ðŸ”’",
+ lang === "tr" ? "Şablon Kilitli 🔒" : "Template Locked 🔒",
  lang === "tr"
  ? `Bu premium şablon (${tmpl.name}) sadece ${tmpl.tier} ve üzeri paketlerde kullanılabilir. Sınırları kaldırmak için yükseltin!`
  : `This premium template (${tmpl.name}) requires the ${tmpl.tier} plan or higher. Upgrade now to unlock!`
@@ -1463,10 +1465,10 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  "bg-zinc-100 border-zinc-200 text-zinc-900"
  }`}
  >
- <option value="TEXT_LINK">ðŸ”— {lang === "tr" ? "Standart Bağlantı (Text)" : "Standard Link"}</option>
+ <option value="TEXT_LINK">🔗 {lang === "tr" ? "Standart Bağlantı (Text)" : "Standard Link"}</option>
  <option value="VIDEO_PLAYER">🎬 {lang === "tr" ? "Sinematik Video Blok" : "Cinematic Video"}</option>
- <option value="AUDIO_PLAYER">ðŸŽµ {lang === "tr" ? "Ses / Beat Oynatıcı" : "Audio / Beat Player"}</option>
- <option value="BEFORE_AFTER">â†•ï¸ {lang === "tr" ? "Önce/Sonra Görsel Karşılaştırma" : "Before/After Image Comparison"}</option>
+ <option value="AUDIO_PLAYER">🎵 {lang === "tr" ? "Ses / Beat Oynatıcı" : "Audio / Beat Player"}</option>
+ <option value="BEFORE_AFTER">↕️ {lang === "tr" ? "Önce/Sonra Görsel Karşılaştırma" : "Before/After Image Comparison"}</option>
  </select>
  </div>
  </div>
@@ -1762,7 +1764,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  {/* 1-Click Preset Themes */}
  <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-white border border-gray-100">
  <span className="text-[9px] font-extrabold text-slate-500 uppercase tracking-wider block">
- {lang === "tr" ? "âš¡ Tek Tıkla Hazır Temalar" : "âš¡ 1-Click Preset Themes"}
+ {lang === "tr" ? "⚡ Tek Tıkla Hazır Temalar" : "⚡ 1-Click Preset Themes"}
  </span>
  <div className="flex flex-wrap gap-2 mt-1">
  {[
@@ -1840,7 +1842,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  <div className="flex flex-col gap-2">
  <div className="flex items-center gap-1.5">
  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
- ðŸŽ¨ {lang === "tr" ? "Hazır Renk Paleti Şablonları" : "Preset Color Palettes"}
+ 🎨 {lang === "tr" ? "Hazır Renk Paleti Şablonları" : "Preset Color Palettes"}
  </span>
  </div>
  <div className="flex flex-wrap gap-2">
@@ -2179,18 +2181,18 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  const selected = initialFonts.find(f => f.value === selectedVal);
  if (selected) {
  const locked = (selected.tier === "STARTER" && simulatedPlan === "FREE") || (selected.tier === "CREATOR" && initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS");
- if (locked) { setErrorMsg(lang === "tr" ? `ðŸ”’ "${selected.name}" yazı tipi planınızda kilitlidir.` : `ðŸ”’ "${selected.name}" is locked on your plan.`); setSuccessMsg(""); } else { setErrorMsg(""); }
+ if (locked) { setErrorMsg(lang === "tr" ? `🔒 "${selected.name}" yazı tipi planınızda kilitlidir.` : `🔒 "${selected.name}" is locked on your plan.`); setSuccessMsg(""); } else { setErrorMsg(""); }
  setFontStyle(selectedVal);
  }
  }} className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none text-sm font-semibold text-slate-900 bg-white focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all">
- <optgroup label={lang === "tr" ? "Ücretsiz (FREE)" : "Free Fonts (FREE)"}>{initialFonts.filter(f => f.tier === "FREE").map(f => (<option key={f.value} value={f.value}>{f.giftLabel ? `â­ ${f.name} (${f.giftLabel})` : f.name}</option>))}</optgroup>
- <optgroup label={lang === "tr" ? "Starter (STARTER)" : "Starter (STARTER)"}>{initialFonts.filter(f => f.tier === "STARTER").map(f => (<option key={f.value} value={f.value}>{simulatedPlan === "FREE" ? "ðŸ”’ " : ""}{f.name}</option>))}</optgroup>
- <optgroup label={lang === "tr" ? "Creator (CREATOR)" : "Creator (CREATOR)"}>{initialFonts.filter(f => f.tier === "CREATOR").map(f => (<option key={f.value} value={f.value}>{(initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS") ? "ðŸ”’ " : ""}{f.name}</option>))}</optgroup>
+ <optgroup label={lang === "tr" ? "Ücretsiz (FREE)" : "Free Fonts (FREE)"}>{initialFonts.filter(f => f.tier === "FREE").map(f => (<option key={f.value} value={f.value}>{f.giftLabel ? `⭐ ${f.name} (${f.giftLabel})` : f.name}</option>))}</optgroup>
+ <optgroup label={lang === "tr" ? "Starter (STARTER)" : "Starter (STARTER)"}>{initialFonts.filter(f => f.tier === "STARTER").map(f => (<option key={f.value} value={f.value}>{simulatedPlan === "FREE" ? "🔒 " : ""}{f.name}</option>))}</optgroup>
+ <optgroup label={lang === "tr" ? "Creator (CREATOR)" : "Creator (CREATOR)"}>{initialFonts.filter(f => f.tier === "CREATOR").map(f => (<option key={f.value} value={f.value}>{(initialUser.plan !== "CREATOR" && initialUser.plan !== "PRO_BUSINESS") ? "🔒 " : ""}{f.name}</option>))}</optgroup>
  </select>
  </div>
  <div className="p-5 rounded-2xl border border-gray-100 bg-gray-50 text-center space-y-2">
  <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block">{lang === "tr" ? "Canlı Önizleme" : "Live Preview"}</span>
- <div style={{ fontFamily: fontStyle }} className="text-xl md:text-2xl py-2 font-bold text-slate-800 tracking-tight">Abcde 12345 â€” {fontStyle}</div>
+ <div style={{ fontFamily: fontStyle }} className="text-xl md:text-2xl py-2 font-bold text-slate-800 tracking-tight">Abcde 12345 — {fontStyle}</div>
  <p style={{ fontFamily: fontStyle }} className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">{lang === "tr" ? "Hızlı kahverengi tilki tembel köpeğin üstünden atlar." : "The quick brown fox jumps over the lazy dog."}</p>
  </div>
  {(() => {
@@ -2231,7 +2233,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  ))}</div>
  <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
  <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-600"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}<span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-[8px] text-amber-600 uppercase tracking-wide font-black"><Lock className="h-2 w-2" /> PREMIUM</span></div></div>
- <button type="button" onClick={() => triggerUpgradeModal(lang === "tr" ? "Özel Arka Plan Kilidi ðŸ”’" : "Custom Background Locked ðŸ”’", lang === "tr" ? "Kendi özel resimlerinizi veya videolarınızı arka plan olarak kullanmak Premium pakete özeldir." : "Custom backgrounds are exclusive to Premium plans.")} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs transition-all cursor-pointer"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "Yükselt" : "Upgrade"}</button>
+ <button type="button" onClick={() => triggerUpgradeModal(lang === "tr" ? "Özel Arka Plan Kilidi 🔒" : "Custom Background Locked 🔒", lang === "tr" ? "Kendi özel resimlerinizi veya videolarınızı arka plan olarak kullanmak Premium pakete özeldir." : "Custom backgrounds are exclusive to Premium plans.")} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs transition-all cursor-pointer"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "Yükselt" : "Upgrade"}</button>
  </div>
  </div>
  )}
@@ -2244,7 +2246,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
  ))}</div>
  <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center gap-4">
- <div className="flex-1 space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-700"><Image className="h-3.5 w-3.5 text-indigo-500" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG veya JPEG â€” Maks. 1 MB" : "PNG or JPEG â€” Max 1 MB"}</p>{customBgError && (<p className="text-[10px] text-red-500 font-bold mt-1">{customBgError}</p>)}</div>
+ <div className="flex-1 space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-700"><Image className="h-3.5 w-3.5 text-indigo-500" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG veya JPEG — Maks. 1 MB" : "PNG or JPEG — Max 1 MB"}</p>{customBgError && (<p className="text-[10px] text-red-500 font-bold mt-1">{customBgError}</p>)}</div>
  <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
  <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "Dosya boyutu 1 MB'ı geçemez!" : "File must be under 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
  {background?.startsWith("custom-img::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
@@ -2261,13 +2263,13 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  ))}</div>
  <div className="grid sm:grid-cols-2 gap-3">
  <div className="p-4 rounded-2xl border border-dashed border-purple-200 bg-purple-50/30 flex flex-col gap-3">
- <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-purple-700"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG / JPEG / WebP â€” Maks. 1 MB" : "Max 1 MB"}</p>{customBgError && customBgError.includes("foto") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
+ <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-purple-700"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG / JPEG / WebP — Maks. 1 MB" : "Max 1 MB"}</p>{customBgError && customBgError.includes("foto") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
  <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-purple-200 bg-purple-100 hover:bg-purple-200 text-purple-800 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
- <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "ðŸ“· Fotoğraf 1 MB sınırını aşıyor!" : "ðŸ“· Photo exceeds 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
+ <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 1 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "📸 Fotoğraf 1 MB sınırını aşıyor!" : "📸 Photo exceeds 1 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-img::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
  {background?.startsWith("custom-img::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer text-center">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
  </div>
  <div className="p-4 rounded-2xl border border-dashed border-amber-200 bg-amber-50/30 flex flex-col gap-3">
- <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-amber-700"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Video" : "Custom Video"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "MP4 / WebM â€” Maks. 5 MB" : "Max 5 MB"}</p>{customBgError && customBgError.includes("video") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
+ <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-amber-700"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Video" : "Custom Video"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "MP4 / WebM — Maks. 5 MB" : "Max 5 MB"}</p>{customBgError && customBgError.includes("video") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
  <label className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-100 hover:bg-amber-200 text-amber-800 cursor-pointer font-bold text-xs transition-all"><Play className="h-3.5 w-3.5" />{lang === "tr" ? "Video Seç" : "Choose Video"}
  <input type="file" accept="video/mp4,video/webm" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (!file) return; if (file.size > 5 * 1024 * 1024) { setCustomBgError(lang === "tr" ? "🎬 Video 5 MB sınırını aşıyor!" : "🎬 Video exceeds 5 MB!"); e.target.value = ""; return; } setCustomBgError(""); const reader = new FileReader(); reader.onload = (ev) => { setBackground(`custom-video::${ev.target?.result as string}`); }; reader.readAsDataURL(file); }} /></label>
  {background?.startsWith("custom-video::") && (<button type="button" onClick={() => setBackground("")} className="text-[10px] font-bold text-red-500 hover:text-red-700 transition-colors cursor-pointer text-center">✕ {lang === "tr" ? "Kaldır" : "Remove"}</button>)}
@@ -2429,6 +2431,37 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
                   {lang === "tr" ? "Maksimum 2.5MB (PNG, JPG). Fotoğraf veri tabanına güvenle işlenecektir." : "Max 2.5MB (PNG, JPG). Image will be safely encrypted."}
                 </p>
               </div>
+            </div>
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <label className="text-xs font-semibold uppercase tracking-wider block text-slate-500">
+              {lang === "tr" ? "FOTOĞRAF ŞEKLİ" : "AVATAR SHAPE"}
+            </label>
+            <div className="grid grid-cols-5 gap-3 p-4 rounded-xl border bg-zinc-100 border-zinc-200">
+              {[
+                { id: "circle", label: lang === "tr" ? "Yuvarlak" : "Circle", class: "rounded-full" },
+                { id: "squircle", label: lang === "tr" ? "Yumuşak Kare" : "Squircle", class: "rounded-2xl" },
+                { id: "square", label: lang === "tr" ? "Keskin Kare" : "Square", class: "rounded-none" },
+                { id: "leaf", label: lang === "tr" ? "Yaprak" : "Leaf", class: "rounded-tl-3xl rounded-br-3xl" },
+                { id: "arch", label: lang === "tr" ? "Kemer" : "Arch", class: "rounded-t-full rounded-b-xl" }
+              ].map((shapeOption) => (
+                <button
+                  key={shapeOption.id}
+                  type="button"
+                  onClick={() => setAvatarShape(shapeOption.id)}
+                  className={`flex flex-col items-center justify-center p-2 rounded-xl border bg-white cursor-pointer select-none transition-all duration-200 h-20 shadow-sm ${
+                    avatarShape === shapeOption.id
+                      ? "border-teal-500 ring-2 ring-teal-500/20"
+                      : "border-zinc-300 hover:border-zinc-400"
+                  }`}
+                >
+                  <div className={`w-8 h-8 bg-zinc-400 border border-zinc-500/30 ${shapeOption.class} mb-1.5`} />
+                  <span className="text-[9px] font-extrabold text-zinc-600 truncate max-w-full text-center">
+                    {shapeOption.label}
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
 

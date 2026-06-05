@@ -276,6 +276,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  products={serializedProducts}
  addons={serializedAddons}
  avatarUrl={activeUser.profile?.avatarUrl ?? null}
+ avatarShape={activeUser.profile?.avatarShape ?? "circle"}
  background={activeTemplate ? activeTemplate.bgColor : (activeUser.profile?.background ?? null)}
  fontStyle={activeTemplate && activeTemplate.fontStyle ? activeTemplate.fontStyle : (activeUser.profile?.fontStyle ?? "Inter")}
  bioColor={activeUser.profile?.bioColor ?? null}
