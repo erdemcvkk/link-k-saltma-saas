@@ -218,87 +218,25 @@ export default function TemplatesClient({
  </p>
  </div>
  </div>
- <Link
- href="/sablonlar"
- className="px-4 py-2.5 md:py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-900 text-xs font-black transition-colors cursor-pointer"
- >
- {lang === "tr" ? "Yeni Şablon Al" : "Browse Showcase"}
- </Link>
- </div>
-
- {/* Profile Link Header */}
- <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-zinc-50 border border-zinc-200 rounded-xl p-4 gap-4">
- <div className="space-y-1">
- <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block">
- {lang === "tr" ? "Şablon Önizleme Bağlantısı" : "Template Preview Link"}
- </span>
- <div className="text-xs sm:text-sm font-bold text-zinc-800 flex items-start sm:items-center gap-1.5 break-all min-w-0">
- <Globe className="h-4 w-4 text-teal-500" />
- {(() => {
- const baseUrl = initialUser.profile?.customDomain 
- ? initialUser.profile.customDomain 
- : `link-saas.vercel.app`;
- if (customizingTemplateId) {
- const customUrl = (ownedTemplates.find(ut => ut.id === customizingTemplateId) as any)?.customUrl;
- if (customUrl) return `${baseUrl}/${customUrl}`;
- return `${baseUrl}/${initialUser.username}?previewTemplate=${customizingTemplateId}`;
- }
- return `${baseUrl}/${initialUser.username}`;
- })()}
- </div>
- </div>
+ 
  <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
- <button
- onClick={() => {
- const protocol = initialUser.profile?.customDomain ? "https://" : `${window.location.protocol}//`;
- const baseUrl = initialUser.profile?.customDomain 
- ? initialUser.profile.customDomain 
- : `${window.location.host}`;
- 
- let finalUrl = `${protocol}${baseUrl}/${initialUser.username}`;
- if (customizingTemplateId) {
- const customUrl = (ownedTemplates.find(ut => ut.id === customizingTemplateId) as any)?.customUrl;
- if (customUrl) {
- finalUrl = `${protocol}${baseUrl}/${customUrl}`;
- } else {
- finalUrl = `${protocol}${baseUrl}/${initialUser.username}?previewTemplate=${customizingTemplateId}`;
- }
- }
- 
- navigator.clipboard.writeText(finalUrl);
- setSuccessMsg(lang === "tr" ? "Bağlantı kopyalandı!" : "Link copied!");
- setTimeout(() => setSuccessMsg(""), 2000);
- }}
- className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 md:py-2 rounded-lg bg-white border border-zinc-200 hover:bg-zinc-50 text-xs font-bold text-zinc-700 transition-colors cursor-pointer"
- >
- <Copy className="h-3.5 w-3.5" />
- {lang === "tr" ? "Kopyala" : "Copy"}
- </button>
- <button
- onClick={() => {
- const protocol = initialUser.profile?.customDomain ? "https://" : `${window.location.protocol}//`;
- const baseUrl = initialUser.profile?.customDomain 
- ? initialUser.profile.customDomain 
- : `${window.location.host}`;
- 
- let finalUrl = `${protocol}${baseUrl}/${initialUser.username}`;
- if (customizingTemplateId) {
- const customUrl = (ownedTemplates.find(ut => ut.id === customizingTemplateId) as any)?.customUrl;
- if (customUrl) {
- finalUrl = `${protocol}${baseUrl}/${customUrl}`;
- } else {
- finalUrl = `${protocol}${baseUrl}/${initialUser.username}?previewTemplate=${customizingTemplateId}`;
- }
- }
- 
- window.open(finalUrl, "_blank");
- }}
- className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 md:py-2 rounded-lg bg-teal-500 hover:bg-teal-400 border border-teal-600/10 text-xs font-bold text-zinc-900 transition-colors cursor-pointer"
- >
- <span>{lang === "tr" ? "Önizle" : "Preview"}</span>
- <ExternalLink className="h-3.5 w-3.5" />
- </button>
- </div>
+    <a
+      href={`/${initialUser.username}${customizingTemplateId ? `?previewTemplate=${customizingTemplateId}` : ""}`}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold shadow-sm transition-all cursor-pointer whitespace-nowrap active:scale-95 hover:border-zinc-300"
+    >
+      <ExternalLink className="h-3.5 w-3.5 text-teal-500 animate-pulse" />
+      <span>{lang === "tr" ? "Şablon Önizleme Linki" : "Template Preview Link"}</span>
+    </a>
+
+    <Link
+      href="/sablonlar"
+      className="px-4 py-2.5 rounded-2xl bg-teal-500 hover:bg-teal-400 text-slate-900 text-xs font-black transition-colors cursor-pointer whitespace-nowrap"
+    >
+      {lang === "tr" ? "Yeni Şablon Al" : "Browse Showcase"}
+    </Link>
+  </div>
  </div>
 
  {ownedTemplates.length === 0 ? (

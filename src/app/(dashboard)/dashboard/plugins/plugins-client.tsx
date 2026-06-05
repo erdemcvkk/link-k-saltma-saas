@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Puzzle, ShoppingBag, Settings, Globe } from "lucide-react";
+import { Puzzle, ShoppingBag, Settings, Globe, ExternalLink } from "lucide-react";
 import AddonConfigModal from "@/components/addons/addon-config-modal";
 import PhonePreview from "@/components/dashboard/phone-preview";
 import { parseButtonStyle } from "@/lib/parse-button-style";
@@ -71,18 +71,30 @@ export default function PluginsClient({
         
         {/* Active Addons Section */}
         <div className="p-3 md:p-6 rounded-2xl border space-y-5 md:space-y-6 w-full max-w-full overflow-hidden bg-white border-zinc-200 shadow-sm">
-          <div className="flex items-center gap-3 border-b border-zinc-150 pb-4 md:pb-5">
-            <Puzzle className="h-5 w-5 text-rose-500" />
-            <div>
-              <h2 className="font-extrabold text-lg text-zinc-950">
-                {lang === "tr" ? "Aktif Eklentilerim" : "My Active Add-ons"}
-              </h2>
-              <p className="text-xs text-slate-500">
-                {lang === "tr" 
-                  ? "Satın alıp aktif ettiğiniz eklentileri buradan yapılandırabilirsiniz."
-                  : "Configure and manage the premium plug-ins you have added to your profile."}
-              </p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-zinc-150 pb-4 md:pb-5">
+            <div className="flex items-center gap-3">
+              <Puzzle className="h-5 w-5 text-rose-500" />
+              <div>
+                <h2 className="font-extrabold text-lg text-zinc-950">
+                  {lang === "tr" ? "Aktif Eklentilerim" : "My Active Add-ons"}
+                </h2>
+                <p className="text-xs text-slate-500">
+                  {lang === "tr" 
+                    ? "Satın alıp aktif ettiğiniz eklentileri buradan yapılandırabilirsiniz."
+                    : "Configure and manage the premium plug-ins you have added to your profile."}
+                </p>
+              </div>
             </div>
+
+            <a
+              href={`/${user.username}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold shadow-sm transition-all cursor-pointer whitespace-nowrap active:scale-95 hover:border-zinc-300"
+            >
+              <ExternalLink className="h-3.5 w-3.5 text-rose-500 animate-pulse" />
+              <span>{lang === "tr" ? "Eklenti Önizleme Linki" : "Add-on Preview Link"}</span>
+            </a>
           </div>
 
           {addons.length === 0 ? (
