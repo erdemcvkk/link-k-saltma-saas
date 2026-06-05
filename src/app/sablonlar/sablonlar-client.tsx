@@ -194,18 +194,31 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  <div className="absolute top-0 left-1/4 w-full md:w-96 h-96 bg-neon-blue/5 rounded-full blur-3xl pointer-events-none" />
  <div className="absolute bottom-10 right-1/4 w-full md:w-96 h-96 bg-light-blue/5 rounded-full blur-3xl pointer-events-none" />
 
- <nav className="border-b border-zinc-800 bg-black/80 backdrop-blur-md sticky top-0 z-40">
- <div className="max-w-full md:w-[1800px] mx-auto px-6 h-16 flex items-center justify-between">
- <Link href="/" className="font-black text-xl tracking-tighter text-white">
- Link.SaaS
- </Link>
- <div className="flex items-center gap-4">
- <Link href="/dashboard" className="text-sm font-bold text-zinc-400 hover:text-white">
- Dashboard'a Dön
- </Link>
- </div>
- </div>
- </nav>
+  <nav className="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
+    <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-all">
+        <ArrowLeft className="h-5 w-5 text-zinc-400" />
+        <span className="text-xl font-black tracking-tight text-white">Ana Sayfa</span>
+      </Link>
+      <div className="flex items-center space-x-4">
+        {userId ? (
+          <Link
+            href="/dashboard"
+            className="px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-bold text-xs md:text-sm transition-all"
+          >
+            Yönetim Paneli
+          </Link>
+        ) : (
+          <Link
+            href="/sign-up"
+            className="px-4 py-2 rounded-full bg-gradient-to-r from-neon-blue to-light-blue text-white font-bold text-xs md:text-sm transition-all"
+          >
+            Hemen Üye Ol
+          </Link>
+        )}
+      </div>
+    </div>
+  </nav>
 
  <div className="max-w-full md:w-[1800px] mx-auto px-6 pt-16 pb-6">
  <div className="text-center max-w-2xl mx-auto mb-12">

@@ -203,44 +203,58 @@ export const ADDON_TYPES: AddonTypeData[] = [
 ];
 
 interface EklentilerClientProps {
- products?: DummyProduct[];
- settings?: Record<string, string>;
+  products?: DummyProduct[];
+  settings?: Record<string, string>;
+  userId?: string | null;
 }
 
-export default function EklentilerClient({ products, settings }: EklentilerClientProps = {}) {
- const [purchasing, setPurchasing] = useState<string | null>(null);
- const [purchased, setPurchased] = useState<string[]>([]);
- const [visibleCount, setVisibleCount] = useState(12);
- const [searchQuery, setSearchQuery] = useState("");
- const [sortOption, setSortOption] = useState("default");
+export default function EklentilerClient({ products, settings, userId = null }: EklentilerClientProps = {}) {
+  const [purchasing, setPurchasing] = useState<string | null>(null);
+  const [purchased, setPurchased] = useState<string[]>([]);
+  const [visibleCount, setVisibleCount] = useState(12);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("default");
 
- const handlePurchase = async (addonType: string) => {
- setPurchasing(addonType);
- try {
- await buyAddonAction(addonType);
- setPurchased(prev => [...prev, addonType]);
- alert("Eklenti başarıyla satın alındı ve paneline eklendi!");
- } catch (err) {
- alert("Satın alma sırasında bir hata oluştu veya oturumunuz açık değil.");
- } finally {
- setPurchasing(null);
- }
- };
+  const handlePurchase = async (addonType: string) => {
+    setPurchasing(addonType);
+    try {
+      await buyAddonAction(addonType);
+      setPurchased(prev => [...prev, addonType]);
+      alert("Eklenti başarıyla satın alındı ve paneline eklendi!");
+    } catch (err) {
+      alert("Satın alma sırasında bir hata oluştu veya oturumunuz açık değil.");
+    } finally {
+      setPurchasing(null);
+    }
+  };
 
- return (
- <div className="min-h-screen bg-black font-sans">
- <nav className="border-b border-zinc-800 bg-black/80 backdrop-blur-md sticky top-0 z-50">
- <div className="max-w-full md:w-[1800px] mx-auto px-6 h-16 flex items-center justify-between">
- <Link href="/" className="font-black text-xl tracking-tighter text-white">
- Link.SaaS
- </Link>
- <div className="flex items-center gap-4">
- <Link href="/dashboard" className="text-sm font-bold text-zinc-400 hover:text-white">
- Dashboard&apos;a Dön
- </Link>
- </div>
- </div>
- </nav>
+  return (
+    <div className="min-h-screen bg-black font-sans">
+      <nav className="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-all">
+            <ArrowLeft className="h-5 w-5 text-zinc-400" />
+            <span className="text-xl font-black tracking-tight text-white">Ana Sayfa</span>
+          </Link>
+          <div className="flex items-center space-x-4">
+            {userId ? (
+              <Link
+                href="/dashboard"
+                className="px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-bold text-xs md:text-sm transition-all"
+              >
+                Yönetim Paneli
+              </Link>
+            ) : (
+              <Link
+                href="/sign-up"
+                className="px-4 py-2 rounded-full bg-gradient-to-r from-neon-blue to-light-blue text-white font-bold text-xs md:text-sm transition-all"
+              >
+                Hemen Üye Ol
+              </Link>
+            )}
+          </div>
+        </div>
+      </nav>
 
  <main className="max-w-full md:w-[1800px] mx-auto px-6 py-16">
  <div className="text-center max-w-2xl mx-auto mb-16">
