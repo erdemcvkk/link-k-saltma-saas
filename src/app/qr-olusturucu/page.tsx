@@ -18,11 +18,15 @@ export default async function QrGeneratorPage() {
   const siteTitle = serializedSettings["site_title"] || "CREATOR.HUB";
   const siteLogo = serializedSettings["site_logo"] || "";
 
+  // Fetch system settings for ads
+  const systemSettings = await db.systemSettings.findFirst();
+
   return (
     <QrClient
       userId={userId}
       siteTitle={siteTitle}
       siteLogo={siteLogo}
+      systemSettings={systemSettings}
     />
   );
 }

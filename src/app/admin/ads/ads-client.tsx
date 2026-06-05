@@ -86,7 +86,7 @@ export default function AdsClient({ adminUserId, initialSettings }: AdsClientPro
               Reklam Yönetim Alanı
             </h1>
             <p className="text-xs text-zinc-400">
-              Ücretsiz (FREE) paketteki tüm kullanıcı profillerinde yayınlanacak global reklamları yönetin.
+              Ücretsiz (FREE) paketteki tüm kullanıcı profillerinde ve QR Oluşturucu (/qr-olusturucu) sayfasında yayınlanacak global reklamları yönetin.
             </p>
           </div>
 
@@ -155,7 +155,7 @@ export default function AdsClient({ adminUserId, initialSettings }: AdsClientPro
               </div>
               <div>
                 <h3 className="text-sm font-extrabold text-white">Özel Görsel Banner (Alternatif)</h3>
-                <p className="text-[10px] text-zinc-500">Eğer yukarıda bir script girilmediyse gösterilecek olan özel görsel reklam.</p>
+                <p className="text-[10px] text-zinc-500">Eğer yukarıda bir script girilmediyse gösterilecek olan özel görsel reklam. Bu reklam ücretsiz profillerde yatay banner, QR Oluşturucu sayfasında ise yanlarda dikey gökdelen (skyscraper) reklamı olarak gösterilir.</p>
               </div>
             </div>
 

@@ -88,6 +88,13 @@ interface QrClientProps {
   userId: string | null;
   siteTitle: string;
   siteLogo: string;
+  systemSettings?: {
+    id: string;
+    adScript: string | null;
+    customImageUrl: string | null;
+    customTargetUrl: string | null;
+    isActive: boolean;
+  } | null;
 }
 
 type PlatformPreset = {
@@ -105,7 +112,7 @@ type PlatformPreset = {
   topLogoRenderer: (color: string) => React.ReactNode;
 };
 
-export default function QrClient({ userId, siteTitle, siteLogo }: QrClientProps) {
+export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }: QrClientProps) {
   // Brand Logo Renderers for top of card
   const renderSpotifyLogo = (color: string) => (
     <g transform="scale(0.357) translate(-84, -84)">
@@ -371,6 +378,45 @@ export default function QrClient({ userId, siteTitle, siteLogo }: QrClientProps)
     }
   };
 
+  const renderAdBox = (position: "left" | "right" | "bottom") => {
+    if (!systemSettings || !systemSettings.isActive) return null;
+
+    // 1. Script Ad
+    if (systemSettings.adScript) {
+      return (
+        <div 
+          className="w-full flex justify-center overflow-hidden bg-zinc-950/50 border border-zinc-900 rounded-3xl p-3 shadow-md"
+          dangerouslySetInnerHTML={{ __html: systemSettings.adScript }}
+        />
+      );
+    }
+
+    // 2. Custom Banner Ad
+    if (systemSettings.customImageUrl) {
+      return (
+        <a 
+          href={systemSettings.customTargetUrl || "/dashboard/billing"} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className={`flex flex-col overflow-hidden relative group rounded-3xl border border-zinc-900 bg-zinc-950/40 hover:border-zinc-800 transition-all duration-300 w-full ${
+            position === "bottom" ? "aspect-[5/1] max-w-2xl mx-auto" : "h-[600px] aspect-[160/600]"
+          }`}
+        >
+          <img 
+            src={systemSettings.customImageUrl} 
+            alt="Reklam" 
+            className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" 
+          />
+          <div className="absolute top-2.5 right-3 bg-black/60 text-[8px] text-zinc-400 px-1.5 py-0.5 rounded border border-white/10 uppercase tracking-wider font-extrabold z-10">
+            AD / Reklam
+          </div>
+        </a>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden">
       <GlobalOverlayManager />
@@ -402,8 +448,16 @@ export default function QrClient({ userId, siteTitle, siteLogo }: QrClientProps)
         </div>
       </header>
 
-      {/* Grid container with modern dark aesthetics */}
-      <main className="max-w-7xl mx-auto px-6 py-12">
+      <div className="w-full max-w-[1650px] mx-auto px-4 md:px-6 py-12 flex flex-col xl:flex-row gap-8 items-start justify-center">
+        {/* Sol Reklam Alanı (Left Ad) */}
+        {systemSettings && systemSettings.isActive && (
+          <div className="hidden xl:block w-[160px] sticky top-28 shrink-0">
+            {renderAdBox("left")}
+          </div>
+        )}
+
+        {/* Grid container with modern dark aesthetics */}
+        <main className="flex-1 max-w-7xl w-full px-2 md:px-4">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="px-3 py-1.5 rounded-full bg-neon-blue/10 text-neon-blue font-bold text-xs tracking-wider uppercase">
             Ücretsiz Akıllı Araç
@@ -874,7 +928,21 @@ export default function QrClient({ userId, siteTitle, siteLogo }: QrClientProps)
             </div>
           </div>
         </div>
-      </main>
+          {/* Mobil/Tablet Alt Reklam Alanı */}
+          {systemSettings && systemSettings.isActive && (
+            <div className="block xl:hidden mt-12 pt-6 border-t border-zinc-900 w-full text-center">
+              {renderAdBox("bottom")}
+            </div>
+          )}
+        </main>
+
+        {/* Sağ Reklam Alanı (Right Ad) */}
+        {systemSettings && systemSettings.isActive && (
+          <div className="hidden xl:block w-[160px] sticky top-28 shrink-0">
+            {renderAdBox("right")}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
