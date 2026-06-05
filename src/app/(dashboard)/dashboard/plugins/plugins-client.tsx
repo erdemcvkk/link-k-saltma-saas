@@ -87,7 +87,7 @@ export default function PluginsClient({
             </div>
 
             <a
-              href={`/${user.username}`}
+              href={`/${user.username}?previewAddons=true`}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold shadow-sm transition-all cursor-pointer whitespace-nowrap active:scale-95 hover:border-zinc-300"

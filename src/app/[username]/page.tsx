@@ -49,10 +49,11 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
 
 import ProfileClient from "./profile-client";
 
-export default async function PublicProfilePage({ params, searchParams }: { params: Promise<{ username: string }>, searchParams?: Promise<{ previewTemplate?: string }> }) {
+export default async function PublicProfilePage({ params, searchParams }: { params: Promise<{ username: string }>, searchParams?: Promise<{ previewTemplate?: string, previewAddons?: string }> }) {
  const { username } = await params;
  const resolvedSearchParams = searchParams ? await searchParams : {};
  const previewTemplateId = resolvedSearchParams.previewTemplate;
+ const previewAddons = resolvedSearchParams.previewAddons;
  const cleanUsername = username.replace("%40", "").replace(/^@/, "");
 
  let forcedTemplateId: string | null = null;
@@ -245,10 +246,13 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  salesCount: p.salesCount
  }));
 
- // Fetch active addons for this user
- const addons = await db.userAddon.findMany({
- where: { userId: activeUser.id, isActive: true }
- });
+  // Fetch active addons for this user
+  const addons = await db.userAddon.findMany({
+    where: { 
+      userId: activeUser.id,
+      ...(previewAddons === "true" ? {} : { isActive: true })
+    }
+  });
  const serializedAddons = addons.map(a => ({
  id: a.id,
  addonType: a.addonType,
