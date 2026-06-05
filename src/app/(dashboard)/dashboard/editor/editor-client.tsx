@@ -201,9 +201,15 @@ type TemplateItem = {
 interface EditorClientProps {
   initialLinks: LinkItem[];
   initialOwnedTemplates?: TemplateItem[];
+  systemSettings?: {
+    adScript?: string | null;
+    customImageUrl?: string | null;
+    customTargetUrl?: string | null;
+    isActive: boolean;
+  } | null;
 }
 
-export default function EditorClient({ initialLinks, initialOwnedTemplates }: EditorClientProps) {
+export default function EditorClient({ initialLinks, initialOwnedTemplates, systemSettings }: EditorClientProps) {
   const {
     user,
     globalSettings,
@@ -862,6 +868,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates }: Ed
     usernameColor: usernameColor || (isLight ? "#0f172a" : "#ffffff"),
     bioColor: bioColor || (isLight ? "#475569" : "rgba(255,255,255,0.7)"),
     links: mappedLinks,
+    systemSettings: systemSettings,
   };
 
   return (

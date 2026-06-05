@@ -74,10 +74,19 @@ export default async function EditorPage() {
     configJson: ot.template.configJson,
   }));
 
+  const systemSettings = await db.systemSettings.findFirst();
+  const serializedSystemSettings = systemSettings ? {
+    adScript: systemSettings.adScript,
+    customImageUrl: systemSettings.customImageUrl,
+    customTargetUrl: systemSettings.customTargetUrl,
+    isActive: systemSettings.isActive
+  } : null;
+
   return (
     <EditorClient
       initialLinks={serializedLinks}
       initialOwnedTemplates={serializedOwnedTemplates}
+      systemSettings={serializedSystemSettings}
     />
   );
 }

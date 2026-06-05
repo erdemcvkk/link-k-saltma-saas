@@ -34,6 +34,7 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
             data={data} 
             isCompactMode={true} 
             isDarkContext={!isLight}
+            isDashboardPreview={true}
           />
         </div>
       </div>

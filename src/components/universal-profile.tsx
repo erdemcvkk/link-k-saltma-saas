@@ -38,9 +38,10 @@ interface UniversalProfileProps {
  isCompactMode?: boolean; // If true, disable interactive popups/modals
  isDarkContext?: boolean; // For default fallback logic
  lang?: "tr" | "en";
+ isDashboardPreview?: boolean;
 }
 
-export default function UniversalProfile({ data, isCompactMode = false, isDarkContext = true, lang = "tr" }: UniversalProfileProps) {
+export default function UniversalProfile({ data, isCompactMode = false, isDarkContext = true, lang = "tr", isDashboardPreview = false }: UniversalProfileProps) {
  // Generate a unique ID to safely scope CSS per instance
  const rawId = useId();
  const wrapperId = `univ-profile-${rawId.replace(/:/g, "")}`;
@@ -192,12 +193,17 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  }
  };
 
-   const renderSponsoredBlock = () => {
-     const settings = data.systemSettings;
-     // Eğer reklam global olarak kapalıysa reklam alanını tamamen gizle
-     if (settings && !settings.isActive) {
-       return null;
-     }
+    const renderSponsoredBlock = () => {
+      // Reklam kısmını yalnızca kullanıcı panelindeki telefon önizlemelerinde göster
+      if (!isDashboardPreview) {
+        return null;
+      }
+
+      const settings = data.systemSettings;
+      // Eğer reklam global olarak kapalıysa reklam alanını tamamen gizle
+      if (settings && !settings.isActive) {
+        return null;
+      }
 
      const defaultLinkForStyle = links[0] || {};
      const adCustomStyle: React.CSSProperties = data.buttonClass ? {} : {
