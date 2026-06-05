@@ -13,7 +13,8 @@ import {
   updateLinkCustomStyle,
   updateAllLinksCustomStyle,
   toggleUserTemplateActive,
-  saveUserCustomTemplate
+  saveUserCustomTemplate,
+  deleteUserCustomTemplate
 } from "@/app/actions";
 import {
   Trash2,
@@ -775,7 +776,41 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
     });
   };
 
-   const handleGenerateAiSuggestions = async () => {
+  const handleDeleteTemplate = async (templateId: string) => {
+    if (!confirm(lang === "tr" ? "Bu şablonu silmek istediğinize emin misiniz?" : "Are you sure you want to delete this template?")) {
+      return;
+    }
+    setErrorMsg("");
+    setSuccessMsg("");
+    startTransition(async () => {
+      try {
+        const res = await deleteUserCustomTemplate(initialUser.id, templateId);
+        if (res && res.success) {
+          setOwnedTemplates(prev => prev.filter(t => t.id !== templateId));
+          // If the deleted template was the active template, reset activeTemplate state
+          if (activeTemplate?.id === templateId) {
+            setActiveTemplate(null);
+            setBackground("");
+            setFontStyle("Inter");
+            setBtnBgColor("");
+            setBtnTextColor("");
+            setBtnBorderColor("");
+            setBtnBorderStyle("solid");
+            setBtnBorderWidth("1px");
+            setBtnBorderRadius("12px");
+            setBtnShadow("none");
+            setBtnFontWeight("font-bold");
+            setActiveTemplateCss("");
+          }
+          setSuccessMsg(lang === "tr" ? "Şablon başarıyla silindi." : "Template deleted successfully.");
+        }
+      } catch (err: any) {
+         setErrorMsg(err.message || "Failed to delete template");
+      }
+    });
+  };
+
+  const handleGenerateAiSuggestions = async () => {
  if (!aiPrompt) return;
  setErrorMsg("");
  setSuccessMsg("");
@@ -1064,30 +1099,42 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
                             </div>
                           </div>
 
-                          <button
-                            type="button"
-                            onClick={() => handleToggleTemplate(tmpl.id, isSelected)}
-                            disabled={isPending}
-                            className={`w-full py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border shadow-sm ${
-                              isSelected
-                                ? "bg-red-50 border-red-200 text-red-600 hover:bg-red-100"
-                                : "bg-zinc-950 border-zinc-900 text-white hover:bg-zinc-800"
-                            }`}
-                          >
-                            {isPending ? (
-                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                            ) : isSelected ? (
-                              <>
-                                <X className="h-3.5 w-3.5" />
-                                {lang === "tr" ? "Şablonu Devre Dışı Bırak" : "Deactivate Template"}
-                              </>
-                            ) : (
-                              <>
-                                <Check className="h-3.5 w-3.5" />
-                                {lang === "tr" ? "Şablonu Aktifleştir" : "Activate Template"}
-                              </>
-                            )}
-                          </button>
+                          <div className="flex items-center gap-2 w-full">
+                            <button
+                              type="button"
+                              onClick={() => handleToggleTemplate(tmpl.id, isSelected)}
+                              disabled={isPending}
+                              className={`flex-1 py-2 rounded-xl text-[11px] font-black transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 border shadow-sm ${
+                                isSelected
+                                  ? "bg-red-50 border-red-200 text-red-600 hover:bg-red-100"
+                                  : "bg-zinc-950 border-zinc-900 text-white hover:bg-zinc-800"
+                              }`}
+                            >
+                              {isPending ? (
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              ) : isSelected ? (
+                                <>
+                                  <X className="h-3.5 w-3.5" />
+                                  {lang === "tr" ? "Devre Dışı Bırak" : "Deactivate"}
+                                </>
+                              ) : (
+                                <>
+                                  <Check className="h-3.5 w-3.5" />
+                                  {lang === "tr" ? "Aktifleştir" : "Activate"}
+                                </>
+                              )}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteTemplate(tmpl.id)}
+                              disabled={isPending}
+                              title={lang === "tr" ? "Şablonu Sil" : "Delete Template"}
+                              className="p-2.5 rounded-xl border border-zinc-200 text-zinc-500 hover:text-red-600 hover:bg-red-50 hover:border-red-200 transition-all duration-200 flex items-center justify-center cursor-pointer shadow-sm hover:scale-105 active:scale-95"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );

@@ -2086,6 +2086,55 @@ export async function saveUserCustomTemplate(
   };
 }
 
+export async function deleteUserCustomTemplate(userId: string, templateId: string) {
+  if (!userId || !templateId) {
+    throw new Error("Missing parameters");
+  }
+
+  // Find user template
+  const userTemplate = await db.userTemplate.findFirst({
+    where: { userId, templateId },
+    include: { template: true }
+  });
+
+  if (!userTemplate) {
+    throw new Error("Template not owned by user");
+  }
+
+  // Double check it is a custom template
+  if (userTemplate.template.category !== "Özel") {
+    throw new Error("You can only delete custom templates");
+  }
+
+  // If this template is active, revert the profile settings to default
+  if (userTemplate.isActive) {
+    await db.profile.update({
+      where: { userId },
+      data: {
+        background: null,
+        fontStyle: "Inter",
+        theme: "dark",
+        customCss: null,
+        buttonClass: null
+      }
+    });
+  }
+
+  // Delete UserTemplate link
+  await db.userTemplate.delete({
+    where: { id: userTemplate.id }
+  });
+
+  // Delete Template record
+  await db.template.delete({
+    where: { id: templateId }
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/sablonlar");
+  return { success: true };
+}
+
 export async function getSystemSettings() {
   try {
     let settings = await db.systemSettings.findFirst();
