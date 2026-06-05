@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Puzzle, ShoppingBag, Settings, Globe, ExternalLink } from "lucide-react";
 import AddonConfigModal from "@/components/addons/addon-config-modal";
 import PhonePreview from "@/components/dashboard/phone-preview";
@@ -47,6 +47,13 @@ export default function PluginsClient({
   const { user, lang, activeTemplate, simulatedPlan } = useDashboard();
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons);
   const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setOrigin(window.location.origin);
+    }
+  }, []);
 
   const getDefaultSlug = (type: string) => {
     if (type === "MINI_STORE") return "store";
@@ -77,10 +84,10 @@ export default function PluginsClient({
       
       const isStorefront = ["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR"].includes(firstAddon.addonType);
       if (isStorefront) {
-        return `/@${user.username}/${slug.toLowerCase()}?previewAddons=true`;
+        return `${origin}/@${user.username}/${slug.toLowerCase()}?previewAddons=true`;
       }
     }
-    return `/@${user.username}?previewAddons=true`;
+    return `${origin}/@${user.username}?previewAddons=true`;
   };
 
   return (
@@ -128,10 +135,10 @@ export default function PluginsClient({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
               {addons.map((addon) => {
-                let addonLink = `/@${user.username}/store`;
+                let addonLink = `${origin}/@${user.username}/store`;
                 try {
                   const config = addon.config ? JSON.parse(addon.config) : {};
-                  addonLink = `/@${user.username}/${(config.customSlug || getDefaultSlug(addon.addonType)).toLowerCase()}`;
+                  addonLink = `${origin}/@${user.username}/${(config.customSlug || getDefaultSlug(addon.addonType)).toLowerCase()}`;
                 } catch (e) {}
 
                 return (

@@ -251,39 +251,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
  {lang === "tr" ? "Genel Ayarlar" : "General Settings"}
  </h4>
- <div className="space-y-1.5 mb-4">
- <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Eklenti Linki (Opsiyonel)" : "Addon Link (Optional)"}</label>
- <div className="flex gap-0 items-center">
- <span className="px-3 py-3 bg-zinc-100 border border-zinc-200 border-r-0 rounded-l-xl text-sm text-zinc-500 font-medium whitespace-nowrap">
- {domain}/@{username}/
- </span>
- <input
- type="text"
- value={configData["customSlug"] || ""}
- onChange={(e) => setConfigData({ ...configData, customSlug: e.target.value })}
- placeholder={getDefaultSlug(addon?.addonType)}
- className="w-full px-4 py-3 border-y border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
- />
- <a
- href={`http://${domain}/@${username}/${activeSlug}`}
- target="_blank"
- rel="noopener noreferrer"
- className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold transition-colors border border-indigo-600 whitespace-nowrap"
- >
- {lang === "tr" ? "Git" : "Go"}
- </a>
- <button
- type="button"
- onClick={() => {
- navigator.clipboard.writeText(`http://${domain}/@${username}/${activeSlug}`);
- showAlert(lang === "tr" ? "Link kopyalandı!" : "Link copied!");
- }}
- className="px-4 py-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 text-sm font-bold rounded-r-xl transition-colors border-y border-r border-zinc-300 whitespace-nowrap"
- >
- {lang === "tr" ? "Kopyala" : "Copy"}
- </button>
- </div>
- </div>
  
  <div className="space-y-1.5">
  <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Profil Fotoğrafı (URL veya Dosya)" : "Profile Image"}</label>
@@ -336,39 +303,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  </h4>
  {renderInput("storeTitle", lang === "tr" ? "Mağaza Başlığı" : "Store Title", lang === "tr" ? "Örn: Premium İçeriklerim" : "Store Name")}
  
- <div className="space-y-1.5 mb-4">
- <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Eklenti Linki (Opsiyonel)" : "Addon Link (Optional)"}</label>
- <div className="flex gap-0 items-center">
- <span className="px-3 py-3 bg-zinc-100 border border-zinc-200 border-r-0 rounded-l-xl text-sm text-zinc-500 font-medium whitespace-nowrap">
- {domain}/@{username}/
- </span>
- <input
- type="text"
- value={configData["customSlug"] || ""}
- onChange={(e) => setConfigData({ ...configData, customSlug: e.target.value })}
- placeholder={getDefaultSlug(addon?.addonType)}
- className="w-full px-4 py-3 border-y border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
- />
- <a
- href={`http://${domain}/@${username}/${activeSlug}`}
- target="_blank"
- rel="noopener noreferrer"
- className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold transition-colors border border-indigo-600 whitespace-nowrap"
- >
- {lang === "tr" ? "Git" : "Go"}
- </a>
- <button
- type="button"
- onClick={() => {
- navigator.clipboard.writeText(`http://${domain}/@${username}/${activeSlug}`);
- showAlert(lang === "tr" ? "Link kopyalandı!" : "Link copied!");
- }}
- className="px-4 py-3 bg-zinc-200 hover:bg-zinc-300 text-zinc-800 text-sm font-bold rounded-r-xl transition-colors border-y border-r border-zinc-300 whitespace-nowrap"
- >
- {lang === "tr" ? "Kopyala" : "Copy"}
- </button>
- </div>
- </div>
  
  <div className="space-y-1.5 mb-4">
  <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Profil Fotoğrafı (URL veya Dosya)" : "Profile Image"}</label>
