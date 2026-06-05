@@ -6,7 +6,9 @@ import {
   toggleUserTemplateActive,
   updateProfile,
   updateAllLinksCustomStyle,
-  applyTemplateToProfile
+  applyTemplateToProfile,
+  addLink,
+  deleteLink
 } from "@/app/actions";
 import {
   Palette,
@@ -18,7 +20,22 @@ import {
   Settings,
   Check,
   X,
-  Code
+  Code,
+  User,
+  Plus,
+  Trash2,
+  FileText,
+  List,
+  Briefcase,
+  Play,
+  Image,
+  MessageCircle,
+  Music,
+  Utensils,
+  Smartphone,
+  Percent,
+  Wifi,
+  ShoppingBag
 } from "lucide-react";
 import PhonePreview from "@/components/dashboard/phone-preview";
 import { useDashboard } from "../dashboard-context";
@@ -70,6 +87,54 @@ interface TemplatesClientProps {
     isActive: boolean;
   } | null;
 }
+
+const getLinkIconHelper = (type: string | undefined, url: string | undefined) => {
+  switch (type) {
+    case "WEBSITE":
+    case "FACEBOOK":
+    case "INSTAGRAM":
+      return <Globe className="h-4 w-4 text-teal-500" />;
+    case "PDF":
+      return <FileText className="h-4 w-4 text-teal-500" />;
+    case "LINK_LIST":
+      return <List className="h-4 w-4 text-teal-500" />;
+    case "VCARD":
+      return <User className="h-4 w-4 text-teal-500" />;
+    case "BUSINESS":
+      return <Briefcase className="h-4 w-4 text-teal-500" />;
+    case "VIDEO":
+      return <Play className="h-4 w-4 text-teal-500" />;
+    case "IMAGES":
+      return <Image className="h-4 w-4 text-teal-500" />;
+    case "SOCIAL_MEDIA":
+    case "WHATSAPP":
+      return <MessageCircle className="h-4 w-4 text-teal-500" />;
+    case "MP3":
+      return <Music className="h-4 w-4 text-teal-500" />;
+    case "MENU":
+      return <Utensils className="h-4 w-4 text-teal-500" />;
+    case "APPS":
+      return <Smartphone className="h-4 w-4 text-teal-500" />;
+    case "COUPON":
+      return <Percent className="h-4 w-4 text-teal-500" />;
+    case "WIFI":
+      return <Wifi className="h-4 w-4 text-teal-500" />;
+    default:
+      if (url) {
+        const lowerUrl = url.toLowerCase();
+        if (lowerUrl.includes("spotify") || lowerUrl.includes("soundcloud") || lowerUrl.includes("music")) {
+          return <Music className="h-4 w-4 text-teal-500" />;
+        }
+        if (lowerUrl.includes("shop") || lowerUrl.includes("store") || lowerUrl.includes("presets")) {
+          return <ShoppingBag className="h-4 w-4 text-teal-500" />;
+        }
+        if (lowerUrl.includes("website") || lowerUrl.includes("portfolio")) {
+          return <Globe className="h-4 w-4 text-teal-500" />;
+        }
+      }
+      return <Globe className="h-4 w-4 text-teal-500" />;
+  }
+};
 
 export default function TemplatesClient({
   initialOwnedTemplates,
@@ -123,7 +188,76 @@ export default function TemplatesClient({
     return "";
   });
 
+  const [avatarUrl, setAvatarUrl] = useState(user.profile?.avatarUrl ?? "");
+  const [newLinkTitle, setNewLinkTitle] = useState("");
+  const [newLinkUrl, setNewLinkUrl] = useState("");
+  const [newLinkType, setNewLinkType] = useState("WEBSITE");
+
+  const formatSocialUrl = (type: string, val: string) => {
+    let value = val.trim();
+    if (!value) return "";
+    if (/^https?:\/\//i.test(value)) return value;
+
+    switch (type) {
+      case "INSTAGRAM":
+        return `https://instagram.com/${value.replace(/^@/, "")}`;
+      case "WHATSAPP":
+        const cleanNum = value.replace(/[^0-9]/g, "");
+        return `https://wa.me/${cleanNum}`;
+      case "TIKTOK":
+        return `https://tiktok.com/@${value.replace(/^@/, "")}`;
+      case "YOUTUBE":
+        if (value.startsWith("@")) {
+          return `https://youtube.com/${value}`;
+        }
+        return `https://youtube.com/c/${value}`;
+      case "X":
+        return `https://x.com/${value.replace(/^@/, "")}`;
+      case "LINKEDIN":
+        return `https://linkedin.com/in/${value}`;
+      case "FACEBOOK":
+        return `https://facebook.com/${value}`;
+      default:
+        return value;
+    }
+  };
+
+  const handleSocialChange = (type: string, value: string) => {
+    setLinks(prev => {
+      const existingIndex = prev.findIndex(l => l.type === type);
+      if (existingIndex > -1) {
+        if (!value) {
+          return prev.filter((_, idx) => idx !== existingIndex);
+        } else {
+          return prev.map((l, idx) => idx === existingIndex ? { ...l, url: value } : l);
+        }
+      } else if (value) {
+        const newTempLink: LinkItem = {
+          id: `temp-${type.toLowerCase()}-${Date.now()}`,
+          title: type === "X" ? "Twitter/X" : type.charAt(0) + type.slice(1).toLowerCase(),
+          url: value,
+          isActive: true,
+          type: type,
+          blockType: "TEXT_LINK"
+        };
+        return [...prev, newTempLink];
+      }
+      return prev;
+    });
+  };
+
+  const handleSocialBlur = (type: string, value: string) => {
+    const formatted = formatSocialUrl(type, value);
+    if (formatted) {
+      setLinks(prev => prev.map(l => l.type === type ? { ...l, url: formatted } : l));
+    }
+  };
+
   useEffect(() => {
+    setNewLinkTitle("");
+    setNewLinkUrl("");
+    setNewLinkType("WEBSITE");
+
     if (customizingTemplateId) {
       const template = ownedTemplates.find(t => t.id === customizingTemplateId);
       if (template) {
@@ -131,6 +265,7 @@ export default function TemplatesClient({
         setFontStyle(template.fontStyle);
         setTheme(template.name);
         setActiveTemplateCss(template.customCss || null);
+        setAvatarUrl(user.profile?.avatarUrl ?? "");
 
         // Determine light/dark contexts for default colors
         const isLightTmpl = [
@@ -179,6 +314,7 @@ export default function TemplatesClient({
       setActiveTemplateCss(user.profile?.customCss ?? null);
       setUsernameColor(user.profile?.usernameColor ?? "#ffffff");
       setBioColor(user.profile?.bioColor ?? "#888888");
+      setAvatarUrl(user.profile?.avatarUrl ?? "");
 
       setBtnBgColor(firstLink?.bgColor || "");
       setBtnTextColor(firstLink?.textColor || "");
@@ -233,7 +369,7 @@ export default function TemplatesClient({
   const previewData = {
     username: user.username || "username",
     bio: user.profile?.bio || "Enter profile bio details...",
-    avatarUrl: user.profile?.avatarUrl,
+    avatarUrl: avatarUrl,
     theme: theme,
     customCss: activeTemplateCss,
     background: background,
@@ -284,26 +420,48 @@ export default function TemplatesClient({
                    </div>
 
                    <div className="space-y-6">
-                     {/* 1. GENERAL DESIGN */}
+                     {/* 1. PROFİL FOTOĞRAFI EKLEME */}
                      <div className="space-y-4 bg-zinc-50/50 p-4 md:p-5 rounded-2xl border border-zinc-100 shadow-sm">
                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-1">
-                         <Palette className="h-4 w-4" />
-                         {lang === "tr" ? "Genel Tasarım" : "General Design"}
+                         <User className="h-4 w-4 text-teal-500" />
+                         {lang === "tr" ? "Profil Fotoğrafı" : "Profile Picture"}
                        </h3>
-
-                       {/* Background */}
-                       <div className="space-y-1.5">
-                         <label className="text-xs font-black text-zinc-700 block">
-                           {lang === "tr" ? "Arka Plan (Renk / CSS)" : "Background (Color / CSS)"}
+                       <div className="flex items-center gap-4 bg-white p-3 rounded-xl border border-zinc-200">
+                         <div className="h-14 w-14 rounded-full border border-zinc-200 overflow-hidden bg-zinc-50 flex items-center justify-center shrink-0 shadow-sm relative">
+                           {avatarUrl ? (
+                             <img src={avatarUrl} alt="Preview" className="w-full h-full object-cover" />
+                           ) : (
+                             <User className="h-6 w-6 text-zinc-300" />
+                           )}
+                         </div>
+                         <label className="px-4 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-650 border border-teal-105 text-xs font-bold transition-all cursor-pointer select-none">
+                           {lang === "tr" ? "Fotoğraf Değiştir" : "Change Photo"}
+                           <input
+                             type="file"
+                             accept="image/*"
+                             className="hidden"
+                             onChange={async (e) => {
+                               const file = e.target.files?.[0];
+                               if (!file) return;
+                               const reader = new FileReader();
+                               reader.onload = (event) => {
+                                 if (event.target?.result) {
+                                   setAvatarUrl(event.target.result as string);
+                                 }
+                               };
+                               reader.readAsDataURL(file);
+                             }}
+                           />
                          </label>
-                         <input
-                           type="text"
-                           value={background || ""}
-                           onChange={(e) => setBackground(e.target.value)}
-                           placeholder="#09090b veya linear-gradient(...)"
-                           className="w-full px-3.5 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all font-semibold text-zinc-800"
-                         />
                        </div>
+                     </div>
+
+                     {/* 2. YAZI FONTU VE YAZI RENGİ */}
+                     <div className="space-y-4 bg-zinc-50/50 p-4 md:p-5 rounded-2xl border border-zinc-100 shadow-sm">
+                       <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-1">
+                         <Palette className="h-4 w-4 text-teal-500" />
+                         {lang === "tr" ? "Yazı Fontu ve Renk Ayarları" : "Font & Text Colors"}
+                       </h3>
 
                        {/* Font Style */}
                        <div className="space-y-1.5">
@@ -380,221 +538,268 @@ export default function TemplatesClient({
                        </div>
                      </div>
 
-                     {/* 2. BUTTON & ICON DESIGN */}
+                     {/* 3. SOSYAL MEDYA İKONLARI VE RENKLERİ */}
                      <div className="space-y-4 bg-zinc-50/50 p-4 md:p-5 rounded-2xl border border-zinc-100 shadow-sm">
                        <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-1">
-                         <Globe className="h-4 w-4" />
-                         {lang === "tr" ? "Buton ve İkon Tasarımı" : "Button & Icon Design"}
+                         <Globe className="h-4 w-4 text-teal-500" />
+                         {lang === "tr" ? "Sosyal Medya İkonları ve Renkleri" : "Social Icons & Colors"}
                        </h3>
 
-                       {/* Button Color Pickers */}
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         <div className="space-y-1.5">
-                           <label className="text-xs font-black text-zinc-700 block">
-                             {lang === "tr" ? "Buton Arka Planı" : "Button Background"}
-                           </label>
-                           <div className="flex gap-2">
-                             <input
-                               type="color"
-                               value={btnBgColor || "#ffffff"}
-                               onChange={(e) => setBtnBgColor(e.target.value)}
-                               className="h-10 w-12 rounded-xl cursor-pointer border border-zinc-200 shrink-0"
-                             />
-                             <input
-                               type="text"
-                               value={btnBgColor || ""}
-                               onChange={(e) => setBtnBgColor(e.target.value)}
-                               className="flex-1 min-w-0 px-3 border border-zinc-200 rounded-xl text-sm font-mono text-zinc-800 bg-white uppercase font-bold"
-                             />
-                           </div>
-                         </div>
-                         <div className="space-y-1.5">
-                           <label className="text-xs font-black text-zinc-700 block">
-                             {lang === "tr" ? "Buton Yazı Rengi" : "Button Text Color"}
-                           </label>
-                           <div className="flex gap-2">
-                             <input
-                               type="color"
-                               value={btnTextColor || "#ffffff"}
-                               onChange={(e) => setBtnTextColor(e.target.value)}
-                               className="h-10 w-12 rounded-xl cursor-pointer border border-zinc-200 shrink-0"
-                             />
-                             <input
-                               type="text"
-                               value={btnTextColor || ""}
-                               onChange={(e) => setBtnTextColor(e.target.value)}
-                               className="flex-1 min-w-0 px-3 border border-zinc-200 rounded-xl text-sm font-mono text-zinc-800 bg-white uppercase font-bold"
-                             />
-                           </div>
-                         </div>
-                         <div className="space-y-1.5">
-                           <label className="text-xs font-black text-zinc-700 block">
-                             {lang === "tr" ? "Buton İkon Rengi" : "Button Icon Color"}
-                           </label>
-                           <div className="flex gap-2">
-                             <input
-                               type="color"
-                               value={btnIconColor || "#ffffff"}
-                               onChange={(e) => setBtnIconColor(e.target.value)}
-                               className="h-10 w-12 rounded-xl cursor-pointer border border-zinc-200 shrink-0"
-                             />
-                             <input
-                               type="text"
-                               value={btnIconColor || ""}
-                               onChange={(e) => setBtnIconColor(e.target.value)}
-                               className="flex-1 min-w-0 px-3 border border-zinc-200 rounded-xl text-sm font-mono text-zinc-800 bg-white uppercase font-bold"
-                               placeholder={lang === "tr" ? "Yazı ile aynı" : "Same as text"}
-                             />
-                           </div>
-                         </div>
-                         <div className="space-y-1.5">
-                           <label className="text-xs font-black text-zinc-700 block">
-                             {lang === "tr" ? "Buton Çerçeve Rengi" : "Button Border Color"}
-                           </label>
-                           <div className="flex gap-2">
-                             <input
-                               type="color"
-                               value={btnBorderColor || "#ffffff"}
-                               onChange={(e) => setBtnBorderColor(e.target.value)}
-                               className="h-10 w-12 rounded-xl cursor-pointer border border-zinc-200 shrink-0"
-                             />
-                             <input
-                               type="text"
-                               value={btnBorderColor || ""}
-                               onChange={(e) => setBtnBorderColor(e.target.value)}
-                               className="flex-1 min-w-0 px-3 border border-zinc-200 rounded-xl text-sm font-mono text-zinc-800 bg-white uppercase font-bold"
-                             />
-                           </div>
-                         </div>
-                       </div>
-
-                       {/* Button Border/Style/Radius/Weight Dropdowns */}
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                         <div className="space-y-1.5">
-                           <label className="text-xs font-black text-zinc-700 block">
-                             {lang === "tr" ? "Çerçeve Stili" : "Border Style"}
-                           </label>
-                           <select
-                             value={btnBorderStyle}
-                             onChange={(e) => setBtnBorderStyle(e.target.value)}
-                             className="w-full px-3 py-2.5 border border-zinc-200 rounded-xl text-sm bg-white outline-none focus:border-teal-500 cursor-pointer font-bold text-zinc-800"
-                           >
-                             <option value="solid">{lang === "tr" ? "Düz (Solid)" : "Solid"}</option>
-                             <option value="dashed">{lang === "tr" ? "Kesik (Dashed)" : "Dashed"}</option>
-                             <option value="dotted">{lang === "tr" ? "Noktalı (Dotted)" : "Dotted"}</option>
-                             <option value="none">{lang === "tr" ? "Yok (None)" : "None"}</option>
-                           </select>
-                         </div>
-                         <div className="space-y-1.5">
-                           <label className="text-xs font-black text-zinc-700 block">
-                             {lang === "tr" ? "Çerçeve Kalınlığı" : "Border Width"}
-                           </label>
-                           <select
-                             value={btnBorderWidth}
-                             onChange={(e) => setBtnBorderWidth(e.target.value)}
-                             className="w-full px-3 py-2.5 border border-zinc-200 rounded-xl text-sm bg-white outline-none focus:border-teal-500 cursor-pointer font-bold text-zinc-800"
-                           >
-                             <option value="0px">0px</option>
-                             <option value="1px">1px</option>
-                             <option value="2px">2px</option>
-                             <option value="3px">3px</option>
-                             <option value="4px">4px</option>
-                           </select>
-                         </div>
-                         <div className="space-y-1.5">
-                           <label className="text-xs font-black text-zinc-700 block">
-                             {lang === "tr" ? "Köşe Yuvarlaklığı" : "Border Radius"}
-                           </label>
-                           <select
-                             value={btnBorderRadius}
-                             onChange={(e) => setBtnBorderRadius(e.target.value)}
-                             className="w-full px-3 py-2.5 border border-zinc-200 rounded-xl text-sm bg-white outline-none focus:border-teal-500 cursor-pointer font-bold text-zinc-800"
-                           >
-                             <option value="0px">0px</option>
-                             <option value="6px">6px (Small)</option>
-                             <option value="8px">8px (Medium)</option>
-                             <option value="12px">12px (Large)</option>
-                             <option value="16px">16px (X-Large)</option>
-                             <option value="24px">24px (2X-Large)</option>
-                             <option value="9999px">{lang === "tr" ? "Tam Yuvarlak" : "Full Circle"}</option>
-                           </select>
-                         </div>
-                         <div className="space-y-1.5">
-                           <label className="text-xs font-black text-zinc-700 block">
-                             {lang === "tr" ? "Yazı Kalınlığı" : "Font Weight"}
-                           </label>
-                           <select
-                             value={btnFontWeight}
-                             onChange={(e) => setBtnFontWeight(e.target.value)}
-                             className="w-full px-3 py-2.5 border border-zinc-200 rounded-xl text-sm bg-white outline-none focus:border-teal-500 cursor-pointer font-bold text-zinc-800"
-                           >
-                             <option value="font-normal">{lang === "tr" ? "Normal" : "Normal"}</option>
-                             <option value="font-semibold">{lang === "tr" ? "Yarı Kalın (Semibold)" : "Semibold"}</option>
-                             <option value="font-bold">{lang === "tr" ? "Kalın (Bold)" : "Bold"}</option>
-                             <option value="font-black">{lang === "tr" ? "Çok Kalın (Black)" : "Black"}</option>
-                           </select>
-                         </div>
-                       </div>
-
-                       {/* Shadow */}
+                       {/* Icon Color Picker */}
                        <div className="space-y-1.5">
                          <label className="text-xs font-black text-zinc-700 block">
-                           {lang === "tr" ? "Buton Gölgesi" : "Button Shadow"}
+                           {lang === "tr" ? "Sosyal Medya İkon Rengi" : "Social Media Icon Color"}
                          </label>
-                         <select
-                           value={btnShadow}
-                           onChange={(e) => setBtnShadow(e.target.value)}
-                           className="w-full px-3 py-2.5 border border-zinc-200 rounded-xl text-sm bg-white outline-none focus:border-teal-500 cursor-pointer font-bold text-zinc-800"
-                         >
-                           <option value="none">{lang === "tr" ? "Gölgesiz (None)" : "None"}</option>
-                           <option value="soft">{lang === "tr" ? "Yumuşak (Soft)" : "Soft"}</option>
-                           <option value="glow-purple">{lang === "tr" ? "Mor Işıma (Glow Purple)" : "Glow Purple"}</option>
-                           <option value="glow-emerald">{lang === "tr" ? "Yeşil Işıma (Glow Emerald)" : "Glow Emerald"}</option>
-                           <option value="hard-3d">Brutal 3D Shadow</option>
-                         </select>
-                       </div>
-                     </div>
-
-                     {/* 3. ADVANCED CUSTOM CSS */}
-                     {(activeTemplateToCustomize.isCoded || activeTemplateCss !== null) && (
-                       <div className="space-y-4 bg-zinc-50/50 p-4 md:p-5 rounded-2xl border border-zinc-100 shadow-sm">
-                         <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-1">
-                           <Code className="h-4 w-4" />
-                           {lang === "tr" ? "Gelişmiş Özel CSS" : "Advanced Custom CSS"}
-                         </h3>
-                         <div className="space-y-1.5">
-                           <label className="text-xs font-bold text-zinc-650 block">
-                             {lang === "tr" ? "CSS Kuralları" : "CSS Rules"}
-                           </label>
-                           <textarea
-                             rows={5}
-                             value={activeTemplateCss || ""}
-                             onChange={(e) => setActiveTemplateCss(e.target.value)}
-                             placeholder=".profile-container { background: ... }"
-                             className="w-full px-3.5 py-2.5 bg-white border border-zinc-200 rounded-xl text-xs font-mono outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all text-zinc-800"
+                         <div className="flex gap-2">
+                           <input
+                             type="color"
+                             value={btnIconColor || "#ffffff"}
+                             onChange={(e) => setBtnIconColor(e.target.value)}
+                             className="h-10 w-12 rounded-xl cursor-pointer border border-zinc-200 shrink-0"
+                           />
+                           <input
+                             type="text"
+                             value={btnIconColor || ""}
+                             onChange={(e) => setBtnIconColor(e.target.value)}
+                             className="flex-1 min-w-0 px-3 border border-zinc-200 rounded-xl text-sm font-mono text-zinc-800 bg-white uppercase font-bold"
+                             placeholder={lang === "tr" ? "Yazı ile aynı" : "Same as text"}
                            />
                          </div>
                        </div>
-                     )}
 
-                     {/* 4. ACTION BUTTONS */}
-                     <div className="pt-4 flex gap-3 border-t border-zinc-100">
+                       {/* Social Links List Inputs */}
+                       <div className="space-y-3 pt-3 border-t border-zinc-200/60">
+                         <label className="text-xs font-bold text-zinc-700 block">
+                           {lang === "tr" ? "Sosyal Medya Hesaplarınız" : "Your Social Media Accounts"}
+                         </label>
+                         <div className="space-y-3">
+                           {[
+                             { id: "INSTAGRAM", name: "Instagram", placeholder: "kullanıcıadı veya link" },
+                             { id: "WHATSAPP", name: "WhatsApp", placeholder: "+905... veya link" },
+                             { id: "TIKTOK", name: "TikTok", placeholder: "kullanıcıadı veya link" },
+                             { id: "YOUTUBE", name: "YouTube", placeholder: "kanal veya link" },
+                             { id: "X", name: "Twitter/X", placeholder: "kullanıcıadı veya link" },
+                             { id: "LINKEDIN", name: "LinkedIn", placeholder: "profil linki" },
+                             { id: "FACEBOOK", name: "Facebook", placeholder: "profil linki" }
+                           ].map(platform => {
+                             const linkItem = links.find(l => l.type === platform.id);
+                             const currentVal = linkItem ? linkItem.url : "";
+                             return (
+                               <div key={platform.id} className="space-y-1.5">
+                                 <label className="text-[11px] font-bold text-zinc-650 block">
+                                   {platform.name}
+                                 </label>
+                                 <input
+                                   type="text"
+                                   value={currentVal}
+                                   onChange={(e) => handleSocialChange(platform.id, e.target.value)}
+                                   onBlur={(e) => handleSocialBlur(platform.id, e.target.value)}
+                                   placeholder={platform.placeholder}
+                                   className="w-full px-3.5 py-2 bg-white border border-zinc-200 rounded-xl text-xs outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all font-semibold text-zinc-800"
+                                 />
+                               </div>
+                             );
+                           })}
+                         </div>
+                       </div>
+                     </div>
+
+                     {/* 4. LİNK EKLEME & ÇIKARTMA */}
+                     <div className="space-y-4 bg-zinc-50/50 p-4 md:p-5 rounded-2xl border border-zinc-100 shadow-sm">
+                       <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 mb-1">
+                         <Code className="h-4 w-4 text-teal-500" />
+                         {lang === "tr" ? "Özel Link Ekleme & Çıkartma" : "Custom Link Management"}
+                       </h3>
+
+                       {/* List of Custom Links */}
+                       <div className="space-y-2.5">
+                         <label className="text-xs font-bold text-zinc-700 block">
+                           {lang === "tr" ? "Mevcut Özel Linkleriniz" : "Your Custom Links"}
+                         </label>
+                         {(() => {
+                           const customLinks = links.filter(l => !["INSTAGRAM", "WHATSAPP", "TIKTOK", "YOUTUBE", "X", "LINKEDIN", "FACEBOOK"].includes(l.type || ""));
+                           if (customLinks.length === 0) {
+                             return (
+                               <p className="text-xs text-zinc-400 italic">
+                                 {lang === "tr" ? "Henüz özel link eklenmemiş." : "No custom links added yet."}
+                               </p>
+                             );
+                           }
+                           return (
+                             <div className="space-y-2 max-h-[200px] overflow-y-auto pr-1">
+                               {customLinks.map((link) => (
+                                 <div key={link.id} className="flex items-center justify-between p-3 bg-white border border-zinc-200 rounded-xl shadow-sm text-zinc-800">
+                                   <div className="flex items-center gap-3 overflow-hidden">
+                                     <div className="h-8 w-8 rounded-full bg-teal-50 text-teal-650 flex items-center justify-center shrink-0 border border-teal-100">
+                                       {getLinkIconHelper(link.type, link.url)}
+                                     </div>
+                                     <div className="flex flex-col min-w-0">
+                                       <span className="text-xs font-bold truncate text-zinc-900">{link.title}</span>
+                                       <span className="text-[10px] text-zinc-400 truncate">{link.url}</span>
+                                     </div>
+                                   </div>
+                                   <button
+                                     type="button"
+                                     disabled={isPending}
+                                     onClick={() => {
+                                       startTransition(async () => {
+                                         try {
+                                           if (!link.id.startsWith("temp-")) {
+                                             await deleteLink(link.id);
+                                           }
+                                           setLinks(prev => prev.filter(l => l.id !== link.id));
+                                           setSuccessMsg(lang === "tr" ? "Link silindi!" : "Link deleted!");
+                                           setTimeout(() => setSuccessMsg(""), 3000);
+                                         } catch (e: any) {
+                                           setErrorMsg(e.message || "Failed to delete link");
+                                           setTimeout(() => setErrorMsg(""), 4000);
+                                         }
+                                       });
+                                     }}
+                                     className="p-2 bg-zinc-50 hover:bg-red-50 text-zinc-400 hover:text-red-500 rounded-lg cursor-pointer border border-zinc-150 transition-colors"
+                                   >
+                                     <Trash2 className="h-3.5 w-3.5" />
+                                   </button>
+                                 </div>
+                               ))}
+                             </div>
+                           );
+                         })()}
+                       </div>
+
+                       {/* Form to Add New Custom Link */}
+                       <div className="space-y-3 pt-3 border-t border-zinc-200/60">
+                         <label className="text-xs font-bold text-zinc-700 block">
+                           {lang === "tr" ? "Yeni Özel Link Ekle" : "Add New Custom Link"}
+                         </label>
+                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                           <div className="space-y-1">
+                             <label className="text-[10px] text-zinc-500 font-bold block">{lang === "tr" ? "Link Başlığı" : "Link Title"}</label>
+                             <input
+                               type="text"
+                               value={newLinkTitle}
+                               onChange={(e) => setNewLinkTitle(e.target.value)}
+                               placeholder={lang === "tr" ? "Örn. Web Sitem" : "e.g. My Website"}
+                               className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-xl text-xs outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all font-semibold text-zinc-800"
+                             />
+                           </div>
+                           <div className="space-y-1">
+                             <label className="text-[10px] text-zinc-500 font-bold block">{lang === "tr" ? "Hedef URL" : "Target URL"}</label>
+                             <input
+                               type="text"
+                               value={newLinkUrl}
+                               onChange={(e) => setNewLinkUrl(e.target.value)}
+                               placeholder="https://..."
+                               className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-xl text-xs outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all font-semibold text-zinc-800"
+                             />
+                           </div>
+                         </div>
+
+                         <button
+                           type="button"
+                           disabled={isPending || !newLinkTitle || !newLinkUrl}
+                           onClick={() => {
+                             startTransition(async () => {
+                               try {
+                                 let formattedUrl = newLinkUrl.trim();
+                                 if (!/^https?:\/\//i.test(formattedUrl)) {
+                                   formattedUrl = `https://${formattedUrl}`;
+                                 }
+
+                                 const res = await addLink(
+                                   user.id,
+                                   newLinkTitle,
+                                   formattedUrl,
+                                   "WEBSITE",
+                                   "",
+                                   "TEXT_LINK",
+                                   null
+                                 );
+                                 if (res && (res as any).error) throw new Error((res as any).error);
+
+                                 // Add locally with temporary ID
+                                 const newLinkObj = {
+                                   id: Math.random().toString(),
+                                   title: newLinkTitle,
+                                   url: formattedUrl,
+                                   isActive: true,
+                                   type: "WEBSITE",
+                                   blockType: "TEXT_LINK"
+                                 };
+
+                                 setLinks(prev => [...prev, newLinkObj]);
+                                 setNewLinkTitle("");
+                                 setNewLinkUrl("");
+                                 setSuccessMsg(lang === "tr" ? "Link başarıyla eklendi!" : "Link added successfully!");
+                                 setTimeout(() => setSuccessMsg(""), 3000);
+                               } catch (e: any) {
+                                 setErrorMsg(e.message || "Failed to add link");
+                                 setTimeout(() => setErrorMsg(""), 4000);
+                               }
+                             });
+                           }}
+                           className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
+                         >
+                           <Plus className="h-4 w-4" />
+                           <span>{lang === "tr" ? "Listeye Ekle ve Önizle" : "Add to List & Preview"}</span>
+                         </button>
+                       </div>
+                     </div>
+
+                     {/* 5. ACTION BUTTONS */}
+                     <div className="pt-4 flex gap-3 border-t border-zinc-150">
                        <button
                          type="button"
                          disabled={isPending}
                          onClick={() => {
                            startTransition(async () => {
                              try {
-                               // Apply the template active state
+                               // 1. Apply the active template
                                await applyTemplateToProfile(user.id, activeTemplateToCustomize.id);
                                
-                               // Update Profile settings
+                               // 2. Sync social links to DB
+                               for (const platform of ["INSTAGRAM", "WHATSAPP", "TIKTOK", "YOUTUBE", "X", "LINKEDIN", "FACEBOOK"]) {
+                                 const oldLink = initialLinks.find(l => l.type === platform);
+                                 const currentLink = links.find(l => l.type === platform && !l.id.startsWith("temp-"));
+                                 const tempLink = links.find(l => l.type === platform && l.id.startsWith("temp-"));
+
+                                 const finalUrl = currentLink?.url || tempLink?.url || "";
+
+                                 if (oldLink) {
+                                   if (!finalUrl) {
+                                     await deleteLink(oldLink.id);
+                                   } else if (finalUrl !== oldLink.url) {
+                                     await deleteLink(oldLink.id);
+                                     await addLink(
+                                       user.id,
+                                       platform === "X" ? "Twitter/X" : platform.charAt(0) + platform.slice(1).toLowerCase(),
+                                       finalUrl,
+                                       platform,
+                                       "",
+                                       "TEXT_LINK",
+                                       null
+                                     );
+                                   }
+                                 } else if (finalUrl) {
+                                   await addLink(
+                                     user.id,
+                                     platform === "X" ? "Twitter/X" : platform.charAt(0) + platform.slice(1).toLowerCase(),
+                                     finalUrl,
+                                     platform,
+                                     "",
+                                     "TEXT_LINK",
+                                     null
+                                   );
+                                 }
+                               }
+
+                               // 3. Update Profile settings
                                await updateProfile(
                                  user.id,
                                  user.profile?.bio || "",
                                  activeTemplateToCustomize.name, // theme
                                  user.username || "",
-                                 user.profile?.avatarUrl || undefined,
+                                 avatarUrl || undefined, // dynamic profile photo
                                  background || undefined,
                                  fontStyle || undefined,
                                  bioColor || undefined,
@@ -603,7 +808,7 @@ export default function TemplatesClient({
                                  activeTemplateToCustomize.buttonStyle
                                );
 
-                               // Update Links custom styling
+                               // 4. Update Links custom styling
                                await updateAllLinksCustomStyle(
                                  user.id,
                                  btnBgColor || null,
@@ -620,7 +825,7 @@ export default function TemplatesClient({
                                setSuccessMsg(lang === "tr" ? "Tasarım başarıyla kaydedildi ve uygulandı!" : "Design saved and applied successfully!");
                                setCustomizingTemplateId(null);
                                
-                               // Refresh the list status
+                               // Refresh list status
                                setOwnedTemplates(prev => prev.map(t => ({
                                  ...t,
                                  isActive: t.id === activeTemplateToCustomize.id
