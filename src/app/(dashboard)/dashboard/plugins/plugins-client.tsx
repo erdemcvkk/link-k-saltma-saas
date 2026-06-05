@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Puzzle, ShoppingBag, Settings, Globe, ExternalLink } from "lucide-react";
+import { Puzzle, ShoppingBag, Settings, Globe, ExternalLink, Copy, Check } from "lucide-react";
 import AddonConfigModal from "@/components/addons/addon-config-modal";
 import PhonePreview from "@/components/dashboard/phone-preview";
 import { parseButtonStyle } from "@/lib/parse-button-style";
@@ -44,7 +44,7 @@ export default function PluginsClient({
   initialLinks = [],
   systemSettings,
 }: PluginsClientProps) {
-  const { user, lang, activeTemplate, simulatedPlan } = useDashboard();
+  const { user, lang, activeTemplate, simulatedPlan, setSuccessMsg, setErrorMsg } = useDashboard();
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons);
   const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
   const [origin, setOrigin] = useState("");
@@ -84,10 +84,10 @@ export default function PluginsClient({
       
       const isStorefront = ["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR"].includes(firstAddon.addonType);
       if (isStorefront) {
-        return `${origin}/@${user.username}/${slug.toLowerCase()}?previewAddons=true`;
+        return `${origin}/@${user.username}/${slug.toLowerCase()}`;
       }
     }
-    return `${origin}/@${user.username}?previewAddons=true`;
+    return `${origin}/@${user.username}`;
   };
 
   return (
@@ -112,15 +112,29 @@ export default function PluginsClient({
               </div>
             </div>
 
-            <a
-              href={getPreviewLink()}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold shadow-sm transition-all cursor-pointer whitespace-nowrap active:scale-95 hover:border-zinc-300"
-            >
-              <ExternalLink className="h-3.5 w-3.5 text-rose-500 animate-pulse" />
-              <span>{lang === "tr" ? "Eklenti Önizleme Linki" : "Add-on Preview Link"}</span>
-            </a>
+            <div className="flex items-center gap-2">
+              <a
+                href={getPreviewLink()}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold shadow-sm transition-all cursor-pointer whitespace-nowrap active:scale-95 hover:border-zinc-300"
+              >
+                <ExternalLink className="h-3.5 w-3.5 text-rose-500 animate-pulse" />
+                <span>{lang === "tr" ? "Eklenti Önizleme Linki" : "Add-on Preview Link"}</span>
+              </a>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(getPreviewLink());
+                  setSuccessMsg(lang === "tr" ? "Eklenti linki kopyalandı!" : "Add-on link copied!");
+                  setTimeout(() => setSuccessMsg(""), 3000);
+                }}
+                className="p-2.5 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-500 hover:text-rose-500 shadow-sm transition-all cursor-pointer hover:border-zinc-300 flex items-center justify-center"
+                title={lang === "tr" ? "Kopyala" : "Copy"}
+              >
+                <Copy className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {addons.length === 0 ? (
@@ -172,25 +186,53 @@ export default function PluginsClient({
                         <span>{lang === "tr" ? "Ayarla" : "Config"}</span>
                       </button>
                       {addon.isActive ? (
-                        <a
-                          href={addonLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2"
-                        >
-                          <Globe className="h-3.5 w-3.5" />
-                          <span>{lang === "tr" ? "Linke Git" : "Visit Link"}</span>
-                        </a>
+                        <div className="flex flex-1 gap-1">
+                          <a
+                            href={addonLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                          >
+                            <Globe className="h-3.5 w-3.5" />
+                            <span>{lang === "tr" ? "Linke Git" : "Visit Link"}</span>
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(addonLink);
+                              setSuccessMsg(lang === "tr" ? "Link kopyalandı!" : "Link copied!");
+                              setTimeout(() => setSuccessMsg(""), 3000);
+                            }}
+                            className="px-2.5 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-500 hover:text-rose-500 transition-colors flex items-center justify-center cursor-pointer hover:border-zinc-300"
+                            title={lang === "tr" ? "Kopyala" : "Copy"}
+                          >
+                            <Copy className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       ) : (
-                        <a
-                          href={`${addonLink}?previewAddons=true`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2"
-                        >
-                          <ExternalLink className="h-3.5 w-3.5" />
-                          <span>{lang === "tr" ? "Önizle" : "Preview"}</span>
-                        </a>
+                        <div className="flex flex-1 gap-1">
+                          <a
+                            href={`${addonLink}?previewAddons=true`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                            <span>{lang === "tr" ? "Önizle" : "Preview"}</span>
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(`${addonLink}?previewAddons=true`);
+                              setSuccessMsg(lang === "tr" ? "Önizleme linki kopyalandı!" : "Preview link copied!");
+                              setTimeout(() => setSuccessMsg(""), 3000);
+                            }}
+                            className="px-2.5 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-500 hover:text-rose-500 transition-colors flex items-center justify-center cursor-pointer hover:border-zinc-300"
+                            title={lang === "tr" ? "Önizleme Linkini Kopyala" : "Copy Preview Link"}
+                          >
+                            <Copy className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>
