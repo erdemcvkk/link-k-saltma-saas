@@ -415,11 +415,11 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
       <div className={`text-center py-6 text-xs rounded-2xl border border-dashed ${isDark ? "text-zinc-500 bg-zinc-950/20 border-zinc-900" : "text-zinc-600 bg-zinc-100 border-zinc-200"}`}>
       No active links found.
       </div>
-      {plan === "FREE" && renderSponsoredBlock()}
+      {/* Removed sponsored block inside the profile container */}
     </>
   ) : (
     (() => {
-      const showAd = plan === "FREE";
+      const showAd = false; // Ads are displayed outside the phone simulator frame now
       const adIndex = Math.floor(links.length / 2);
       
       return links.map((link, idx) => {
