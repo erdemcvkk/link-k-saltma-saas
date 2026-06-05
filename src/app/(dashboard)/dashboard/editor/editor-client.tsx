@@ -879,32 +879,44 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
         {(() => {return (
  <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
  
- {/* SUB-TABS NAVIGATION */}
- <div className="flex gap-1.5 sm:gap-2 p-1 sm:p-1.5 bg-zinc-100 rounded-2xl border border-zinc-200 w-full max-w-full overflow-hidden">
- <button
- type="button"
- onClick={() => setActiveSubTab("appearance")}
- className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-3.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
- activeSubTab === "appearance"
- ? "bg-white text-zinc-950 shadow-sm"
- : "text-zinc-650 hover:text-zinc-950"
- }`}
- >
- <Palette className="h-3.5 w-3.5 text-teal-500" />
- {lang === "tr" ? "Görünüm" : "Look"}
- </button>
- <button
- type="button"
- onClick={() => setActiveSubTab("profile")}
- className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-3.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
- activeSubTab === "profile"
- ? "bg-white text-zinc-950 shadow-sm"
- : "text-zinc-650 hover:text-zinc-950"
- }`}
- >
- <User className="h-3.5 w-3.5 text-teal-500" />
- {lang === "tr" ? "Profil" : "Profile"}
- </button>
+ {/* SUB-TABS NAVIGATION WITH TEMPLATE PREVIEW LINK */}
+ <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between w-full max-w-full">
+   <div className="flex gap-1.5 sm:gap-2 p-1 sm:p-1.5 bg-zinc-100 rounded-2xl border border-zinc-200 overflow-hidden shrink-0">
+     <button
+       type="button"
+       onClick={() => setActiveSubTab("appearance")}
+       className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-4 py-2.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+         activeSubTab === "appearance"
+           ? "bg-white text-zinc-950 shadow-sm"
+           : "text-zinc-650 hover:text-zinc-950"
+       }`}
+     >
+       <Palette className="h-3.5 w-3.5 text-teal-500" />
+       {lang === "tr" ? "Görünüm" : "Look"}
+     </button>
+     <button
+       type="button"
+       onClick={() => setActiveSubTab("profile")}
+       className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-4 py-2.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+         activeSubTab === "profile"
+           ? "bg-white text-zinc-950 shadow-sm"
+           : "text-zinc-650 hover:text-zinc-950"
+       }`}
+     >
+       <User className="h-3.5 w-3.5 text-teal-500" />
+       {lang === "tr" ? "Profil" : "Profile"}
+     </button>
+   </div>
+
+   <a
+     href={`/${username}?previewTemplate=${activeTemplate ? activeTemplate.id : effectiveTheme}`}
+     target="_blank"
+     rel="noreferrer"
+     className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold shadow-sm transition-all cursor-pointer whitespace-nowrap active:scale-95 hover:border-zinc-300"
+   >
+     <ExternalLink className="h-3.5 w-3.5 text-teal-500 animate-pulse" />
+     <span>{lang === "tr" ? "Şablon Önizleme Linki" : "Template Preview Link"}</span>
+   </a>
  </div>
 
  {/* SUB-TAB CONTENT: APPEARANCE */}

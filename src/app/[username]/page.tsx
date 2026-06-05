@@ -175,17 +175,29 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  orderBy: { createdAt: "desc" }
  });
 
- const theme = activeUser.profile?.theme ?? "dark";
- const bio = activeUser.profile?.bio ?? "";
+  let theme = activeUser.profile?.theme ?? "dark";
+  const bio = activeUser.profile?.bio ?? "";
 
- // Priority 1: Preview Template (If ?previewTemplate=... is passed)
- // We keep preview override for dashboard iframe ONLY. Live profiles use hydrated DB data.
- let activeTemplate = null;
- if (previewTemplateId || forcedTemplateId) {
- const targetId = forcedTemplateId || previewTemplateId;
- const previewMatch = activeUser.purchasedTemplates?.find((ot: any) => ot.template?.id === targetId);
- if (previewMatch) activeTemplate = previewMatch.template;
- }
+  // Priority 1: Preview Template (If ?previewTemplate=... is passed)
+  let activeTemplate = null;
+  if (previewTemplateId || forcedTemplateId) {
+    const targetId = forcedTemplateId || previewTemplateId;
+    
+    const dbTemplate = await db.template.findFirst({
+      where: {
+        OR: [
+          { id: targetId },
+          { name: targetId }
+        ]
+      }
+    });
+
+    if (dbTemplate) {
+      activeTemplate = dbTemplate;
+    } else {
+      theme = targetId || theme;
+    }
+  }
 
  let customCss = activeTemplate ? activeTemplate.customCss : (activeUser.profile?.customCss ?? null);
 
