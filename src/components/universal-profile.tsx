@@ -7,6 +7,38 @@ import VideoPlayer from "@/components/blocks/video-player";
 import BeforeAfterSlider from "@/components/blocks/before-after-slider";
 import AudioPlayer from "@/components/blocks/audio-player";
 
+// Safelist for Tailwind background gradient classes so that they are compiled by Tailwind and available on the public profile page
+const TAILWIND_BACKGROUNDS_SAFELIST = [
+  // Free
+  "bg-gradient-to-tr from-slate-900 via-zinc-900 to-slate-900",
+  "bg-gradient-to-br from-zinc-900 to-black",
+  "bg-gradient-to-tr from-zinc-950 to-stone-900",
+  "bg-gradient-to-r from-zinc-900 via-zinc-955 to-zinc-900",
+  "bg-gradient-to-b from-purple-950/20 via-zinc-955 to-black",
+  // Starter
+  "bg-gradient-to-tr from-indigo-950 via-zinc-955 to-indigo-900",
+  "bg-gradient-to-br from-emerald-950 via-zinc-955 to-teal-900",
+  "bg-gradient-to-r from-purple-950 via-zinc-955 to-pink-955",
+  "bg-gradient-to-tr from-slate-900 via-zinc-955 to-zinc-900",
+  "bg-gradient-to-b from-rose-950 via-zinc-955 to-violet-955",
+  "bg-gradient-to-tr from-cyan-950 via-zinc-955 to-blue-955",
+  "bg-gradient-to-r from-orange-950 via-zinc-955 to-red-955",
+  "bg-gradient-to-b from-zinc-955 to-stone-900",
+  "bg-gradient-to-tr from-violet-955 to-zinc-955",
+  "bg-gradient-to-br from-blue-955 via-slate-955 to-black",
+  // Creator
+  "bg-gradient-to-tr from-pink-600 via-rose-500 to-yellow-500",
+  "bg-gradient-to-br from-green-400 via-emerald-500 to-cyan-500",
+  "bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600",
+  "bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-fuchsia-500 via-purple-600 to-zinc-955",
+  "bg-gradient-to-tr from-red-500 via-orange-500 to-yellow-400",
+  "bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-teal-400 via-emerald-600 to-zinc-955",
+  "bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-500",
+  "bg-gradient-to-tr from-orange-400 via-pink-500 to-purple-600",
+  "bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-purple-600 via-indigo-600 to-black",
+  "bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-600",
+];
+
 export interface UniversalProfileData {
  username: string;
  bio?: string | null;

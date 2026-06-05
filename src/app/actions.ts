@@ -2029,6 +2029,12 @@ export async function saveUserCustomTemplate(
     throw new Error("Missing parameters");
   }
 
+  // Deactivate all other templates for this user since we are activating this new one
+  await db.userTemplate.updateMany({
+    where: { userId },
+    data: { isActive: false }
+  });
+
   // Create Template record in DB
   const template = await db.template.create({
     data: {
@@ -2045,14 +2051,17 @@ export async function saveUserCustomTemplate(
     }
   });
 
-  // Link it to the user
+  // Link it to the user and make it active
   const userTemplate = await db.userTemplate.create({
     data: {
       userId,
       templateId: template.id,
-      isActive: false
+      isActive: true
     }
   });
+
+  // Apply the template settings directly to the profile so it takes effect immediately on their live page
+  await applyTemplateToProfile(userId, template.id);
 
   revalidatePath("/dashboard");
   revalidatePath("/sablonlar");
