@@ -800,7 +800,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
             setBtnBorderRadius("12px");
             setBtnShadow("none");
             setBtnFontWeight("font-bold");
-            setActiveTemplateCss("");
+            setActiveTemplateCss(null);
           }
           setSuccessMsg(lang === "tr" ? "Şablon başarıyla silindi." : "Template deleted successfully.");
         }
