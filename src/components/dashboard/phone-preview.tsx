@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { Laptop, Zap } from "lucide-react";
+import { Laptop, Zap, Clock } from "lucide-react";
 import UniversalProfile, { UniversalProfileData } from "@/components/universal-profile";
+import StorefrontPreview from "@/components/storefront-preview";
 
 interface PhonePreviewProps {
   mode: "editor" | "template" | "plugin";
@@ -19,7 +20,6 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
   ].includes(theme);
 
   const renderAdBlock = () => {
-    // Sadece FREE planındaysa ve reklam yayını aktifse göster
     if (plan !== "FREE") return null;
     if (!systemSettings || !systemSettings.isActive) return null;
 
@@ -29,7 +29,6 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
       window.location.href = "/dashboard/billing";
     };
 
-    // 1. Google AdSense / Script Entegrasyonu
     if (systemSettings.adScript) {
       return (
         <div className="mt-6 w-full flex justify-center overflow-hidden rounded-2xl border border-zinc-200 bg-white p-2 shadow-sm">
@@ -38,7 +37,6 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
       );
     }
 
-    // 2. Özel Banner Reklamı
     if (systemSettings.customImageUrl) {
       return (
         <div className="mt-6 w-full flex flex-col rounded-3xl border border-zinc-200 bg-white overflow-hidden shadow-sm relative group">
@@ -70,7 +68,6 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
       );
     }
 
-    // 3. Varsayılan Native Reklam
     return (
       <div className="mt-6 w-full flex flex-col rounded-3xl border border-zinc-200 bg-white p-4 shadow-sm relative overflow-hidden group">
         <div className="absolute top-2.5 right-3 flex items-center gap-1.5 z-20">
@@ -108,6 +105,275 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
     );
   };
 
+  const renderPluginPreview = () => {
+    // Eklentilerim sayfasındaki aktif addon'u bul
+    const activeAddon = data.addons?.[0];
+    if (!activeAddon) {
+      return (
+        <UniversalProfile 
+          data={data} 
+          isCompactMode={true} 
+          isDarkContext={!isLight}
+          isDashboardPreview={true}
+        />
+      );
+    }
+
+    let parsedConfig: any = {};
+    if (activeAddon.config) {
+      try {
+        parsedConfig = JSON.parse(activeAddon.config);
+      } catch (e) {}
+    }
+
+    const type = activeAddon.addonType;
+
+    // 1. Storefront Addons (Magaza)
+    if (["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR"].includes(type)) {
+      const getDefaultTheme = (t: string) => {
+        switch (t) {
+          case "NEO_BRUTAL": return "neo-brutalism";
+          case "ORGANIC": return "organic-earth";
+          case "RETRO": return "retro-arcade";
+          case "ACADEMIA": return "dark-academia";
+          case "Y2K": return "y2k-holographic";
+          case "PREMIUM_CREATOR": return "premium-creator";
+          default: return "classic";
+        }
+      };
+
+      const mappedProducts = (data.products || []).map((p: any) => ({
+        id: p.id,
+        title: p.title,
+        type: p.type,
+        price: p.price.toString(),
+        imageUrl: p.imageUrl || p.fileUrl,
+        description: p.description || ""
+      }));
+
+      return (
+        <StorefrontPreview 
+          theme={parsedConfig.theme || getDefaultTheme(type)} 
+          onProductClick={undefined}
+          products={mappedProducts} 
+          storeTitle={parsedConfig.storeTitle || data.username || "Mağazam"}
+          storeCoverUrl={parsedConfig.storeCoverUrl || data.background || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&q=80"}
+          avatarUrl={parsedConfig.storeAvatarUrl || data.avatarUrl}
+          username={parsedConfig.storeUsername || ("@" + data.username)}
+          bio={parsedConfig.storeBio || data.bio}
+          buyButtonText={parsedConfig.buyButtonText || "Satın Al"}
+        />
+      );
+    }
+
+    // 2. Booking Addon
+    if (type === "BOOKING") {
+      return (
+        <div className="w-full h-full bg-slate-50 flex items-center justify-center p-4">
+          <div className="w-full bg-white p-4 rounded-3xl shadow-md flex flex-col items-center text-center">
+            {parsedConfig.avatarUrl ? (
+              <img src={parsedConfig.avatarUrl} className="w-16 h-16 rounded-full object-cover shadow-sm mb-4" alt="Profile" />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-4 text-xl">
+                📅
+              </div>
+            )}
+            <h1 className="text-sm font-black text-slate-800 mb-1">{parsedConfig.title || "Görüşme Ayarla"}</h1>
+            <p className="text-[10px] text-slate-500 mb-4">{parsedConfig.description || "Görüşme detayları."}</p>
+            <button className="w-full py-2 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-colors shadow-sm">
+              {parsedConfig.buttonText || "Takvimi Görüntüle"}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 3. QA Addon
+    if (type === "QA") {
+      return (
+        <div className="w-full h-full bg-amber-50/20 flex items-center justify-center p-4">
+          <div className="w-full bg-white p-4 rounded-3xl shadow-md flex flex-col">
+            <div className="flex flex-col items-center text-center mb-4">
+              {parsedConfig.avatarUrl ? (
+                <img src={parsedConfig.avatarUrl} className="w-12 h-12 rounded-full object-cover shadow-sm mb-2" alt="Profile" />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mb-2 text-xl">
+                  ❓
+                </div>
+              )}
+              <h1 className="text-sm font-black text-slate-800">{parsedConfig.boxTitle || "Bana Soru Sor!"}</h1>
+            </div>
+            <textarea disabled className="w-full min-h-[60px] p-2 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-[10px] resize-none mb-3" placeholder={parsedConfig.placeholderText || "Sorunuzu buraya yazın..."}></textarea>
+            <button className="w-full py-2 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-colors shadow-sm">
+              {parsedConfig.buttonText || "Gönder"}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 4. Premium Video Addon
+    if (type === "PREMIUM_VIDEO") {
+      return (
+        <div className="w-full h-full bg-black flex flex-col items-center justify-center p-4 text-center">
+          <div className="w-full aspect-video rounded-2xl bg-zinc-900 relative overflow-hidden border border-white/5">
+            <div 
+              className="absolute inset-0 bg-cover bg-center opacity-80" 
+              style={{ backgroundImage: `url('${parsedConfig.coverUrl || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&q=80'}')` }}
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white shadow-md">
+                ▶
+              </div>
+            </div>
+          </div>
+          <h1 className="text-xs font-bold text-white mt-4 truncate w-full px-2">
+            {parsedConfig.title || "UI/UX Masterclass"}
+          </h1>
+          <p className="text-[10px] text-zinc-400 mt-1 line-clamp-2 px-2">
+            {parsedConfig.description || "Video açıklaması."}
+          </p>
+        </div>
+      );
+    }
+
+    // 5. Donation Addon
+    if (type === "DONATION") {
+      return (
+        <div className="w-full h-full bg-pink-50/20 flex items-center justify-center p-4">
+          <div className="w-full bg-white p-4 rounded-3xl shadow-md flex flex-col items-center text-center">
+            {parsedConfig.avatarUrl ? (
+              <img src={parsedConfig.avatarUrl} className="w-16 h-16 rounded-full object-cover shadow-sm mb-4" alt="Profile" />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center mb-4 text-xl">
+                ☕
+              </div>
+            )}
+            <h1 className="text-sm font-black text-slate-800 mb-1">{parsedConfig.title || "Destek Ol"}</h1>
+            <p className="text-[10px] text-slate-500 mb-4">{parsedConfig.thankYouMsg || "Teşekkürler!"}</p>
+            <button className="w-full py-2 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-colors shadow-sm">
+              {parsedConfig.buttonText || "Destek Ol"}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 6. Countdown Addon
+    if (type === "COUNTDOWN") {
+      return (
+        <div className="w-full h-full bg-gradient-to-br from-indigo-950 via-slate-900 to-black flex items-center justify-center p-4">
+          <div className="w-full bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-3xl shadow-md flex flex-col items-center text-center">
+            <h1 className="text-xs font-black text-white tracking-tight mb-2">{parsedConfig.title || "Lansman"}</h1>
+            <div className="grid grid-cols-4 gap-1.5 w-full mb-4">
+              {['G', 'S', 'D', 'S'].map((lbl, idx) => (
+                <div key={lbl} className="bg-black/30 border border-white/5 rounded-lg py-2 flex flex-col items-center">
+                  <span className="text-xs font-black text-white font-mono">14</span>
+                  <span className="text-[7px] text-indigo-300 font-bold">{lbl}</span>
+                </div>
+              ))}
+            </div>
+            <button className="w-full py-2 rounded-xl bg-indigo-500 text-white font-black text-xs hover:bg-indigo-400 transition-colors shadow-md">
+              {parsedConfig.buttonText || "Git"}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 7. Portfolio Addon
+    if (type === "PORTFOLIO") {
+      return (
+        <div className="w-full h-full bg-zinc-100 flex flex-col items-center justify-center p-4">
+          <div className="w-full bg-white p-4 rounded-3xl shadow-md text-center">
+            {parsedConfig.avatarUrl ? (
+              <img src={parsedConfig.avatarUrl} className="w-16 h-16 rounded-2xl object-cover shadow-sm mx-auto mb-4" alt="Profile" />
+            ) : (
+              <div className="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center mx-auto mb-4 text-xl">
+                🎨
+              </div>
+            )}
+            <h1 className="text-sm font-black text-slate-800 mb-1">{parsedConfig.title || "Çalışmalarım"}</h1>
+            <p className="text-[10px] text-slate-500 mb-4">{parsedConfig.description}</p>
+            <button className="w-full py-2 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-colors shadow-sm">
+              {parsedConfig.buttonText || "Projeler"}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 8. FAQ Addon
+    if (type === "FAQ") {
+      return (
+        <div className="w-full h-full bg-emerald-50/10 flex flex-col items-center justify-center p-4">
+          <div className="w-full bg-white p-4 rounded-3xl shadow-md">
+            <h1 className="text-xs font-black text-slate-800 tracking-tight text-center mb-4">{parsedConfig.title || "S.S.S."}</h1>
+            <div className="space-y-2 mb-4 max-h-[140px] overflow-y-auto no-scrollbar">
+              <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-2 text-left">
+                <p className="text-[10px] font-bold text-slate-800">Örnek Soru?</p>
+                <p className="text-[9px] text-slate-600 mt-0.5">Örnek cevap içeriği.</p>
+              </div>
+            </div>
+            <button className="w-full py-2 rounded-xl bg-emerald-500 text-white font-bold text-xs hover:bg-emerald-600 transition-colors shadow-sm">
+              {parsedConfig.buttonText || "İletişim"}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 9. Map Addon
+    if (type === "MAP") {
+      return (
+        <div className="w-full h-full bg-slate-100 flex flex-col items-center justify-center p-4 text-center">
+          <div className="w-full bg-white rounded-3xl shadow-md overflow-hidden flex flex-col">
+            <div className="h-24 bg-blue-100/50 flex flex-col items-center justify-center text-blue-500 text-sm font-bold">
+              🗺️ Harita
+            </div>
+            <div className="p-4 flex flex-col items-center">
+              <h1 className="text-xs font-black text-slate-800 mb-1">{parsedConfig.title || "Konum"}</h1>
+              <p className="text-[9px] text-zinc-500 truncate w-full max-w-[200px] mb-4">{parsedConfig.address || "İstanbul, Türkiye"}</p>
+              <button className="w-full py-2 rounded-xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition-colors shadow-sm">
+                {parsedConfig.buttonText || "Yol Tarifi"}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 10. WhatsApp Addon
+    if (type === "WHATSAPP") {
+      return (
+        <div className="w-full h-full bg-[#ece5dd] flex items-center justify-center p-4">
+          <div className="w-full bg-white rounded-3xl shadow-md overflow-hidden flex flex-col text-center">
+            <div className="bg-[#075e54] p-3 text-white">
+              <h1 className="text-xs font-bold">{parsedConfig.title || "WhatsApp İletişim"}</h1>
+            </div>
+            <div className="p-4 bg-[#e5ddd5] flex flex-col items-center">
+              <div className="bg-white p-3 rounded-xl rounded-tl-sm text-left max-w-[90%] text-[11px] mb-4">
+                {parsedConfig.welcomeMessage || "Merhaba, size nasıl yardımcı olabilirim?"}
+              </div>
+              <button className="w-full py-2 rounded-xl bg-[#25d366] text-white font-bold text-xs hover:bg-[#1ebd5a] transition-colors shadow-md flex items-center justify-center gap-1.5">
+                {parsedConfig.buttonText || "Mesaj Gönder"}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <UniversalProfile 
+        data={data} 
+        isCompactMode={true} 
+        isDarkContext={!isLight}
+        isDashboardPreview={true}
+      />
+    );
+  };
+
   return (
     <div className="hidden lg:block w-full max-w-sm lg:w-[360px] shrink-0 sticky top-32 self-start">
       <div className="text-center mb-4">
@@ -120,12 +386,14 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
       <div className="relative mx-auto rounded-[3rem] p-4 border-4 shadow-[0_0_50px_rgba(0,0,0,0.15)] overflow-hidden bg-white border-zinc-200">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-50 rounded-b-xl z-20" />
         <div id="sandbox-preview" className="relative rounded-[2.5rem] aspect-[9/18] overflow-y-auto overflow-x-hidden bg-zinc-950 flex flex-col justify-between transition-all duration-300 w-full h-full pointer-events-none p-0 border-0 scrollbar-none">
-          <UniversalProfile 
-            data={data} 
-            isCompactMode={true} 
-            isDarkContext={!isLight}
-            isDashboardPreview={true}
-          />
+          {mode === "plugin" ? renderPluginPreview() : (
+            <UniversalProfile 
+              data={data} 
+              isCompactMode={true} 
+              isDarkContext={!isLight}
+              isDashboardPreview={true}
+            />
+          )}
         </div>
       </div>
 

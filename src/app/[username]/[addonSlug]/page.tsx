@@ -20,53 +20,64 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
  };
 }
 
-export default async function AddonPage({ params }: { params: Promise<{ username: string; addonSlug: string }> }) {
- const resolvedParams = await params;
- const username = resolvedParams.username.replace("%40", "");
- const addonSlug = resolvedParams.addonSlug;
+export default async function AddonPage({ 
+  params, 
+  searchParams 
+}: { 
+  params: Promise<{ username: string; addonSlug: string }>,
+  searchParams?: Promise<{ previewAddons?: string }>
+}) {
+  const resolvedParams = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const previewAddons = resolvedSearchParams.previewAddons;
+  const username = resolvedParams.username.replace("%40", "");
+  const addonSlug = resolvedParams.addonSlug;
 
- const user = await db.user.findUnique({
- where: { username },
- include: { profile: true },
- });
+  const user = await db.user.findUnique({
+  where: { username },
+  include: { profile: true },
+  });
 
- if (!user || !user.profile) {
- notFound();
- }
+  if (!user || !user.profile) {
+  notFound();
+  }
 
- // Find active addons
- const addons = await db.userAddon.findMany({
- where: { userId: user.id, isActive: true },
- });
+  // Find active or draft addons
+  const addons = await db.userAddon.findMany({
+  where: { 
+    userId: user.id,
+    ...(previewAddons === "true" ? {} : { isActive: true })
+  },
+  });
 
- // Find the addon that matches this slug
- function getDefaultSlug(type: string) {
- if (type === "MINI_STORE") return "store";
- if (type === "NEO_BRUTAL") return "neo-brutal";
- if (type === "ORGANIC") return "organic";
- if (type === "RETRO") return "retro";
- if (type === "ACADEMIA") return "academia";
- if (type === "Y2K") return "y2k";
- if (type === "BOOKING") return "booking";
- if (type === "NEWSLETTER") return "newsletter";
- if (type === "QA") return "qa";
- if (type === "DONATION") return "donation";
- if (type === "PREMIUM_CREATOR") return "creator-store";
- if (type === "PREMIUM_VIDEO") return "masterclass";
- return type.toLowerCase();
- }
+  // Find the addon that matches this slug
+  function getDefaultSlug(type: string) {
+  if (type === "MINI_STORE") return "store";
+  if (type === "NEO_BRUTAL") return "neo-brutal";
+  if (type === "ORGANIC") return "organic";
+  if (type === "RETRO") return "retro";
+  if (type === "ACADEMIA") return "academia";
+  if (type === "Y2K") return "y2k";
+  if (type === "BOOKING") return "booking";
+  if (type === "NEWSLETTER") return "newsletter";
+  if (type === "QA") return "qa";
+  if (type === "DONATION") return "donation";
+  if (type === "PREMIUM_CREATOR") return "creator-store";
+  if (type === "PREMIUM_VIDEO") return "masterclass";
+  return type.toLowerCase();
+  }
 
- // Find the matching active addon by slug
- const matchingAddon = addons.find(a => {
- if (!a.isActive) return false;
- try {
- const parsed = a.config ? JSON.parse(a.config) : {};
- const cSlug = (parsed.customSlug || getDefaultSlug(a.addonType)).toLowerCase();
- return cSlug === addonSlug.toLowerCase();
- } catch {
- return getDefaultSlug(a.addonType).toLowerCase() === addonSlug.toLowerCase();
- }
- });
+  // Find the matching active/draft addon by slug
+  const matchingAddon = addons.find(a => {
+  if (!a.isActive && previewAddons !== "true") return false;
+  try {
+  const parsed = a.config ? JSON.parse(a.config) : {};
+  const cSlug = (parsed.customSlug || getDefaultSlug(a.addonType)).toLowerCase();
+  return cSlug === addonSlug.toLowerCase();
+  } catch {
+  return getDefaultSlug(a.addonType).toLowerCase() === addonSlug.toLowerCase();
+  }
+  });
 
  if (!matchingAddon) {
  notFound();

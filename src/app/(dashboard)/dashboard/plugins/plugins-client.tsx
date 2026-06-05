@@ -64,6 +64,25 @@ export default function PluginsClient({
     return type.toLowerCase();
   };
 
+  const getPreviewLink = () => {
+    const firstAddon = addons[0];
+    if (firstAddon) {
+      let slug = getDefaultSlug(firstAddon.addonType);
+      try {
+        const config = firstAddon.config ? JSON.parse(firstAddon.config) : {};
+        if (config.customSlug) {
+          slug = config.customSlug;
+        }
+      } catch (e) {}
+      
+      const isStorefront = ["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR"].includes(firstAddon.addonType);
+      if (isStorefront) {
+        return `/${user.username}/${slug.toLowerCase()}?previewAddons=true`;
+      }
+    }
+    return `/${user.username}?previewAddons=true`;
+  };
+
   return (
     <div className="flex flex-col lg:flex-row gap-4 md:gap-8 w-full max-w-full items-start justify-start overflow-hidden">
       {/* LEFT COLUMN: ACTIVE WORKSPACE CONTENT */}
@@ -87,7 +106,7 @@ export default function PluginsClient({
             </div>
 
             <a
-              href={`/${user.username}?previewAddons=true`}
+              href={getPreviewLink()}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold shadow-sm transition-all cursor-pointer whitespace-nowrap active:scale-95 hover:border-zinc-300"
@@ -145,7 +164,7 @@ export default function PluginsClient({
                         <Settings className="h-3.5 w-3.5" />
                         <span>{lang === "tr" ? "Ayarla" : "Config"}</span>
                       </button>
-                      {addon.isActive && (
+                      {addon.isActive ? (
                         <a
                           href={addonLink}
                           target="_blank"
@@ -154,6 +173,16 @@ export default function PluginsClient({
                         >
                           <Globe className="h-3.5 w-3.5" />
                           <span>{lang === "tr" ? "Linke Git" : "Visit Link"}</span>
+                        </a>
+                      ) : (
+                        <a
+                          href={`${addonLink}?previewAddons=true`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                          <span>{lang === "tr" ? "Önizle" : "Preview"}</span>
                         </a>
                       )}
                     </div>
@@ -233,7 +262,7 @@ export default function PluginsClient({
           usernameColor: isLight ? "#0f172a" : "#ffffff",
           bioColor: isLight ? "#475569" : "rgba(255,255,255,0.7)",
           links: mappedLinks,
-          addons: addons.filter(a => a.isActive),
+          addons: addons,
           products: initialProducts,
           systemSettings: systemSettings,
           plan: simulatedPlan,
@@ -246,7 +275,16 @@ export default function PluginsClient({
         <AddonConfigModal
           addon={editingAddon}
           products={initialProducts}
-          onClose={() => setEditingAddon(null)}
+          onClose={(updatedConfig, updatedIsActive) => {
+            if (updatedConfig !== undefined || updatedIsActive !== undefined) {
+              setAddons(prev => prev.map(a => a.id === editingAddon.id ? {
+                ...a,
+                config: updatedConfig !== undefined ? updatedConfig : a.config,
+                isActive: updatedIsActive !== undefined ? updatedIsActive : a.isActive
+              } : a));
+            }
+            setEditingAddon(null);
+          }}
           lang={lang}
           username={user.username || ""}
         />
