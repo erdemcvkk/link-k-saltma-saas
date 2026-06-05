@@ -188,13 +188,13 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  };
 
  return (
- <div className="min-h-screen bg-zinc-950 text-white font-sans relative overflow-hidden pb-16">
+ <div className="min-h-screen bg-black text-white font-sans relative overflow-hidden pb-16">
  <GlobalOverlayManager />
  
- <div className="absolute top-0 left-1/4 w-full md:w-96 h-96 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
- <div className="absolute bottom-10 right-1/4 w-full md:w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+ <div className="absolute top-0 left-1/4 w-full md:w-96 h-96 bg-neon-blue/5 rounded-full blur-3xl pointer-events-none" />
+ <div className="absolute bottom-10 right-1/4 w-full md:w-96 h-96 bg-light-blue/5 rounded-full blur-3xl pointer-events-none" />
 
- <nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-40">
+ <nav className="border-b border-zinc-800 bg-black/80 backdrop-blur-md sticky top-0 z-40">
  <div className="max-w-full md:w-[1800px] mx-auto px-6 h-16 flex items-center justify-between">
  <Link href="/" className="font-black text-xl tracking-tighter text-white">
  Link.SaaS
@@ -209,12 +209,12 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
 
  <div className="max-w-full md:w-[1800px] mx-auto px-6 pt-16 pb-6">
  <div className="text-center max-w-2xl mx-auto mb-12">
- <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-rose-500/10 text-rose-500 font-bold text-sm mb-6">
+ <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-neon-blue/10 text-neon-blue font-bold text-sm mb-6">
  <Sparkles className="h-4 w-4" />
  <span>Premium Şablon Vitrini</span>
  </div>
  <h1 className="text-2xl md:text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
- Sayfanıza <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">Güç Katın</span>
+ Sayfanıza <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-light-blue">Güç Katın</span>
  </h1>
  <p className="text-lg text-zinc-400 font-medium">
  Kreatörler, müzisyenler ve gamerlar için tasarlanmış şık şablonları inceleyin, anında profilinizde uygulayın.
@@ -235,7 +235,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  }}
  className={`px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
  selectedCategory === cat
- ? "bg-gradient-to-r from-rose-500 to-orange-500 text-white shadow-md shadow-rose-500/20"
+ ? "bg-gradient-to-r from-neon-blue to-light-blue text-white shadow-md shadow-neon-blue/20"
  : "bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white"
  }`}
  >
@@ -258,7 +258,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  setSearchQuery(e.target.value);
  setVisibleCount(12);
  }}
- className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white placeholder-zinc-500 transition-colors"
+ className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-neon-blue text-white placeholder-zinc-500 transition-colors"
  />
  </div>
 
@@ -270,7 +270,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  setSortOption(e.target.value);
  setVisibleCount(12);
  }}
- className="w-full pl-10 pr-8 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white appearance-none cursor-pointer transition-colors"
+ className="w-full pl-10 pr-8 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-neon-blue text-white appearance-none cursor-pointer transition-colors"
  >
  <option value="default">Varsayılan Sıralama</option>
  <option value="name-asc">A → Z (İsim)</option>
@@ -302,7 +302,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  return (
  <div key={template.id} className="flex flex-col items-center">
  <div className="text-center mb-6 px-4">
- <div className={`w-3 h-3 rounded-full mb-3 mx-auto ${template.category === 'Premium' ? 'bg-rose-500' : 'bg-neon-blue'} animate-pulse`} />
+ <div className={`w-3 h-3 rounded-full mb-3 mx-auto ${template.category === 'Premium' ? 'bg-light-blue' : 'bg-neon-blue'} animate-pulse`} />
  <h3 className="text-xl font-bold text-white mb-2">{template.name}</h3>
  <p className="text-sm text-zinc-400 font-medium leading-relaxed h-[40px] flex items-center justify-center">
  {template.category}
@@ -338,7 +338,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  <button 
  onClick={() => handlePurchase(template)}
  disabled={isPending}
- className="w-full py-3 rounded-xl bg-rose-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-rose-500 transition-colors disabled:opacity-50"
+ className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue hover:opacity-90 text-white font-bold flex items-center justify-center gap-2 transition-all border-0 shadow-lg shadow-neon-blue/10 disabled:opacity-50 cursor-pointer"
  >
  {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Hemen Satın Al"}
  </button>

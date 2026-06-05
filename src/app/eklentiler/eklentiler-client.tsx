@@ -228,8 +228,8 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
  };
 
  return (
- <div className="min-h-screen bg-zinc-950 font-sans">
- <nav className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-50">
+ <div className="min-h-screen bg-black font-sans">
+ <nav className="border-b border-zinc-800 bg-black/80 backdrop-blur-md sticky top-0 z-50">
  <div className="max-w-full md:w-[1800px] mx-auto px-6 h-16 flex items-center justify-between">
  <Link href="/" className="font-black text-xl tracking-tighter text-white">
  Link.SaaS
@@ -244,12 +244,12 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
 
  <main className="max-w-full md:w-[1800px] mx-auto px-6 py-16">
  <div className="text-center max-w-2xl mx-auto mb-16">
- <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-rose-500/10 text-rose-500 font-bold text-sm mb-6">
+ <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-neon-blue/10 text-neon-blue font-bold text-sm mb-6">
  <Zap className="h-4 w-4" />
  <span>10 Premium Eklenti Vitrini</span>
  </div>
  <h1 className="text-2xl md:text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
- Profilinize <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">Güç Katın</span>
+ Profilinize <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-light-blue">Güç Katın</span>
  </h1>
  <p className="text-lg text-zinc-400 font-medium">
  İhtiyacınıza uygun modülü seçin, tek seferlik ödemeyle ömür boyu kullanın. 10 farklı premium tema arasından seçim yapın.
@@ -271,7 +271,7 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
  setSearchQuery(e.target.value);
  setVisibleCount(12);
  }}
- className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white placeholder-zinc-500 transition-colors"
+ className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-neon-blue text-white placeholder-zinc-500 transition-colors"
  />
  </div>
 
@@ -283,7 +283,7 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
  setSortOption(e.target.value);
  setVisibleCount(12);
  }}
- className="w-full pl-10 pr-8 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-rose-500 text-white appearance-none cursor-pointer transition-colors"
+ className="w-full pl-10 pr-8 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-neon-blue text-white appearance-none cursor-pointer transition-colors"
  >
  <option value="default">Varsayılan Sıralama</option>
  <option value="name-asc">A → Z (İsim)</option>
@@ -417,7 +417,7 @@ export default function EklentilerClient({ products, settings }: EklentilerClien
  }
  }}
  disabled={isProcessing}
- className="w-full py-3 rounded-xl bg-rose-600 text-white font-bold flex items-center justify-center gap-2 hover:bg-rose-500 transition-colors disabled:opacity-50"
+ className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue hover:opacity-90 text-white font-bold flex items-center justify-center gap-2 transition-all border-0 shadow-lg shadow-neon-blue/10 disabled:opacity-50 cursor-pointer"
  >
  {isProcessing ? "İşleniyor..." : "Hemen Satın Al"}
  </button>
