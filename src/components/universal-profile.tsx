@@ -31,9 +31,10 @@ interface UniversalProfileProps {
  data: UniversalProfileData;
  isCompactMode?: boolean; // If true, disable interactive popups/modals
  isDarkContext?: boolean; // For default fallback logic
+ lang?: "tr" | "en";
 }
 
-export default function UniversalProfile({ data, isCompactMode = false, isDarkContext = true }: UniversalProfileProps) {
+export default function UniversalProfile({ data, isCompactMode = false, isDarkContext = true, lang = "tr" }: UniversalProfileProps) {
  // Generate a unique ID to safely scope CSS per instance
  const rawId = useId();
  const wrapperId = `univ-profile-${rawId.replace(/:/g, "")}`;
@@ -185,8 +186,74 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  }
  };
 
- const isLayoutLeft = buttonClass?.includes("layout-left");
- const isLayoutHero = buttonClass?.includes("layout-hero");
+  const renderSponsoredBlock = () => {
+    const defaultLinkForStyle = links[0] || {};
+    const adCustomStyle: React.CSSProperties = data.buttonClass ? {} : {
+      backgroundColor: defaultLinkForStyle.bgColor || undefined,
+      color: defaultLinkForStyle.textColor || undefined,
+      borderColor: defaultLinkForStyle.borderColor || undefined,
+      borderStyle: defaultLinkForStyle.borderStyle as any || undefined,
+      borderWidth: defaultLinkForStyle.borderWidth || undefined,
+      borderRadius: defaultLinkForStyle.borderRadius || undefined,
+      boxShadow: defaultLinkForStyle.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
+        : defaultLinkForStyle.shadow === "glow-emerald" ? "0 0 15px rgba(16,185,129,0.5)"
+        : defaultLinkForStyle.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
+        : undefined
+    };
+
+    const adDynamicBlockClass = data.buttonClass 
+      ? `link-item btn-link ${data.buttonClass} ${defaultLinkForStyle.animation || ""} ${defaultLinkForStyle.fontWeight || ""}`
+      : `link-item btn-link ${!defaultLinkForStyle.bgColor ? currentStyles.btnClass : ""} ${!defaultLinkForStyle.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-2xl") : ""} ${defaultLinkForStyle.animation || ""} ${defaultLinkForStyle.fontWeight || "font-bold"}`;
+
+    const handleUpgradeRedirect = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      if (isCompactMode) {
+        alert(lang === "tr" ? "Bu özellik planınızı yükseltmenizi gerektirir." : "This feature requires upgrading your plan.");
+      } else {
+        window.location.href = "/dashboard/billing";
+      }
+    };
+
+    return (
+      <div 
+        style={adCustomStyle} 
+        className={`flex flex-col p-4 text-xs transition-all relative overflow-hidden group ${adDynamicBlockClass}`}
+      >
+        <div className="absolute top-2.5 right-3 flex items-center gap-1 z-20">
+          <span 
+            onClick={handleUpgradeRedirect}
+            className="text-[8.5px] font-semibold text-zinc-400 hover:text-zinc-350 cursor-pointer underline transition-colors"
+          >
+            {lang === "tr" ? "Reklamı Kaldır" : "Remove Ad"}
+          </span>
+          <span className="h-3 w-[1px] bg-zinc-500/20" />
+          <span className="text-[7.5px] font-bold tracking-wider uppercase bg-zinc-400/10 text-zinc-400 px-1 py-0.2 rounded border border-zinc-500/10">
+            Ad
+          </span>
+        </div>
+
+        <div className="flex items-start gap-3 mt-1 text-left w-full pr-16">
+          <div className="h-9 w-9 rounded-full bg-teal-500/10 text-teal-400 flex items-center justify-center shrink-0 border border-teal-500/20">
+            <Zap className="h-4.5 w-4.5 animate-pulse text-teal-500" />
+          </div>
+          <div className="space-y-0.5">
+            <h4 className="font-extrabold text-xs tracking-tight" style={{ color: defaultLinkForStyle.textColor || 'inherit' }}>
+              {lang === "tr" ? "Kendi Biyo Link Sayfanı Ücretsiz Oluştur!" : "Build Your Free Link Bio Page!"}
+            </h4>
+            <p className="text-[10px] leading-snug opacity-75" style={{ color: defaultLinkForStyle.textColor || 'inherit' }}>
+              {lang === "tr" 
+                ? "Saniyeler içinde sosyal medya hesaplarını tek bir yerde topla ve analiz et." 
+                : "Unify all your social links and view page traffic metrics in seconds."}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const isLayoutLeft = buttonClass?.includes("layout-left");
+  const isLayoutHero = buttonClass?.includes("layout-hero");
 
  return (
  <div 
@@ -281,57 +348,76 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  )}
 
  {/* Links Grid */}
- <div className="links-container w-full flex flex-col gap-3" style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
- {links.length > 0 && <h3 className={`text-[10px] uppercase tracking-widest font-bold mb-1 ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>Links</h3>}
- {links.length === 0 ? (
- <div className={`text-center py-6 text-xs rounded-2xl border border-dashed ${isDark ? "text-zinc-500 bg-zinc-950/20 border-zinc-900" : "text-zinc-600 bg-zinc-100 border-zinc-200"}`}>
- No active links found.
- </div>
- ) : (
- links.map((link, idx) => {
- let blockMeta: any = {};
- if (link.metadata) try { blockMeta = JSON.parse(link.metadata); } catch(e) {}
+  <div className="links-container w-full flex flex-col gap-3" style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
+  {links.length > 0 && <h3 className={`text-[10px] uppercase tracking-widest font-bold mb-1 ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>Links</h3>}
+  {links.length === 0 ? (
+    <>
+      <div className={`text-center py-6 text-xs rounded-2xl border border-dashed ${isDark ? "text-zinc-500 bg-zinc-950/20 border-zinc-900" : "text-zinc-600 bg-zinc-100 border-zinc-200"}`}>
+      No active links found.
+      </div>
+      {plan === "FREE" && renderSponsoredBlock()}
+    </>
+  ) : (
+    (() => {
+      const showAd = plan === "FREE";
+      const adIndex = Math.floor(links.length / 2);
+      
+      return links.map((link, idx) => {
+        let blockMeta: any = {};
+        if (link.metadata) try { blockMeta = JSON.parse(link.metadata); } catch(e) {}
 
-  const customStyle: React.CSSProperties = {
-  backgroundColor: link.bgColor || undefined,
-  color: link.textColor || undefined,
-  borderColor: link.borderColor || undefined,
-  borderStyle: link.borderStyle as any || undefined,
-  borderWidth: link.borderWidth || undefined,
-  borderRadius: link.borderRadius || undefined,
-  boxShadow: link.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
-  : link.shadow === "glow-emerald" ? "0 0 15px rgba(16,185,129,0.5)"
-  : link.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
-  : undefined
-  };
+        const customStyle: React.CSSProperties = {
+          backgroundColor: link.bgColor || undefined,
+          color: link.textColor || undefined,
+          borderColor: link.borderColor || undefined,
+          borderStyle: link.borderStyle as any || undefined,
+          borderWidth: link.borderWidth || undefined,
+          borderRadius: link.borderRadius || undefined,
+          boxShadow: link.shadow === "glow-purple" ? "0 0 15px rgba(168,85,247,0.5)"
+            : link.shadow === "glow-emerald" ? "0 0 15px rgba(16,185,129,0.5)"
+            : link.shadow === "hard-3d" ? "4px 4px 0px 0px rgba(0,0,0,1)"
+            : undefined
+        };
 
- const dynamicBlockClass = data.buttonClass 
- ? `link-item btn-link ${data.buttonClass} ${link.animation || ""} ${link.fontWeight || ""}`
- : `link-item btn-link ${!link.bgColor ? currentStyles.btnClass : ""} ${!link.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-2xl") : ""} ${link.animation || ""} ${link.fontWeight || "font-bold"}`;
+        const dynamicBlockClass = data.buttonClass 
+          ? `link-item btn-link ${data.buttonClass} ${link.animation || ""} ${link.fontWeight || ""}`
+          : `link-item btn-link ${!link.bgColor ? currentStyles.btnClass : ""} ${!link.borderRadius ? (theme === "brutalism" || theme === "terminal" ? "rounded-none" : "rounded-2xl") : ""} ${link.animation || ""} ${link.fontWeight || "font-bold"}`;
 
- if (link.blockType === "VIDEO_PLAYER") {
- return <VideoPlayer key={link.id} title={link.title} url={link.url} isDark={isDark} boxStyle={customStyle} className={dynamicBlockClass} />;
- }
- if (link.blockType === "BEFORE_AFTER") {
- return <BeforeAfterSlider key={link.id} title={link.title} beforeImage={blockMeta.beforeImage||""} afterImage={blockMeta.afterImage||""} isDark={isDark} boxStyle={customStyle} className={dynamicBlockClass} />;
- }
- if (link.blockType === "AUDIO_PLAYER") {
- return <AudioPlayer key={link.id} title={link.title} url={link.url} isDark={isDark} boxStyle={customStyle} className={dynamicBlockClass} />;
- }
+        let blockElement = null;
 
- return (
- <a key={link.id} href={isCompactMode ? "#" : `/click/${link.id}`} target={isCompactMode ? "_self" : "_blank"} rel="noopener noreferrer" style={customStyle} className={`flex flex-wrap items-center justify-between p-3 text-sm transition-all hover:scale-[1.02] ${dynamicBlockClass}`}>
- <div className="flex items-center gap-3 flex-1 overflow-hidden">
- <div className="h-8 w-8 rounded-full bg-black/10 flex items-center justify-center shrink-0 border border-white/5" style={blockMeta.iconColor ? { color: blockMeta.iconColor } : undefined}>
- {getLinkIcon(link.type, link.url)}
- </div>
- <span className="link-title truncate flex-1 font-semibold" style={{ color: link.textColor || 'inherit', display: 'block', visibility: 'visible', opacity: 1 }}>{link.title}</span>
- </div>
- <ArrowUpRight className="h-4 w-4 opacity-50 shrink-0" style={link.textColor ? { color: link.textColor } : undefined} />
- </a>
- );
- })
- )}
+        if (link.blockType === "VIDEO_PLAYER") {
+          blockElement = <VideoPlayer key={link.id} title={link.title} url={link.url} isDark={isDark} boxStyle={customStyle} className={dynamicBlockClass} />;
+        } else if (link.blockType === "BEFORE_AFTER") {
+          blockElement = <BeforeAfterSlider key={link.id} title={link.title} beforeImage={blockMeta.beforeImage||""} afterImage={blockMeta.afterImage||""} isDark={isDark} boxStyle={customStyle} className={dynamicBlockClass} />;
+        } else if (link.blockType === "AUDIO_PLAYER") {
+          blockElement = <AudioPlayer key={link.id} title={link.title} url={link.url} isDark={isDark} boxStyle={customStyle} className={dynamicBlockClass} />;
+        } else {
+          blockElement = (
+            <a key={link.id} href={isCompactMode ? "#" : `/click/${link.id}`} target={isCompactMode ? "_self" : "_blank"} rel="noopener noreferrer" style={customStyle} className={`flex flex-wrap items-center justify-between p-3 text-sm transition-all hover:scale-[1.02] ${dynamicBlockClass}`}>
+              <div className="flex items-center gap-3 flex-1 overflow-hidden">
+                <div className="h-8 w-8 rounded-full bg-black/10 flex items-center justify-center shrink-0 border border-white/5" style={blockMeta.iconColor ? { color: blockMeta.iconColor } : undefined}>
+                  {getLinkIcon(link.type, link.url)}
+                </div>
+                <span className="link-title truncate flex-1 font-semibold" style={{ color: link.textColor || 'inherit', display: 'block', visibility: 'visible', opacity: 1 }}>{link.title}</span>
+              </div>
+              <ArrowUpRight className="h-4 w-4 opacity-50 shrink-0" style={link.textColor ? { color: link.textColor } : undefined} />
+            </a>
+          );
+        }
+
+        if (showAd && idx === adIndex) {
+          return (
+            <React.Fragment key={`ad-frag-${link.id}`}>
+              {renderSponsoredBlock()}
+              {blockElement}
+            </React.Fragment>
+          );
+        }
+
+        return blockElement;
+      });
+    })()
+  )}
  </div>
 
  {/* Addons Grid */}
