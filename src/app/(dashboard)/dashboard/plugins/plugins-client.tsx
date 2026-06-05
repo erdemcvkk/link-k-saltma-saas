@@ -65,6 +65,21 @@ export default function PluginsClient({
   };
 
   const getPreviewLink = () => {
+    const firstAddon = addons[0];
+    if (firstAddon) {
+      let slug = getDefaultSlug(firstAddon.addonType);
+      try {
+        const config = firstAddon.config ? JSON.parse(firstAddon.config) : {};
+        if (config.customSlug) {
+          slug = config.customSlug;
+        }
+      } catch (e) {}
+      
+      const isStorefront = ["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR"].includes(firstAddon.addonType);
+      if (isStorefront) {
+        return `/@${user.username}/${slug.toLowerCase()}?previewAddons=true`;
+      }
+    }
     return `/@${user.username}?previewAddons=true`;
   };
 
