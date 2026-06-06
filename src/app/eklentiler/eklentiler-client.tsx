@@ -410,10 +410,11 @@ interface EklentilerClientProps {
   products?: DummyProduct[];
   settings?: Record<string, string>;
   userId?: string | null;
+  dbUserId?: string | null;
   purchasedAddons?: string[];
 }
 
-export default function EklentilerClient({ products, settings, userId = null, purchasedAddons = [] }: EklentilerClientProps = {}) {
+export default function EklentilerClient({ products, settings, userId = null, dbUserId = null, purchasedAddons = [] }: EklentilerClientProps = {}) {
   const lang = "tr";
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [purchased, setPurchased] = useState<string[]>(purchasedAddons);
@@ -1036,10 +1037,20 @@ export default function EklentilerClient({ products, settings, userId = null, pu
     ) : (
       <button 
         onClick={() => {
-          if (paymentUrl) {
-            window.location.href = paymentUrl;
+          if (displayPrice === "0") {
+            if (paymentUrl) {
+              window.location.href = paymentUrl;
+            } else {
+              handlePurchase(addon.id);
+            }
           } else {
-            handlePurchase(addon.id);
+            if (!userId || !dbUserId) {
+              alert(lang === "tr" ? "Satın almak için lütfen önce giriş yapın." : "Please sign in to purchase.");
+              window.location.href = "/sign-in";
+              return;
+            }
+            // "Hemen Satın Al" redirect to checkout API route
+            window.location.href = `/api/checkout?userId=${dbUserId}&moduleId=${addon.id}`;
           }
         }}
         disabled={isProcessing}

@@ -16,6 +16,7 @@ export default async function AddonsPage() {
   const products = await getAddonDummyProducts();
 
   let userAddonTypes: string[] = [];
+  let dbUserId: string | null = null;
   if (userId) {
     const user = await db.user.findUnique({
       where: { clerkUserId: userId },
@@ -23,6 +24,7 @@ export default async function AddonsPage() {
     });
     if (user) {
       userAddonTypes = user.addons.map(a => a.addonType);
+      dbUserId = user.id;
     }
   }
   
@@ -31,6 +33,7 @@ export default async function AddonsPage() {
       settings={settings} 
       products={products.map((p: any) => ({ ...p, type: p.type || "PRODUCT", imageUrl: p.imageUrl || null }))} 
       userId={userId}
+      dbUserId={dbUserId}
       purchasedAddons={userAddonTypes}
     />
   );

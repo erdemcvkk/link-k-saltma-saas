@@ -28,6 +28,7 @@ model User {
   qrCodes       QrCode[]
   purchasedTemplates UserTemplate[]
   addons        UserAddon[]
+  purchasedModules UserPurchasedModule[]
 }
 
 model Profile {
@@ -299,4 +300,14 @@ model SystemSettings {
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+model UserPurchasedModule {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  moduleId  String   // e.g. "MINI_STORE", "BOOKING", etc.
+  createdAt DateTime @default(now())
+
+  @@unique([userId, moduleId])
 }
