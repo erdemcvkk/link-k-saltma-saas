@@ -574,7 +574,7 @@ export default async function AddonPage({
         <div className="w-full min-h-screen bg-black flex justify-center">
           <div className="w-full max-w-full md:w-[480px] min-h-screen relative shadow-2xl overflow-hidden bg-zinc-950 flex flex-col justify-between">
             <div className="flex-1 w-full overflow-y-auto no-scrollbar">
-              {renderAddonInnerContent(type, displayAvatar, displayUsername, displayBio, displayTitle, displayDesc)}
+              {renderAddonInnerContent(type, displayAvatar, displayUsername, displayBio, displayTitle, displayDesc, parsedConfig)}
             </div>
             
             {/* Direct Buy Section */}
@@ -597,14 +597,14 @@ export default async function AddonPage({
 }
 
 
-function renderAddonInnerContent(type: string, avatarUrl: string, username: string, bio: string, title: string, desc: string) {
+function renderAddonInnerContent(type: string, avatarUrl: string, username: string, bio: string, title: string, desc: string, config: any = {}) {
   switch (type) {
     case "SPOTIFY_CLASSIC":
       return (
         <div className="w-full h-full bg-zinc-950 flex flex-col p-8 text-white relative z-0">
           <div className="flex flex-col items-center mt-12 mb-8">
             <div className="w-24 h-24 bg-zinc-850 rounded-xl overflow-hidden border border-zinc-800 shadow-xl">
-              <img src={avatarUrl || "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&q=80"} className="w-full h-full object-cover" />
+              <img src={config.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&q=80"} className="w-full h-full object-cover" />
             </div>
             <span className="text-sm font-bold mt-3 text-white">{username}</span>
             <p className="text-xs text-green-500 font-bold mt-1">{bio}</p>
@@ -613,8 +613,8 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
           <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-sm font-bold text-white">{title}</h4>
-                <p className="text-[10px] text-zinc-400">{desc}</p>
+                <h4 className="text-sm font-bold text-white">{config.trackName || title}</h4>
+                <p className="text-[10px] text-zinc-400">{config.artistName || desc}</p>
               </div>
               <div className="flex items-center gap-4">
                 <span className="text-green-500 text-lg cursor-pointer">⏮</span>
@@ -631,7 +631,7 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
               </div>
               <div className="flex justify-between text-[9px] text-zinc-500 font-mono">
                 <span>1:12</span>
-                <span>3:45</span>
+                <span>{config.trackDuration || "3:45"}</span>
               </div>
             </div>
           </div>
@@ -656,8 +656,8 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
           </div>
           
           <div className="bg-stone-950/85 rounded-2xl p-5 border border-stone-800 text-center space-y-4 mt-auto">
-            <h4 className="text-xs font-bold text-stone-300">{title}</h4>
-            <p className="text-[10px] text-stone-500">{desc}</p>
+            <h4 className="text-xs font-bold text-stone-300">{config.trackName || title}</h4>
+            <p className="text-[10px] text-stone-500">{config.artistName || desc}</p>
             <div className="flex items-center justify-center gap-6 text-orange-400">
               <span className="text-sm cursor-pointer">⏮</span>
               <button className="w-10 h-10 rounded-full bg-orange-400 flex items-center justify-center text-stone-900 border-0 cursor-pointer">
@@ -673,15 +673,15 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
         <div className="w-full h-full bg-gradient-to-br from-indigo-400 to-purple-400 flex flex-col p-8 text-white relative z-0">
           <div className="flex flex-col items-center mt-12 mb-8">
             <div className="w-20 h-20 bg-white/20 rounded-full overflow-hidden border border-white/20 shadow-lg">
-              <img src={avatarUrl || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=200&q=80"} className="w-full h-full object-cover" />
+              <img src={config.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=200&q=80"} className="w-full h-full object-cover" />
             </div>
             <span className="text-sm font-bold mt-3 text-white">{username}</span>
           </div>
           
           <div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-5 mt-4 space-y-4 shadow-xl">
             <div className="text-center">
-              <h4 className="text-sm font-extrabold text-white">{title}</h4>
-              <p className="text-[10px] text-purple-100/80 mt-1">{desc}</p>
+              <h4 className="text-sm font-extrabold text-white">{config.trackName || title}</h4>
+              <p className="text-[10px] text-purple-100/80 mt-1">{config.artistName || desc}</p>
             </div>
             <div className="flex items-center justify-center gap-6 text-white pt-2">
               <span className="text-sm cursor-pointer">⏮</span>
@@ -698,7 +698,7 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
         <div className="w-full h-full bg-black flex flex-col p-8 text-white relative z-0">
           <div className="flex flex-col items-center mt-12 mb-8">
             <div className="w-24 h-24 bg-zinc-900 rounded-none overflow-hidden border border-pink-500 shadow-[0_0_12px_rgba(236,72,153,0.5)]">
-              <img src={avatarUrl || "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=200&q=80"} className="w-full h-full object-cover" />
+              <img src={config.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=200&q=80"} className="w-full h-full object-cover" />
             </div>
             <span className="text-xs font-black mt-3 uppercase tracking-widest text-pink-500">{username}</span>
           </div>
@@ -706,8 +706,8 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
           <div className="bg-black border border-pink-500 shadow-[0_0_20px_rgba(236,72,153,0.6)] rounded-none p-5 mt-4 space-y-5">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-xs font-black uppercase tracking-widest text-cyan-400">{title}</h4>
-                <p className="text-[9px] text-pink-400 uppercase mt-1">{desc}</p>
+                <h4 className="text-xs font-black uppercase tracking-widest text-cyan-400">{config.trackName || title}</h4>
+                <p className="text-[9px] text-pink-400 uppercase mt-1">{config.artistName || desc}</p>
               </div>
               <button className="w-10 h-10 rounded-none bg-pink-500 flex items-center justify-center text-black border-0 shadow-[0_0_12px_rgba(236,72,153,0.8)] cursor-pointer">
                 <span className="text-xs">▶</span>
@@ -724,7 +724,7 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
         <div className="w-full h-full bg-slate-50 flex flex-col p-8 text-slate-800 relative z-0">
           <div className="flex flex-col items-center mt-12 mb-8">
             <div className="w-24 h-24 bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm">
-              <img src={avatarUrl || "https://images.unsplash.com/photo-1516280440503-66f837ce5b97?w=200&q=80"} className="w-full h-full object-cover" />
+              <img src={config.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1516280440503-66f837ce5b97?w=200&q=80"} className="w-full h-full object-cover" />
             </div>
             <span className="text-sm font-bold mt-3 text-slate-800">{username}</span>
             <p className="text-xs text-slate-500 mt-1">{bio}</p>
@@ -733,8 +733,8 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
           <div className="bg-white shadow-sm border border-slate-150 rounded-xl p-5 mt-4 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-sm font-semibold text-slate-800">{title}</h4>
-                <p className="text-[10px] text-slate-500 mt-1">{desc}</p>
+                <h4 className="text-sm font-semibold text-slate-800">{config.trackName || title}</h4>
+                <p className="text-[10px] text-slate-500 mt-1">{config.artistName || desc}</p>
               </div>
               <button className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center border-0 shadow-sm cursor-pointer">
                 <span className="text-sm ml-0.5">▶</span>
@@ -751,7 +751,7 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
         <div className="w-full h-full bg-gradient-to-br from-purple-900 to-indigo-950 flex flex-col p-8 text-white relative z-0">
           <div className="flex flex-col items-center mt-12 mb-8">
             <div className="w-24 h-24 bg-zinc-800 rounded-t-full rounded-b-xl overflow-hidden border border-purple-500/30">
-              <img src={avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&q=80"} className="w-full h-full object-cover" />
+              <img src={config.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&q=80"} className="w-full h-full object-cover" />
             </div>
             <span className="text-sm font-bold mt-3 text-purple-300">{username}</span>
             <p className="text-xs text-purple-200/60 mt-1">{bio}</p>
@@ -760,8 +760,8 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 mt-4 space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h4 className="text-sm font-bold text-white">{title}</h4>
-                <p className="text-xs text-purple-300 mt-1">{desc}</p>
+                <h4 className="text-sm font-bold text-white">{config.trackName || title}</h4>
+                <p className="text-xs text-purple-300 mt-1">{config.artistName || desc}</p>
               </div>
               <button className="w-12 h-12 rounded-full bg-pink-500 flex items-center justify-center text-white border-0 shadow-[0_0_15px_rgba(236,72,153,0.5)] cursor-pointer">
                 <span className="text-sm ml-0.5">▶</span>
@@ -796,21 +796,38 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
           
           <div className="grid grid-cols-2 gap-3 mt-2">
             <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=200&q=80" className="w-full h-full object-cover rounded-lg" />
+              <img src={config.galleryImage1 || "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=200&q=80"} className="w-full h-full object-cover rounded-lg" />
             </div>
             <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&q=80" className="w-full h-full object-cover rounded-lg" />
+              <img src={config.galleryImage2 || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&q=80"} className="w-full h-full object-cover rounded-lg" />
             </div>
             <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80" className="w-full h-full object-cover rounded-lg" />
+              <img src={config.galleryImage3 || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80"} className="w-full h-full object-cover rounded-lg" />
             </div>
             <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=200&q=80" className="w-full h-full object-cover rounded-lg" />
+              <img src={config.galleryImage4 || "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=200&q=80"} className="w-full h-full object-cover rounded-lg" />
             </div>
           </div>
+          
+          {(config.behanceUrl || config.dribbbleUrl || config.websiteUrl) && (
+            <div className="flex items-center justify-center gap-3 mt-6">
+              {config.behanceUrl && <a href={config.behanceUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-slate-800 underline">Behance</a>}
+              {config.dribbbleUrl && <a href={config.dribbbleUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-slate-800 underline">Dribbble</a>}
+              {config.websiteUrl && <a href={config.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-slate-800 underline">Website</a>}
+            </div>
+          )}
         </div>
       );
     case "COUNTDOWN_LAUNCH":
+      {
+        const now = new Date();
+        const target = config.targetDate ? new Date(config.targetDate) : new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000 + 14 * 60 * 60 * 1000 + 59 * 60 * 1000);
+        const diff = Math.max(0, target.getTime() - now.getTime());
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        const pad = (n: number) => n.toString().padStart(2, '0');
       return (
         <div className="w-full h-full bg-orange-500 flex flex-col p-8 text-black relative z-0">
           <div className="flex flex-col items-center mt-12 mb-8">
@@ -824,23 +841,39 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
           <div className="bg-black text-white rounded-3xl p-5 mt-4 border border-black/10 text-center space-y-4 shadow-lg">
             <h4 className="text-xs font-black uppercase tracking-widest text-orange-500">{title}</h4>
             <p className="text-[10px] text-zinc-400">{desc}</p>
-            <div className="flex items-center justify-center gap-3">
+            <div className="flex items-center justify-center gap-2">
+              {days > 0 && (<>
+                <div className="bg-zinc-900 px-3 py-2 rounded-xl border border-zinc-800">
+                  <span className="text-base font-black font-mono text-white">{pad(days)}</span>
+                  <span className="block text-[8px] text-zinc-500 mt-0.5">GÜN</span>
+                </div>
+                <span className="text-zinc-600 font-bold">:</span>
+              </>)}
               <div className="bg-zinc-900 px-3 py-2 rounded-xl border border-zinc-800">
-                <span className="text-base font-black font-mono text-white">03</span>
+                <span className="text-base font-black font-mono text-white">{pad(hours)}</span>
+                <span className="block text-[8px] text-zinc-500 mt-0.5">SAAT</span>
               </div>
               <span className="text-zinc-600 font-bold">:</span>
               <div className="bg-zinc-900 px-3 py-2 rounded-xl border border-zinc-800">
-                <span className="text-base font-black font-mono text-white">14</span>
+                <span className="text-base font-black font-mono text-white">{pad(minutes)}</span>
+                <span className="block text-[8px] text-zinc-500 mt-0.5">DAK</span>
               </div>
               <span className="text-zinc-600 font-bold">:</span>
               <div className="bg-zinc-900 px-3 py-2 rounded-xl border border-zinc-800">
-                <span className="text-base font-black font-mono text-white">59</span>
+                <span className="text-base font-black font-mono text-white">{pad(seconds)}</span>
+                <span className="block text-[8px] text-zinc-500 mt-0.5">SN</span>
               </div>
             </div>
+            {config.buttonUrl && config.buttonText && (
+              <a href={config.buttonUrl} target="_blank" rel="noopener noreferrer" className="inline-block mt-2 px-6 py-2.5 bg-orange-500 text-black text-xs font-black uppercase tracking-wider rounded-full hover:bg-orange-400 transition-colors">{config.buttonText}</a>
+            )}
           </div>
         </div>
       );
+      }
     case "TESTIMONIALS":
+      {
+        const testimonials = config.testimonials && config.testimonials.length > 0 ? config.testimonials : [{ name: "Elif Y.", text: desc, rating: 5, avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" }];
       return (
         <div className="w-full h-full bg-teal-50 flex flex-col p-8 text-zinc-800 relative z-0">
           <div className="flex flex-col items-center mt-12 mb-8">
@@ -848,26 +881,28 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
               <img src={avatarUrl || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80"} className="w-full h-full object-cover" />
             </div>
             <span className="text-sm font-bold mt-3 text-teal-800">{username}</span>
-            <p className="text-xs text-teal-650 mt-1">{bio}</p>
+            <p className="text-xs text-teal-600 mt-1">{bio}</p>
           </div>
           
-          <div className="bg-white rounded-2xl p-5 mt-4 border border-zinc-100 shadow-sm space-y-3">
-            <div className="flex gap-0.5 text-yellow-400 text-sm">
-              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-            </div>
-            <h4 className="text-xs font-bold text-slate-800">{title}</h4>
-            <p className="text-[11px] text-zinc-650 italic leading-relaxed">
-              "${desc}"
-            </p>
-            <div className="flex items-center gap-2 pt-1 border-t border-zinc-100">
-              <div className="w-6 h-6 rounded-full bg-zinc-300 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" className="w-full h-full object-cover" />
+          <div className="space-y-3">
+            {testimonials.map((t: any, idx: number) => (
+              <div key={idx} className="bg-white rounded-2xl p-5 border border-zinc-100 shadow-sm space-y-3">
+                <div className="flex gap-0.5 text-yellow-400 text-sm">
+                  {[1,2,3,4,5].map((s) => <span key={s} className={s <= (t.rating || 5) ? "text-yellow-400" : "text-zinc-200"}>★</span>)}
+                </div>
+                <p className="text-[11px] text-zinc-600 italic leading-relaxed">"{t.text || "Harika bir hizmet!"}"</p>
+                <div className="flex items-center gap-2 pt-1 border-t border-zinc-100">
+                  <div className="w-6 h-6 rounded-full bg-zinc-300 overflow-hidden">
+                    {t.avatarUrl ? <img src={t.avatarUrl} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-teal-200"></div>}
+                  </div>
+                  <span className="text-[10px] font-bold text-zinc-700">{t.name || "Anonim"}</span>
+                </div>
               </div>
-              <span className="text-[10px] font-bold text-zinc-700">Elif Y.</span>
-            </div>
+            ))}
           </div>
         </div>
       );
+      }
     default:
       return null;
   }
