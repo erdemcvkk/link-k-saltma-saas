@@ -22,7 +22,7 @@ export default async function CheckoutSuccessPage({ searchParams }: PageProps) {
   // Modül bilgilerini eşleştir
   const moduleNames: Record<string, string> = {
     MINI_STORE: "Dijital Mağaza Modülü",
-    CORP_EXEC: "Modern Alışveriş Vitrini",
+    CORP_EXEC: "Kurumsal Yönetici Kartı",
     COMIC_MANGA: "Şık & Sade Mağaza",
     RETRO: "Klasik Retro Mağaza",
     ACADEMIA: "Kolej Modülü",

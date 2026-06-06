@@ -829,7 +829,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  case "WEB3_NFT":
  case "EDITORIAL_LUX":
  case "GAMER_HUB":
- case "CORP_EXEC":
  case "COMIC_MANGA":
  specificFields = (
  <>
@@ -1045,6 +1044,62 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   </>
   );
  break;
+ case "CORP_EXEC":
+ specificFields = (
+ <>
+ <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+ <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+ <Briefcase className="h-4 w-4" />
+ {lang === "tr" ? "Yönetici Kartı Bilgileri" : "Executive Card Information"}
+ </h4>
+ <div className="space-y-1.5 mb-4">
+ <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Profil Fotoğrafı" : "Profile Image"}</label>
+ <div className="flex gap-2">
+ <input
+ type="text"
+ value={configData["storeAvatarUrl"] || ""}
+ onChange={(e) => setConfigData({ ...configData, storeAvatarUrl: e.target.value })}
+ placeholder="https://..."
+ className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
+  />
+  <label className="flex items-center justify-center px-4 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+  {lang === "tr" ? "Dosya Seç" : "Upload"}
+  <input 
+  type="file" 
+  className="hidden" 
+  accept="image/*"
+  onChange={async (e) => {
+  const file = e.target.files?.[0];
+  if (file) {
+  try {
+  const url = await handleFileUpload(file);
+  setConfigData({ ...configData, storeAvatarUrl: url });
+  } catch (err: any) { showAlert(err.message); }
+  }
+  }}
+  />
+  </label>
+  </div>
+  </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+  {renderInput("storeUsername", lang === "tr" ? "Kullanıcı Adı / Ünvan" : "Username / Handle", "@ceo.exec")}
+  {renderInput("storeBio", lang === "tr" ? "Alt Başlık / Görev" : "Subtitle / Role", "C-Level Executive Consultant")}
+  </div>
+  <div className="border-t border-zinc-100 pt-4 mt-4 space-y-4">
+  <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+  <Store className="h-4 w-4" />
+  {lang === "tr" ? "Kart İçeriği" : "Card Content"}
+  </h4>
+  {renderInput("title", lang === "tr" ? "Kart Başlığı" : "Card Title", "Q3 Executive Briefing")}
+  {renderTextarea("description", lang === "tr" ? "Kart Açıklaması" : "Card Description", "Corporate & Strategy")}
+  {renderInput("buttonText", lang === "tr" ? "Buton Metni" : "Button Text", "Schedule Consultation")}
+  {renderInput("buttonUrl", lang === "tr" ? "Buton Yönlendirme Linki" : "Button Redirect URL", "https://calendly.com/... veya https://...")}
+  </div>
+  </div>
+  </>
+  );
+  break;
+
  case "BOOKING":
  specificFields = (
  <>
@@ -1298,7 +1353,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   addon.addonType !== "WEB3_NFT" &&
   addon.addonType !== "EDITORIAL_LUX" &&
   addon.addonType !== "GAMER_HUB" &&
-  addon.addonType !== "CORP_EXEC" &&
+  
   addon.addonType !== "COMIC_MANGA" ? renderSlugAndAvatar() : null}
  {specificFields}
  </div>
@@ -1317,7 +1372,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "WEB3_NFT":
   case "EDITORIAL_LUX":
   case "GAMER_HUB":
-  case "CORP_EXEC":
   case "COMIC_MANGA":
   return (
   <div className="w-full h-full relative overflow-hidden flex flex-col">
@@ -1340,6 +1394,40 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   />
   </div>
   );
+  case "CORP_EXEC":
+  return (
+  <div className="w-full h-full bg-slate-50 flex flex-col relative z-0 text-slate-800 overflow-hidden">
+  {/* Cover Header */}
+  <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 h-32 w-full flex flex-col justify-end p-4 relative shrink-0">
+  {configData.storeCoverUrl && (
+  <img src={configData.storeCoverUrl} className="absolute inset-0 w-full h-full object-cover opacity-65" />
+  )}
+  <div className="absolute top-3 right-3 px-2 py-0.5 bg-blue-600 text-[8px] font-bold text-white rounded tracking-wide shadow-sm uppercase">PRO</div>
+  </div>
+  {/* Profile Details */}
+  <div className="flex flex-col items-center -mt-10 px-6 mb-4 relative z-10 shrink-0">
+  <div className="w-20 h-20 bg-white rounded-full border-4 border-white overflow-hidden shadow-md">
+  <img src={configData.storeAvatarUrl || "/placeholder.png"} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.png" }} />
+  </div>
+  <span className="text-sm font-extrabold mt-2 text-slate-800">{configData.storeUsername || ("@" + username)}</span>
+  <p className="text-xs text-slate-500 font-medium tracking-tight mt-0.5">{configData.storeBio || "C-Level Executive Consultant"}</p>
+  </div>
+  {/* Main Card Content */}
+  <div className="bg-white shadow-xl rounded-2xl p-5 mx-6 mt-1 border border-slate-100 space-y-4">
+  <div className="text-center md:text-left">
+  <h4 className="text-sm font-extrabold text-slate-800 tracking-tight leading-snug">{configData.title || "Q3 Executive Briefing"}</h4>
+  <p className="text-xs text-slate-400 font-medium mt-1 leading-relaxed">{configData.description || "Corporate & Strategy"}</p>
+  </div>
+  <button 
+  type="button" 
+  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl tracking-wide transition-all border-0 shadow-md shadow-blue-500/10 cursor-pointer"
+  >
+  {configData.buttonText || "Schedule Consultation"}
+  </button>
+  </div>
+  </div>
+  );
+
   case "NEWSLETTER":
   return (
     <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-3 md:p-6">

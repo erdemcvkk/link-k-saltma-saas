@@ -131,7 +131,7 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
     const type = activeAddon.addonType;
 
     // 1. Storefront Addons (Magaza)
-    if (["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR", "WEB3_NFT", "EDITORIAL_LUX", "GAMER_HUB", "CORP_EXEC", "COMIC_MANGA"].includes(type)) {
+    if (["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR", "WEB3_NFT", "EDITORIAL_LUX", "GAMER_HUB", "COMIC_MANGA"].includes(type)) {
       const getDefaultTheme = (t: string) => {
         switch (t) {
           case "NEO_BRUTAL": return "neo-brutalism";
@@ -143,7 +143,6 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
           case "WEB3_NFT": return "dark-drill";
           case "EDITORIAL_LUX": return "minimalist";
           case "GAMER_HUB": return "vibrant-pop";
-          case "CORP_EXEC": return "classic";
           case "COMIC_MANGA": return "neo-brutalism";
           default: return "classic";
         }
@@ -181,6 +180,42 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
           bio={parsedConfig.storeBio || data.bio}
           buyButtonText={parsedConfig.buyButtonText || "Satın Al"}
         />
+      );
+    }
+
+    // 1.5 Kurumsal Yönetici Kartı
+    if (type === "CORP_EXEC") {
+      return (
+        <div className="w-full h-full bg-slate-50 flex flex-col relative z-0 text-slate-800 overflow-hidden">
+          {/* Cover Header */}
+          <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 h-24 w-full flex flex-col justify-end p-3 relative shrink-0">
+            {parsedConfig.storeCoverUrl && (
+              <img src={parsedConfig.storeCoverUrl} className="absolute inset-0 w-full h-full object-cover opacity-65" />
+            )}
+            <div className="absolute top-2 right-2 px-1.5 py-0.5 bg-blue-600 text-[7px] font-bold text-white rounded tracking-wide shadow-sm uppercase">PRO</div>
+          </div>
+          
+          {/* Profile details */}
+          <div className="flex flex-col items-center -mt-8 px-4 mb-3 relative z-10 shrink-0">
+            <div className="w-16 h-16 bg-white rounded-full border-2 border-white overflow-hidden shadow-md">
+              <img src={parsedConfig.storeAvatarUrl || data.avatarUrl || "/placeholder.png"} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.png" }} />
+            </div>
+            <span className="text-[11px] font-extrabold mt-1 text-slate-800">{parsedConfig.storeUsername || ("@" + data.username)}</span>
+            <p className="text-[8.5px] text-slate-500 font-bold tracking-tight mt-0.5">{parsedConfig.storeBio || data.bio || "C-Level Executive Consultant"}</p>
+          </div>
+          
+          {/* Main Card */}
+          <div className="bg-white shadow-lg rounded-2xl p-4 mx-4 mt-1 border border-slate-100 space-y-3">
+            <div className="text-center">
+              <h4 className="text-[11px] font-extrabold text-slate-800 tracking-tight leading-snug">{parsedConfig.title || "Q3 Executive Briefing"}</h4>
+              <p className="text-[9px] text-slate-400 font-medium mt-1 leading-normal">{parsedConfig.description || "Corporate & Strategy"}</p>
+            </div>
+            
+            <button className="w-full py-2 bg-blue-600 text-white font-bold text-[9px] rounded-lg tracking-wide border-0 cursor-pointer shadow-sm shadow-blue-500/10">
+              {parsedConfig.buttonText || "Schedule Consultation"}
+            </button>
+          </div>
+        </div>
       );
     }
 

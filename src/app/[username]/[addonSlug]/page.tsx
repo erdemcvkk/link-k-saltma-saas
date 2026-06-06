@@ -161,7 +161,6 @@ export default async function AddonPage({
    matchingAddon.addonType === "WEB3_NFT" ||
    matchingAddon.addonType === "EDITORIAL_LUX" ||
    matchingAddon.addonType === "GAMER_HUB" ||
-   matchingAddon.addonType === "CORP_EXEC" ||
    matchingAddon.addonType === "COMIC_MANGA") {
     
     const displayProducts = (parsedConfig.products && Array.isArray(parsedConfig.products) && parsedConfig.products.length > 0)
@@ -209,6 +208,49 @@ export default async function AddonPage({
     );
   }
 
+  if (matchingAddon.addonType === "CORP_EXEC") {
+    return (
+      <div className="w-full min-h-screen bg-slate-100 flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-slate-50 text-slate-800 rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-200">
+          
+          {/* Header Cover */}
+          <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 h-36 w-full flex flex-col justify-end p-4 relative">
+            {parsedConfig.storeCoverUrl && (
+              <img src={parsedConfig.storeCoverUrl} className="absolute inset-0 w-full h-full object-cover opacity-65" />
+            )}
+            <div className="absolute top-4 right-4 px-3 py-1 bg-blue-600 text-[10px] font-bold text-white rounded-lg tracking-wider shadow-sm uppercase">PRO</div>
+          </div>
+          
+          {/* Profile details */}
+          <div className="flex flex-col items-center -mt-12 px-6 mb-6 relative z-10">
+            <div className="w-24 h-24 bg-white rounded-full border-4 border-white overflow-hidden shadow-lg">
+              <img src={parsedConfig.storeAvatarUrl || user.profile.avatarUrl || "/placeholder.png"} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.png" }} />
+            </div>
+            <h1 className="text-lg font-black mt-3 text-slate-800">{parsedConfig.storeUsername || ("@" + user.username)}</h1>
+            <p className="text-xs text-slate-500 font-bold tracking-tight mt-1">{parsedConfig.storeBio || user.profile.bio || "C-Level Executive Consultant"}</p>
+          </div>
+          
+          {/* Main Card */}
+          <div className="bg-white shadow-xl rounded-3xl p-6 mx-6 mb-8 border border-slate-100 space-y-4">
+            <div className="text-center md:text-left">
+              <h2 className="text-base font-black text-slate-800 tracking-tight leading-snug">{parsedConfig.title || "Q3 Executive Briefing"}</h2>
+              <p className="text-sm text-slate-500 font-medium mt-1.5 leading-relaxed">{parsedConfig.description || "Corporate & Strategy"}</p>
+            </div>
+            
+            <a 
+              href={parsedConfig.buttonUrl || "#"} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl tracking-wide transition-all border-0 shadow-lg shadow-blue-500/20 cursor-pointer block text-center"
+            >
+              {parsedConfig.buttonText || "Schedule Consultation"}
+            </a>
+          </div>
+          
+        </div>
+      </div>
+    );
+  }
 
  if (matchingAddon.addonType === "BOOKING") {
  return (

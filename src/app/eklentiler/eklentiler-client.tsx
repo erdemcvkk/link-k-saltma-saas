@@ -40,8 +40,8 @@ export const ADDON_TYPES: AddonTypeData[] = [
   },
   { 
     id: "CORP_EXEC", 
-    name: "Modern Alışveriş Vitrini", 
-    desc: "Ürünlerinizi modern, temiz ve profesyonel bir tasarımla sergileyin.", 
+    name: "Kurumsal Yönetici Kartı", 
+    desc: "Yönetici profilinizi, kartvizit ve görüşme detaylarınızı şık bir şekilde sergileyin.", 
     color: "bg-blue-600",
     theme: "classic",
     price: "99",

@@ -891,7 +891,6 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     case "WEB3_NFT":
     case "EDITORIAL_LUX":
     case "GAMER_HUB":
-    case "CORP_EXEC":
     case "COMIC_MANGA":
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
@@ -906,6 +905,23 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
           </div>
           <div className={btnClassName}>
             {configData.buyButtonText || "Mağazayı Gör"}
+          </div>
+        </CardWrapper>
+      );
+    case "CORP_EXEC":
+      return (
+        <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
+              <Briefcase className="h-5 w-5 text-blue-600" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-slate-800">{configData.title || "Kurumsal Yönetici Kartı"}</h4>
+              <p className="text-xs opacity-70 mt-0.5">{configData.description || "Görüşme ve detaylar için tıklayın."}</p>
+            </div>
+          </div>
+          <div className={btnClassName}>
+            {configData.buttonText || "Görüşme Ayarla"}
           </div>
         </CardWrapper>
       );
