@@ -61,9 +61,33 @@ interface ProfileClientProps {
    customTargetUrl?: string | null;
    isActive: boolean;
  } | null;
+ purchasedTemplates?: any[];
+ purchasedModules?: any[];
 }
 
-export default function ProfileClient({ username, bio, theme, links, products, addons = [], avatarUrl, avatarShape = "circle", background, fontStyle, bioColor, usernameColor, plan, storeTitle, storeCoverUrl, storeLayout, customCss, buttonClass, systemSettings }: ProfileClientProps) {
+export default function ProfileClient({ 
+  username, 
+  bio, 
+  theme, 
+  links, 
+  products, 
+  addons = [], 
+  avatarUrl, 
+  avatarShape = "circle", 
+  background, 
+  fontStyle, 
+  bioColor, 
+  usernameColor, 
+  plan, 
+  storeTitle, 
+  storeCoverUrl, 
+  storeLayout, 
+  customCss, 
+  buttonClass, 
+  systemSettings,
+  purchasedTemplates = [],
+  purchasedModules = []
+}: ProfileClientProps) {
  const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
  const [cardNumber, setCardNumber] = useState("");
  const [cardExpiry, setCardExpiry] = useState("");
@@ -143,7 +167,9 @@ export default function ProfileClient({ username, bio, theme, links, products, a
  customCss,
  buttonClass,
  systemSettings,
- avatarShape
+ avatarShape,
+ purchasedTemplates,
+ purchasedModules
  };
 
  return (

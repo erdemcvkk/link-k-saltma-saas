@@ -6,6 +6,7 @@ import { YoutubeIcon, TwitterIcon, LinkedinIcon, TiktokIcon, PinterestIcon, Inst
 import VideoPlayer from "@/components/blocks/video-player";
 import BeforeAfterSlider from "@/components/blocks/before-after-slider";
 import AudioPlayer from "@/components/blocks/audio-player";
+import Link from "next/link";
 
 // Safelist for Tailwind background gradient classes so that they are compiled by Tailwind and available on the public profile page
 const TAILWIND_BACKGROUNDS_SAFELIST = [
@@ -58,12 +59,14 @@ export interface UniversalProfileData {
  links: any[];
  products?: any[];
  addons?: any[];
- systemSettings?: {
-   adScript?: string | null;
-   customImageUrl?: string | null;
-   customTargetUrl?: string | null;
-   isActive: boolean;
- } | null;
+  systemSettings?: {
+    adScript?: string | null;
+    customImageUrl?: string | null;
+    customTargetUrl?: string | null;
+    isActive: boolean;
+  } | null;
+  purchasedTemplates?: any[];
+  purchasedModules?: any[];
 }
 
 interface UniversalProfileProps {
@@ -95,12 +98,21 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  const rawId = useId();
  const wrapperId = `univ-profile-${rawId.replace(/:/g, "")}`;
 
- const {
- username, bio, avatarUrl, theme = "dark", customCss, background, fontStyle = "Inter",
- bioColor, usernameColor, plan, links = [], products = [], addons = [], buttonClass, avatarShape = "circle"
- } = data;
+  const {
+  username, bio, avatarUrl, theme = "dark", customCss, background, fontStyle = "Inter",
+  bioColor, usernameColor, plan, links = [], products = [], addons = [], buttonClass, avatarShape = "circle",
+  purchasedTemplates = [], purchasedModules = []
+  } = data;
 
- const isDark = isDarkContext;
+  const isDark = isDarkContext;
+
+  const hasPurchasedPremiumTemplate = purchasedTemplates?.some(
+    (pt: any) => pt.template && pt.template.price > 0
+  ) ?? false;
+
+  const hasPurchasedModule = (purchasedModules && purchasedModules.length > 0) ?? false;
+
+  const shouldShowBranding = plan === "FREE" && !hasPurchasedPremiumTemplate && !hasPurchasedModule;
 
  // Fallback styling for backward compatibility when customCss is empty or "Start from Scratch"
  const getFallbackStyles = (themeId: string) => {
@@ -537,11 +549,17 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  )}
  </main>
 
- {(plan !== "CREATOR" && plan !== "PRO_BUSINESS" && !isCompactMode) && (
- <footer className="text-center text-[10px] text-zinc-600 uppercase tracking-widest font-black py-4 relative z-10">
- Powered by CREATOR.HUB
- </footer>
- )}
+  {shouldShowBranding && (
+    <Link 
+      href="/" 
+      className={`flex items-center justify-center gap-2 mt-12 pb-6 text-[11px] transition-opacity duration-200 relative z-10 hover:opacity-100 ${
+        isDark ? "text-white/50 hover:text-white" : "text-zinc-500 hover:text-zinc-800"
+      }`}
+    >
+      <span>{lang === "tr" ? "Kendi sayfanı oluştur:" : "Create your page:"}</span>
+      <span className="font-extrabold tracking-wider">CREATOR.HUB</span>
+    </Link>
+  )}
  </div>
  );
 }

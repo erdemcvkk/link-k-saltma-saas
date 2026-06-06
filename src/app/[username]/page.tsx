@@ -74,6 +74,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  purchasedTemplates: {
  include: { template: true }
  },
+ purchasedModules: true,
  addons: {
  where: { isActive: true }
  }
@@ -95,6 +96,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  purchasedTemplates: {
  include: { template: true }
  },
+ purchasedModules: true,
  addons: {
  where: { isActive: true }
  }
@@ -267,6 +269,22 @@ export default async function PublicProfilePage({ params, searchParams }: { para
   isActive: systemSettings.isActive
  } : null;
 
+  const serializedPurchasedTemplates = activeUser.purchasedTemplates?.map((pt: any) => ({
+    id: pt.id,
+    templateId: pt.templateId,
+    isActive: pt.isActive,
+    template: pt.template ? {
+      id: pt.template.id,
+      name: pt.template.name,
+      price: pt.template.price
+    } : null
+  })) ?? [];
+
+  const serializedPurchasedModules = activeUser.purchasedModules?.map((pm: any) => ({
+    id: pm.id,
+    moduleId: pm.moduleId
+  })) ?? [];
+
  return (
  <ProfileClient
  username={activeUser.username!}
@@ -288,6 +306,8 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  customCss={customCss}
  buttonClass={activeTemplate ? activeTemplate.buttonStyle : (activeUser.profile?.buttonClass ?? null)}
  systemSettings={serializedSystemSettings}
+ purchasedTemplates={serializedPurchasedTemplates}
+ purchasedModules={serializedPurchasedModules}
  />
  );
 }
