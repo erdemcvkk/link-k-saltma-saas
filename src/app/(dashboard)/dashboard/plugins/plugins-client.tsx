@@ -67,6 +67,7 @@ export default function PluginsClient({
   }, [initialAddons]);
 
   const getDefaultSlug = (type: string) => {
+    if (!type) return "store";
     if (type === "MINI_STORE") return "store";
     if (type === "NEO_BRUTAL") return "neo-brutal";
     if (type === "ORGANIC") return "organic";
@@ -79,6 +80,25 @@ export default function PluginsClient({
     if (type === "DONATION") return "donation";
     if (type === "PREMIUM_CREATOR") return "creator-store";
     if (type === "PREMIUM_VIDEO") return "masterclass";
+    if (type === "WEB3_NFT") return "web3-nft";
+    if (type === "EDITORIAL_LUX") return "editorial";
+    if (type === "GAMER_HUB") return "gamer-hub";
+    if (type === "CORP_EXEC") return "corporate";
+    if (type === "COMIC_MANGA") return "comic-manga";
+    if (type === "RETRO_CASSETTE") return "retro-cassette";
+    if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
+    if (type === "VINTAGE_RADIO") return "vintage-radio";
+    if (type === "FUTURE_WAVE") return "future-wave";
+    if (type === "CINEMATIC_THEATER") return "cinematic-theater";
+    if (type === "SPOTIFY_CLASSIC") return "spotify-player";
+    if (type === "VINYL_RETRO") return "vinyl-player";
+    if (type === "GLASS_AUDIO") return "glass-audio";
+    if (type === "NEON_CYBERPUNK") return "neon-player";
+    if (type === "MINIMAL_LIGHT_AUDIO") return "minimal-audio";
+    if (type === "MUSIC_PODCAST") return "music-podcast";
+    if (type === "PORTFOLIO_GALLERY") return "portfolio-gallery";
+    if (type === "COUNTDOWN_LAUNCH") return "countdown";
+    if (type === "TESTIMONIALS") return "testimonials";
     return type.toLowerCase();
   };
 
