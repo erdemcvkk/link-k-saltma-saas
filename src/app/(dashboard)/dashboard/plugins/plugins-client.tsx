@@ -47,6 +47,8 @@ export default function PluginsClient({
 }: PluginsClientProps) {
   const { user, lang, activeTemplate, simulatedPlan, setSuccessMsg, setErrorMsg } = useDashboard();
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons);
+  const firstActiveAddon = initialAddons.find(a => a.isActive) || initialAddons[0];
+  const [activeAddonId, setActiveAddonId] = useState<string | undefined>(firstActiveAddon?.id);
   const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
   const [isPending, startTransition] = useTransition();
   const [origin, setOrigin] = useState("");
@@ -186,12 +188,18 @@ export default function PluginsClient({
                           disabled={isPending}
                           onClick={() => {
                             const nextActive = !addon.isActive;
+                            
+                            // Optimistically update active preview addon and status list
+                            setActiveAddonId(addon.id);
+                            setAddons(prev => prev.map(a => a.id === addon.id ? { ...a, isActive: nextActive } : a));
+
                             startTransition(async () => {
                               try {
                                 const res = await saveAddonConfig(addon.id, addon.settings || {}, nextActive);
                                 if (res.error) {
                                   setErrorMsg(res.error);
                                   setTimeout(() => setErrorMsg(""), 3000);
+                                  setAddons(initialAddons);
                                 } else {
                                   setSuccessMsg(lang === "tr" ? "Durum güncellendi!" : "Status updated!");
                                   setTimeout(() => {
@@ -202,6 +210,7 @@ export default function PluginsClient({
                               } catch (err: any) {
                                 setErrorMsg(err.message || "Error");
                                 setTimeout(() => setErrorMsg(""), 3000);
+                                setAddons(initialAddons);
                               }
                             });
                           }}
@@ -358,7 +367,7 @@ export default function PluginsClient({
           plan: simulatedPlan,
         };
 
-        return <PhonePreview mode="plugin" data={previewData} label={lang === "tr" ? "Eklenti Sandbox Önizleme" : "Add-on Sandbox Preview"} />;
+        return <PhonePreview mode="plugin" data={previewData} activeAddonId={activeAddonId} label={lang === "tr" ? "Eklenti Sandbox Önizleme" : "Add-on Sandbox Preview"} />;
       })()}
 
       {editingAddon && (

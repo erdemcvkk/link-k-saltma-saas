@@ -10,9 +10,10 @@ interface PhonePreviewProps {
   mode: "editor" | "template" | "plugin";
   data: UniversalProfileData;
   label?: string;
+  activeAddonId?: string;
 }
 
-export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
+export default function PhonePreview({ mode, data, label, activeAddonId }: PhonePreviewProps) {
   const { theme = "dark", plan, systemSettings } = data;
   
   const isLight = [
@@ -107,8 +108,10 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
   };
 
   const renderPluginPreview = () => {
-    // Eklentilerim sayfasındaki aktif addon'u bul
-    const activeAddon = data.addons?.[0];
+    // Eklentilerim sayfasındaki aktif eklentiyi bul
+    const activeAddon = (activeAddonId ? data.addons?.find((a: any) => a.id === activeAddonId) : null)
+      || data.addons?.find((a: any) => a.isActive)
+      || data.addons?.[0];
     if (!activeAddon) {
       return (
         <UniversalProfile 

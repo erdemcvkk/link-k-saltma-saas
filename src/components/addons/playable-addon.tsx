@@ -3,6 +3,56 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Music, Play, Pause, Clock, MessageCircle, Image, Star, ArrowLeft } from "lucide-react";
 
+function getMediaEmbed(url: string, accentColor?: string) {
+  if (!url) return null;
+  const trimmed = url.trim();
+  
+  // Spotify track/album/playlist/episode
+  const spotifyMatch = trimmed.match(/open\.spotify\.com\/(track|album|playlist|episode)\/([a-zA-Z0-9]+)/);
+  if (spotifyMatch) {
+    return (
+      <div className="w-full rounded-xl overflow-hidden shadow-lg my-2">
+        <iframe
+          src={"https://open.spotify.com/embed/" + spotifyMatch[1] + "/" + spotifyMatch[2] + "?utm_source=generator&theme=0"}
+          width="100%"
+          height={spotifyMatch[1] === "track" || spotifyMatch[1] === "episode" ? 152 : 352}
+          frameBorder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          className="rounded-xl"
+        />  
+      </div>
+    );
+  }
+  
+  return null;
+}
+
+function getHiddenEmbedSrc(url: string) {
+  if (!url) return null;
+  const trimmed = url.trim();
+
+  // YouTube (watch?v=, embed/, shorts/, youtu.be/)
+  const ytMatch = trimmed.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+  if (ytMatch) {
+    return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=0&enablejsapi=1`;
+  }
+
+  // SoundCloud
+  if (trimmed.includes("soundcloud.com/")) {
+    const encodedUrl = encodeURIComponent(trimmed);
+    return `https://w.soundcloud.com/player/?url=${encodedUrl}&auto_play=true&mute=0`;
+  }
+
+  // Apple Music
+  const appleMusicMatch = trimmed.match(/music\.apple\.com\/([a-z]{2})\/(?:album|playlist)\/[^/]+\/([a-zA-Z0-9.]+)/i);
+  if (appleMusicMatch) {
+    return `https://embed.music.apple.com/${appleMusicMatch[1]}/album/${appleMusicMatch[2]}?autoplay=1&mute=0`;
+  }
+
+  return null;
+}
+
 interface PlayableAddonProps {
   type: string;
   avatarUrl: string;
@@ -47,6 +97,7 @@ export default function PlayableAddon({
   const url = (activeTrack.trackUrl || "").trim();
   const isDirectAudio = /\.(mp3|wav|ogg|m4a|aac|flac)(\?.*)?$/i.test(url);
   const isEmbeddable = /open\.spotify\.com|youtube\.com|youtu\.be|soundcloud\.com|music\.apple\.com/i.test(url);
+  const mediaEmbed = !isDirectAudio ? getMediaEmbed(url, config.accentColor) : null;
 
   // ── VIDEOS DATA PARSING ──
   const videos = Array.isArray(config.videos) && config.videos.length > 0 
@@ -364,8 +415,9 @@ export default function PlayableAddon({
   };
 
   // ── SWITCH RENDER BY TYPE ──
-  switch (type) {
-    case "SPOTIFY_CLASSIC":
+  const renderContent = () => {
+    switch (type) {
+      case "SPOTIFY_CLASSIC":
       return (
         <div className="w-full h-full bg-zinc-950 flex flex-col p-6 text-white relative z-0">
           {isDirectAudio && (
@@ -390,44 +442,54 @@ export default function PlayableAddon({
             <p className="text-xs text-green-500 font-bold mt-1">{bio}</p>
           </div>
 
-          <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-sm font-bold text-white truncate max-w-[180px]">{activeTrack.trackName || title}</h4>
-                <p className="text-[10px] text-zinc-400 truncate max-w-[180px]">{activeTrack.artistName || desc}</p>
+          {mediaEmbed ? (
+            <div className="space-y-4">
+              <div className="text-center mb-2">
+                <h4 className="text-sm font-bold text-white truncate max-w-full">{activeTrack.trackName || title}</h4>
+                <p className="text-[10px] text-zinc-400 mt-1 truncate max-w-full">{activeTrack.artistName || desc}</p>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="text-green-500 text-lg cursor-pointer hover:opacity-85 select-none" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
-                {renderThemePlayButton(config.accentColor || "#22c55e", "w-12 h-12", 18)}
-                <span className="text-green-500 text-lg cursor-pointer hover:opacity-85 select-none" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
-              </div>
+              {mediaEmbed}
             </div>
-            <div className="space-y-1">
-              <div className="w-full h-1 bg-zinc-800 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${progressPercent}%`,
-                    backgroundColor: config.accentColor || "#22c55e",
-                  }}
-                />
+          ) : (
+            <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-bold text-white truncate max-w-[180px]">{activeTrack.trackName || title}</h4>
+                  <p className="text-[10px] text-zinc-400 truncate max-w-[180px]">{activeTrack.artistName || desc}</p>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="text-green-500 text-lg cursor-pointer hover:opacity-85 select-none" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
+                  {renderThemePlayButton(config.accentColor || "#22c55e", "w-12 h-12", 18)}
+                  <span className="text-green-500 text-lg cursor-pointer hover:opacity-85 select-none" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
+                </div>
               </div>
-              <div className="flex justify-between text-[9px] text-zinc-500 font-mono">
-                <span>{formatTime(currentTime)}</span>
-                <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+              <div className="space-y-1">
+                <div className="w-full h-1 bg-zinc-800 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${progressPercent}%`,
+                      backgroundColor: config.accentColor || "#22c55e",
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between text-[9px] text-zinc-500 font-mono">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                </div>
               </div>
+              {url && !isDirectAudio && (
+                <div className="text-center pt-2">
+                  <button
+                    onClick={handlePlayPause}
+                    className="text-xs text-green-500 hover:underline font-bold"
+                  >
+                    Bağlantıyı Aç ↗
+                  </button>
+                </div>
+              )}
             </div>
-            {url && !isDirectAudio && (
-              <div className="text-center pt-2">
-                <button
-                  onClick={handlePlayPause}
-                  className="text-xs text-green-500 hover:underline font-bold"
-                >
-                  Bağlantıyı Aç ↗
-                </button>
-              </div>
-            )}
-          </div>
+          )}
           {renderPlaylist("SPOTIFY_CLASSIC")}
         </div>
       );
@@ -473,38 +535,40 @@ export default function PlayableAddon({
             <h4 className="text-xs font-bold text-stone-300 truncate max-w-full">{activeTrack.trackName || title}</h4>
             <p className="text-[10px] text-stone-500 truncate max-w-full">{activeTrack.artistName || desc}</p>
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-center gap-6 text-orange-400">
-                <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
-                {renderThemePlayButton(config.accentColor || "#f97316", "w-10 h-10", 14)}
-                <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
-              </div>
-              {isDirectAudio && (
-                <div className="space-y-1">
-                  <div className="w-full h-1 bg-stone-800 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${progressPercent}%`,
-                        backgroundColor: config.accentColor || "#f97316",
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[8px] text-stone-600 font-mono">
-                    <span>{formatTime(currentTime)}</span>
-                    <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
-                  </div>
+            {mediaEmbed ? mediaEmbed : (
+              <div className="space-y-3">
+                <div className="flex items-center justify-center gap-6 text-orange-400">
+                  <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
+                  {renderThemePlayButton(config.accentColor || "#f97316", "w-10 h-10", 14)}
+                  <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
                 </div>
-              )}
-              {url && !isDirectAudio && (
-                <button
-                  onClick={handlePlayPause}
-                  className="text-[10px] text-orange-400 hover:underline font-bold"
-                >
-                  Bağlantıyı Aç ↗
-                </button>
-              )}
-            </div>
+                {isDirectAudio && (
+                  <div className="space-y-1">
+                    <div className="w-full h-1 bg-stone-800 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${progressPercent}%`,
+                          backgroundColor: config.accentColor || "#f97316",
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[8px] text-stone-600 font-mono">
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                    </div>
+                  </div>
+                )}
+                {url && !isDirectAudio && (
+                  <button
+                    onClick={handlePlayPause}
+                    className="text-[10px] text-orange-400 hover:underline font-bold"
+                  >
+                    Bağlantıyı Aç ↗
+                  </button>
+                )}
+              </div>
+            )}
           </div>
           {renderPlaylist("VINYL_RETRO")}
         </div>
@@ -540,39 +604,41 @@ export default function PlayableAddon({
               <p className="text-[10px] text-purple-100/80 mt-1 truncate max-w-full">{activeTrack.artistName || desc}</p>
             </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-center gap-6 text-white pt-2">
-                <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
-                {renderThemePlayButton("#ffffff", "w-11 h-11", 16)}
-                <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
+            {mediaEmbed ? mediaEmbed : (
+              <div className="space-y-3">
+                <div className="flex items-center justify-center gap-6 text-white pt-2">
+                  <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
+                  {renderThemePlayButton("#ffffff", "w-11 h-11", 16)}
+                  <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
+                </div>
+                {isDirectAudio && (
+                  <div className="space-y-1">
+                    <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
+                      <div
+                        className="h-full bg-white rounded-full"
+                        style={{
+                          width: `${progressPercent}%`,
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[8px] text-purple-150 font-mono">
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                    </div>
+                  </div>
+                )}
+                {url && !isDirectAudio && (
+                  <div className="text-center">
+                    <button
+                      onClick={handlePlayPause}
+                      className="text-[10px] text-white hover:underline font-bold"
+                    >
+                      Bağlantıyı Aç ↗
+                    </button>
+                  </div>
+                )}
               </div>
-              {isDirectAudio && (
-                <div className="space-y-1">
-                  <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
-                    <div
-                      className="h-full bg-white rounded-full"
-                      style={{
-                        width: `${progressPercent}%`,
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-[8px] text-purple-150 font-mono">
-                    <span>{formatTime(currentTime)}</span>
-                    <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
-                  </div>
-                </div>
-              )}
-              {url && !isDirectAudio && (
-                <div className="text-center">
-                  <button
-                    onClick={handlePlayPause}
-                    className="text-[10px] text-white hover:underline font-bold"
-                  >
-                    Bağlantıyı Aç ↗
-                  </button>
-                </div>
-              )}
-            </div>
+            )}
           </div>
           {renderPlaylist("GLASS_AUDIO")}
         </div>
@@ -617,34 +683,36 @@ export default function PlayableAddon({
                 </p>
               </div>
 
-              {renderThemePlayButton(config.accentColor || "#ec4899", "w-10 h-10 rounded-none", 12)}
+              {!mediaEmbed && renderThemePlayButton(config.accentColor || "#ec4899", "w-10 h-10 rounded-none", 12)}
             </div>
 
-            <div className="space-y-2">
-              <div className="w-full h-0.5 bg-zinc-900 relative cursor-pointer" onClick={handleTimelineClick}>
-                <div
-                  className="absolute left-0 top-0 h-full shadow-[0_0_8px_#22d3ee]"
-                  style={{
-                    width: `${progressPercent}%`,
-                    backgroundColor: config.accentColor || "#22d3ee",
-                  }}
-                />
-              </div>
-              {isDirectAudio && (
-                <div className="flex justify-between text-[8px] text-zinc-500 font-mono">
-                  <span>{formatTime(currentTime)}</span>
-                  <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+            {mediaEmbed ? mediaEmbed : (
+              <div className="space-y-2">
+                <div className="w-full h-0.5 bg-zinc-900 relative cursor-pointer" onClick={handleTimelineClick}>
+                  <div
+                    className="absolute left-0 top-0 h-full shadow-[0_0_8px_#22d3ee]"
+                    style={{
+                      width: `${progressPercent}%`,
+                      backgroundColor: config.accentColor || "#22d3ee",
+                    }}
+                  />
                 </div>
-              )}
-              {url && !isDirectAudio && (
-                <button
-                  onClick={handlePlayPause}
-                  className="text-[9px] text-pink-500 uppercase tracking-widest font-black hover:underline"
-                >
-                  LINK_OPEN_STATION ↗
-                </button>
-              )}
-            </div>
+                {isDirectAudio && (
+                  <div className="flex justify-between text-[8px] text-zinc-500 font-mono">
+                    <span>{formatTime(currentTime)}</span>
+                    <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                  </div>
+                )}
+                {url && !isDirectAudio && (
+                  <button
+                    onClick={handlePlayPause}
+                    className="text-[9px] text-pink-500 uppercase tracking-widest font-black hover:underline"
+                  >
+                    LINK_OPEN_STATION ↗
+                  </button>
+                )}
+              </div>
+            )}
           </div>
           {renderPlaylist("NEON_CYBERPUNK")}
         </div>
@@ -686,34 +754,36 @@ export default function PlayableAddon({
                 </p>
               </div>
 
-              {renderThemePlayButton(config.accentColor || "#1e293b", "w-10 h-10", 14)}
+              {!mediaEmbed && renderThemePlayButton(config.accentColor || "#1e293b", "w-10 h-10", 14)}
             </div>
 
-            <div className="space-y-2">
-              <div className="w-full h-0.5 bg-slate-100 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${progressPercent}%`,
-                    backgroundColor: config.accentColor || "#64748b",
-                  }}
-                />
-              </div>
-              {isDirectAudio && (
-                <div className="flex justify-between text-[8px] text-slate-400 font-mono">
-                  <span>{formatTime(currentTime)}</span>
-                  <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+            {mediaEmbed ? mediaEmbed : (
+              <div className="space-y-2">
+                <div className="w-full h-0.5 bg-slate-100 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${progressPercent}%`,
+                      backgroundColor: config.accentColor || "#64748b",
+                    }}
+                  />
                 </div>
-              )}
-              {url && !isDirectAudio && (
-                <button
-                  onClick={handlePlayPause}
-                  className="text-[10px] text-slate-600 font-bold hover:underline"
-                >
-                  Bağlantıyı Aç ↗
-                </button>
-              )}
-            </div>
+                {isDirectAudio && (
+                  <div className="flex justify-between text-[8px] text-slate-400 font-mono">
+                    <span>{formatTime(currentTime)}</span>
+                    <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                  </div>
+                )}
+                {url && !isDirectAudio && (
+                  <button
+                    onClick={handlePlayPause}
+                    className="text-[10px] text-slate-600 font-bold hover:underline"
+                  >
+                    Bağlantıyı Aç ↗
+                  </button>
+                )}
+              </div>
+            )}
           </div>
           {renderPlaylist("MINIMAL_LIGHT_AUDIO")}
         </div>
@@ -751,73 +821,75 @@ export default function PlayableAddon({
                 <p className="text-xs text-purple-300 mt-1 truncate max-w-[170px]">{activeTrack.artistName || desc}</p>
               </div>
 
-              {renderThemePlayButton(config.accentColor || "#ec4899", "w-12 h-12", 18)}
+              {!mediaEmbed && renderThemePlayButton(config.accentColor || "#ec4899", "w-12 h-12", 18)}
             </div>
 
-            <div className="space-y-3">
-              {isDirectAudio && (
-                <div className="space-y-1">
-                  <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${progressPercent}%`,
-                        backgroundColor: config.accentColor || "#ec4899",
-                      }}
-                    />
+            {mediaEmbed ? mediaEmbed : (
+              <div className="space-y-3">
+                {isDirectAudio && (
+                  <div className="space-y-1">
+                    <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${progressPercent}%`,
+                          backgroundColor: config.accentColor || "#ec4899",
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[8px] text-purple-300/60 font-mono">
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-[8px] text-purple-300/60 font-mono">
-                    <span>{formatTime(currentTime)}</span>
-                    <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
-                  </div>
-                </div>
-              )}
+                )}
 
-              {/* Animated waves while playing */}
-              <div className="flex items-end gap-1.5 justify-center h-10 pt-2">
-                <div
-                  className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
-                    isPlaying ? "h-6 animate-pulse" : "h-3"
-                  }`}
-                  style={{ animationDuration: "0.6s", backgroundColor: config.accentColor || "#ec4899" }}
-                />
-                <div
-                  className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
-                    isPlaying ? "h-10 animate-pulse" : "h-4"
-                  }`}
-                  style={{ animationDuration: "0.9s", animationDelay: "0.15s", backgroundColor: config.accentColor || "#ec4899" }}
-                />
-                <div
-                  className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
-                    isPlaying ? "h-7 animate-pulse" : "h-3"
-                  }`}
-                  style={{ animationDuration: "0.7s", animationDelay: "0.3s", backgroundColor: config.accentColor || "#ec4899" }}
-                />
-                <div
-                  className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
-                    isPlaying ? "h-11 animate-pulse" : "h-5"
-                  }`}
-                  style={{ animationDuration: "0.8s", animationDelay: "0.1s", backgroundColor: config.accentColor || "#ec4899" }}
-                />
-                <div
-                  className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
-                    isPlaying ? "h-5 animate-pulse" : "h-2"
-                  }`}
-                  style={{ animationDuration: "0.5s", animationDelay: "0.4s", backgroundColor: config.accentColor || "#ec4899" }}
-                />
+                {/* Animated waves while playing */}
+                <div className="flex items-end gap-1.5 justify-center h-10 pt-2">
+                  <div
+                    className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
+                      isPlaying ? "h-6 animate-pulse" : "h-3"
+                    }`}
+                    style={{ animationDuration: "0.6s", backgroundColor: config.accentColor || "#ec4899" }}
+                  />
+                  <div
+                    className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
+                      isPlaying ? "h-10 animate-pulse" : "h-4"
+                    }`}
+                    style={{ animationDuration: "0.9s", animationDelay: "0.15s", backgroundColor: config.accentColor || "#ec4899" }}
+                  />
+                  <div
+                    className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
+                      isPlaying ? "h-7 animate-pulse" : "h-3"
+                    }`}
+                    style={{ animationDuration: "0.7s", animationDelay: "0.3s", backgroundColor: config.accentColor || "#ec4899" }}
+                  />
+                  <div
+                    className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
+                      isPlaying ? "h-11 animate-pulse" : "h-5"
+                    }`}
+                    style={{ animationDuration: "0.8s", animationDelay: "0.1s", backgroundColor: config.accentColor || "#ec4899" }}
+                  />
+                  <div
+                    className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
+                      isPlaying ? "h-5 animate-pulse" : "h-2"
+                    }`}
+                    style={{ animationDuration: "0.5s", animationDelay: "0.4s", backgroundColor: config.accentColor || "#ec4899" }}
+                  />
+                </div>
+
+                {url && !isDirectAudio && (
+                  <div className="text-center pt-1">
+                    <button
+                      onClick={handlePlayPause}
+                      className="text-[10px] text-pink-400 font-bold hover:underline"
+                    >
+                      Bağlantıyı Aç ↗
+                    </button>
+                  </div>
+                )}
               </div>
-
-              {url && !isDirectAudio && (
-                <div className="text-center pt-1">
-                  <button
-                    onClick={handlePlayPause}
-                    className="text-[10px] text-pink-400 font-bold hover:underline"
-                  >
-                    Bağlantıyı Aç ↗
-                  </button>
-                </div>
-              )}
-            </div>
+            )}
           </div>
           {renderPlaylist("MUSIC_PODCAST")}
         </div>
@@ -1194,33 +1266,37 @@ export default function PlayableAddon({
           </div>
 
           <div className="bg-[#241715] rounded-2xl p-4 border border-amber-900/25 text-center space-y-3 mt-auto">
-            <div className="flex items-center justify-center gap-6 text-amber-500">
-              <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
-              {renderThemePlayButton(config.accentColor || "#d97706", "w-10 h-10", 14)}
-              <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
-            </div>
+            {mediaEmbed ? mediaEmbed : (
+              <>
+                <div className="flex items-center justify-center gap-6 text-amber-500">
+                  <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
+                  {renderThemePlayButton(config.accentColor || "#d97706", "w-10 h-10", 14)}
+                  <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = activeTrack.trackDuration || 225; }}>⏭</span>
+                </div>
 
-            {isDirectAudio && (
-              <div className="space-y-1">
-                <div className="w-full h-1 bg-amber-950 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${progressPercent}%`,
-                      backgroundColor: config.accentColor || "#d97706",
-                    }}
-                  />
-                </div>
-                <div className="flex justify-between text-[8px] text-amber-600/80 font-mono">
-                  <span>{formatTime(currentTime)}</span>
-                  <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
-                </div>
-              </div>
-            )}
-            {url && !isDirectAudio && (
-              <button onClick={handlePlayPause} className="text-[10px] text-amber-400 hover:underline font-bold bg-transparent border-0 cursor-pointer">
-                Bağlantıyı Aç ↗
-              </button>
+                {isDirectAudio && (
+                  <div className="space-y-1">
+                    <div className="w-full h-1 bg-amber-955 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${progressPercent}%`,
+                          backgroundColor: config.accentColor || "#d97706",
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[8px] text-amber-600/80 font-mono">
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                    </div>
+                  </div>
+                )}
+                {url && !isDirectAudio && (
+                  <button onClick={handlePlayPause} className="text-[10px] text-amber-400 hover:underline font-bold bg-transparent border-0 cursor-pointer">
+                    Bağlantıyı Aç ↗
+                  </button>
+                )}
+              </>
             )}
           </div>
           {renderPlaylist("RETRO_CASSETTE")}
@@ -1250,11 +1326,13 @@ export default function PlayableAddon({
               <p className="text-[10px] text-zinc-500 truncate max-w-full">{activeTrack.artistName || desc}</p>
             </div>
 
-            <div className="flex items-center justify-center gap-8 text-white">
-              <span className="text-xs font-mono cursor-pointer select-none hover:text-zinc-400" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>PREV</span>
-              {renderThemePlayButton("#ffffff", "w-12 h-12 bg-white text-black border border-white hover:bg-black hover:text-white transition-all", 16)}
-              <span className="text-xs font-mono cursor-pointer select-none hover:text-zinc-400" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>NEXT</span>
-            </div>
+            {mediaEmbed ? mediaEmbed : (
+              <div className="flex items-center justify-center gap-8 text-white">
+                <span className="text-xs font-mono cursor-pointer select-none hover:text-zinc-400" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>PREV</span>
+                {renderThemePlayButton("#ffffff", "w-12 h-12 bg-white text-black border border-white hover:bg-black hover:text-white transition-all", 16)}
+                <span className="text-xs font-mono cursor-pointer select-none hover:text-zinc-400" onClick={() => { if (audioRef.current) audioRef.current.currentTime = activeTrack.trackDuration || 225; }}>NEXT</span>
+              </div>
+            )}
           </div>
 
           <div className="mt-auto space-y-3">
@@ -1275,7 +1353,7 @@ export default function PlayableAddon({
                 </div>
               </div>
             )}
-            {url && !isDirectAudio && (
+            {url && !isDirectAudio && !mediaEmbed && (
               <button onClick={handlePlayPause} className="text-[10px] text-zinc-400 hover:text-white uppercase font-mono tracking-wider bg-transparent border-0 cursor-pointer">
                 Open External Link ↗
               </button>
@@ -1322,33 +1400,37 @@ export default function PlayableAddon({
           </div>
 
           <div className="bg-[#1c0f0d] rounded-2xl p-4 border border-amber-900/20 text-center space-y-3 mt-auto">
-            <div className="flex items-center justify-center gap-6">
-              <span className="text-sm cursor-pointer select-none text-amber-600 hover:text-amber-500" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
-              {renderThemePlayButton(config.accentColor || "#d97706", "w-10 h-10", 14)}
-              <span className="text-sm cursor-pointer select-none text-amber-600 hover:text-amber-500" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
-            </div>
+            {mediaEmbed ? mediaEmbed : (
+              <>
+                <div className="flex items-center justify-center gap-6">
+                  <span className="text-sm cursor-pointer select-none text-amber-600 hover:text-amber-500" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
+                  {renderThemePlayButton(config.accentColor || "#d97706", "w-10 h-10", 14)}
+                  <span className="text-sm cursor-pointer select-none text-amber-600 hover:text-amber-500" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
+                </div>
 
-            {isDirectAudio && (
-              <div className="space-y-1">
-                <div className="w-full h-1 bg-[#120807] rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${progressPercent}%`,
-                      backgroundColor: config.accentColor || "#d97706",
-                    }}
-                  />
-                </div>
-                <div className="flex justify-between text-[8px] text-amber-700/80 font-mono">
-                  <span>{formatTime(currentTime)}</span>
-                  <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
-                </div>
-              </div>
-            )}
-            {url && !isDirectAudio && (
-              <button onClick={handlePlayPause} className="text-[10px] text-amber-500 hover:underline bg-transparent border-0 cursor-pointer">
-                Radyoyu Aç ↗
-              </button>
+                {isDirectAudio && (
+                  <div className="space-y-1">
+                    <div className="w-full h-1 bg-[#120807] rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${progressPercent}%`,
+                          backgroundColor: config.accentColor || "#d97706",
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[8px] text-amber-700/80 font-mono">
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                    </div>
+                  </div>
+                )}
+                {url && !isDirectAudio && (
+                  <button onClick={handlePlayPause} className="text-[10px] text-amber-500 hover:underline bg-transparent border-0 cursor-pointer">
+                    Radyoyu Aç ↗
+                  </button>
+                )}
+              </>
             )}
           </div>
           {renderPlaylist("VINTAGE_RADIO")}
@@ -1507,5 +1589,29 @@ export default function PlayableAddon({
 
     default:
       return null;
-  }
+    }
+  };
+
+  const hiddenEmbedSrc = !isDirectAudio ? getHiddenEmbedSrc(url) : null;
+
+  return (
+    <>
+      {renderContent()}
+      {isPlaying && !isDirectAudio && hiddenEmbedSrc && (
+        <iframe
+          src={hiddenEmbedSrc}
+          allow="autoplay; encrypted-media"
+          style={{
+            position: "absolute",
+            opacity: 0,
+            pointerEvents: "none",
+            width: "1px",
+            height: "1px",
+            left: "-9999px",
+          }}
+          title="background-player"
+        />
+      )}
+    </>
+  );
 }
