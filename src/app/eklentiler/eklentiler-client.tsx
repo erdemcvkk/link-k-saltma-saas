@@ -71,22 +71,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     ]
   },
   { 
-    id: "ACADEMIA", 
-    name: "Kolej Modülü", 
-    desc: "Dark academia tarzında, kitaplar, yazarlar ve eğitmenler için şık tasarım.", 
-    color: "bg-[#b4963c]",
-    theme: "dark-academia",
-    price: "99",
-    username: "@the.quill",
-    bio: "Yazar & Şair",
-    avatarUrl: "/placeholder.png",
-    category: "Premium Temalar",
-    mockProducts: [
-      { id: "da1", title: "Gotik Şiir Derlemesi (PDF)", type: "E-Kitap", price: "99", imageUrl: "/placeholder.png" },
-      { id: "da2", title: "Daktilo Yazı Fontu", type: "Font", price: "99", imageUrl: "/placeholder.png" },
-    ]
-  },
-  { 
     id: "NEO_BRUTAL", 
     name: "Neo Brutalist Vitrin", 
     desc: "Kalın çizgiler ve yüksek kontrastlı renklerle modern brutalist tasarım.", 
@@ -132,22 +116,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     mockProducts: [
       { id: "y1", title: "2000'ler Nostalji Filtreleri", type: "Filtre", price: "99", imageUrl: "/placeholder.png" },
       { id: "y2", title: "Holografik Sticker Paketi", type: "Tasarım", price: "99", imageUrl: "/placeholder.png" },
-    ]
-  },
-  { 
-    id: "PREMIUM_CREATOR", 
-    name: "Premium Creator Vitrini", 
-    desc: "Dijital ürünlerinizi en üst düzey lüks ve zarafetle sunan yaratıcı şablon.", 
-    color: "bg-zinc-900",
-    theme: "premium-creator",
-    price: "99",
-    username: "@kreator",
-    bio: "Premium Beatmaker & Eğitmen",
-    avatarUrl: "/placeholder.png",
-    category: "Premium Temalar",
-    mockProducts: [
-      { id: "pc1", title: "Mastering Eğitimi (Video)", type: "Eğitim", price: "99", imageUrl: "/placeholder.png" },
-      { id: "pc2", title: "Özel Lo-Fi Beat Paketi", type: "Beat", price: "99", imageUrl: "/placeholder.png" },
     ]
   },
   { 
@@ -284,22 +252,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     mockProducts: []
   },
   { 
-    id: "BOOKING", 
-    name: "Randevu & İletişim", 
-    desc: "1-1 Görüşmeler, toplantılar veya randevular ayarlayıp takviminizi yönetin.", 
-    color: "bg-zinc-800",
-    theme: "minimalist",
-    price: "99",
-    username: "@coach.mehmet",
-    bio: "Yazar & Kariyer Danışmanı",
-    avatarUrl: "/placeholder.png",
-    category: "Etkileşim & Araçlar",
-    mockProducts: [
-      { id: "b1", title: "1 Saatlik UI/UX Danışmanlığı", type: "Toplantı", price: "99", imageUrl: "/placeholder.png" },
-      { id: "b2", title: "Hızlı Kod İncelemesi", type: "Toplantı", price: "99", imageUrl: "/placeholder.png" },
-    ]
-  },
-  { 
     id: "NEWSLETTER", 
     name: "Bülten Aboneliği", 
     desc: "Takipçilerinizden e-posta toplayarak bülten aboneleri kazanın.", 
@@ -351,32 +303,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     bio: "Classic Rock & Jazz collector",
     avatarUrl: "/placeholder.png",
     category: "Müzik & Audio",
-    mockProducts: []
-  },
-  { 
-    id: "FUTURE_WAVE", 
-    name: "Future Synthwave Video", 
-    desc: "Neon cyberpunk çerçeve ve VHS filtre esintili video oynatıcı.", 
-    color: "bg-pink-500",
-    theme: "classic",
-    price: "99",
-    username: "@cyber.waves",
-    bio: "Motion Designer & VJ",
-    avatarUrl: "/placeholder.png",
-    category: "Satış & Gelir",
-    mockProducts: []
-  },
-  { 
-    id: "CINEMATIC_THEATER", 
-    name: "Sinematik Tiyatro Video", 
-    desc: "Kırmızı kadife perdeler ve sinema projektörü efektli film/eğitim modülü.", 
-    color: "bg-red-700",
-    theme: "classic",
-    price: "99",
-    username: "@cine.theater",
-    bio: "Indie Filmmaker",
-    avatarUrl: "/placeholder.png",
-    category: "Satış & Gelir",
     mockProducts: []
   }
 ];

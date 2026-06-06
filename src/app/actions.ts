@@ -1881,15 +1881,12 @@ export async function purchaseAddon(userId: string, addonType: string) {
 
   let defaultTheme = "classic";
   if (addonType === "MINI_STORE") defaultTheme = "vibrant-pop";
-  if (addonType === "BOOKING") defaultTheme = "minimalist";
   if (addonType === "NEWSLETTER") defaultTheme = "glassmorphism";
   if (addonType === "QA") defaultTheme = "dark-drill";
   if (addonType === "NEO_BRUTAL") defaultTheme = "neo-brutalism";
   if (addonType === "ORGANIC") defaultTheme = "organic-earth";
   if (addonType === "RETRO") defaultTheme = "retro-arcade";
-  if (addonType === "ACADEMIA") defaultTheme = "dark-academia";
   if (addonType === "Y2K") defaultTheme = "y2k-holographic";
-  if (addonType === "PREMIUM_CREATOR") defaultTheme = "premium-creator";
   if (addonType === "WEB3_NFT") defaultTheme = "dark-drill";
   if (addonType === "CORP_EXEC") defaultTheme = "classic";
 

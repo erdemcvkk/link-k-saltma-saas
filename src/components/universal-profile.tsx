@@ -579,17 +579,12 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     if (t === "NEO_BRUTAL") return "neo-brutal";
     if (t === "ORGANIC") return "organic";
     if (t === "RETRO") return "retro";
-    if (t === "ACADEMIA") return "academia";
     if (t === "Y2K") return "y2k";
-    if (t === "BOOKING") return "booking";
     if (t === "NEWSLETTER") return "newsletter";
     if (t === "QA") return "qa";
-    if (t === "PREMIUM_CREATOR") return "creator-store";
     if (t === "RETRO_CASSETTE") return "retro-cassette";
     if (t === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
     if (t === "VINTAGE_RADIO") return "vintage-radio";
-    if (t === "FUTURE_WAVE") return "future-wave";
-    if (t === "CINEMATIC_THEATER") return "cinematic-theater";
     if (t === "PREMIUM_VIDEO") return "masterclass";
     return t.toLowerCase();
   };
@@ -607,23 +602,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
   };
 
   switch (type) {
-    case "BOOKING":
-      return (
-        <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
-              <Calendar className="h-5 w-5 text-blue-500" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-slate-800">{configData.title || (isDark ? "Book a 1:1 Call" : "Birebir Görüşme Ayarla")}</h4>
-              <p className="text-xs opacity-70 mt-0.5">{configData.description || "Sizinle tanışmak için sabırsızlanıyorum."}</p>
-            </div>
-          </div>
-          <div className={btnClassName}>
-            {configData.buttonText || "Takvimi Görüntüle"}
-          </div>
-        </CardWrapper>
-      );
+
     case "QA":
       {
         const qaPairs = configData.qaPairs || [];
@@ -685,8 +664,6 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
           </div>
         </CardWrapper>
       );
-    case "FUTURE_WAVE":
-    case "CINEMATIC_THEATER":
     case "PREMIUM_VIDEO":
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
@@ -851,9 +828,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     case "NEO_BRUTAL":
     case "ORGANIC":
     case "RETRO":
-    case "ACADEMIA":
     case "Y2K":
-    case "PREMIUM_CREATOR":
     case "WEB3_NFT":
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>

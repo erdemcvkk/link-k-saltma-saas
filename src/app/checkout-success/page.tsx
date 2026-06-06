@@ -24,11 +24,9 @@ export default async function CheckoutSuccessPage({ searchParams }: PageProps) {
     MINI_STORE: "Dijital Mağaza Modülü",
     CORP_EXEC: "Kurumsal Yönetici Kartı",
     RETRO: "Klasik Retro Mağaza",
-    ACADEMIA: "Kolej Modülü",
     NEO_BRUTAL: "Neo Brutalist Vitrin",
     ORGANIC: "Organik & Doğal Vitrin",
     Y2K: "Neon & Gece Hayatı Vitrin",
-    PREMIUM_CREATOR: "Premium Creator Vitrini",
     PREMIUM_VIDEO: "Premium Video Eğitimi",
     MUSIC_PODCAST: "Müzik & Podcast Çalar",
     PORTFOLIO_GALLERY: "Portfolyo & Galeri",
@@ -39,7 +37,6 @@ export default async function CheckoutSuccessPage({ searchParams }: PageProps) {
     NEON_CYBERPUNK: "Neon Cyberpunk Player",
     WEB3_NFT: "Web3 & NFT Koleksiyonu",
     FAQ: "Sıkça Sorulan Sorular",
-    BOOKING: "Randevu & İletişim",
     NEWSLETTER: "Bülten Aboneliği",
   };
 
