@@ -167,6 +167,51 @@ export default async function AddonPage({
  );
  }
 
+  if (matchingAddon.addonType === "NEWSLETTER") {
+    const isDirect = parsedConfig.integrationType === "DIRECT";
+    return (
+      <div className="w-full min-h-screen bg-emerald-50/20 flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-white p-6 md:p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
+          <div className="w-20 h-20 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center mb-6 text-3xl">
+            ✉️
+          </div>
+          <h1 className="text-2xl font-black text-slate-800 mb-3">
+            {parsedConfig.title || "Haftalık Bülten"}
+          </h1>
+          <p className="text-slate-500 mb-8 leading-relaxed text-sm">
+            {parsedConfig.incentiveMsg || "Spam yok, sadece kaliteli içerik."}
+          </p>
+          
+          {isDirect ? (
+            <form className="w-full space-y-4">
+              <input 
+                type="email" 
+                required
+                placeholder="E-posta adresiniz" 
+                className="w-full px-4 py-3.5 rounded-2xl border border-zinc-200 bg-zinc-50 text-sm outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"
+              />
+              <button 
+                type="submit" 
+                className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg"
+              >
+                {parsedConfig.buttonText || "Abone Ol"}
+              </button>
+            </form>
+          ) : (
+            <a 
+              href={parsedConfig.serviceUrl || "#"} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-all text-center block shadow-lg"
+            >
+              {parsedConfig.buttonText || "Abone Ol"}
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  }
+
  if (matchingAddon.addonType === "QA") {
     const qaPairs = parsedConfig.qaPairs || [];
     return (
