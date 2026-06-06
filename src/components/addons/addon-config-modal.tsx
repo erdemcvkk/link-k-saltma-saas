@@ -50,7 +50,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "EDITORIAL_LUX": return "minimalist";
   case "GAMER_HUB": return "vibrant-pop";
   case "CORP_EXEC": return "classic";
-  case "COMIC_MANGA": return "neo-brutalism";
   default: return "classic";
   }
   };
@@ -87,7 +86,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  if (type === "EDITORIAL_LUX") return "editorial";
  if (type === "GAMER_HUB") return "gamer-hub";
  if (type === "CORP_EXEC") return "corporate";
- if (type === "COMIC_MANGA") return "comic-manga";
  if (type === "RETRO_CASSETTE") return "retro-cassette";
   if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
   if (type === "VINTAGE_RADIO") return "vintage-radio";
@@ -857,8 +855,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     case "WEB3_NFT":
     case "EDITORIAL_LUX":
     case "GAMER_HUB":
-    case "CORP_EXEC":
-    case "COMIC_MANGA": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
+    case "CORP_EXEC": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
  case "PREMIUM_VIDEO": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Premium Video" : "Premium Video" };
  case "BOOKING": return { icon: <Calendar className="h-5 w-5" />, title: lang === "tr" ? "Randevu" : "Booking" };
  case "QA": return { icon: <FileQuestion className="h-5 w-5" />, title: lang === "tr" ? "Soru-Cevap" : "Q&A" };
@@ -941,7 +938,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  case "WEB3_NFT":
  case "EDITORIAL_LUX":
  case "GAMER_HUB":
- case "COMIC_MANGA":
  specificFields = (
  <>
  <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
@@ -1489,9 +1485,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   addon.addonType !== "PREMIUM_CREATOR" &&
   addon.addonType !== "WEB3_NFT" &&
   addon.addonType !== "EDITORIAL_LUX" &&
-  addon.addonType !== "GAMER_HUB" &&
-  
-  addon.addonType !== "COMIC_MANGA" ? renderSlugAndAvatar() : null}
+  addon.addonType !== "GAMER_HUB" ? renderSlugAndAvatar() : null}
  {specificFields}
  </div>
  );
@@ -1509,7 +1503,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "WEB3_NFT":
   case "EDITORIAL_LUX":
   case "GAMER_HUB":
-  case "COMIC_MANGA":
   return (
   <div className="w-full h-full relative overflow-hidden flex flex-col">
   <StorefrontPreview 

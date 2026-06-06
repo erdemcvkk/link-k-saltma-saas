@@ -71,7 +71,6 @@ export default async function AddonPage({
     if (type === "EDITORIAL_LUX") return "editorial";
     if (type === "GAMER_HUB") return "gamer-hub";
     if (type === "CORP_EXEC") return "corporate";
-    if (type === "COMIC_MANGA") return "comic-manga";
     if (type === "RETRO_CASSETTE") return "retro-cassette";
     if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
     if (type === "VINTAGE_RADIO") return "vintage-radio";
@@ -113,7 +112,6 @@ export default async function AddonPage({
   case "EDITORIAL_LUX": return "minimalist";
   case "GAMER_HUB": return "vibrant-pop";
   case "CORP_EXEC": return "classic";
-  case "COMIC_MANGA": return "neo-brutalism";
   default: return "classic";
   }
   };
@@ -160,8 +158,7 @@ export default async function AddonPage({
    matchingAddon.addonType === "PREMIUM_CREATOR" ||
    matchingAddon.addonType === "WEB3_NFT" ||
    matchingAddon.addonType === "EDITORIAL_LUX" ||
-   matchingAddon.addonType === "GAMER_HUB" ||
-   matchingAddon.addonType === "COMIC_MANGA") {
+   matchingAddon.addonType === "GAMER_HUB") {
     
     const displayProducts = (parsedConfig.products && Array.isArray(parsedConfig.products) && parsedConfig.products.length > 0)
       ? parsedConfig.products.map((p: any) => ({
@@ -190,7 +187,7 @@ export default async function AddonPage({
     const bgClass = getThemeBgClass(currentTheme);
 
     return (
-      <div className={`w-full min-h-screen ${matchingAddon.addonType === "COMIC_MANGA" ? "bg-zinc-950" : bgClass} flex justify-center`}>
+      <div className={`w-full min-h-screen ${bgClass} flex justify-center`}>
         <div className="w-full max-w-full md:w-[480px] min-h-screen relative shadow-2xl overflow-hidden bg-white">
           <StorefrontPreview 
             theme={currentTheme} 

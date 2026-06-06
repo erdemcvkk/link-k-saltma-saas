@@ -1895,7 +1895,6 @@ export async function purchaseAddon(userId: string, addonType: string) {
   if (addonType === "EDITORIAL_LUX") defaultTheme = "minimalist";
   if (addonType === "GAMER_HUB") defaultTheme = "vibrant-pop";
   if (addonType === "CORP_EXEC") defaultTheme = "classic";
-  if (addonType === "COMIC_MANGA") defaultTheme = "neo-brutalism";
 
   // Deactivate all other addons first to ensure only 1 active addon exists
   await db.userAddon.updateMany({

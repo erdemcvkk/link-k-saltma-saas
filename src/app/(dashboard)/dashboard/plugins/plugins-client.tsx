@@ -74,7 +74,6 @@ export default function PluginsClient({
       case "EDITORIAL_LUX": return lang === "tr" ? "Editoryal Vitrin" : "Editorial Showcase";
       case "GAMER_HUB": return lang === "tr" ? "Oyuncu Platformu" : "Gamer Hub";
       case "CORP_EXEC": return lang === "tr" ? "Kurumsal Yönetici Kartı" : "Corporate Executive Card";
-      case "COMIC_MANGA": return lang === "tr" ? "Çizgi Roman & Manga" : "Comic & Manga";
       case "DONATION": return lang === "tr" ? "Dijital Kahve İkramı" : "Coffee Donation";
       case "MINI_STORE": return lang === "tr" ? "Mini Mağaza" : "Mini Store";
       case "NEO_BRUTAL": return lang === "tr" ? "Neo Brutalism Vitrin" : "Neo Brutalism Gallery";
@@ -182,7 +181,6 @@ export default function PluginsClient({
     if (type === "EDITORIAL_LUX") return "editorial";
     if (type === "GAMER_HUB") return "gamer-hub";
     if (type === "CORP_EXEC") return "corporate";
-    if (type === "COMIC_MANGA") return "comic-manga";
     if (type === "RETRO_CASSETTE") return "retro-cassette";
     if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
     if (type === "VINTAGE_RADIO") return "vintage-radio";

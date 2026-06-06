@@ -55,22 +55,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     ]
   },
   { 
-    id: "COMIC_MANGA", 
-    name: "Çizgi Roman & Manga", 
-    desc: "Sade, şık ve minimal bir tasarımla ürünlerinizi ön plana çıkarın.", 
-    color: "bg-[#000000]",
-    theme: "neo-brutalism",
-    price: "99",
-    username: "@manga.artisan",
-    bio: "Comic Artist & Illustrator",
-    avatarUrl: "/placeholder.png",
-    category: "Premium Temalar",
-    mockProducts: [
-      { id: "cm1", title: "Digital Ink Brushes Pack", type: "Fırça", price: "99", imageUrl: "/placeholder.png" },
-      { id: "cm2", title: "Chapter 1 Manga Panels (RAW)", type: "Comic", price: "99", imageUrl: "/placeholder.png" }
-    ]
-  },
-  { 
     id: "RETRO", 
     name: "Klasik Retro Mağaza", 
     desc: "8-bit atari ve retro oyun estetiğine sahip nostaljik mağaza tasarımı.", 
@@ -1158,26 +1142,6 @@ export default function EklentilerClient({ products, settings, userId = null, db
         </div>
         <button className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] rounded-lg tracking-wide transition-colors border-0 cursor-pointer">
           Schedule Consultation
-        </button>
-      </div>
-    </div>
-  ) : addon.id === "COMIC_MANGA" ? (
-    <div className="w-full h-full bg-white flex flex-col p-6 text-black relative z-0">
-      <div className="flex flex-col items-center mt-6 mb-4">
-        <div className="w-20 h-20 bg-white rounded-none border-4 border-black overflow-hidden shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
-          <img src={addon.avatarUrl} className="w-full h-full object-cover" />
-        </div>
-        <span className="text-xs font-extrabold mt-3 tracking-wide uppercase border-2 border-black px-2 py-0.5 bg-yellow-300 shadow-[2px_2px_0_0_rgba(0,0,0,1)]">{addon.username}</span>
-        <p className="text-[9px] font-semibold text-zinc-650 mt-2">{addon.bio}</p>
-      </div>
-      
-      <div className="bg-white border-2 border-black p-4 mt-2 space-y-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
-        <div>
-          <h4 className="text-xs font-black uppercase tracking-tight">Episode 4: Inked!</h4>
-          <p className="text-[8px] text-zinc-700">Digital Comic Panels</p>
-        </div>
-        <button className="w-full py-2 bg-white border-2 border-black text-black font-black uppercase text-[10px] tracking-wide shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[0px_0px_0_0_rgba(0,0,0,1)] transition-all cursor-pointer">
-          Read Chapter
         </button>
       </div>
     </div>

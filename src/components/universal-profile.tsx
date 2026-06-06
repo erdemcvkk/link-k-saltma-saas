@@ -891,7 +891,6 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     case "WEB3_NFT":
     case "EDITORIAL_LUX":
     case "GAMER_HUB":
-    case "COMIC_MANGA":
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
           <div className="flex items-center gap-3">

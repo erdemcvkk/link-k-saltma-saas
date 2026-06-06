@@ -131,7 +131,7 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
     const type = activeAddon.addonType;
 
     // 1. Storefront Addons (Magaza)
-    if (["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR", "WEB3_NFT", "EDITORIAL_LUX", "GAMER_HUB", "COMIC_MANGA"].includes(type)) {
+    if (["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR", "WEB3_NFT", "EDITORIAL_LUX", "GAMER_HUB"].includes(type)) {
       const getDefaultTheme = (t: string) => {
         switch (t) {
           case "NEO_BRUTAL": return "neo-brutalism";
@@ -143,7 +143,6 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
           case "WEB3_NFT": return "dark-drill";
           case "EDITORIAL_LUX": return "minimalist";
           case "GAMER_HUB": return "vibrant-pop";
-          case "COMIC_MANGA": return "neo-brutalism";
           default: return "classic";
         }
       };
