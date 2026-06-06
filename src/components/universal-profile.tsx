@@ -903,7 +903,7 @@ function getMediaEmbed(url: string, accentColor?: string) {
   const trimmed = url.trim();
   
   // Spotify track/album/playlist/episode
-  const spotifyMatch = trimmed.match(/open\.spotify\.com\/(track|album|playlist|episode)\/([a-zA-Z0-9]+)/);
+  const spotifyMatch = trimmed.match(/open\.spotify\.com\/(?:[a-zA-Z0-9_-]+\/)?(track|album|playlist|episode)\/([a-zA-Z0-9]+)/i);
   if (spotifyMatch) {
     return (
       <div className="w-full rounded-xl overflow-hidden shadow-lg">
@@ -921,7 +921,7 @@ function getMediaEmbed(url: string, accentColor?: string) {
   }
   
   // YouTube
-  const ytMatch = trimmed.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  const ytMatch = trimmed.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
   if (ytMatch) {
     return (
       <div className="w-full aspect-video rounded-xl overflow-hidden shadow-lg">
@@ -957,7 +957,7 @@ function getMediaEmbed(url: string, accentColor?: string) {
   }
   
   // Apple Music
-  const appleMusicMatch = trimmed.match(/music\.apple\.com\/([a-z]{2})\/(?:album|playlist)\/[^/]+\/([a-zA-Z0-9.]+)/);
+  const appleMusicMatch = trimmed.match(/music\.apple\.com\/([a-z]{2})\/(?:album|playlist)\/(?:[^/]+\/)?([a-zA-Z0-9.]+)/i);
   if (appleMusicMatch) {
     return (
       <div className="w-full rounded-xl overflow-hidden shadow-lg">

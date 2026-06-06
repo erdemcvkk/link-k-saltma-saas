@@ -47,8 +47,7 @@ export default function PluginsClient({
 }: PluginsClientProps) {
   const { user, lang, activeTemplate, simulatedPlan, setSuccessMsg, setErrorMsg } = useDashboard();
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons);
-  const firstActiveAddon = initialAddons.find(a => a.isActive) || initialAddons[0];
-  const [activeAddonId, setActiveAddonId] = useState<string | undefined>(firstActiveAddon?.id);
+  const [activeAddonId, setActiveAddonId] = useState<string | undefined>(undefined);
   const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
   const [isPending, startTransition] = useTransition();
   const [origin, setOrigin] = useState("");
@@ -56,8 +55,16 @@ export default function PluginsClient({
   useEffect(() => {
     if (typeof window !== "undefined") {
       setOrigin(window.location.origin);
+      
+      const savedActiveId = sessionStorage.getItem("activeAddonId");
+      if (savedActiveId && initialAddons.some(a => a.id === savedActiveId)) {
+        setActiveAddonId(savedActiveId);
+      } else {
+        const firstActiveAddon = initialAddons.find(a => a.isActive) || initialAddons[0];
+        setActiveAddonId(firstActiveAddon?.id);
+      }
     }
-  }, []);
+  }, [initialAddons]);
 
   const getDefaultSlug = (type: string) => {
     if (type === "MINI_STORE") return "store";
@@ -191,6 +198,7 @@ export default function PluginsClient({
                             
                             // Optimistically update active preview addon and status list
                             setActiveAddonId(addon.id);
+                            sessionStorage.setItem("activeAddonId", addon.id);
                             setAddons(prev => prev.map(a => a.id === addon.id ? { ...a, isActive: nextActive } : a));
 
                             startTransition(async () => {
@@ -229,7 +237,11 @@ export default function PluginsClient({
 
                     <div className="mt-4 pt-4 border-t border-zinc-200/60 flex items-center gap-2">
                       <button
-                        onClick={() => setEditingAddon(addon)}
+                        onClick={() => {
+                          setActiveAddonId(addon.id);
+                          sessionStorage.setItem("activeAddonId", addon.id);
+                          setEditingAddon(addon);
+                        }}
                         className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2"
                       >
                         <Settings className="h-3.5 w-3.5" />
