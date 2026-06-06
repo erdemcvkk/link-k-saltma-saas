@@ -106,6 +106,26 @@ export default function PlayableAddon({
     return () => clearInterval(interval);
   }, [type, config.targetDate]);
 
+  // ── EXTERNAL AUDIO PROGRESS SIMULATOR ──
+  useEffect(() => {
+    if (isDirectAudio || !isPlaying) return;
+
+    const mockDuration = 225; // 3:45
+    setDuration(mockDuration);
+
+    const interval = setInterval(() => {
+      setCurrentTime((prev) => {
+        if (prev >= mockDuration) {
+          setIsPlaying(false);
+          return 0;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, isDirectAudio]);
+
   // ── AUDIO PLAYBACK SYNC ──
   useEffect(() => {
     if (!audioRef.current) return;
@@ -131,25 +151,19 @@ export default function PlayableAddon({
 
   const handlePlayPause = () => {
     if (!url) return;
-
-    if (isDirectAudio) {
-      setIsPlaying(!isPlaying);
-    } else {
-      // Open external link in new tab
-      window.open(url, "_blank", "noopener,noreferrer");
-      // Toggle play state visually for animations
-      setIsPlaying(!isPlaying);
-    }
+    setIsPlaying(!isPlaying);
   };
 
   const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current || !duration) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const width = rect.width;
     const clickRatio = clickX / width;
-    const newTime = clickRatio * duration;
-    audioRef.current.currentTime = newTime;
+    const newTime = clickRatio * (duration || 225);
+    
+    if (isDirectAudio && audioRef.current) {
+      audioRef.current.currentTime = newTime;
+    }
     setCurrentTime(newTime);
   };
 
@@ -1342,24 +1356,44 @@ export default function PlayableAddon({
       );
 
     case "FUTURE_WAVE":
-      return (
-        <div className="w-full h-full bg-black flex flex-col p-6 text-pink-500 relative z-0 overflow-hidden shadow-[inset_0_0_40px_rgba(236,72,153,0.1)]">
-          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(236,72,153,0.05)_1px,transparent_1px),linear-gradient(to_right,rgba(236,72,153,0.05)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
-          
-          <div className="flex flex-col items-center mt-6 mb-4 relative z-10">
-            <span className="text-xs font-black uppercase tracking-widest text-cyan-400">{username}</span>
-          </div>
+      {
+        const videoUrl = (activeVideo.videoUrl || "").trim();
+        const hasValidEmbed =
+          videoUrl &&
+          (/youtube\.com|youtu\.be/i.test(videoUrl) || /\.(mp4|webm|mov)(\?.*)?$/i.test(videoUrl));
 
-          <div className="w-full aspect-video rounded-xl bg-zinc-950 mt-2 relative border border-pink-500/30 overflow-hidden group shadow-[0_0_20px_rgba(236,72,153,0.2)]">
-            <img src={activeVideo.coverUrl || "/placeholder.png"} className="absolute inset-0 w-full h-full object-cover opacity-80" alt="Video cover" />
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,3px_100%] pointer-events-none" />
-
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button onClick={handlePlayPause} className="w-14 h-14 rounded-none bg-pink-500 flex items-center justify-center text-black border-2 border-cyan-400 shadow-[0_0_15px_rgba(236,72,153,0.8)] hover:scale-105 transition-all cursor-pointer">
-                <span className="text-lg ml-0.5">▶</span>
-              </button>
+        return (
+          <div className="w-full h-full bg-black flex flex-col p-6 text-pink-500 relative z-0 overflow-hidden shadow-[inset_0_0_40px_rgba(236,72,153,0.1)]">
+            <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(236,72,153,0.05)_1px,transparent_1px),linear-gradient(to_right,rgba(236,72,153,0.05)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+            
+            <div className="flex flex-col items-center mt-6 mb-4 relative z-10">
+              <span className="text-xs font-black uppercase tracking-widest text-cyan-400">{username}</span>
             </div>
-          </div>
+
+            <div className="w-full aspect-video rounded-xl bg-zinc-950 mt-2 relative border border-pink-500/30 overflow-hidden group shadow-[0_0_20px_rgba(236,72,153,0.2)] animate-all duration-300">
+              {isPlaying && hasValidEmbed ? (
+                <div className="w-full h-full relative">
+                  {renderVideoPlayer()}
+                  <button
+                    onClick={() => setIsPlaying(false)}
+                    className="absolute top-2 left-2 p-1 bg-black/60 hover:bg-black/80 rounded-full text-white text-[10px] font-bold border border-white/10 z-20 flex items-center gap-1 shadow-md cursor-pointer"
+                  >
+                    <ArrowLeft size={10} /> {config.lang === "tr" ? "Kapat" : "Close"}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <img src={activeVideo.coverUrl || "/placeholder.png"} className="absolute inset-0 w-full h-full object-cover opacity-80" alt="Video cover" />
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,3px_100%] pointer-events-none" />
+
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <button onClick={handlePlayPause} className="w-14 h-14 rounded-none bg-pink-500 flex items-center justify-center text-black border-2 border-cyan-400 shadow-[0_0_15px_rgba(236,72,153,0.8)] hover:scale-105 transition-all cursor-pointer">
+                      <span className="text-lg ml-0.5">▶</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
 
           <div className="flex flex-col mt-6 flex-1 relative z-10">
             <h4 className="text-base font-black uppercase tracking-wider text-cyan-400">{activeVideo.title || title}</h4>
@@ -1394,26 +1428,47 @@ export default function PlayableAddon({
           </div>
         </div>
       );
+    }
 
     case "CINEMATIC_THEATER":
-      return (
-        <div className="w-full h-full bg-[#080808] flex flex-col p-6 text-zinc-100 relative z-0">
-          <div className="flex flex-col items-center mt-6 mb-4">
-            <span className="text-xs font-serif uppercase tracking-widest text-zinc-500">{username}</span>
-          </div>
+      {
+        const videoUrl = (activeVideo.videoUrl || "").trim();
+        const hasValidEmbed =
+          videoUrl &&
+          (/youtube\.com|youtu\.be/i.test(videoUrl) || /\.(mp4|webm|mov)(\?.*)?$/i.test(videoUrl));
 
-          <div className="w-full aspect-video rounded-xl bg-zinc-950 mt-2 relative overflow-hidden group shadow-[0_15px_35px_rgba(0,0,0,0.8)] border border-zinc-850">
-            <img src={activeVideo.coverUrl || "/placeholder.png"} className="absolute inset-0 w-full h-full object-cover opacity-70" alt="Video cover" />
-            <div className="absolute left-0 inset-y-0 w-4 bg-gradient-to-r from-red-950 to-red-800 border-r border-red-900/50 shadow-lg z-10"></div>
-            <div className="absolute right-0 inset-y-0 w-4 bg-gradient-to-l from-red-950 to-red-800 border-l border-red-900/50 shadow-lg z-10"></div>
-
-            <div className="absolute inset-0 flex items-center justify-center z-20">
-              <button onClick={handlePlayPause} className="w-16 h-16 rounded-full bg-red-700/80 backdrop-blur-sm flex items-center justify-center text-white border border-red-500/50 shadow-2xl hover:bg-red-650 hover:scale-105 transition-all cursor-pointer">
-                <span className="text-xl ml-1">▶</span>
-              </button>
+        return (
+          <div className="w-full h-full bg-[#080808] flex flex-col p-6 text-zinc-100 relative z-0">
+            <div className="flex flex-col items-center mt-6 mb-4">
+              <span className="text-xs font-serif uppercase tracking-widest text-zinc-500">{username}</span>
             </div>
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-full bg-gradient-to-b from-white/5 via-transparent to-transparent pointer-events-none" />
-          </div>
+
+            <div className="w-full aspect-video rounded-xl bg-zinc-950 mt-2 relative overflow-hidden group shadow-[0_15px_35px_rgba(0,0,0,0.8)] border border-zinc-850 animate-all duration-300">
+              {isPlaying && hasValidEmbed ? (
+                <div className="w-full h-full relative">
+                  {renderVideoPlayer()}
+                  <button
+                    onClick={() => setIsPlaying(false)}
+                    className="absolute top-2 left-2 p-1 bg-black/60 hover:bg-black/80 rounded-full text-white text-[10px] font-bold border border-white/10 z-25 flex items-center gap-1 shadow-md cursor-pointer"
+                  >
+                    <ArrowLeft size={10} /> {config.lang === "tr" ? "Kapat" : "Close"}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <img src={activeVideo.coverUrl || "/placeholder.png"} className="absolute inset-0 w-full h-full object-cover opacity-70" alt="Video cover" />
+                  <div className="absolute left-0 inset-y-0 w-4 bg-gradient-to-r from-red-950 to-red-800 border-r border-red-900/50 shadow-lg z-10"></div>
+                  <div className="absolute right-0 inset-y-0 w-4 bg-gradient-to-l from-red-950 to-red-800 border-l border-red-900/50 shadow-lg z-10"></div>
+
+                  <div className="absolute inset-0 flex items-center justify-center z-20">
+                    <button onClick={handlePlayPause} className="w-16 h-16 rounded-full bg-red-700/80 backdrop-blur-sm flex items-center justify-center text-white border border-red-500/50 shadow-2xl hover:bg-red-650 hover:scale-105 transition-all cursor-pointer">
+                      <span className="text-xl ml-1">▶</span>
+                    </button>
+                  </div>
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-full bg-gradient-to-b from-white/5 via-transparent to-transparent pointer-events-none" />
+                </>
+              )}
+            </div>
 
           <div className="flex flex-col mt-6 flex-1">
             <h4 className="text-base font-serif italic text-zinc-200">{activeVideo.title || title}</h4>
@@ -1448,6 +1503,7 @@ export default function PlayableAddon({
           </div>
         </div>
       );
+    }
 
     default:
       return null;
