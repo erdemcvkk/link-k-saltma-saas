@@ -226,7 +226,7 @@ export default async function AddonPage({
           {/* Profile details */}
           <div className="flex flex-col items-center -mt-12 px-6 mb-6 relative z-10">
             <div className="w-24 h-24 bg-white rounded-full border-4 border-white overflow-hidden shadow-lg">
-              <img src={parsedConfig.storeAvatarUrl || user.profile.avatarUrl || "/placeholder.png"} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.png" }} />
+              <img src={parsedConfig.storeAvatarUrl || user.profile.avatarUrl || "/placeholder.png"} className="w-full h-full object-cover" />
             </div>
             <h1 className="text-lg font-black mt-3 text-slate-800">{parsedConfig.storeUsername || ("@" + user.username)}</h1>
             <p className="text-xs text-slate-500 font-bold tracking-tight mt-1">{parsedConfig.storeBio || user.profile.bio || "C-Level Executive Consultant"}</p>
