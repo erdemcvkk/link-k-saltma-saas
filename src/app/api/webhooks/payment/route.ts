@@ -57,7 +57,6 @@ export async function POST(req: Request) {
     if (moduleId === "BOOKING") defaultTheme = "minimalist";
     if (moduleId === "NEWSLETTER") defaultTheme = "glassmorphism";
     if (moduleId === "QA") defaultTheme = "dark-drill";
-    if (moduleId === "DONATION") defaultTheme = "classic";
     if (moduleId === "NEO_BRUTAL") defaultTheme = "neo-brutalism";
     if (moduleId === "ORGANIC") defaultTheme = "organic-earth";
     if (moduleId === "RETRO") defaultTheme = "retro-arcade";

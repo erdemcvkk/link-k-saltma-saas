@@ -63,18 +63,13 @@ export default function PluginsClient({
       case "VINYL_RETRO": return lang === "tr" ? "Retro Plak Çalar" : "Retro Vinyl Player";
       case "GLASS_AUDIO": return lang === "tr" ? "Modern Cam Efekti" : "Modern Glass Effect";
       case "NEON_CYBERPUNK": return lang === "tr" ? "Neon Cyberpunk Player" : "Neon Cyberpunk Player";
-      case "MINIMAL_LIGHT_AUDIO": return lang === "tr" ? "Minimalist Light Player" : "Minimalist Light Player";
       case "MUSIC_PODCAST": return lang === "tr" ? "Müzik & Podcast Çalar" : "Music & Podcast Player";
       case "PORTFOLIO_GALLERY": return lang === "tr" ? "Portfolyo & Galeri" : "Portfolio & Gallery";
       case "COUNTDOWN_LAUNCH": return lang === "tr" ? "Geri Sayım & Lansman" : "Countdown & Launch";
       case "PREMIUM_VIDEO": return lang === "tr" ? "Premium Video" : "Premium Video";
-      case "TESTIMONIALS": return lang === "tr" ? "Müşteri Yorumları" : "Testimonials";
       case "FAQ": return lang === "tr" ? "Sıkça Sorulan Sorular" : "FAQ";
       case "WEB3_NFT": return lang === "tr" ? "Web3 NFT Vitrini" : "Web3 NFT Gallery";
-      case "EDITORIAL_LUX": return lang === "tr" ? "Editoryal Vitrin" : "Editorial Showcase";
-      case "GAMER_HUB": return lang === "tr" ? "Oyuncu Platformu" : "Gamer Hub";
       case "CORP_EXEC": return lang === "tr" ? "Kurumsal Yönetici Kartı" : "Corporate Executive Card";
-      case "DONATION": return lang === "tr" ? "Dijital Kahve İkramı" : "Coffee Donation";
       case "MINI_STORE": return lang === "tr" ? "Mini Mağaza" : "Mini Store";
       case "NEO_BRUTAL": return lang === "tr" ? "Neo Brutalism Vitrin" : "Neo Brutalism Gallery";
       case "ORGANIC": return lang === "tr" ? "Doğal Tasarım Vitrin" : "Organic Showcase";
@@ -174,12 +169,9 @@ export default function PluginsClient({
     if (type === "BOOKING") return "booking";
     if (type === "NEWSLETTER") return "newsletter";
     if (type === "QA") return "qa";
-    if (type === "DONATION") return "donation";
     if (type === "PREMIUM_CREATOR") return "creator-store";
     if (type === "PREMIUM_VIDEO") return "masterclass";
     if (type === "WEB3_NFT") return "web3-nft";
-    if (type === "EDITORIAL_LUX") return "editorial";
-    if (type === "GAMER_HUB") return "gamer-hub";
     if (type === "CORP_EXEC") return "corporate";
     if (type === "RETRO_CASSETTE") return "retro-cassette";
     if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
@@ -190,11 +182,9 @@ export default function PluginsClient({
     if (type === "VINYL_RETRO") return "vinyl-player";
     if (type === "GLASS_AUDIO") return "glass-audio";
     if (type === "NEON_CYBERPUNK") return "neon-player";
-    if (type === "MINIMAL_LIGHT_AUDIO") return "minimal-audio";
     if (type === "MUSIC_PODCAST") return "music-podcast";
     if (type === "PORTFOLIO_GALLERY") return "portfolio-gallery";
     if (type === "COUNTDOWN_LAUNCH") return "countdown";
-    if (type === "TESTIMONIALS") return "testimonials";
     return type.toLowerCase();
   };
 

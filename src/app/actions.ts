@@ -1884,7 +1884,6 @@ export async function purchaseAddon(userId: string, addonType: string) {
   if (addonType === "BOOKING") defaultTheme = "minimalist";
   if (addonType === "NEWSLETTER") defaultTheme = "glassmorphism";
   if (addonType === "QA") defaultTheme = "dark-drill";
-  if (addonType === "DONATION") defaultTheme = "classic";
   if (addonType === "NEO_BRUTAL") defaultTheme = "neo-brutalism";
   if (addonType === "ORGANIC") defaultTheme = "organic-earth";
   if (addonType === "RETRO") defaultTheme = "retro-arcade";
@@ -1892,8 +1891,6 @@ export async function purchaseAddon(userId: string, addonType: string) {
   if (addonType === "Y2K") defaultTheme = "y2k-holographic";
   if (addonType === "PREMIUM_CREATOR") defaultTheme = "premium-creator";
   if (addonType === "WEB3_NFT") defaultTheme = "dark-drill";
-  if (addonType === "EDITORIAL_LUX") defaultTheme = "minimalist";
-  if (addonType === "GAMER_HUB") defaultTheme = "vibrant-pop";
   if (addonType === "CORP_EXEC") defaultTheme = "classic";
 
   // Deactivate all other addons first to ensure only 1 active addon exists

@@ -38,21 +38,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  }
  }, []);
 
- const getDefaultTheme = (type: string) => {
-  switch (type) {
-  case "NEO_BRUTAL": return "neo-brutalism";
-  case "ORGANIC": return "organic-earth";
-  case "RETRO": return "retro-arcade";
-  case "ACADEMIA": return "dark-academia";
-  case "Y2K": return "y2k-holographic";
-  case "PREMIUM_CREATOR": return "premium-creator";
-  case "WEB3_NFT": return "dark-drill";
-  case "EDITORIAL_LUX": return "minimalist";
-  case "GAMER_HUB": return "vibrant-pop";
-  case "CORP_EXEC": return "classic";
-  default: return "classic";
-  }
-  };
+ 
   const [configData, setConfigData] = useState<any>(() => {
     try {
       if (addon.settings) {
@@ -68,40 +54,49 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   const [newProdPrice, setNewProdPrice] = useState("");
   const [newProdImageUrl, setNewProdImageUrl] = useState("");
   const [newProdBuyLink, setNewProdBuyLink] = useState("");
- const getDefaultSlug = (type: string) => {
- if (!type) return "store";
- if (type === "MINI_STORE") return "store";
- if (type === "NEO_BRUTAL") return "neo-brutal";
- if (type === "ORGANIC") return "organic";
- if (type === "RETRO") return "retro";
- if (type === "ACADEMIA") return "academia";
- if (type === "Y2K") return "y2k";
- if (type === "BOOKING") return "booking";
- if (type === "NEWSLETTER") return "newsletter";
- if (type === "QA") return "qa";
- if (type === "DONATION") return "donation";
- if (type === "PREMIUM_CREATOR") return "creator-store";
- if (type === "PREMIUM_VIDEO") return "masterclass";
- if (type === "WEB3_NFT") return "web3-nft";
- if (type === "EDITORIAL_LUX") return "editorial";
- if (type === "GAMER_HUB") return "gamer-hub";
- if (type === "CORP_EXEC") return "corporate";
- if (type === "RETRO_CASSETTE") return "retro-cassette";
-  if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
-  if (type === "VINTAGE_RADIO") return "vintage-radio";
-  if (type === "FUTURE_WAVE") return "future-wave";
-  if (type === "CINEMATIC_THEATER") return "cinematic-theater";
-  if (type === "SPOTIFY_CLASSIC") return "spotify-player";
- if (type === "VINYL_RETRO") return "vinyl-player";
- if (type === "GLASS_AUDIO") return "glass-audio";
- if (type === "NEON_CYBERPUNK") return "neon-player";
- if (type === "MINIMAL_LIGHT_AUDIO") return "minimal-audio";
- if (type === "MUSIC_PODCAST") return "music-podcast";
- if (type === "PORTFOLIO_GALLERY") return "portfolio-gallery";
- if (type === "COUNTDOWN_LAUNCH") return "countdown";
- if (type === "TESTIMONIALS") return "testimonials";
- return type.toLowerCase();
- };
+  const getDefaultTheme = (type: string) => {
+    switch (type) {
+      case "NEO_BRUTAL": return "neo-brutalism";
+      case "ORGANIC": return "organic-earth";
+      case "RETRO": return "retro-arcade";
+      case "ACADEMIA": return "dark-academia";
+      case "Y2K": return "y2k-holographic";
+      case "PREMIUM_CREATOR": return "premium-creator";
+      case "WEB3_NFT": return "dark-drill";
+      case "CORP_EXEC": return "classic";
+      default: return "classic";
+    }
+  };
+
+  const getDefaultSlug = (type: string) => {
+    if (!type) return "store";
+    if (type === "MINI_STORE") return "store";
+    if (type === "NEO_BRUTAL") return "neo-brutal";
+    if (type === "ORGANIC") return "organic";
+    if (type === "RETRO") return "retro";
+    if (type === "ACADEMIA") return "academia";
+    if (type === "Y2K") return "y2k";
+    if (type === "BOOKING") return "booking";
+    if (type === "NEWSLETTER") return "newsletter";
+    if (type === "QA") return "qa";
+    if (type === "PREMIUM_CREATOR") return "creator-store";
+    if (type === "PREMIUM_VIDEO") return "masterclass";
+    if (type === "WEB3_NFT") return "web3-nft";
+    if (type === "CORP_EXEC") return "corporate";
+    if (type === "RETRO_CASSETTE") return "retro-cassette";
+    if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
+    if (type === "VINTAGE_RADIO") return "vintage-radio";
+    if (type === "FUTURE_WAVE") return "future-wave";
+    if (type === "CINEMATIC_THEATER") return "cinematic-theater";
+    if (type === "SPOTIFY_CLASSIC") return "spotify-player";
+    if (type === "VINYL_RETRO") return "vinyl-player";
+    if (type === "GLASS_AUDIO") return "glass-audio";
+    if (type === "NEON_CYBERPUNK") return "neon-player";
+    if (type === "MUSIC_PODCAST") return "music-podcast";
+    if (type === "PORTFOLIO_GALLERY") return "portfolio-gallery";
+    if (type === "COUNTDOWN_LAUNCH") return "countdown";
+    return type.toLowerCase();
+  };
  const activeSlug = configData.customSlug || getDefaultSlug(addon?.addonType);
 
 
@@ -853,14 +848,12 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     case "Y2K":
     case "PREMIUM_CREATOR":
     case "WEB3_NFT":
-    case "EDITORIAL_LUX":
-    case "GAMER_HUB":
+
     case "CORP_EXEC": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
  case "PREMIUM_VIDEO": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Premium Video" : "Premium Video" };
  case "BOOKING": return { icon: <Calendar className="h-5 w-5" />, title: lang === "tr" ? "Randevu" : "Booking" };
  case "QA": return { icon: <FileQuestion className="h-5 w-5" />, title: lang === "tr" ? "Soru-Cevap" : "Q&A" };
  case "NEWSLETTER": return { icon: <Mail className="h-5 w-5" />, title: lang === "tr" ? "Bülten" : "Newsletter" };
- case "DONATION": return { icon: <Heart className="h-5 w-5" />, title: lang === "tr" ? "Bağış" : "Donation" };
  case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === "tr" ? "Geri Sayım" : "Countdown" };
  case "PORTFOLIO": return { icon: <Briefcase className="h-5 w-5" />, title: lang === "tr" ? "Portfolyo" : "Portfolio" };
  case "FAQ": return { icon: <HelpCircle className="h-5 w-5" />, title: "FAQ" };
@@ -875,11 +868,11 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "VINYL_RETRO": return { icon: <Music className="h-5 w-5" />, title: "Retro Plak Çalar" };
   case "GLASS_AUDIO": return { icon: <Music className="h-5 w-5" />, title: "Modern Cam Efekti" };
   case "NEON_CYBERPUNK": return { icon: <Music className="h-5 w-5" />, title: "Neon Cyberpunk Player" };
-  case "MINIMAL_LIGHT_AUDIO": return { icon: <Music className="h-5 w-5" />, title: "Minimalist Light Player" };
+
   case "MUSIC_PODCAST": return { icon: <Music className="h-5 w-5" />, title: "Müzik & Podcast Çalar" };
   case "PORTFOLIO_GALLERY": return { icon: <Image className="h-5 w-5" />, title: "Portfolyo & Galeri" };
   case "COUNTDOWN_LAUNCH": return { icon: <Clock className="h-5 w-5" />, title: "Geri Sayım & Lansman" };
-  case "TESTIMONIALS": return { icon: <MessageCircle className="h-5 w-5" />, title: "Müşteri Yorumları" };
+
   default: return { icon: <Store className="h-5 w-5" />, title: "Add-on" };
  }
  };
@@ -935,10 +928,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  case "ACADEMIA":
  case "Y2K":
  case "PREMIUM_CREATOR":
- case "WEB3_NFT":
- case "EDITORIAL_LUX":
- case "GAMER_HUB":
- specificFields = (
+ case "WEB3_NFT":  specificFields = (
  <>
  <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
  <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
@@ -1283,16 +1273,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   </>
   );
   break;
- case "DONATION":
- specificFields = (
- <>
- {renderInput("title", lang === "tr" ? "Başlık" : "Title", lang === "tr" ? "Bana Kahve Ismarla" : "Buy me a coffee")}
- {renderTextarea("thankYouMsg", lang === "tr" ? "Açıklama / Teşekkür Mesajı" : "Description / Thank You", lang === "tr" ? "Desteğiniz için teşekkürler!" : "Thank you for your support!")}
- {renderInput("platformUrl", lang === "tr" ? "Bağış Platformu Linki (Örn: Patreon)" : "Donation URL", "https://patreon.com/yourname")}
- {renderInput("buttonText", lang === "tr" ? "Buton Yazısı" : "Button Text", lang === "tr" ? "Destek Ol" : "Support Me")}
- </>
- );
- break;
+ 
  case "COUNTDOWN":
  specificFields = (
  <>
@@ -1353,9 +1334,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "SPOTIFY_CLASSIC":
   case "VINYL_RETRO":
  case "GLASS_AUDIO":
- case "NEON_CYBERPUNK":
- case "MINIMAL_LIGHT_AUDIO":
- case "MUSIC_PODCAST":
+ case "NEON_CYBERPUNK":  case "MUSIC_PODCAST":
  specificFields = (
  <>
  <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
@@ -1447,24 +1426,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  );
  break;
 
- // ── TESTIMONIALS ──
- case "TESTIMONIALS":
- specificFields = (
- <>
- <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
- <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
- <MessageCircle className="h-4 w-4" />
- {lang === "tr" ? "Yorum Modülü Ayarları" : "Testimonial Settings"}
- </h4>
- {renderInput("title", lang === "tr" ? "Modül Başlığı" : "Module Title", lang === "tr" ? "Müşteri Yorumları" : "Client Testimonials")}
- {renderTextarea("description", lang === "tr" ? "Açıklama" : "Description", lang === "tr" ? "Müşterilerimizin görüşleri." : "What our clients say.")}
- {renderInput("username", lang === "tr" ? "Görünen Kullanıcı Adı" : "Display Username", "@username")}
- {renderInput("bio", lang === "tr" ? "Kısa Biyografi" : "Short Bio", "E-Commerce Business Consultant")}
- </div>
- {renderTestimonialsEditor()}
- </>
- );
- break;
+ 
 
  default:
  specificFields = (
@@ -1483,9 +1445,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   addon.addonType !== "ACADEMIA" && 
   addon.addonType !== "Y2K" &&
   addon.addonType !== "PREMIUM_CREATOR" &&
-  addon.addonType !== "WEB3_NFT" &&
-  addon.addonType !== "EDITORIAL_LUX" &&
-  addon.addonType !== "GAMER_HUB" ? renderSlugAndAvatar() : null}
+  addon.addonType !== "WEB3_NFT" ? renderSlugAndAvatar() : null}
  {specificFields}
  </div>
  );
@@ -1501,8 +1461,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "Y2K":
   case "PREMIUM_CREATOR":
   case "WEB3_NFT":
-  case "EDITORIAL_LUX":
-  case "GAMER_HUB":
+
   return (
   <div className="w-full h-full relative overflow-hidden flex flex-col">
   <StorefrontPreview 
@@ -1677,18 +1636,18 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "VINYL_RETRO":
     case "GLASS_AUDIO":
     case "NEON_CYBERPUNK":
-    case "MINIMAL_LIGHT_AUDIO":
+  
     case "MUSIC_PODCAST":
     case "PORTFOLIO_GALLERY":
     case "COUNTDOWN_LAUNCH":
-    case "TESTIMONIALS":
+
       {
         const type = addon.addonType;
         const displayAvatar = configData.avatarUrl || addon.settings?.avatarUrl || "";
         const displayUsername = configData.username || addon.settings?.username || ("@" + username);
         const displayBio = configData.bio || addon.settings?.bio || "";
-        const displayTitle = configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "FUTURE_WAVE" ? "Future Synthwave Video" : type === "CINEMATIC_THEATER" ? "Sinematik Tiyatro Video" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MINIMAL_LIGHT_AUDIO" ? "Minimalist Light Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "Müşteri Yorumları");
-        const displayDesc = configData.description || (type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "MINIMAL_DARK_AUDIO" ? "Siyahın asil tonunda ultra modern tasarım." : type === "VINTAGE_RADIO" ? "Klasik ahşap radyo kadranı tasarımı." : type === "FUTURE_WAVE" ? "Neon pembe ve camgöbeği synthwave video tasarımı." : type === "CINEMATIC_THEATER" ? "Kırmızı kadife perdeli sinematik video tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MINIMAL_LIGHT_AUDIO" ? "Ferah, aydınlık ve dikkat dağıtmayan net tasarım." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "Referanslarınızı ve 5 yıldızlı değerlendirmelerinizi öne çıkararak güven inşa edin.");
+        const displayTitle = configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "FUTURE_WAVE" ? "Future Synthwave Video" : type === "CINEMATIC_THEATER" ? "Sinematik Tiyatro Video" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "");
+        const displayDesc = configData.description || (type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "MINIMAL_DARK_AUDIO" ? "Siyahın asil tonunda ultra modern tasarım." : type === "VINTAGE_RADIO" ? "Klasik ahşap radyo kadranı tasarımı." : type === "FUTURE_WAVE" ? "Neon pembe ve camgöbeği synthwave video tasarımı." : type === "CINEMATIC_THEATER" ? "Kırmızı kadife perdeli sinematik video tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "");
 
         return (
           <div className="w-full h-full bg-zinc-950 flex flex-col justify-between overflow-y-auto no-scrollbar">

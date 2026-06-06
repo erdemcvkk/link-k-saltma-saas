@@ -135,38 +135,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     ]
   },
   { 
-    id: "EDITORIAL_LUX", 
-    name: "Editöryel & Lüks Vitrin", 
-    desc: "Dergi kapağı zarafetinde, lüks ve moda markaları için ultra elit tasarım.", 
-    color: "bg-[#0f172a]",
-    theme: "minimalist",
-    price: "99",
-    username: "@maison.luxury",
-    bio: "High-End Fashion Label",
-    avatarUrl: "/placeholder.png",
-    category: "Premium Temalar",
-    mockProducts: [
-      { id: "e1", title: "Summer Collection Catalog", type: "PDF", price: "99", imageUrl: "/placeholder.png" },
-      { id: "e2", title: "Private Styling Session", type: "Toplantı", price: "99", imageUrl: "/placeholder.png" }
-    ]
-  },
-  { 
-    id: "GAMER_HUB", 
-    name: "Canlı & Popüler Vitrin", 
-    desc: "Yayıncılar, gamerlar ve esporcular için dinamik ve enerjik vitrin.", 
-    color: "bg-green-500",
-    theme: "vibrant-pop",
-    price: "99",
-    username: "@phoenix.gg",
-    bio: "Twitch Partner & Pro Gamer",
-    avatarUrl: "/placeholder.png",
-    category: "Premium Temalar",
-    mockProducts: [
-      { id: "g1", title: "Gamer Setup Presets", type: "Şablon", price: "99", imageUrl: "/placeholder.png" },
-      { id: "g2", title: "1-on-1 Coaching Session", type: "Koçluk", price: "99", imageUrl: "/placeholder.png" }
-    ]
-  },
-  { 
     id: "PREMIUM_CREATOR", 
     name: "Premium Creator Vitrini", 
     desc: "Dijital ürünlerinizi en üst düzey lüks ve zarafetle sunan yaratıcı şablon.", 
@@ -235,19 +203,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     mockProducts: []
   },
   { 
-    id: "TESTIMONIALS", 
-    name: "Müşteri Yorumları", 
-    desc: "Referanslarınızı ve 5 yıldızlı değerlendirmelerinizi öne çıkararak güven inşa edin.", 
-    color: "bg-teal-500",
-    theme: "classic",
-    price: "99",
-    username: "@trust.reviews",
-    bio: "E-Commerce Business Consultant",
-    avatarUrl: "/placeholder.png",
-    category: "Etkileşim & Araçlar",
-    mockProducts: []
-  },
-  { 
     id: "SPOTIFY_CLASSIC", 
     name: "Spotify Classic Player", 
     desc: "Orijinal ve ikonik Spotify görünümünde parça veya çalma listesi oynatıcısı.", 
@@ -295,19 +250,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     price: "99",
     username: "@cyberpunk.wave",
     bio: "Synthwave & Cyberpunk Creator",
-    avatarUrl: "/placeholder.png",
-    category: "Müzik & Audio",
-    mockProducts: []
-  },
-  { 
-    id: "MINIMAL_LIGHT_AUDIO", 
-    name: "Minimalist Light Player", 
-    desc: "Ferah, aydınlık ve dikkat dağıtmayan net tasarımda müzik oynatıcı.", 
-    color: "bg-slate-350",
-    theme: "classic",
-    price: "99",
-    username: "@clean.acoustic",
-    bio: "Acoustic & Folk Sessions",
     avatarUrl: "/placeholder.png",
     category: "Müzik & Audio",
     mockProducts: []
@@ -370,22 +312,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     category: "Etkileşim & Araçlar",
     mockProducts: [
       { id: "n1", title: "Haftalık Tasarım Bülteni", type: "Abonelik", price: "99", imageUrl: "/placeholder.png" },
-    ]
-  },
-  { 
-    id: "DONATION", 
-    name: "Dijital Kahve İkramı", 
-    desc: "Takipçilerinizden destek alın ve dijital kahve ısmarlamalarını sağlayın.", 
-    color: "bg-blue-500",
-    theme: "classic",
-    price: "99",
-    username: "@pixelcraft.design",
-    bio: "Premium Dijital Ürün Mağazası",
-    avatarUrl: "/placeholder.png",
-    category: "Satış & Gelir",
-    mockProducts: [
-      { id: "d1", title: "Bana Bir Kahve Ismarla", type: "Destek", price: "99", imageUrl: "/placeholder.png" },
-      { id: "d2", title: "Büyük Destek", type: "Destek", price: "99", imageUrl: "/placeholder.png" },
     ]
   },
   { 
@@ -800,34 +726,7 @@ export default function EklentilerClient({ products, settings, userId = null, db
       </div>
     </div>
   </div>
-  ) : addon.id === "MINIMAL_LIGHT_AUDIO" ? (
-  <div className="w-full h-full bg-slate-50 flex flex-col p-6 text-slate-800 relative z-0">
-    <div className="flex flex-col items-center mt-6 mb-4">
-      <div className="w-20 h-20 bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm">
-        <img src={addon.avatarUrl} className="w-full h-full object-cover" />
-      </div>
-      <span className="text-xs font-bold mt-2 text-slate-800">{addon.username}</span>
-      <p className="text-[9px] text-slate-500 mt-0.5">{addon.bio}</p>
-    </div>
-    
-    {/* Minimalist Light Card */}
-    <div className="bg-white shadow-sm border border-slate-150 rounded-xl p-4 mt-2 space-y-3">
-      <div className="flex items-center justify-between">
-        <div>
-          <h4 className="text-xs font-semibold text-slate-800">Clean Acoustic Session</h4>
-          <p className="text-[9px] text-slate-500">Live Recording</p>
-        </div>
-        <button className="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center border-0 shadow-sm cursor-pointer">
-          <span className="text-xs ml-0.5">▶</span>
-        </button>
-      </div>
-      
-      {/* Light Progress Bar */}
-      <div className="w-full h-0.5 bg-slate-100 rounded-full overflow-hidden">
-        <div className="w-1/2 h-full bg-slate-400 rounded-full"></div>
-      </div>
-    </div>
-  </div>
+
   ) : addon.id === "MUSIC_PODCAST" ? (
   <div className="w-full h-full bg-gradient-to-br from-purple-900 to-indigo-950 flex flex-col p-6 text-white relative z-0">
     <div className="flex flex-col items-center mt-6 mb-4">
@@ -1017,31 +916,7 @@ export default function EklentilerClient({ products, settings, userId = null, db
       </div>
     </div>
   </div>
-  ) : addon.id === "TESTIMONIALS" ? (
-  <div className="w-full h-full bg-teal-50 flex flex-col p-6 text-zinc-800 relative z-0">
-    <div className="flex flex-col items-center mt-6 mb-4">
-      <div className="w-20 h-20 bg-zinc-200 rounded-2xl overflow-hidden border border-teal-200">
-        <img src={addon.avatarUrl} className="w-full h-full object-cover" />
-      </div>
-      <span className="text-xs font-bold mt-2 text-teal-800">{addon.username}</span>
-      <p className="text-[10px] text-teal-650 mt-0.5">{addon.bio}</p>
-    </div>
-    
-    <div className="bg-white rounded-2xl p-4 mt-2 border border-zinc-100 shadow-sm space-y-2">
-      <div className="flex gap-0.5 text-yellow-400">
-        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-      </div>
-      <p className="text-[10px] text-zinc-600 italic leading-relaxed">
-        "Harika bir ürün, kesinlikle tavsiye ediyorum! Hayatımı çok kolaylaştırdı."
-      </p>
-      <div className="flex items-center gap-1.5">
-        <div className="w-5 h-5 rounded-full bg-zinc-300 overflow-hidden">
-          <img src="/placeholder.png" className="w-full h-full object-cover" />
-        </div>
-        <span className="text-[9px] font-bold text-zinc-700">Elif Y.</span>
-      </div>
-    </div>
-  </div>
+
   ) : addon.id === "FAQ" ? (
   <div className="w-full h-full bg-[#fcfcfd] flex flex-col p-6 text-zinc-800 relative z-0">
     <div className="bg-white rounded-2xl p-4 mt-8 border border-zinc-200 shadow-md">
@@ -1077,46 +952,6 @@ export default function EklentilerClient({ products, settings, userId = null, db
             ▲
           </div>
         </div>
-      </div>
-    </div>
-  ) : addon.id === "EDITORIAL_LUX" ? (
-    <div className="w-full h-full bg-[#FDFBF7] flex flex-col p-6 text-slate-900 relative z-0">
-      <div className="flex flex-col items-center mt-8 mb-4">
-        <div className="w-20 h-28 bg-zinc-200 rounded-t-full rounded-b-md overflow-hidden border border-slate-200">
-          <img src={addon.avatarUrl} className="w-full h-full object-cover" />
-        </div>
-        <span className="text-sm font-serif italic mt-3 tracking-wide">{addon.username}</span>
-        <p className="text-[8px] tracking-[0.2em] text-slate-500 uppercase mt-1">{addon.bio}</p>
-      </div>
-      
-      <div className="border border-slate-900 p-4 mt-auto space-y-2 text-center bg-transparent">
-        <h4 className="text-xs font-serif tracking-wide text-slate-800">L'Édition Estivale</h4>
-        <button className="w-full py-2 bg-transparent border border-slate-900 text-slate-900 font-serif text-[10px] tracking-widest uppercase hover:bg-slate-900 hover:text-white transition-colors cursor-pointer">
-          Découvrir
-        </button>
-      </div>
-    </div>
-  ) : addon.id === "GAMER_HUB" ? (
-    <div className="w-full h-full bg-zinc-900 flex flex-col p-6 text-white relative z-0">
-      <div className="flex flex-col items-center mt-6 mb-4">
-        <div className="w-20 h-20 bg-zinc-800 rounded-xl border-4 border-green-500 overflow-hidden shadow-[0_0_15px_rgba(34,197,94,0.3)]">
-          <img src={addon.avatarUrl} className="w-full h-full object-cover" />
-        </div>
-        <span className="text-xs font-black mt-2 text-green-400 tracking-wider uppercase">{addon.username}</span>
-        <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-tight mt-0.5">{addon.bio}</p>
-      </div>
-      
-      <div className="bg-zinc-950 border-2 border-zinc-800 p-4 mt-2 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-ping"></span>
-            <span className="text-[10px] font-black text-white uppercase tracking-wider">Live Now</span>
-          </div>
-          <span className="text-[9px] font-bold text-green-400">12,420 Viewers</span>
-        </div>
-        <button className="w-full py-2 bg-green-500 hover:bg-green-600 text-black font-black uppercase text-[10px] tracking-wider transition-colors border-0 cursor-pointer">
-          Watch Stream
-        </button>
       </div>
     </div>
   ) : addon.id === "CORP_EXEC" ? (

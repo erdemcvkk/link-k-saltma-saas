@@ -374,14 +374,7 @@ export default function PlayableAddon({
         subtextClass = "text-[9px] uppercase tracking-wide text-pink-400 truncate";
         durationClass = "text-[9px] text-cyan-500/80 font-mono ml-auto";
         break;
-      case "MINIMAL_LIGHT_AUDIO":
-        containerClass = "mt-4 bg-white border border-slate-200 rounded-2xl p-3 max-h-48 overflow-y-auto no-scrollbar shadow-sm";
-        itemClass = "flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors";
-        activeItemClass = "bg-slate-100 border-l-4 border-slate-700";
-        textClass = "text-xs font-bold text-slate-800 truncate";
-        subtextClass = "text-[10px] text-slate-500 truncate";
-        durationClass = "text-[10px] text-slate-400 font-mono ml-auto";
-        break;
+
       case "MUSIC_PODCAST":
         containerClass = "mt-4 bg-purple-950/40 backdrop-blur-sm border border-purple-500/25 rounded-2xl p-3 max-h-48 overflow-y-auto no-scrollbar";
         itemClass = "flex items-center gap-3 p-2.5 rounded-xl hover:bg-purple-900/30 cursor-pointer transition-colors";
@@ -769,76 +762,7 @@ export default function PlayableAddon({
         </div>
       );
 
-    case "MINIMAL_LIGHT_AUDIO":
-      return (
-        <div className="w-full h-full bg-slate-50 flex flex-col p-6 text-slate-800 relative z-0">
-          {isDirectAudio && (
-            <audio
-              ref={audioRef}
-              src={url}
-              onTimeUpdate={() => audioRef.current && setCurrentTime(audioRef.current.currentTime)}
-              onLoadedMetadata={() => audioRef.current && setDuration(audioRef.current.duration)}
-              onEnded={() => setIsPlaying(false)}
-            />
-          )}
 
-          <div className="flex flex-col items-center mt-8 mb-6">
-            <div className="w-20 h-20 bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm">
-              <img
-                src={activeTrack.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1516280440503-66f837ce5b97?w=200&q=80"}
-                className="w-full h-full object-cover"
-                alt="Cover"
-              />
-            </div>
-            <span className="text-sm font-bold mt-3 text-slate-800">{username}</span>
-            <p className="text-xs text-slate-500 mt-1">{bio}</p>
-          </div>
-
-          <div className="bg-white shadow-sm border border-slate-150 rounded-xl p-4 mt-2 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-sm font-semibold text-slate-800 truncate max-w-[180px]">
-                  {activeTrack.trackName || title}
-                </h4>
-                <p className="text-[10px] text-slate-500 mt-1 truncate max-w-[180px]">
-                  {activeTrack.artistName || desc}
-                </p>
-              </div>
-
-              {!mediaEmbed && renderThemePlayButton(config.accentColor || "#1e293b", "w-10 h-10", 14)}
-            </div>
-
-            {mediaEmbed ? mediaEmbed : (
-              <div className="space-y-2">
-                <div className="w-full h-0.5 bg-slate-100 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: `${progressPercent}%`,
-                      backgroundColor: config.accentColor || "#64748b",
-                    }}
-                  />
-                </div>
-                {isDirectAudio && (
-                  <div className="flex justify-between text-[8px] text-slate-400 font-mono">
-                    <span>{formatTime(currentTime)}</span>
-                    <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
-                  </div>
-                )}
-                {url && !isDirectAudio && (
-                  <button
-                    onClick={handlePlayPause}
-                    className="text-[10px] text-slate-600 font-bold hover:underline"
-                  >
-                    Bağlantıyı Aç ↗
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-          {renderPlaylist("MINIMAL_LIGHT_AUDIO")}
-        </div>
-      );
 
     case "MUSIC_PODCAST":
       return (
@@ -1087,64 +1011,6 @@ export default function PlayableAddon({
                   {config.buttonText}
                 </a>
               )}
-            </div>
-          </div>
-        );
-      }
-
-    case "TESTIMONIALS":
-      {
-        const testimonials =
-          config.testimonials && config.testimonials.length > 0
-            ? config.testimonials
-            : [
-                {
-                  name: "Elif Y.",
-                  text: desc,
-                  rating: 5,
-                  avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
-                },
-              ];
-        return (
-          <div className="w-full h-full bg-teal-50 flex flex-col p-6 text-zinc-800 relative z-0">
-            <div className="flex flex-col items-center mt-8 mb-6">
-              <div className="w-20 h-20 bg-zinc-200 rounded-2xl overflow-hidden border border-teal-200">
-                <img
-                  src={avatarUrl || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80"}
-                  className="w-full h-full object-cover"
-                  alt="Avatar"
-                />
-              </div>
-              <span className="text-sm font-bold mt-3 text-teal-800">{username}</span>
-              <p className="text-xs text-teal-600 mt-1">{bio}</p>
-            </div>
-
-            <div className="space-y-3">
-              {testimonials.map((t: any, idx: number) => (
-                <div key={idx} className="bg-white rounded-2xl p-5 border border-zinc-100 shadow-sm space-y-3">
-                  <div className="flex gap-0.5 text-yellow-400 text-sm">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <span
-                        key={s}
-                        className={s <= (t.rating || 5) ? "text-yellow-400" : "text-zinc-200"}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-                  <p className="text-[11px] text-zinc-600 italic leading-relaxed">"{t.text || "Harika bir hizmet!"}"</p>
-                  <div className="flex items-center gap-2 pt-1 border-t border-zinc-100">
-                    <div className="w-6 h-6 rounded-full bg-zinc-300 overflow-hidden">
-                      {t.avatarUrl ? (
-                        <img src={t.avatarUrl} className="w-full h-full object-cover" alt="avatar" />
-                      ) : (
-                        <div className="w-full h-full bg-teal-200"></div>
-                      )}
-                    </div>
-                    <span className="text-[10px] font-bold text-zinc-700">{t.name || "Anonim"}</span>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         );

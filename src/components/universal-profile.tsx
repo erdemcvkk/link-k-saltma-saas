@@ -584,7 +584,6 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     if (t === "BOOKING") return "booking";
     if (t === "NEWSLETTER") return "newsletter";
     if (t === "QA") return "qa";
-    if (t === "DONATION") return "donation";
     if (t === "PREMIUM_CREATOR") return "creator-store";
     if (t === "RETRO_CASSETTE") return "retro-cassette";
     if (t === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
@@ -665,23 +664,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
           </div>
         );
       }
-    case "DONATION":
-      return (
-        <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-pink-500/10 flex items-center justify-center shrink-0">
-              <Heart className="h-5 w-5 text-pink-500" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-slate-800">{configData.title || "Bana Kahve Ismarla"}</h4>
-              <p className="text-xs opacity-70 mt-0.5">{configData.thankYouMsg || "Desteğiniz için teşekkürler!"}</p>
-            </div>
-          </div>
-          <div className={btnClassName}>
-            {configData.buttonText || "Destek Ol"}
-          </div>
-        </CardWrapper>
-      );
+
     case "NEWSLETTER":
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
@@ -810,7 +793,6 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     case "VINYL_RETRO":
     case "GLASS_AUDIO":
     case "NEON_CYBERPUNK":
-    case "MINIMAL_LIGHT_AUDIO":
     case "MUSIC_PODCAST":
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
@@ -820,7 +802,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
                 <Music className="h-5 w-5 text-purple-650" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-slate-800">{configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MINIMAL_LIGHT_AUDIO" ? "Minimalist Light Player" : "Müzik & Podcast Çalar")}</h4>
+                <h4 className="text-sm font-bold text-slate-800">{configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : "Müzik & Podcast Çalar")}</h4>
                 <p className="text-xs opacity-70 mt-0.5 truncate max-w-[200px]">{configData.description || "Müziklerimi dinlemek için tıklayın."}</p>
               </div>
             </div>
@@ -864,23 +846,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
           </div>
         </CardWrapper>
       );
-    case "TESTIMONIALS":
-      return (
-        <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-teal-500/10 flex items-center justify-center shrink-0">
-              <MessageCircle className="h-5 w-5 text-teal-500" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-slate-800">{configData.title || "Müşteri Yorumları"}</h4>
-              <p className="text-xs opacity-70 mt-0.5">{configData.description || "Müşterilerimizin yorumlarını okuyun."}</p>
-            </div>
-          </div>
-          <div className={btnClassName}>
-            {configData.buttonText || "Yorumları Gör"}
-          </div>
-        </CardWrapper>
-      );
+
     case "MINI_STORE":
     case "NEO_BRUTAL":
     case "ORGANIC":
@@ -889,8 +855,6 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     case "Y2K":
     case "PREMIUM_CREATOR":
     case "WEB3_NFT":
-    case "EDITORIAL_LUX":
-    case "GAMER_HUB":
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
           <div className="flex items-center gap-3">
@@ -1180,37 +1144,7 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
           </div>
         </div>
       );
-    case "MINIMAL_LIGHT_AUDIO":
-      return (
-        <div className="w-full h-full bg-slate-50 flex flex-col p-6 text-slate-800 relative z-0">
-          <div className="flex flex-col items-center mt-8 mb-6">
-            <div className="w-20 h-20 bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm">
-              <img src={config.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1516280440503-66f837ce5b97?w=200&q=80"} className="w-full h-full object-cover" />
-            </div>
-            <span className="text-sm font-bold mt-3 text-slate-800">{username}</span>
-            <p className="text-xs text-slate-500 mt-1">{bio}</p>
-          </div>
-          
-          <div className="bg-white shadow-sm border border-slate-150 rounded-xl p-4 mt-2 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-sm font-semibold text-slate-800">{config.trackName || title}</h4>
-                <p className="text-[10px] text-slate-500 mt-1">{config.artistName || desc}</p>
-              </div>
-              {!mediaEmbed && (
-                <button className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center border-0 shadow-sm cursor-pointer shrink-0">
-                  <span className="text-sm ml-0.5">▶</span>
-                </button>
-              )}
-            </div>
-            {mediaEmbed ? mediaEmbed : (
-              <div className="w-full h-0.5 bg-slate-100 rounded-full overflow-hidden">
-                <div className="w-1/2 h-full bg-slate-400 rounded-full"></div>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+
     case "MUSIC_PODCAST":
       return (
         <div className="w-full h-full bg-gradient-to-br from-purple-900 to-indigo-950 flex flex-col p-6 text-white relative z-0">
@@ -1340,38 +1274,7 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
         </div>
       );
       }
-    case "TESTIMONIALS":
-      {
-        const testimonials = config.testimonials && config.testimonials.length > 0 ? config.testimonials : [{ name: "Elif Y.", text: desc, rating: 5, avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" }];
-      return (
-        <div className="w-full h-full bg-teal-50 flex flex-col p-6 text-zinc-800 relative z-0">
-          <div className="flex flex-col items-center mt-8 mb-6">
-            <div className="w-20 h-20 bg-zinc-200 rounded-2xl overflow-hidden border border-teal-200">
-              <img src={avatarUrl || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80"} className="w-full h-full object-cover" />
-            </div>
-            <span className="text-sm font-bold mt-3 text-teal-800">{username}</span>
-            <p className="text-xs text-teal-600 mt-1">{bio}</p>
-          </div>
-          
-          <div className="space-y-3">
-            {testimonials.map((t: any, idx: number) => (
-              <div key={idx} className="bg-white rounded-2xl p-5 border border-zinc-100 shadow-sm space-y-3">
-                <div className="flex gap-0.5 text-yellow-400 text-sm">
-                  {[1,2,3,4,5].map((s) => <span key={s} className={s <= (t.rating || 5) ? "text-yellow-400" : "text-zinc-200"}>★</span>)}
-                </div>
-                <p className="text-[11px] text-zinc-600 italic leading-relaxed">"{t.text || "Harika bir hizmet!"}"</p>
-                <div className="flex items-center gap-2 pt-1 border-t border-zinc-100">
-                  <div className="w-6 h-6 rounded-full bg-zinc-300 overflow-hidden">
-                    {t.avatarUrl ? <img src={t.avatarUrl} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-teal-200"></div>}
-                  </div>
-                  <span className="text-[10px] font-bold text-zinc-700">{t.name || "Anonim"}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-      }
+
     default:
       return null;
   }

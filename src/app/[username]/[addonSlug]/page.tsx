@@ -64,12 +64,9 @@ export default async function AddonPage({
     if (type === "BOOKING") return "booking";
     if (type === "NEWSLETTER") return "newsletter";
     if (type === "QA") return "qa";
-    if (type === "DONATION") return "donation";
     if (type === "PREMIUM_CREATOR") return "creator-store";
     if (type === "PREMIUM_VIDEO") return "masterclass";
     if (type === "WEB3_NFT") return "web3-nft";
-    if (type === "EDITORIAL_LUX") return "editorial";
-    if (type === "GAMER_HUB") return "gamer-hub";
     if (type === "CORP_EXEC") return "corporate";
     if (type === "RETRO_CASSETTE") return "retro-cassette";
     if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
@@ -80,11 +77,9 @@ export default async function AddonPage({
     if (type === "VINYL_RETRO") return "vinyl-player";
     if (type === "GLASS_AUDIO") return "glass-audio";
     if (type === "NEON_CYBERPUNK") return "neon-player";
-    if (type === "MINIMAL_LIGHT_AUDIO") return "minimal-audio";
     if (type === "MUSIC_PODCAST") return "music-podcast";
     if (type === "PORTFOLIO_GALLERY") return "portfolio-gallery";
     if (type === "COUNTDOWN_LAUNCH") return "countdown";
-    if (type === "TESTIMONIALS") return "testimonials";
     return type.toLowerCase();
   }
 
@@ -109,8 +104,6 @@ export default async function AddonPage({
   case "Y2K": return "y2k-holographic";
   case "PREMIUM_CREATOR": return "premium-creator";
   case "WEB3_NFT": return "dark-drill";
-  case "EDITORIAL_LUX": return "minimalist";
-  case "GAMER_HUB": return "vibrant-pop";
   case "CORP_EXEC": return "classic";
   default: return "classic";
   }
@@ -156,9 +149,7 @@ export default async function AddonPage({
    matchingAddon.addonType === "ACADEMIA" || 
    matchingAddon.addonType === "Y2K" ||
    matchingAddon.addonType === "PREMIUM_CREATOR" ||
-   matchingAddon.addonType === "WEB3_NFT" ||
-   matchingAddon.addonType === "EDITORIAL_LUX" ||
-   matchingAddon.addonType === "GAMER_HUB") {
+   matchingAddon.addonType === "WEB3_NFT") {
     
     const displayProducts = (parsedConfig.products && Array.isArray(parsedConfig.products) && parsedConfig.products.length > 0)
       ? parsedConfig.products.map((p: any) => ({
@@ -376,26 +367,7 @@ export default async function AddonPage({
     );
   }
 
- if (matchingAddon.addonType === "DONATION") {
- return (
- <div className="w-full min-h-screen bg-pink-50/30 flex items-center justify-center p-4">
- <div className="w-full max-w-md bg-white p-4 md:p-8 rounded-[2rem] shadow-xl flex flex-col items-center text-center">
- {parsedConfig.avatarUrl ? (
- <img src={parsedConfig.avatarUrl} className="w-24 h-24 rounded-full object-cover shadow-md mb-6" alt="Profile" />
- ) : (
- <div className="w-24 h-24 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center mb-6">
- <span className="text-xl md:text-3xl">☕</span>
- </div>
- )}
- <h1 className="text-2xl font-black text-slate-800 mb-3">{parsedConfig.title || "Bana Kahve Ismarla"}</h1>
- <p className="text-slate-500 mb-8">{parsedConfig.thankYouMsg || "Desteğiniz için teşekkürler!"}</p>
- <a href={parsedConfig.platformUrl || "#"} target="_blank" rel="noopener noreferrer" className="w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-lg hover:bg-slate-800 transition-colors shadow-lg">
- {parsedConfig.buttonText || "Destek Ol"}
- </a>
- </div>
- </div>
- );
- }
+
 
  if (matchingAddon.addonType === "COUNTDOWN") {
  // Generate an aesthetic countdown layout
@@ -590,18 +562,16 @@ export default async function AddonPage({
     matchingAddon.addonType === "VINYL_RETRO" ||
     matchingAddon.addonType === "GLASS_AUDIO" ||
     matchingAddon.addonType === "NEON_CYBERPUNK" ||
-    matchingAddon.addonType === "MINIMAL_LIGHT_AUDIO" ||
     matchingAddon.addonType === "MUSIC_PODCAST" ||
     matchingAddon.addonType === "PORTFOLIO_GALLERY" ||
-    matchingAddon.addonType === "COUNTDOWN_LAUNCH" ||
-    matchingAddon.addonType === "TESTIMONIALS"
+    matchingAddon.addonType === "COUNTDOWN_LAUNCH"
   ) {
     const type = matchingAddon.addonType;
     const displayAvatar = parsedConfig.avatarUrl || user.profile.avatarUrl || "";
     const displayUsername = parsedConfig.username || ("@" + user.username);
     const displayBio = parsedConfig.bio || user.profile.bio || "";
-    const displayTitle = parsedConfig.title || (type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MINIMAL_LIGHT_AUDIO" ? "Minimalist Light Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : "Müşteri Yorumları");
-    const displayDesc = parsedConfig.description || (type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MINIMAL_LIGHT_AUDIO" ? "Ferah, aydınlık ve dikkat dağıtmayan net tasarım." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : "Referanslarınızı ve 5 yıldızlı değerlendirmelerinizi öne çıkararak güven inşa edin.");
+    const displayTitle = parsedConfig.title || (type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : "");
+    const displayDesc = parsedConfig.description || (type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : "");
 
     return (
       <div className="w-full min-h-screen bg-black flex justify-center">

@@ -131,7 +131,7 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
     const type = activeAddon.addonType;
 
     // 1. Storefront Addons (Magaza)
-    if (["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR", "WEB3_NFT", "EDITORIAL_LUX", "GAMER_HUB"].includes(type)) {
+    if (["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR", "WEB3_NFT"].includes(type)) {
       const getDefaultTheme = (t: string) => {
         switch (t) {
           case "NEO_BRUTAL": return "neo-brutalism";
@@ -141,8 +141,6 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
           case "Y2K": return "y2k-holographic";
           case "PREMIUM_CREATOR": return "premium-creator";
           case "WEB3_NFT": return "dark-drill";
-          case "EDITORIAL_LUX": return "minimalist";
-          case "GAMER_HUB": return "vibrant-pop";
           default: return "classic";
         }
       };
@@ -308,13 +306,13 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
       );
     }
 
-    // 4. Premium Video / Audio / Portfolio / Countdown / Testimonials Addons
-    if (["PREMIUM_VIDEO", "SPOTIFY_CLASSIC", "VINYL_RETRO", "GLASS_AUDIO", "NEON_CYBERPUNK", "MINIMAL_LIGHT_AUDIO", "MUSIC_PODCAST", "PORTFOLIO_GALLERY", "COUNTDOWN_LAUNCH", "TESTIMONIALS", "RETRO_CASSETTE", "MINIMAL_DARK_AUDIO", "VINTAGE_RADIO", "FUTURE_WAVE", "CINEMATIC_THEATER"].includes(type)) {
+    // 4. Premium Video / Audio / Portfolio / Countdown Addons
+    if (["PREMIUM_VIDEO", "SPOTIFY_CLASSIC", "VINYL_RETRO", "GLASS_AUDIO", "NEON_CYBERPUNK", "MUSIC_PODCAST", "PORTFOLIO_GALLERY", "COUNTDOWN_LAUNCH", "RETRO_CASSETTE", "MINIMAL_DARK_AUDIO", "VINTAGE_RADIO", "FUTURE_WAVE", "CINEMATIC_THEATER"].includes(type)) {
       const displayAvatar = parsedConfig.avatarUrl || data.avatarUrl || "";
       const displayUsername = parsedConfig.username || ("@" + data.username);
       const displayBio = parsedConfig.bio || data.bio || "";
-      const displayTitle = parsedConfig.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "FUTURE_WAVE" ? "Future Synthwave Video" : type === "CINEMATIC_THEATER" ? "Sinematik Tiyatro Video" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MINIMAL_LIGHT_AUDIO" ? "Minimalist Light Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "Müşteri Yorumları");
-      const displayDesc = parsedConfig.description || (type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "MINIMAL_DARK_AUDIO" ? "Siyahın asil tonunda ultra modern tasarım." : type === "VINTAGE_RADIO" ? "Klasik ahşap radyo kadranı tasarımı." : type === "FUTURE_WAVE" ? "Neon pembe ve camgöbeği synthwave video tasarımı." : type === "CINEMATIC_THEATER" ? "Kırmızı kadife perdeli sinematik video tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MINIMAL_LIGHT_AUDIO" ? "Ferah, aydınlık ve dikkat dağıtmayan net tasarım." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "Referanslarınızı ve 5 yıldızlı değerlendirmelerinizi öne çıkararak güven inşa edin.");
+      const displayTitle = parsedConfig.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "FUTURE_WAVE" ? "Future Synthwave Video" : type === "CINEMATIC_THEATER" ? "Sinematik Tiyatro Video" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "");
+      const displayDesc = parsedConfig.description || (type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "MINIMAL_DARK_AUDIO" ? "Siyahın asil tonunda ultra modern tasarım." : type === "VINTAGE_RADIO" ? "Klasik ahşap radyo kadranı tasarımı." : type === "FUTURE_WAVE" ? "Neon pembe ve camgöbeği synthwave video tasarımı." : type === "CINEMATIC_THEATER" ? "Kırmızı kadife perdeli sinematik video tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "");
 
       return (
         <div className="w-full h-full bg-zinc-950 flex flex-col justify-between overflow-y-auto no-scrollbar">
@@ -331,27 +329,7 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
       );
     }
 
-    // 5. Donation Addon
-    if (type === "DONATION") {
-      return (
-        <div className="w-full h-full bg-pink-50/20 flex items-center justify-center p-4">
-          <div className="w-full bg-white p-4 rounded-3xl shadow-md flex flex-col items-center text-center">
-            {parsedConfig.avatarUrl ? (
-              <img src={parsedConfig.avatarUrl} className="w-16 h-16 rounded-full object-cover shadow-sm mb-4" alt="Profile" />
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-pink-50 text-pink-500 flex items-center justify-center mb-4 text-xl">
-                ☕
-              </div>
-            )}
-            <h1 className="text-sm font-black text-slate-800 mb-1">{parsedConfig.title || "Destek Ol"}</h1>
-            <p className="text-[10px] text-slate-500 mb-4">{parsedConfig.thankYouMsg || "Teşekkürler!"}</p>
-            <button className="w-full py-2 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-colors shadow-sm">
-              {parsedConfig.buttonText || "Destek Ol"}
-            </button>
-          </div>
-        </div>
-      );
-    }
+
 
     // 6. Countdown Addon
     if (type === "COUNTDOWN") {
