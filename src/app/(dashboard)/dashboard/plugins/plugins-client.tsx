@@ -74,20 +74,18 @@ export default function PluginsClient({
   };
 
   const getPreviewLink = () => {
-    const firstAddon = addons[0];
-    if (firstAddon) {
-      let slug = getDefaultSlug(firstAddon.addonType);
+    const activeAddon = addons.find(a => a.isActive);
+    const targetAddon = activeAddon || addons[0];
+    if (targetAddon) {
+      let slug = getDefaultSlug(targetAddon.addonType);
       try {
-        const config = firstAddon.settings ? (typeof firstAddon.settings === "string" ? JSON.parse(firstAddon.settings) : firstAddon.settings) : {};
+        const config = targetAddon.settings ? (typeof targetAddon.settings === "string" ? JSON.parse(targetAddon.settings) : targetAddon.settings) : {};
         if (config.customSlug) {
           slug = config.customSlug;
         }
       } catch (e) {}
       
-      const isStorefront = ["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR"].includes(firstAddon.addonType);
-      if (isStorefront) {
-        return `${origin}/@${user.username}/${slug.toLowerCase()}`;
-      }
+      return `${origin}/@${user.username}/${slug.toLowerCase()}`;
     }
     return `${origin}/@${user.username}`;
   };
@@ -195,14 +193,11 @@ export default function PluginsClient({
                                   setErrorMsg(res.error);
                                   setTimeout(() => setErrorMsg(""), 3000);
                                 } else {
-                                  setAddons(prev => prev.map(a => {
-                                    if (a.id === addon.id) {
-                                      return { ...a, isActive: nextActive };
-                                    }
-                                    return a;
-                                  }));
                                   setSuccessMsg(lang === "tr" ? "Durum güncellendi!" : "Status updated!");
-                                  setTimeout(() => setSuccessMsg(""), 3000);
+                                  setTimeout(() => {
+                                    setSuccessMsg("");
+                                    window.location.reload();
+                                  }, 500);
                                 }
                               } catch (err: any) {
                                 setErrorMsg(err.message || "Error");
@@ -372,13 +367,10 @@ export default function PluginsClient({
           products={initialProducts}
           onClose={(updatedSettings, updatedIsActive) => {
             if (updatedSettings !== undefined || updatedIsActive !== undefined) {
-              setAddons(prev => prev.map(a => a.id === editingAddon.id ? {
-                ...a,
-                settings: updatedSettings !== undefined ? (typeof updatedSettings === "string" ? JSON.parse(updatedSettings) : updatedSettings) : a.settings,
-                isActive: updatedIsActive !== undefined ? updatedIsActive : a.isActive
-              } : a));
+              window.location.reload();
+            } else {
+              setEditingAddon(null);
             }
-            setEditingAddon(null);
           }}
           lang={lang}
           username={user.username || ""}

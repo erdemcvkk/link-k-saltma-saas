@@ -1960,6 +1960,18 @@ export async function saveAddonConfig(addonId: string, settingsJson: any, isActi
       }
     });
 
+    if (isActive === true) {
+      await db.userAddon.updateMany({
+        where: {
+          userId: user.id,
+          id: { not: addonId }
+        },
+        data: {
+          isActive: false
+        }
+      });
+    }
+
 
 
     try {
