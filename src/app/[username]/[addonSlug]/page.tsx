@@ -90,6 +90,35 @@ export default async function AddonPage({
  default: return "classic";
  }
  };
+
+ const getThemeBgClass = (theme: string) => {
+   switch (theme) {
+     case "dark-drill":
+       return "bg-black";
+     case "glassmorphism":
+       return "bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900";
+     case "minimalist":
+       return "bg-white";
+     case "vibrant-pop":
+       return "bg-orange-50";
+     case "neo-brutalism":
+       return "bg-[#caff4a]";
+     case "organic-earth":
+       return "bg-[#f5efe6]";
+     case "retro-arcade":
+       return "bg-[#0a0a2e] retro-grid-bg";
+     case "dark-academia":
+       return "bg-[#1a1a1a]";
+     case "y2k-holographic":
+       return "bg-gradient-to-br from-[#ffe6f7] via-[#e8e0ff] to-[#d4f7ff]";
+     case "premium-creator":
+       return "bg-[#fdfdfd]";
+     case "classic":
+     default:
+       return "bg-gray-50";
+   }
+ };
+
   let parsedConfig: any = { theme: 'classic' };
   if (matchingAddon.settings) {
     parsedConfig = typeof matchingAddon.settings === "string" ? JSON.parse(matchingAddon.settings) : matchingAddon.settings;
@@ -126,11 +155,14 @@ export default async function AddonPage({
           buyLink: ""
         }));
 
+    const currentTheme = parsedConfig.theme || getDefaultTheme(matchingAddon.addonType);
+    const bgClass = getThemeBgClass(currentTheme);
+
     return (
-      <div className="w-full min-h-screen bg-zinc-100 flex justify-center">
+      <div className={`w-full min-h-screen ${bgClass} flex justify-center`}>
         <div className="w-full max-w-full md:w-[480px] min-h-screen relative shadow-2xl overflow-hidden bg-white">
           <StorefrontPreview 
-            theme={parsedConfig.theme || getDefaultTheme(matchingAddon.addonType)} 
+            theme={currentTheme} 
             onProductClick={undefined}
             products={displayProducts} 
             storeTitle={parsedConfig.storeTitle || user.username || "Mağazam"}
