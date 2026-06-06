@@ -28,14 +28,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Dijital veya fiziksel ürünlerinizi doğrudan profilinizde satmaya başlayın.", 
     color: "bg-orange-500",
     theme: "vibrant-pop",
-    price: "0",
+    price: "99",
     username: "@creative.zeynep",
     bio: "İçerik Üreticisi & YouTuber",
     avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
     category: "Satış & Gelir",
     mockProducts: [
-      { id: "p1", title: "Video Düzenleme Masterclass'ı", type: "Kurs", price: "750", imageUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=500&q=80" },
-      { id: "p2", title: "Sosyal Medya İçerik Takvimi", type: "Şablon", price: "200", imageUrl: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80" },
+      { id: "p1", title: "Video Düzenleme Masterclass'ı", type: "Kurs", price: "99", imageUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=500&q=80" },
+      { id: "p2", title: "Sosyal Medya İçerik Takvimi", type: "Şablon", price: "99", imageUrl: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500&q=80" },
     ]
   },
   { 
@@ -44,14 +44,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Ürünlerinizi modern, temiz ve profesyonel bir tasarımla sergileyin.", 
     color: "bg-blue-600",
     theme: "classic",
-    price: "0",
+    price: "99",
     username: "@ceo.exec",
     bio: "C-Level Executive Consultant",
     avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "ce1", title: "Q3 Business Strategy Plan", type: "Şablon", price: "1200", imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&q=80" },
-      { id: "ce2", title: "Corporate Restructuring Guide", type: "E-Kitap", price: "400", imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&q=80" }
+      { id: "ce1", title: "Q3 Business Strategy Plan", type: "Şablon", price: "99", imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&q=80" },
+      { id: "ce2", title: "Corporate Restructuring Guide", type: "E-Kitap", price: "99", imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&q=80" }
     ]
   },
   { 
@@ -60,14 +60,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Sade, şık ve minimal bir tasarımla ürünlerinizi ön plana çıkarın.", 
     color: "bg-[#000000]",
     theme: "neo-brutalism",
-    price: "299",
+    price: "99",
     username: "@manga.artisan",
     bio: "Comic Artist & Illustrator",
     avatarUrl: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "cm1", title: "Digital Ink Brushes Pack", type: "Fırça", price: "200", imageUrl: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500&q=80" },
-      { id: "cm2", title: "Chapter 1 Manga Panels (RAW)", type: "Comic", price: "150", imageUrl: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=500&q=80" }
+      { id: "cm1", title: "Digital Ink Brushes Pack", type: "Fırça", price: "99", imageUrl: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500&q=80" },
+      { id: "cm2", title: "Chapter 1 Manga Panels (RAW)", type: "Comic", price: "99", imageUrl: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=500&q=80" }
     ]
   },
   { 
@@ -76,14 +76,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "8-bit atari ve retro oyun estetiğine sahip nostaljik mağaza tasarımı.", 
     color: "bg-[#00ffc8]",
     theme: "retro-arcade",
-    price: "0",
+    price: "99",
     username: "@PIXEL_DEV",
     bio: "Indie Oyun Geliştiricisi",
     avatarUrl: "https://images.unsplash.com/photo-1566753323558-f4e0952af115?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "ra1", title: "16-Bit Sprite Paketi", type: "Asset", price: "250", imageUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&q=80" },
-      { id: "ra2", title: "Chiptune Müzik Paketi", type: "Müzik", price: "200", imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&q=80" },
+      { id: "ra1", title: "16-Bit Sprite Paketi", type: "Asset", price: "99", imageUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&q=80" },
+      { id: "ra2", title: "Chiptune Müzik Paketi", type: "Müzik", price: "99", imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&q=80" },
     ]
   },
   { 
@@ -92,14 +92,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Dark academia tarzında, kitaplar, yazarlar ve eğitmenler için şık tasarım.", 
     color: "bg-[#b4963c]",
     theme: "dark-academia",
-    price: "0",
+    price: "99",
     username: "@the.quill",
     bio: "Yazar & Şair",
     avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "da1", title: "Gotik Şiir Derlemesi (PDF)", type: "E-Kitap", price: "150", imageUrl: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=500&q=80" },
-      { id: "da2", title: "Daktilo Yazı Fontu", type: "Font", price: "200", imageUrl: "https://images.unsplash.com/photo-1504691342899-4d92b50853e1?w=500&q=80" },
+      { id: "da1", title: "Gotik Şiir Derlemesi (PDF)", type: "E-Kitap", price: "99", imageUrl: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=500&q=80" },
+      { id: "da2", title: "Daktilo Yazı Fontu", type: "Font", price: "99", imageUrl: "https://images.unsplash.com/photo-1504691342899-4d92b50853e1?w=500&q=80" },
     ]
   },
   { 
@@ -108,14 +108,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Kalın çizgiler ve yüksek kontrastlı renklerle modern brutalist tasarım.", 
     color: "bg-[#caff4a]",
     theme: "neo-brutalism",
-    price: "0",
+    price: "99",
     username: "@dev.manifest",
     bio: "Full-Stack Geliştirici & Tasarımcı",
     avatarUrl: "https://images.unsplash.com/photo-1599566150163-29194dcabd9c?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "nb1", title: "Terminal VS Code Eklentisi", type: "Eklenti", price: "120", imageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500&q=80" },
-      { id: "nb2", title: "Brutalist React Kit", type: "Kod", price: "500", imageUrl: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=500&q=80" },
+      { id: "nb1", title: "Terminal VS Code Eklentisi", type: "Eklenti", price: "99", imageUrl: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500&q=80" },
+      { id: "nb2", title: "Brutalist React Kit", type: "Kod", price: "99", imageUrl: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=500&q=80" },
     ]
   },
   { 
@@ -124,14 +124,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Doğal tonlar ve yumuşak hatlarla organik ürünleriniz için yeşil tasarım.", 
     color: "bg-[#8fbc6a]",
     theme: "organic-earth",
-    price: "0",
+    price: "99",
     username: "@naturel.coach",
     bio: "Holistik Sağlık & Beslenme Koçu",
     avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "oe1", title: "Holistik Beslenme Rehberi", type: "E-Kitap", price: "180", imageUrl: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500&q=80" },
-      { id: "oe2", title: "30 Günlük Detoks Programı", type: "Program", price: "450", imageUrl: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80" },
+      { id: "oe1", title: "Holistik Beslenme Rehberi", type: "E-Kitap", price: "99", imageUrl: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500&q=80" },
+      { id: "oe2", title: "30 Günlük Detoks Programı", type: "Program", price: "99", imageUrl: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80" },
     ]
   },
   { 
@@ -140,14 +140,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Fütüristik neon ışıkları ve holografik esintiler sunan özel tasarım.", 
     color: "bg-gradient-to-r from-[#ff6ec7] to-[#7873f5]",
     theme: "y2k-holographic",
-    price: "0",
+    price: "99",
     username: "@glitter.queen",
     bio: "Moda & Lifestyle Influencer",
     avatarUrl: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "y1", title: "2000'ler Nostalji Filtreleri", type: "Filtre", price: "200", imageUrl: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=500&q=80" },
-      { id: "y2", title: "Holografik Sticker Paketi", type: "Tasarım", price: "120", imageUrl: "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?w=500&q=80" },
+      { id: "y1", title: "2000'ler Nostalji Filtreleri", type: "Filtre", price: "99", imageUrl: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=500&q=80" },
+      { id: "y2", title: "Holografik Sticker Paketi", type: "Tasarım", price: "99", imageUrl: "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?w=500&q=80" },
     ]
   },
   { 
@@ -156,14 +156,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Dergi kapağı zarafetinde, lüks ve moda markaları için ultra elit tasarım.", 
     color: "bg-[#0f172a]",
     theme: "minimalist",
-    price: "0",
+    price: "99",
     username: "@maison.luxury",
     bio: "High-End Fashion Label",
     avatarUrl: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "e1", title: "Summer Collection Catalog", type: "PDF", price: "300", imageUrl: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&q=80" },
-      { id: "e2", title: "Private Styling Session", type: "Toplantı", price: "1500", imageUrl: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=500&q=80" }
+      { id: "e1", title: "Summer Collection Catalog", type: "PDF", price: "99", imageUrl: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&q=80" },
+      { id: "e2", title: "Private Styling Session", type: "Toplantı", price: "99", imageUrl: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=500&q=80" }
     ]
   },
   { 
@@ -172,14 +172,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Yayıncılar, gamerlar ve esporcular için dinamik ve enerjik vitrin.", 
     color: "bg-green-500",
     theme: "vibrant-pop",
-    price: "0",
+    price: "99",
     username: "@phoenix.gg",
     bio: "Twitch Partner & Pro Gamer",
     avatarUrl: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "g1", title: "Gamer Setup Presets", type: "Şablon", price: "150", imageUrl: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500&q=80" },
-      { id: "g2", title: "1-on-1 Coaching Session", type: "Koçluk", price: "600", imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&q=80" }
+      { id: "g1", title: "Gamer Setup Presets", type: "Şablon", price: "99", imageUrl: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500&q=80" },
+      { id: "g2", title: "1-on-1 Coaching Session", type: "Koçluk", price: "99", imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&q=80" }
     ]
   },
   { 
@@ -188,14 +188,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Dijital ürünlerinizi en üst düzey lüks ve zarafetle sunan yaratıcı şablon.", 
     color: "bg-zinc-900",
     theme: "premium-creator",
-    price: "299",
+    price: "99",
     username: "@kreator",
     bio: "Premium Beatmaker & Eğitmen",
     avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "pc1", title: "Mastering Eğitimi (Video)", type: "Eğitim", price: "450", imageUrl: "https://images.unsplash.com/photo-1516280440503-66f837ce5b97?w=500&q=80" },
-      { id: "pc2", title: "Özel Lo-Fi Beat Paketi", type: "Beat", price: "300", imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&q=80" },
+      { id: "pc1", title: "Mastering Eğitimi (Video)", type: "Eğitim", price: "99", imageUrl: "https://images.unsplash.com/photo-1516280440503-66f837ce5b97?w=500&q=80" },
+      { id: "pc2", title: "Özel Lo-Fi Beat Paketi", type: "Beat", price: "99", imageUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&q=80" },
     ]
   },
   { 
@@ -204,7 +204,7 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Eğitim veya masterclass videolarınızı sinematik şekilde sunup izletin.", 
     color: "bg-red-500",
     theme: "premium-video",
-    price: "0",
+    price: "99",
     username: "@masterclass",
     bio: "Video Eğitimi",
     avatarUrl: "",
@@ -217,7 +217,7 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin.", 
     color: "bg-purple-600",
     theme: "classic",
-    price: "199",
+    price: "99",
     username: "@podcast.wave",
     bio: "Beatmaker & Podcaster",
     avatarUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&q=80",
@@ -230,7 +230,7 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin.", 
     color: "bg-slate-400",
     theme: "classic",
-    price: "299",
+    price: "99",
     username: "@art.portfolio",
     bio: "Visual Artist & Designer",
     avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80",
@@ -269,7 +269,7 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Orijinal ve ikonik Spotify görünümünde parça veya çalma listesi oynatıcısı.", 
     color: "bg-[#1db954]",
     theme: "classic",
-    price: "199",
+    price: "99",
     username: "@spotify.classic",
     bio: "Original Spotify Look",
     avatarUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&q=80",
@@ -282,7 +282,7 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Nostaljik ruhu yaşatan, şarkı çalarken dönen retro plak görünümlü oynatıcı.", 
     color: "bg-amber-700",
     theme: "classic",
-    price: "199",
+    price: "99",
     username: "@vinyl.collector",
     bio: "Vintage Plak Sever",
     avatarUrl: "https://images.unsplash.com/photo-1539625318667-15c0b90c6b1b?w=200&q=80",
@@ -295,7 +295,7 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Albüm renklerine uyum sağlayan yarı saydam lüks cam tasarımı.", 
     color: "bg-indigo-400",
     theme: "classic",
-    price: "199",
+    price: "99",
     username: "@glass.synth",
     bio: "Ambient & Synthwave Producer",
     avatarUrl: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=200&q=80",
@@ -308,7 +308,7 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Elektronik müzik ve synthwave tutkunları için parlayan neon tasarımlı oynatıcı.", 
     color: "bg-pink-500",
     theme: "classic",
-    price: "199",
+    price: "99",
     username: "@cyberpunk.wave",
     bio: "Synthwave & Cyberpunk Creator",
     avatarUrl: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=200&q=80",
@@ -321,7 +321,7 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Ferah, aydınlık ve dikkat dağıtmayan net tasarımda müzik oynatıcı.", 
     color: "bg-slate-350",
     theme: "classic",
-    price: "199",
+    price: "99",
     username: "@clean.acoustic",
     bio: "Acoustic & Folk Sessions",
     avatarUrl: "https://images.unsplash.com/photo-1516280440503-66f837ce5b97?w=200&q=80",
@@ -334,14 +334,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Kripto, NFT ve Web3 projelerinizi fütüristik karanlık sergi alanında sergileyin.", 
     color: "bg-[#8b5cf6]",
     theme: "dark-drill",
-    price: "299",
+    price: "99",
     username: "@cryptopunk.eth",
     bio: "NFT Artist & Web3 Dev",
     avatarUrl: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=200&q=80",
     category: "Premium Temalar",
     mockProducts: [
-      { id: "w1", title: "Genesis NFT Collectible", type: "NFT", price: "2500", imageUrl: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=500&q=80" },
-      { id: "w2", title: "Solidity Smart Contract Template", type: "Kod", price: "800", imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=500&q=80" }
+      { id: "w1", title: "Genesis NFT Collectible", type: "NFT", price: "99", imageUrl: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=500&q=80" },
+      { id: "w2", title: "Solidity Smart Contract Template", type: "Kod", price: "99", imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=500&q=80" }
     ]
   },
   { 
@@ -350,7 +350,7 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Sıkça sorulan soruları profilinizde listeleyerek kullanıcılarınızı bilgilendirin.", 
     color: "bg-emerald-500",
     theme: "classic",
-    price: "0",
+    price: "99",
     username: "@pixelcraft.design",
     bio: "Sıkça Sorulan Sorular",
     avatarUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80",
@@ -363,14 +363,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "1-1 Görüşmeler, toplantılar veya randevular ayarlayıp takviminizi yönetin.", 
     color: "bg-zinc-800",
     theme: "minimalist",
-    price: "249",
+    price: "99",
     username: "@coach.mehmet",
     bio: "Yazar & Kariyer Danışmanı",
     avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
     category: "Etkileşim & Araçlar",
     mockProducts: [
-      { id: "b1", title: "1 Saatlik UI/UX Danışmanlığı", type: "Toplantı", price: "850", imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80" },
-      { id: "b2", title: "Hızlı Kod İncelemesi", type: "Toplantı", price: "400", imageUrl: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500&q=80" },
+      { id: "b1", title: "1 Saatlik UI/UX Danışmanlığı", type: "Toplantı", price: "99", imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80" },
+      { id: "b2", title: "Hızlı Kod İncelemesi", type: "Toplantı", price: "99", imageUrl: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500&q=80" },
     ]
   },
   { 
@@ -379,13 +379,13 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Takipçilerinizden e-posta toplayarak bülten aboneleri kazanın.", 
     color: "bg-purple-500",
     theme: "glassmorphism",
-    price: "499",
+    price: "99",
     username: "@artisan.studio",
     bio: "Dijital Sanatçı & Fotoğrafçı",
     avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80",
     category: "Etkileşim & Araçlar",
     mockProducts: [
-      { id: "n1", title: "Haftalık Tasarım Bülteni", type: "Abonelik", price: "0", imageUrl: "https://images.unsplash.com/photo-1554046920-90dcac024a13?w=500&q=80" },
+      { id: "n1", title: "Haftalık Tasarım Bülteni", type: "Abonelik", price: "99", imageUrl: "https://images.unsplash.com/photo-1554046920-90dcac024a13?w=500&q=80" },
     ]
   },
   { 
@@ -394,14 +394,14 @@ export const ADDON_TYPES: AddonTypeData[] = [
     desc: "Takipçilerinizden destek alın ve dijital kahve ısmarlamalarını sağlayın.", 
     color: "bg-blue-500",
     theme: "classic",
-    price: "299",
+    price: "99",
     username: "@pixelcraft.design",
     bio: "Premium Dijital Ürün Mağazası",
     avatarUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80",
     category: "Satış & Gelir",
     mockProducts: [
-      { id: "d1", title: "Bana Bir Kahve Ismarla", type: "Destek", price: "50", imageUrl: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&q=80" },
-      { id: "d2", title: "Büyük Destek", type: "Destek", price: "250", imageUrl: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=500&q=80" },
+      { id: "d1", title: "Bana Bir Kahve Ismarla", type: "Destek", price: "99", imageUrl: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&q=80" },
+      { id: "d2", title: "Büyük Destek", type: "Destek", price: "99", imageUrl: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=500&q=80" },
     ]
   }
 ];
