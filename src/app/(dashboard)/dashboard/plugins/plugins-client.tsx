@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
-import { Puzzle, ShoppingBag, Settings, Globe, ExternalLink, Copy, Check, Trash2 } from "lucide-react";
+import React, { useState, useEffect, useTransition, useMemo } from "react";
+import { Puzzle, ShoppingBag, Settings, Globe, ExternalLink, Copy, Check, Trash2, Search, ArrowUpDown, ChevronDown } from "lucide-react";
 import AddonConfigModal from "@/components/addons/addon-config-modal";
 import PhonePreview from "@/components/dashboard/phone-preview";
 import { parseButtonStyle } from "@/lib/parse-button-style";
@@ -48,6 +48,74 @@ export default function PluginsClient({
   const { user, lang, activeTemplate, simulatedPlan, setSuccessMsg, setErrorMsg } = useDashboard();
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons);
   const [activeAddonId, setActiveAddonId] = useState<string | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("default");
+
+  const getAddonName = (type: string, lang: string) => {
+    switch (type) {
+      case "RETRO_CASSETTE": return lang === "tr" ? "Retro Kaset Çalar" : "Retro Cassette Player";
+      case "MINIMAL_DARK_AUDIO": return lang === "tr" ? "Minimalist Dark Player" : "Minimalist Dark Player";
+      case "VINTAGE_RADIO": return lang === "tr" ? "Antika Radyo Oynatıcı" : "Vintage Radio Player";
+      case "FUTURE_WAVE": return lang === "tr" ? "Future Synthwave Video" : "Future Synthwave Video";
+      case "CINEMATIC_THEATER": return lang === "tr" ? "Sinematik Tiyatro Video" : "Cinematic Theater Video";
+      case "SPOTIFY_CLASSIC": return lang === "tr" ? "Classic Spotify Player" : "Classic Spotify Player";
+      case "VINYL_RETRO": return lang === "tr" ? "Retro Plak Çalar" : "Retro Vinyl Player";
+      case "GLASS_AUDIO": return lang === "tr" ? "Modern Cam Efekti" : "Modern Glass Effect";
+      case "NEON_CYBERPUNK": return lang === "tr" ? "Neon Cyberpunk Player" : "Neon Cyberpunk Player";
+      case "MINIMAL_LIGHT_AUDIO": return lang === "tr" ? "Minimalist Light Player" : "Minimalist Light Player";
+      case "MUSIC_PODCAST": return lang === "tr" ? "Müzik & Podcast Çalar" : "Music & Podcast Player";
+      case "PORTFOLIO_GALLERY": return lang === "tr" ? "Portfolyo & Galeri" : "Portfolio & Gallery";
+      case "COUNTDOWN_LAUNCH": return lang === "tr" ? "Geri Sayım & Lansman" : "Countdown & Launch";
+      case "PREMIUM_VIDEO": return lang === "tr" ? "Premium Video" : "Premium Video";
+      case "TESTIMONIALS": return lang === "tr" ? "Müşteri Yorumları" : "Testimonials";
+      case "FAQ": return lang === "tr" ? "Sıkça Sorulan Sorular" : "FAQ";
+      case "WEB3_NFT": return lang === "tr" ? "Web3 NFT Vitrini" : "Web3 NFT Gallery";
+      case "EDITORIAL_LUX": return lang === "tr" ? "Editoryal Vitrin" : "Editorial Showcase";
+      case "GAMER_HUB": return lang === "tr" ? "Oyuncu Platformu" : "Gamer Hub";
+      case "CORP_EXEC": return lang === "tr" ? "Kurumsal Yönetici Kartı" : "Corporate Executive Card";
+      case "COMIC_MANGA": return lang === "tr" ? "Çizgi Roman & Manga" : "Comic & Manga";
+      case "DONATION": return lang === "tr" ? "Dijital Kahve İkramı" : "Coffee Donation";
+      case "MINI_STORE": return lang === "tr" ? "Mini Mağaza" : "Mini Store";
+      case "NEO_BRUTAL": return lang === "tr" ? "Neo Brutalism Vitrin" : "Neo Brutalism Gallery";
+      case "ORGANIC": return lang === "tr" ? "Doğal Tasarım Vitrin" : "Organic Showcase";
+      case "RETRO": return lang === "tr" ? "Retro Arcade Vitrin" : "Retro Arcade Gallery";
+      case "ACADEMIA": return lang === "tr" ? "Akademik Portfolyo" : "Academia Portfolio";
+      case "Y2K": return lang === "tr" ? "Y2K Estetik Vitrin" : "Y2K Aesthetic Showcase";
+      case "BOOKING": return lang === "tr" ? "Rezervasyon & Randevu" : "Booking & Appointment";
+      case "NEWSLETTER": return lang === "tr" ? "Bülten Kaydı" : "Newsletter signup";
+      case "QA": return lang === "tr" ? "Soru & Cevap" : "Q&A Module";
+      case "PREMIUM_CREATOR": return lang === "tr" ? "Kreatör Mağazası" : "Premium Creator Store";
+      default: return type;
+    }
+  };
+
+  const sortedAddons = useMemo(() => {
+    return [...addons]
+      .filter((addon) => {
+        const name = getAddonName(addon.addonType, lang);
+        const matchesQuery = name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+          addon.addonType.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesQuery;
+      })
+      .sort((a, b) => {
+        const nameA = getAddonName(a.addonType, lang);
+        const nameB = getAddonName(b.addonType, lang);
+
+        if (sortOption === "active-first") {
+          if (a.isActive && !b.isActive) return -1;
+          if (!a.isActive && b.isActive) return 1;
+        } else if (sortOption === "name-asc") {
+          return nameA.localeCompare(nameB);
+        } else if (sortOption === "name-desc") {
+          return nameB.localeCompare(nameA);
+        }
+        
+        // Default sort: active first, then alphabetical
+        if (a.isActive && !b.isActive) return -1;
+        if (!a.isActive && b.isActive) return 1;
+        return nameA.localeCompare(nameB);
+      });
+  }, [addons, searchQuery, sortOption, lang]);
 
   const handleDeleteAddon = async (addonId: string) => {
     if (!confirm(lang === "tr" ? "Bu eklentiyi hesabınızdan silmek istediğinize emin misiniz? (Bu işlem sadece sizin hesabınızı etkiler, eklenti sistemden silinmez)" : "Are you sure you want to delete this addon from your account? (This only affects your account, the addon will not be deleted from the system)")) {
@@ -191,6 +259,39 @@ export default function PluginsClient({
             </div>
           </div>
 
+          {/* Search + Sort row */}
+          {addons.length > 0 && (
+            <div className="flex flex-col sm:flex-row gap-3 items-center pb-2">
+              <div className="relative flex-1 w-full">
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
+                  <Search className="h-4 w-4" />
+                </span>
+                <input
+                  type="text"
+                  placeholder={lang === "tr" ? "Eklenti ara..." : "Search add-ons..."}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-200 focus:border-rose-500/50 outline-none text-sm bg-zinc-50 text-zinc-900 font-medium transition-colors"
+                />
+              </div>
+
+              <div className="relative w-full sm:w-56">
+                <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+                <select
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                  className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-zinc-200 focus:border-rose-500/50 outline-none text-sm bg-zinc-50 text-zinc-900 font-medium appearance-none cursor-pointer transition-colors"
+                >
+                  <option value="default">{lang === "tr" ? "Varsayılan Sıralama" : "Default Sorting"}</option>
+                  <option value="active-first">{lang === "tr" ? "Aktifler Önce" : "Active First"}</option>
+                  <option value="name-asc">{lang === "tr" ? "İsim: A → Z" : "Name: A → Z"}</option>
+                  <option value="name-desc">{lang === "tr" ? "İsim: Z → A" : "Name: Z → A"}</option>
+                </select>
+                <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+              </div>
+            </div>
+          )}
+
           {addons.length === 0 ? (
             <div className="text-center py-8 space-y-3">
               <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center mx-auto text-zinc-400">
@@ -200,9 +301,15 @@ export default function PluginsClient({
                 {lang === "tr" ? "Henüz aktif bir eklentiniz bulunmuyor." : "No active add-ons yet."}
               </p>
             </div>
+          ) : sortedAddons.length === 0 ? (
+            <div className="text-center py-8 space-y-2 border border-dashed border-zinc-200 rounded-2xl bg-zinc-50/50 w-full">
+              <p className="text-xs font-bold text-zinc-500">
+                {lang === "tr" ? "Aramanızla eşleşen eklenti bulunamadı." : "No add-ons match your search query."}
+              </p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-              {addons.map((addon) => {
+              {sortedAddons.map((addon) => {
                 let addonLink = `${origin}/@${user.username}/store`;
                 try {
                   const config = addon.settings ? (typeof addon.settings === "string" ? JSON.parse(addon.settings) : addon.settings) : {};
@@ -217,7 +324,7 @@ export default function PluginsClient({
                           <Puzzle className="h-5 w-5 text-rose-500" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-black text-zinc-900">{addon.addonType}</h3>
+                          <h3 className="text-sm font-black text-zinc-900">{getAddonName(addon.addonType, lang)}</h3>
                           {addon.isActive ? (
                             <span className="text-[10px] font-bold text-emerald-500 mt-0.5 px-2 py-0.5 rounded-md bg-emerald-50 inline-block border border-emerald-100">
                               {lang === "tr" ? "Yayında" : "Published"}

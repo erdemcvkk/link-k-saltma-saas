@@ -34,6 +34,9 @@ import {
   Music,
   Utensils,
   Smartphone,
+  Search,
+  ArrowUpDown,
+  ChevronDown,
   Percent,
   Wifi,
   ShoppingBag
@@ -191,6 +194,45 @@ export default function TemplatesClient({
 
   const [avatarUrl, setAvatarUrl] = useState(user.profile?.avatarUrl ?? "");
   const [newLinkTitle, setNewLinkTitle] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("default");
+
+  const sortedTemplates = useMemo(() => {
+    return [...ownedTemplates]
+      .filter((template) => {
+        const matchesQuery = template.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+          template.category.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesQuery;
+      })
+      .sort((a, b) => {
+        const isActiveA = activeTemplate?.id === a.id;
+        const isActiveB = activeTemplate?.id === b.id;
+
+        if (sortOption === "active-first") {
+          if (isActiveA && !isActiveB) return -1;
+          if (!isActiveA && isActiveB) return 1;
+        } else if (sortOption === "name-asc") {
+          return a.name.localeCompare(b.name);
+        } else if (sortOption === "name-desc") {
+          return b.name.localeCompare(a.name);
+        } else if (sortOption === "custom-first") {
+          const isCustomA = a.category === "Özel";
+          const isCustomB = b.category === "Özel";
+          if (isCustomA && !isCustomB) return -1;
+          if (!isCustomA && isCustomB) return 1;
+        } else if (sortOption === "purchased-first") {
+          const isCustomA = a.category === "Özel";
+          const isCustomB = b.category === "Özel";
+          if (!isCustomA && isCustomB) return -1;
+          if (isCustomA && !isCustomB) return 1;
+        }
+        
+        // Default sort (active first, then alphabetical)
+        if (isActiveA && !isActiveB) return -1;
+        if (!isActiveA && isActiveB) return 1;
+        return a.name.localeCompare(b.name);
+      });
+  }, [ownedTemplates, searchQuery, sortOption, activeTemplate]);
 
   const handleDeleteOwnedTemplate = async (templateId: string) => {
     if (!confirm(lang === "tr" ? "Bu şablonu hesabınızdan silmek istediğinize emin misiniz? (Bu işlem sadece sizin hesabınızı etkiler, şablon sistemden silinmez)" : "Are you sure you want to delete this template from your account? (This only affects your account, the template will not be deleted from the system)")) {
@@ -938,6 +980,41 @@ export default function TemplatesClient({
   </div>
  </div>
 
+    {/* Search + Sort row */}
+    {ownedTemplates.length > 0 && (
+      <div className="flex flex-col sm:flex-row gap-3 items-center pb-2">
+        <div className="relative flex-1 w-full">
+          <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
+            <Search className="h-4 w-4" />
+          </span>
+          <input
+            type="text"
+            placeholder={lang === "tr" ? "Şablon ara..." : "Search templates..."}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-200 focus:border-teal-500/50 outline-none text-sm bg-zinc-50 text-zinc-900 font-medium transition-colors"
+          />
+        </div>
+
+        <div className="relative w-full sm:w-56">
+          <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="w-full pl-10 pr-8 py-2.5 rounded-xl border border-zinc-200 focus:border-teal-500/50 outline-none text-sm bg-zinc-50 text-zinc-900 font-medium appearance-none cursor-pointer transition-colors"
+          >
+            <option value="default">{lang === "tr" ? "Varsayılan Sıralama" : "Default Sorting"}</option>
+            <option value="active-first">{lang === "tr" ? "Aktifler Önce" : "Active First"}</option>
+            <option value="name-asc">{lang === "tr" ? "İsim: A → Z" : "Name: A → Z"}</option>
+            <option value="name-desc">{lang === "tr" ? "İsim: Z → A" : "Name: Z → A"}</option>
+            <option value="custom-first">{lang === "tr" ? "Özel Şablonlar Önce" : "Custom Templates First"}</option>
+            <option value="purchased-first">{lang === "tr" ? "Satın Alınanlar Önce" : "Purchased Templates First"}</option>
+          </select>
+          <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+        </div>
+      </div>
+    )}
+
  {ownedTemplates.length === 0 ? (
  <div className="text-center py-10 space-y-4">
  <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center mx-auto text-zinc-400">
@@ -961,9 +1038,15 @@ export default function TemplatesClient({
  <ArrowRight className="h-3.5 w-3.5" />
  </Link>
  </div>
+ ) : sortedTemplates.length === 0 ? (
+   <div className="text-center py-10 space-y-2 border border-dashed border-zinc-200 rounded-2xl bg-zinc-50/50 w-full">
+     <p className="text-xs font-bold text-zinc-500">
+       {lang === "tr" ? "Aramanızla eşleşen şablon bulunamadı." : "No templates match your search query."}
+     </p>
+   </div>
  ) : (
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
- {ownedTemplates.map((template) => {
+ {sortedTemplates.map((template) => {
  const isCurrentlyApplied = background === template.bgColor && fontStyle === template.fontStyle;
  return (
  <div 
