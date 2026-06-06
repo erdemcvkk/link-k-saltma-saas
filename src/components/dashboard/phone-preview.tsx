@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Laptop, Zap, Clock } from "lucide-react";
+import { Laptop, Zap, Clock, Store, Music, Image, MessageCircle, Calendar } from "lucide-react";
 import UniversalProfile, { UniversalProfileData } from "@/components/universal-profile";
 import StorefrontPreview from "@/components/storefront-preview";
 
@@ -127,7 +127,7 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
     const type = activeAddon.addonType;
 
     // 1. Storefront Addons (Magaza)
-    if (["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR"].includes(type)) {
+    if (["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "ACADEMIA", "Y2K", "PREMIUM_CREATOR", "WEB3_NFT", "EDITORIAL_LUX", "GAMER_HUB", "CORP_EXEC", "COMIC_MANGA"].includes(type)) {
       const getDefaultTheme = (t: string) => {
         switch (t) {
           case "NEO_BRUTAL": return "neo-brutalism";
@@ -136,6 +136,11 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
           case "ACADEMIA": return "dark-academia";
           case "Y2K": return "y2k-holographic";
           case "PREMIUM_CREATOR": return "premium-creator";
+          case "WEB3_NFT": return "dark-drill";
+          case "EDITORIAL_LUX": return "minimalist";
+          case "GAMER_HUB": return "vibrant-pop";
+          case "CORP_EXEC": return "classic";
+          case "COMIC_MANGA": return "neo-brutalism";
           default: return "classic";
         }
       };
@@ -447,4 +452,281 @@ export default function PhonePreview({ mode, data, label }: PhonePreviewProps) {
       {renderAdBlock()}
     </div>
   );
+}
+
+
+function renderAddonInnerContent(type: string, avatarUrl: string, username: string, bio: string, title: string, desc: string) {
+  switch (type) {
+    case "SPOTIFY_CLASSIC":
+      return (
+        <div className="w-full h-full bg-zinc-950 flex flex-col p-8 text-white relative z-0">
+          <div className="flex flex-col items-center mt-12 mb-8">
+            <div className="w-24 h-24 bg-zinc-850 rounded-xl overflow-hidden border border-zinc-800 shadow-xl">
+              <img src={avatarUrl || "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&q=80"} className="w-full h-full object-cover" />
+            </div>
+            <span className="text-sm font-bold mt-3 text-white">{username}</span>
+            <p className="text-xs text-green-500 font-bold mt-1">{bio}</p>
+          </div>
+          
+          <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-bold text-white">{title}</h4>
+                <p className="text-[10px] text-zinc-400">{desc}</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-green-500 text-lg cursor-pointer">⏮</span>
+                <button className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-black border-0 shadow-[0_0_15px_rgba(34,197,94,0.4)] cursor-pointer">
+                  <span className="text-sm ml-0.5">▶</span>
+                </button>
+                <span className="text-green-500 text-lg cursor-pointer">⏭</span>
+              </div>
+            </div>
+            
+            <div className="space-y-1">
+              <div className="w-full h-1 bg-zinc-800 rounded-full overflow-hidden">
+                <div className="w-1/3 h-full bg-green-500 rounded-full"></div>
+              </div>
+              <div className="flex justify-between text-[9px] text-zinc-500 font-mono">
+                <span>1:12</span>
+                <span>3:45</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    case "VINYL_RETRO":
+      return (
+        <div className="w-full h-full bg-stone-900 flex flex-col p-8 text-orange-400 relative z-0">
+          <div className="flex flex-col items-center mt-12 mb-6">
+            <span className="text-sm font-bold text-stone-200">{username}</span>
+            <p className="text-xs text-orange-400/70 mt-1">{bio}</p>
+          </div>
+          
+          <div className="flex justify-center my-6">
+            <div className="w-32 h-32 rounded-full bg-zinc-950 border-4 border-black flex items-center justify-center relative shadow-2xl animate-[spin_6s_linear_infinite]">
+              <div className="absolute inset-2 rounded-full border border-stone-850"></div>
+              <div className="absolute inset-5 rounded-full border border-stone-850"></div>
+              <div className="w-12 h-12 rounded-full bg-orange-400 flex items-center justify-center p-0.5">
+                <div className="w-3 h-3 rounded-full bg-stone-900"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-stone-950/85 rounded-2xl p-5 border border-stone-800 text-center space-y-4 mt-auto">
+            <h4 className="text-xs font-bold text-stone-300">{title}</h4>
+            <p className="text-[10px] text-stone-500">{desc}</p>
+            <div className="flex items-center justify-center gap-6 text-orange-400">
+              <span className="text-sm cursor-pointer">⏮</span>
+              <button className="w-10 h-10 rounded-full bg-orange-400 flex items-center justify-center text-stone-900 border-0 cursor-pointer">
+                <span className="text-xs ml-0.5">▶</span>
+              </button>
+              <span className="text-sm cursor-pointer">⏭</span>
+            </div>
+          </div>
+        </div>
+      );
+    case "GLASS_AUDIO":
+      return (
+        <div className="w-full h-full bg-gradient-to-br from-indigo-400 to-purple-400 flex flex-col p-8 text-white relative z-0">
+          <div className="flex flex-col items-center mt-12 mb-8">
+            <div className="w-20 h-20 bg-white/20 rounded-full overflow-hidden border border-white/20 shadow-lg">
+              <img src={avatarUrl || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=200&q=80"} className="w-full h-full object-cover" />
+            </div>
+            <span className="text-sm font-bold mt-3 text-white">{username}</span>
+          </div>
+          
+          <div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-5 mt-4 space-y-4 shadow-xl">
+            <div className="text-center">
+              <h4 className="text-sm font-extrabold text-white">{title}</h4>
+              <p className="text-[10px] text-purple-100/80 mt-1">{desc}</p>
+            </div>
+            <div className="flex items-center justify-center gap-6 text-white pt-2">
+              <span className="text-sm cursor-pointer">⏮</span>
+              <button className="w-11 h-11 rounded-full bg-white text-purple-600 flex items-center justify-center border-0 shadow-lg cursor-pointer">
+                <span className="text-sm ml-0.5">▶</span>
+              </button>
+              <span className="text-sm cursor-pointer">⏭</span>
+            </div>
+          </div>
+        </div>
+      );
+    case "NEON_CYBERPUNK":
+      return (
+        <div className="w-full h-full bg-black flex flex-col p-8 text-white relative z-0">
+          <div className="flex flex-col items-center mt-12 mb-8">
+            <div className="w-24 h-24 bg-zinc-900 rounded-none overflow-hidden border border-pink-500 shadow-[0_0_12px_rgba(236,72,153,0.5)]">
+              <img src={avatarUrl || "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=200&q=80"} className="w-full h-full object-cover" />
+            </div>
+            <span className="text-xs font-black mt-3 uppercase tracking-widest text-pink-500">{username}</span>
+          </div>
+          
+          <div className="bg-black border border-pink-500 shadow-[0_0_20px_rgba(236,72,153,0.6)] rounded-none p-5 mt-4 space-y-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-xs font-black uppercase tracking-widest text-cyan-400">{title}</h4>
+                <p className="text-[9px] text-pink-400 uppercase mt-1">{desc}</p>
+              </div>
+              <button className="w-10 h-10 rounded-none bg-pink-500 flex items-center justify-center text-black border-0 shadow-[0_0_12px_rgba(236,72,153,0.8)] cursor-pointer">
+                <span className="text-xs">▶</span>
+              </button>
+            </div>
+            <div className="w-full h-0.5 bg-zinc-900 relative">
+              <div className="absolute left-0 top-0 w-2/3 h-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]"></div>
+            </div>
+          </div>
+        </div>
+      );
+    case "MINIMAL_LIGHT_AUDIO":
+      return (
+        <div className="w-full h-full bg-slate-50 flex flex-col p-8 text-slate-800 relative z-0">
+          <div className="flex flex-col items-center mt-12 mb-8">
+            <div className="w-24 h-24 bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+              <img src={avatarUrl || "https://images.unsplash.com/photo-1516280440503-66f837ce5b97?w=200&q=80"} className="w-full h-full object-cover" />
+            </div>
+            <span className="text-sm font-bold mt-3 text-slate-800">{username}</span>
+            <p className="text-xs text-slate-500 mt-1">{bio}</p>
+          </div>
+          
+          <div className="bg-white shadow-sm border border-slate-150 rounded-xl p-5 mt-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-semibold text-slate-800">{title}</h4>
+                <p className="text-[10px] text-slate-500 mt-1">{desc}</p>
+              </div>
+              <button className="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center border-0 shadow-sm cursor-pointer">
+                <span className="text-sm ml-0.5">▶</span>
+              </button>
+            </div>
+            <div className="w-full h-0.5 bg-slate-100 rounded-full overflow-hidden">
+              <div className="w-1/2 h-full bg-slate-400 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      );
+    case "MUSIC_PODCAST":
+      return (
+        <div className="w-full h-full bg-gradient-to-br from-purple-900 to-indigo-950 flex flex-col p-8 text-white relative z-0">
+          <div className="flex flex-col items-center mt-12 mb-8">
+            <div className="w-24 h-24 bg-zinc-800 rounded-t-full rounded-b-xl overflow-hidden border border-purple-500/30">
+              <img src={avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&q=80"} className="w-full h-full object-cover" />
+            </div>
+            <span className="text-sm font-bold mt-3 text-purple-300">{username}</span>
+            <p className="text-xs text-purple-200/60 mt-1">{bio}</p>
+          </div>
+          
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 mt-4 space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-bold text-white">{title}</h4>
+                <p className="text-xs text-purple-300 mt-1">{desc}</p>
+              </div>
+              <button className="w-12 h-12 rounded-full bg-pink-500 flex items-center justify-center text-white border-0 shadow-[0_0_15px_rgba(236,72,153,0.5)] cursor-pointer">
+                <span className="text-sm ml-0.5">▶</span>
+              </button>
+            </div>
+            
+            <div className="flex items-end gap-1.5 justify-center h-10 pt-2">
+              <div className="w-1.5 bg-pink-500 h-4 rounded-full animate-pulse"></div>
+              <div className="w-1.5 bg-pink-500 h-8 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+              <div className="w-1.5 bg-pink-500 h-5 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+              <div className="w-1.5 bg-pink-500 h-10 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+              <div className="w-1.5 bg-pink-500 h-7 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+              <div className="w-1.5 bg-pink-500 h-9 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+              <div className="w-1.5 bg-pink-500 h-4 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+            </div>
+          </div>
+        </div>
+      );
+    case "PORTFOLIO_GALLERY":
+      return (
+        <div className="w-full h-full bg-slate-50 flex flex-col p-8 text-slate-800 relative z-0">
+          <div className="flex flex-col items-center mt-12 mb-8">
+            <div className="w-24 h-24 bg-zinc-200 rounded-none border border-slate-300 overflow-hidden">
+              <img src={avatarUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80"} className="w-full h-full object-cover" />
+            </div>
+            <span className="text-sm font-bold mt-3 text-slate-700">{username}</span>
+            <p className="text-xs text-slate-500 mt-1">{bio}</p>
+          </div>
+          
+          <h3 className="text-sm font-bold text-slate-800 mb-3 px-1">{title}</h3>
+          <p className="text-xs text-slate-500 mb-4 px-1">{desc}</p>
+          
+          <div className="grid grid-cols-2 gap-3 mt-2">
+            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
+              <img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=200&q=80" className="w-full h-full object-cover rounded-lg" />
+            </div>
+            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
+              <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&q=80" className="w-full h-full object-cover rounded-lg" />
+            </div>
+            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
+              <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80" className="w-full h-full object-cover rounded-lg" />
+            </div>
+            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
+              <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=200&q=80" className="w-full h-full object-cover rounded-lg" />
+            </div>
+          </div>
+        </div>
+      );
+    case "COUNTDOWN_LAUNCH":
+      return (
+        <div className="w-full h-full bg-orange-500 flex flex-col p-8 text-black relative z-0">
+          <div className="flex flex-col items-center mt-12 mb-8">
+            <div className="w-24 h-24 bg-zinc-950 rounded-tl-3xl rounded-br-3xl overflow-hidden border border-black/20">
+              <img src={avatarUrl || "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=200&q=80"} className="w-full h-full object-cover" />
+            </div>
+            <span className="text-sm font-black mt-3 uppercase tracking-wide">{username}</span>
+            <p className="text-xs text-zinc-900/75 font-semibold mt-1">{bio}</p>
+          </div>
+          
+          <div className="bg-black text-white rounded-3xl p-5 mt-4 border border-black/10 text-center space-y-4 shadow-lg">
+            <h4 className="text-xs font-black uppercase tracking-widest text-orange-500">{title}</h4>
+            <p className="text-[10px] text-zinc-400">{desc}</p>
+            <div className="flex items-center justify-center gap-3">
+              <div className="bg-zinc-900 px-3 py-2 rounded-xl border border-zinc-800">
+                <span className="text-base font-black font-mono text-white">03</span>
+              </div>
+              <span className="text-zinc-600 font-bold">:</span>
+              <div className="bg-zinc-900 px-3 py-2 rounded-xl border border-zinc-800">
+                <span className="text-base font-black font-mono text-white">14</span>
+              </div>
+              <span className="text-zinc-600 font-bold">:</span>
+              <div className="bg-zinc-900 px-3 py-2 rounded-xl border border-zinc-800">
+                <span className="text-base font-black font-mono text-white">59</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    case "TESTIMONIALS":
+      return (
+        <div className="w-full h-full bg-teal-50 flex flex-col p-8 text-zinc-800 relative z-0">
+          <div className="flex flex-col items-center mt-12 mb-8">
+            <div className="w-24 h-24 bg-zinc-200 rounded-2xl overflow-hidden border border-teal-200">
+              <img src={avatarUrl || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80"} className="w-full h-full object-cover" />
+            </div>
+            <span className="text-sm font-bold mt-3 text-teal-800">{username}</span>
+            <p className="text-xs text-teal-650 mt-1">{bio}</p>
+          </div>
+          
+          <div className="bg-white rounded-2xl p-5 mt-4 border border-zinc-100 shadow-sm space-y-3">
+            <div className="flex gap-0.5 text-yellow-400 text-sm">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <h4 className="text-xs font-bold text-slate-800">{title}</h4>
+            <p className="text-[11px] text-zinc-650 italic leading-relaxed">
+              "${desc}"
+            </p>
+            <div className="flex items-center gap-2 pt-1 border-t border-zinc-100">
+              <div className="w-6 h-6 rounded-full bg-zinc-300 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" className="w-full h-full object-cover" />
+              </div>
+              <span className="text-[10px] font-bold text-zinc-700">Elif Y.</span>
+            </div>
+          </div>
+        </div>
+      );
+    default:
+      return null;
+  }
 }
