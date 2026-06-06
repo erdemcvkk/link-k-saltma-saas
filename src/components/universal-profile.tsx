@@ -67,6 +67,8 @@ export interface UniversalProfileData {
   } | null;
   purchasedTemplates?: any[];
   purchasedModules?: any[];
+  isActiveTemplatePremium?: boolean;
+  hasActivePremiumModule?: boolean;
 }
 
 interface UniversalProfileProps {
@@ -101,18 +103,14 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
   const {
   username, bio, avatarUrl, theme = "dark", customCss, background, fontStyle = "Inter",
   bioColor, usernameColor, plan, links = [], products = [], addons = [], buttonClass, avatarShape = "circle",
-  purchasedTemplates = [], purchasedModules = []
+  purchasedTemplates = [], purchasedModules = [],
+  isActiveTemplatePremium = false,
+  hasActivePremiumModule = false
   } = data;
 
   const isDark = isDarkContext;
 
-  const hasPurchasedPremiumTemplate = purchasedTemplates?.some(
-    (pt: any) => pt.template && pt.template.price > 0
-  ) ?? false;
-
-  const hasPurchasedModule = (purchasedModules && purchasedModules.length > 0) ?? false;
-
-  const shouldShowBranding = plan === "FREE" && !hasPurchasedPremiumTemplate && !hasPurchasedModule && !isDashboardPreview && !isCompactMode;
+  const shouldShowBranding = plan === "FREE" && !isActiveTemplatePremium && !hasActivePremiumModule && !isDashboardPreview && !isCompactMode;
 
  // Fallback styling for backward compatibility when customCss is empty or "Start from Scratch"
  const getFallbackStyles = (themeId: string) => {

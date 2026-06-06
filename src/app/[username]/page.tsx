@@ -285,6 +285,14 @@ export default async function PublicProfilePage({ params, searchParams }: { para
     moduleId: pm.moduleId
   })) ?? [];
 
+  const isActiveTemplatePremium = activeTemplate 
+    ? (activeTemplate.price > 0) 
+    : (activeUser.purchasedTemplates?.some((pt: any) => pt.isActive && pt.template && pt.template.price > 0) ?? false);
+
+  const hasActivePremiumModule = serializedAddons.some((addon: any) => 
+    serializedPurchasedModules.some((pm: any) => pm.moduleId === addon.addonType)
+  );
+
  return (
  <ProfileClient
  username={activeUser.username!}
@@ -308,6 +316,8 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  systemSettings={serializedSystemSettings}
  purchasedTemplates={serializedPurchasedTemplates}
  purchasedModules={serializedPurchasedModules}
+ isActiveTemplatePremium={isActiveTemplatePremium}
+ hasActivePremiumModule={hasActivePremiumModule}
  />
  );
 }

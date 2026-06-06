@@ -63,6 +63,8 @@ interface ProfileClientProps {
  } | null;
  purchasedTemplates?: any[];
  purchasedModules?: any[];
+ isActiveTemplatePremium?: boolean;
+ hasActivePremiumModule?: boolean;
 }
 
 export default function ProfileClient({ 
@@ -86,7 +88,9 @@ export default function ProfileClient({
   buttonClass, 
   systemSettings,
   purchasedTemplates = [],
-  purchasedModules = []
+  purchasedModules = [],
+  isActiveTemplatePremium = false,
+  hasActivePremiumModule = false
 }: ProfileClientProps) {
  const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
  const [cardNumber, setCardNumber] = useState("");
@@ -169,7 +173,9 @@ export default function ProfileClient({
  systemSettings,
  avatarShape,
  purchasedTemplates,
- purchasedModules
+ purchasedModules,
+ isActiveTemplatePremium,
+ hasActivePremiumModule
  };
 
  return (
