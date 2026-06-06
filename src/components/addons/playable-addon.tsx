@@ -3,11 +3,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Music, Play, Pause, Clock, MessageCircle, Image, Star, ArrowLeft } from "lucide-react";
 
-function getMediaEmbed(url: string, accentColor?: string) {
+function getMediaEmbed(url: string, accentColor?: string, playing?: boolean, onClose?: () => void) {
   if (!url) return null;
   const trimmed = url.trim();
   
-  // Spotify track/album/playlist/episode
+  // Spotify track/album/playlist/episode — always show widget (no autoplay support)
   const spotifyMatch = trimmed.match(/open\.spotify\.com\/(track|album|playlist|episode)\/([a-zA-Z0-9]+)/);
   if (spotifyMatch) {
     return (
@@ -25,29 +25,73 @@ function getMediaEmbed(url: string, accentColor?: string) {
     );
   }
   
-  return null;
-}
+  // YouTube, SoundCloud, Apple Music — only show embed when user clicks play (with autoplay)
+  if (!playing) return null;
 
-function getHiddenEmbedSrc(url: string) {
-  if (!url) return null;
-  const trimmed = url.trim();
-
-  // YouTube (watch?v=, embed/, shorts/, youtu.be/)
+  const closeButton = onClose ? (
+    <button
+      onClick={(e) => { e.stopPropagation(); onClose(); }}
+      className="absolute top-2 right-2 z-20 px-2.5 py-1.5 bg-black/80 hover:bg-black text-white text-[10px] font-bold rounded-lg border border-white/20 backdrop-blur-sm cursor-pointer flex items-center gap-1.5 shadow-lg transition-all"
+    >
+      ✕ Kapat
+    </button>
+  ) : null;
+  
+  // YouTube
   const ytMatch = trimmed.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
   if (ytMatch) {
-    return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=0&enablejsapi=1`;
+    return (
+      <div className="w-full aspect-video rounded-xl overflow-hidden shadow-lg my-2 relative">
+        {closeButton}
+        <iframe
+          src={"https://www.youtube.com/embed/" + ytMatch[1] + "?autoplay=1"}
+          width="100%"
+          height="100%"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="rounded-xl"
+        />
+      </div>
+    );
   }
-
+  
   // SoundCloud
   if (trimmed.includes("soundcloud.com/")) {
     const encodedUrl = encodeURIComponent(trimmed);
-    return `https://w.soundcloud.com/player/?url=${encodedUrl}&auto_play=true&mute=0`;
+    return (
+      <div className="w-full rounded-xl overflow-hidden shadow-lg my-2 relative">
+        {closeButton}
+        <iframe
+          width="100%"
+          height={166}
+          scrolling="no"
+          frameBorder="0"
+          allow="autoplay"
+          src={"https://w.soundcloud.com/player/?url=" + encodedUrl + "&color=" + (accentColor ? accentColor.replace("#", "%23") : "%23ff5500") + "&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"}
+          className="rounded-xl"
+        />
+      </div>
+    );
   }
-
+  
   // Apple Music
   const appleMusicMatch = trimmed.match(/music\.apple\.com\/([a-z]{2})\/(?:album|playlist)\/[^/]+\/([a-zA-Z0-9.]+)/i);
   if (appleMusicMatch) {
-    return `https://embed.music.apple.com/${appleMusicMatch[1]}/album/${appleMusicMatch[2]}?autoplay=1&mute=0`;
+    return (
+      <div className="w-full rounded-xl overflow-hidden shadow-lg my-2 relative">
+        {closeButton}
+        <iframe
+          allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+          frameBorder="0"
+          height={175}
+          width="100%"
+          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+          src={"https://embed.music.apple.com/" + appleMusicMatch[1] + "/album/" + appleMusicMatch[2]}
+          className="rounded-xl"
+        />
+      </div>
+    );
   }
 
   return null;
@@ -87,6 +131,15 @@ export default function PlayableAddon({
 
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
 
+  // ── AUDIO STATES (declared early so mediaEmbed can reference isPlaying) ──
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // ── VIDEO STATES ──
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+
   // Reset track index if tracks array changes length
   useEffect(() => {
     setCurrentTrackIndex(0);
@@ -97,7 +150,7 @@ export default function PlayableAddon({
   const url = (activeTrack.trackUrl || "").trim();
   const isDirectAudio = /\.(mp3|wav|ogg|m4a|aac|flac)(\?.*)?$/i.test(url);
   const isEmbeddable = /open\.spotify\.com|youtube\.com|youtu\.be|soundcloud\.com|music\.apple\.com/i.test(url);
-  const mediaEmbed = !isDirectAudio ? getMediaEmbed(url, config.accentColor) : null;
+  const mediaEmbed = !isDirectAudio ? getMediaEmbed(url, config.accentColor, isPlaying, () => setIsPlaying(false)) : null;
 
   // ── VIDEOS DATA PARSING ──
   const videos = Array.isArray(config.videos) && config.videos.length > 0 
@@ -122,16 +175,6 @@ export default function PlayableAddon({
   }, [videos.length]);
 
   const activeVideo = videos[currentVideoIndex] || videos[0] || {};
-
-  // ── AUDIO STATES ──
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const hiddenPlayerRef = useRef<HTMLDivElement>(null);
-
-  // ── VIDEO STATES ──
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   // ── COUNTDOWN STATE ──
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -199,59 +242,11 @@ export default function PlayableAddon({
     if (audioRef.current) {
       audioRef.current.load();
     }
-    // Remove any hidden player iframe when URL changes
-    if (hiddenPlayerRef.current) {
-      hiddenPlayerRef.current.innerHTML = '';
-    }
   }, [url]);
-
-  // ── CLEANUP HIDDEN PLAYER ON UNMOUNT ──
-  useEffect(() => {
-    return () => {
-      if (hiddenPlayerRef.current) {
-        hiddenPlayerRef.current.innerHTML = '';
-      }
-    };
-  }, []);
-
-  // ── IMPERATIVE HIDDEN IFRAME MANAGEMENT ──
-  // Creates/removes iframe directly in click handler so browser recognizes user gesture for autoplay
-  const mountHiddenPlayer = (embedUrl: string) => {
-    if (!hiddenPlayerRef.current) return;
-    hiddenPlayerRef.current.innerHTML = '';
-    const iframe = document.createElement('iframe');
-    iframe.src = embedUrl;
-    iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
-    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-popups');
-    iframe.style.width = '320px';
-    iframe.style.height = '180px';
-    iframe.style.border = 'none';
-    iframe.title = 'background-audio-player';
-    hiddenPlayerRef.current.appendChild(iframe);
-  };
-
-  const unmountHiddenPlayer = () => {
-    if (hiddenPlayerRef.current) {
-      hiddenPlayerRef.current.innerHTML = '';
-    }
-  };
 
   const handlePlayPause = () => {
     if (!url) return;
-    const newIsPlaying = !isPlaying;
-    setIsPlaying(newIsPlaying);
-
-    // For external (non-direct-audio) URLs, imperatively manage hidden iframe
-    if (!isDirectAudio) {
-      if (newIsPlaying) {
-        const embedSrc = getHiddenEmbedSrc(url);
-        if (embedSrc) {
-          mountHiddenPlayer(embedSrc);
-        }
-      } else {
-        unmountHiddenPlayer();
-      }
-    }
+    setIsPlaying(!isPlaying);
   };
 
   // Video play handler (for FUTURE_WAVE, CINEMATIC_THEATER)
@@ -1648,23 +1643,5 @@ export default function PlayableAddon({
     }
   };
 
-  return (
-    <>
-      {renderContent()}
-      {/* Hidden container for imperative iframe player - positioned off-screen but at a real size so browsers allow playback */}
-      <div
-        ref={hiddenPlayerRef}
-        style={{
-          position: 'fixed',
-          top: '-9999px',
-          left: '-9999px',
-          width: '320px',
-          height: '180px',
-          overflow: 'hidden',
-          pointerEvents: 'none',
-          opacity: 0,
-        }}
-      />
-    </>
-  );
+  return renderContent();
 }
