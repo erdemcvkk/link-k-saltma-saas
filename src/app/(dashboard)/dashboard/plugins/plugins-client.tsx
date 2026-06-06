@@ -13,6 +13,7 @@ interface AddonItem {
   addonType: string;
   isActive: boolean;
   settings: any;
+  createdAt: string;
 }
 
 interface ProductItem {
@@ -108,6 +109,10 @@ export default function PluginsClient({
           return nameA.localeCompare(nameB);
         } else if (sortOption === "name-desc") {
           return nameB.localeCompare(nameA);
+        } else if (sortOption === "date-desc") {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        } else if (sortOption === "date-asc") {
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         }
         
         // Default sort: active first, then alphabetical
@@ -286,6 +291,8 @@ export default function PluginsClient({
                   <option value="active-first">{lang === "tr" ? "Aktifler Önce" : "Active First"}</option>
                   <option value="name-asc">{lang === "tr" ? "İsim: A → Z" : "Name: A → Z"}</option>
                   <option value="name-desc">{lang === "tr" ? "İsim: Z → A" : "Name: Z → A"}</option>
+                  <option value="date-desc">{lang === "tr" ? "Yeniden Eskiye" : "Newest First"}</option>
+                  <option value="date-asc">{lang === "tr" ? "Eskiden Yeniye" : "Oldest First"}</option>
                 </select>
                 <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
               </div>

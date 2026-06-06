@@ -21,7 +21,8 @@ export default async function PluginsPage() {
     id: a.id,
     addonType: a.addonType,
     isActive: a.isActive,
-    settings: a.settings
+    settings: a.settings,
+    createdAt: a.createdAt.toISOString(),
   }));
 
   // Fetch products (needed for config modal)

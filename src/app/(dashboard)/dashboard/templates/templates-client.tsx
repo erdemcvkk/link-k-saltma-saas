@@ -79,6 +79,7 @@ interface TemplateItem {
   isCoded: boolean;
   customCss?: string | null;
   configJson?: string | null;
+  createdAt: string;
 }
 
 interface TemplatesClientProps {
@@ -225,6 +226,10 @@ export default function TemplatesClient({
           const isCustomB = b.category === "Özel";
           if (!isCustomA && isCustomB) return -1;
           if (isCustomA && !isCustomB) return 1;
+        } else if (sortOption === "date-desc") {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        } else if (sortOption === "date-asc") {
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         }
         
         // Default sort (active first, then alphabetical)
@@ -1009,6 +1014,8 @@ export default function TemplatesClient({
             <option value="name-desc">{lang === "tr" ? "İsim: Z → A" : "Name: Z → A"}</option>
             <option value="custom-first">{lang === "tr" ? "Özel Şablonlar Önce" : "Custom Templates First"}</option>
             <option value="purchased-first">{lang === "tr" ? "Satın Alınanlar Önce" : "Purchased Templates First"}</option>
+            <option value="date-desc">{lang === "tr" ? "Yeniden Eskiye" : "Newest First"}</option>
+            <option value="date-asc">{lang === "tr" ? "Eskiden Yeniye" : "Oldest First"}</option>
           </select>
           <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
         </div>

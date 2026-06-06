@@ -35,6 +35,7 @@ export default async function TemplatesPage() {
     isCoded: ot.template.isCoded,
     customCss: ot.template.customCss,
     configJson: ot.template.configJson,
+    createdAt: ot.createdAt.toISOString(),
   }));
 
   // Fetch user's links for preview
