@@ -909,6 +909,10 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
         </CardWrapper>
       );
     case "CORP_EXEC":
+      const mainTitle = configData.title || (configData.cards && configData.cards[0] && configData.cards[0].title) || "Kurumsal Yönetici Kartı";
+      const mainDesc = configData.description || (configData.cards && configData.cards[0] && configData.cards[0].description) || "Görüşme ve detaylar için tıklayın.";
+      const mainBtnText = configData.buttonText || (configData.cards && configData.cards[0] && configData.cards[0].buttonText) || "Görüşme Ayarla";
+
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
           <div className="flex items-center gap-3">
@@ -916,12 +920,12 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
               <Briefcase className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-slate-800">{configData.title || "Kurumsal Yönetici Kartı"}</h4>
-              <p className="text-xs opacity-70 mt-0.5">{configData.description || "Görüşme ve detaylar için tıklayın."}</p>
+              <h4 className="text-sm font-bold text-slate-800">{mainTitle}</h4>
+              <p className="text-xs opacity-70 mt-0.5">{mainDesc}</p>
             </div>
           </div>
           <div className={btnClassName}>
-            {configData.buttonText || "Görüşme Ayarla"}
+            {mainBtnText}
           </div>
         </CardWrapper>
       );

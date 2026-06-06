@@ -209,6 +209,8 @@ export default async function AddonPage({
   }
 
   if (matchingAddon.addonType === "CORP_EXEC") {
+    const cards = parsedConfig.cards || (parsedConfig.title ? [{ title: parsedConfig.title, description: parsedConfig.description, buttonText: parsedConfig.buttonText, buttonUrl: parsedConfig.buttonUrl }] : []);
+
     return (
       <div className="w-full min-h-screen bg-slate-100 flex items-center justify-center p-4">
         <div className="w-full max-w-md bg-slate-50 text-slate-800 rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-200">
@@ -230,21 +232,25 @@ export default async function AddonPage({
             <p className="text-xs text-slate-500 font-bold tracking-tight mt-1">{parsedConfig.storeBio || user.profile.bio || "C-Level Executive Consultant"}</p>
           </div>
           
-          {/* Main Card */}
-          <div className="bg-white shadow-xl rounded-3xl p-6 mx-6 mb-8 border border-slate-100 space-y-4">
-            <div className="text-center md:text-left">
-              <h2 className="text-base font-black text-slate-800 tracking-tight leading-snug">{parsedConfig.title || "Q3 Executive Briefing"}</h2>
-              <p className="text-sm text-slate-500 font-medium mt-1.5 leading-relaxed">{parsedConfig.description || "Corporate & Strategy"}</p>
-            </div>
-            
-            <a 
-              href={parsedConfig.buttonUrl || "#"} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl tracking-wide transition-all border-0 shadow-lg shadow-blue-500/20 cursor-pointer block text-center"
-            >
-              {parsedConfig.buttonText || "Schedule Consultation"}
-            </a>
+          {/* Cards List */}
+          <div className="px-6 pb-8 space-y-4">
+            {cards.map((card: any, idx: number) => (
+              <div key={idx} className="bg-white shadow-xl rounded-3xl p-6 border border-slate-100 space-y-4">
+                <div className="text-center md:text-left">
+                  <h2 className="text-base font-black text-slate-800 tracking-tight leading-snug">{card.title || "Q3 Executive Briefing"}</h2>
+                  <p className="text-sm text-slate-500 font-medium mt-1.5 leading-relaxed">{card.description || "Corporate & Strategy"}</p>
+                </div>
+                
+                <a 
+                  href={card.buttonUrl || "#"} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl tracking-wide transition-all border-0 shadow-lg shadow-blue-500/20 cursor-pointer block text-center"
+                >
+                  {card.buttonText || "Schedule Consultation"}
+                </a>
+              </div>
+            ))}
           </div>
           
         </div>

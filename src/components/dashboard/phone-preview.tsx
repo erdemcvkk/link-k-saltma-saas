@@ -185,8 +185,10 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
 
     // 1.5 Kurumsal Yönetici Kartı
     if (type === "CORP_EXEC") {
+      const cards = parsedConfig.cards || (parsedConfig.title ? [{ title: parsedConfig.title, description: parsedConfig.description, buttonText: parsedConfig.buttonText, buttonUrl: parsedConfig.buttonUrl }] : []);
+      
       return (
-        <div className="w-full h-full bg-slate-50 flex flex-col relative z-0 text-slate-800 overflow-hidden">
+        <div className="w-full h-full bg-slate-50 flex flex-col relative z-0 text-slate-800 overflow-y-auto no-scrollbar">
           {/* Cover Header */}
           <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 h-24 w-full flex flex-col justify-end p-3 relative shrink-0">
             {parsedConfig.storeCoverUrl && (
@@ -204,16 +206,20 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
             <p className="text-[8.5px] text-slate-500 font-bold tracking-tight mt-0.5">{parsedConfig.storeBio || data.bio || "C-Level Executive Consultant"}</p>
           </div>
           
-          {/* Main Card */}
-          <div className="bg-white shadow-lg rounded-2xl p-4 mx-4 mt-1 border border-slate-100 space-y-3">
-            <div className="text-center">
-              <h4 className="text-[11px] font-extrabold text-slate-800 tracking-tight leading-snug">{parsedConfig.title || "Q3 Executive Briefing"}</h4>
-              <p className="text-[9px] text-slate-400 font-medium mt-1 leading-normal">{parsedConfig.description || "Corporate & Strategy"}</p>
-            </div>
-            
-            <button className="w-full py-2 bg-blue-600 text-white font-bold text-[9px] rounded-lg tracking-wide border-0 cursor-pointer shadow-sm shadow-blue-500/10">
-              {parsedConfig.buttonText || "Schedule Consultation"}
-            </button>
+          {/* Cards List */}
+          <div className="px-4 pb-4 space-y-3 shrink-0">
+            {cards.map((card: any, idx: number) => (
+              <div key={idx} className="bg-white shadow-lg rounded-2xl p-4 border border-slate-100 space-y-3">
+                <div className="text-center">
+                  <h4 className="text-[11px] font-extrabold text-slate-800 tracking-tight leading-snug">{card.title || "Q3 Executive Briefing"}</h4>
+                  <p className="text-[9px] text-slate-400 font-medium mt-1 leading-normal">{card.description || "Corporate & Strategy"}</p>
+                </div>
+                
+                <button className="w-full py-2 bg-blue-600 text-white font-bold text-[9px] rounded-lg tracking-wide border-0 cursor-pointer shadow-sm shadow-blue-500/10">
+                  {card.buttonText || "Schedule Consultation"}
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       );

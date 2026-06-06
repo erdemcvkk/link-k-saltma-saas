@@ -398,6 +398,118 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     );
   };
 
+  const renderCardsEditor = () => {
+    const cards = configData.cards || (configData.title ? [{ title: configData.title, description: configData.description, buttonText: configData.buttonText, buttonUrl: configData.buttonUrl }] : []);
+    return (
+      <div className="space-y-4 mt-4">
+        <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+          {lang === "tr" ? "Yönetici Kartları Listesi" : "Executive Cards List"}
+        </label>
+        {cards.map((card: any, idx: number) => (
+          <div key={idx} className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50 relative space-y-3 shadow-sm">
+            <div className="flex justify-between items-center pb-2 border-b border-zinc-150">
+              <span className="text-xs font-black text-indigo-650 uppercase tracking-wide">
+                {lang === "tr" ? `${idx + 1}. Kart` : `Card #${idx + 1}`}
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  const newCards = [...cards];
+                  newCards.splice(idx, 1);
+                  setConfigData({ ...configData, cards: newCards });
+                }}
+                className="w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center transition-colors shadow-sm"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-1">
+                  {lang === "tr" ? "Kart Başlığı" : "Card Title"}
+                </label>
+                <input
+                  type="text"
+                  placeholder="Q3 Executive Briefing"
+                  value={card.title || ""}
+                  onChange={(e) => {
+                    const newCards = [...cards];
+                    newCards[idx] = { ...newCards[idx], title: e.target.value };
+                    setConfigData({ ...configData, cards: newCards });
+                  }}
+                  className="w-full px-3 py-2 text-xs font-bold bg-white border border-zinc-200 rounded-xl focus:border-indigo-500 outline-none text-slate-800"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-1">
+                  {lang === "tr" ? "Kart Açıklaması" : "Card Description"}
+                </label>
+                <textarea
+                  placeholder="Corporate & Strategy"
+                  value={card.description || ""}
+                  onChange={(e) => {
+                    const newCards = [...cards];
+                    newCards[idx] = { ...newCards[idx], description: e.target.value };
+                    setConfigData({ ...configData, cards: newCards });
+                  }}
+                  className="w-full px-3 py-2 text-xs bg-white border border-zinc-200 rounded-xl focus:border-indigo-500 outline-none resize-none h-14 text-slate-600"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-1">
+                    {lang === "tr" ? "Buton Metni" : "Button Text"}
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Schedule Consultation"
+                    value={card.buttonText || ""}
+                    onChange={(e) => {
+                      const newCards = [...cards];
+                      newCards[idx] = { ...newCards[idx], buttonText: e.target.value };
+                      setConfigData({ ...configData, cards: newCards });
+                    }}
+                    className="w-full px-3 py-2 text-xs bg-white border border-zinc-200 rounded-xl focus:border-indigo-500 outline-none text-slate-850"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide block mb-1">
+                    {lang === "tr" ? "Yönlendirme Linki" : "Redirect URL"}
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={card.buttonUrl || ""}
+                    onChange={(e) => {
+                      const newCards = [...cards];
+                      newCards[idx] = { ...newCards[idx], buttonUrl: e.target.value };
+                      setConfigData({ ...configData, cards: newCards });
+                    }}
+                    className="w-full px-3 py-2 text-xs bg-white border border-zinc-200 rounded-xl focus:border-indigo-500 outline-none text-slate-850"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => {
+            const newCards = [...cards, { title: "", description: "", buttonText: "Schedule Consultation", buttonUrl: "" }];
+            setConfigData({ ...configData, cards: newCards });
+          }}
+          className="w-full py-3 md:py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>{lang === "tr" ? "Yeni Kart Ekle" : "Add New Card"}</span>
+        </button>
+      </div>
+    );
+  };
+
   const renderTracksEditor = () => {
     const items = configData.tracks || [];
     const effectiveItems = items.length > 0 ? items : (configData.trackUrl ? [
@@ -1052,6 +1164,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  <Briefcase className="h-4 w-4" />
  {lang === "tr" ? "Yönetici Kartı Bilgileri" : "Executive Card Information"}
  </h4>
+ 
  <div className="space-y-1.5 mb-4">
  <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Profil Fotoğrafı" : "Profile Image"}</label>
  <div className="flex gap-2">
@@ -1061,44 +1174,68 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  onChange={(e) => setConfigData({ ...configData, storeAvatarUrl: e.target.value })}
  placeholder="https://..."
  className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
-  />
-  <label className="flex items-center justify-center px-4 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
-  {lang === "tr" ? "Dosya Seç" : "Upload"}
-  <input 
-  type="file" 
-  className="hidden" 
-  accept="image/*"
-  onChange={async (e) => {
-  const file = e.target.files?.[0];
-  if (file) {
-  try {
-  const url = await handleFileUpload(file);
-  setConfigData({ ...configData, storeAvatarUrl: url });
-  } catch (err: any) { showAlert(err.message); }
-  }
-  }}
-  />
-  </label>
-  </div>
-  </div>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-  {renderInput("storeUsername", lang === "tr" ? "Kullanıcı Adı / Ünvan" : "Username / Handle", "@ceo.exec")}
-  {renderInput("storeBio", lang === "tr" ? "Alt Başlık / Görev" : "Subtitle / Role", "C-Level Executive Consultant")}
-  </div>
-  <div className="border-t border-zinc-100 pt-4 mt-4 space-y-4">
-  <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-  <Store className="h-4 w-4" />
-  {lang === "tr" ? "Kart İçeriği" : "Card Content"}
-  </h4>
-  {renderInput("title", lang === "tr" ? "Kart Başlığı" : "Card Title", "Q3 Executive Briefing")}
-  {renderTextarea("description", lang === "tr" ? "Kart Açıklaması" : "Card Description", "Corporate & Strategy")}
-  {renderInput("buttonText", lang === "tr" ? "Buton Metni" : "Button Text", "Schedule Consultation")}
-  {renderInput("buttonUrl", lang === "tr" ? "Buton Yönlendirme Linki" : "Button Redirect URL", "https://calendly.com/... veya https://...")}
-  </div>
-  </div>
-  </>
-  );
-  break;
+ />
+ <label className="flex items-center justify-center px-4 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+ {lang === "tr" ? "Dosya Seç" : "Upload"}
+ <input 
+ type="file" 
+ className="hidden" 
+ accept="image/*"
+ onChange={async (e) => {
+ const file = e.target.files?.[0];
+ if (file) {
+ try {
+ const url = await handleFileUpload(file);
+ setConfigData({ ...configData, storeAvatarUrl: url });
+ } catch (err: any) { showAlert(err.message); }
+ }
+ }}
+ />
+ </label>
+ </div>
+ </div>
+
+ <div className="space-y-1.5 mb-4">
+ <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Kapak Görseli (Banner)" : "Cover Image (Banner)"}</label>
+ <div className="flex gap-2">
+ <input
+ type="text"
+ value={configData["storeCoverUrl"] || ""}
+ onChange={(e) => setConfigData({ ...configData, storeCoverUrl: e.target.value })}
+ placeholder="https://..."
+ className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
+ />
+ <label className="flex items-center justify-center px-4 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+ {lang === "tr" ? "Dosya Seç" : "Upload"}
+ <input 
+ type="file" 
+ className="hidden" 
+ accept="image/*"
+ onChange={async (e) => {
+ const file = e.target.files?.[0];
+ if (file) {
+ try {
+ const url = await handleFileUpload(file);
+ setConfigData({ ...configData, storeCoverUrl: url });
+ } catch (err: any) { showAlert(err.message); }
+ }
+ }}
+ />
+ </label>
+ </div>
+ </div>
+
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+ {renderInput("storeUsername", lang === "tr" ? "Kullanıcı Adı / Ünvan" : "Username / Handle", "@ceo.exec")}
+ {renderInput("storeBio", lang === "tr" ? "Alt Başlık / Görev" : "Subtitle / Role", "C-Level Executive Consultant")}
+ </div>
+ <div className="border-t border-zinc-150 pt-4 mt-4">
+ {renderCardsEditor()}
+ </div>
+ </div>
+ </>
+ );
+ break;
 
  case "BOOKING":
  specificFields = (
@@ -1395,38 +1532,45 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   </div>
   );
   case "CORP_EXEC":
-  return (
-  <div className="w-full h-full bg-slate-50 flex flex-col relative z-0 text-slate-800 overflow-hidden">
-  {/* Cover Header */}
-  <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 h-32 w-full flex flex-col justify-end p-4 relative shrink-0">
-  {configData.storeCoverUrl && (
-  <img src={configData.storeCoverUrl} className="absolute inset-0 w-full h-full object-cover opacity-65" />
-  )}
-  <div className="absolute top-3 right-3 px-2 py-0.5 bg-blue-600 text-[8px] font-bold text-white rounded tracking-wide shadow-sm uppercase">PRO</div>
-  </div>
-  {/* Profile Details */}
-  <div className="flex flex-col items-center -mt-10 px-6 mb-4 relative z-10 shrink-0">
-  <div className="w-20 h-20 bg-white rounded-full border-4 border-white overflow-hidden shadow-md">
-  <img src={configData.storeAvatarUrl || "/placeholder.png"} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.png" }} />
-  </div>
-  <span className="text-sm font-extrabold mt-2 text-slate-800">{configData.storeUsername || ("@" + username)}</span>
-  <p className="text-xs text-slate-500 font-medium tracking-tight mt-0.5">{configData.storeBio || "C-Level Executive Consultant"}</p>
-  </div>
-  {/* Main Card Content */}
-  <div className="bg-white shadow-xl rounded-2xl p-5 mx-6 mt-1 border border-slate-100 space-y-4">
-  <div className="text-center md:text-left">
-  <h4 className="text-sm font-extrabold text-slate-800 tracking-tight leading-snug">{configData.title || "Q3 Executive Briefing"}</h4>
-  <p className="text-xs text-slate-400 font-medium mt-1 leading-relaxed">{configData.description || "Corporate & Strategy"}</p>
-  </div>
-  <button 
-  type="button" 
-  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl tracking-wide transition-all border-0 shadow-md shadow-blue-500/10 cursor-pointer"
-  >
-  {configData.buttonText || "Schedule Consultation"}
-  </button>
-  </div>
-  </div>
-  );
+    const previewCards = configData.cards || (configData.title ? [{ title: configData.title, description: configData.description, buttonText: configData.buttonText, buttonUrl: configData.buttonUrl }] : []);
+    return (
+      <div className="w-full h-full bg-slate-50 flex flex-col relative z-0 text-slate-800 overflow-y-auto no-scrollbar">
+        {/* Cover Header */}
+        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 h-32 w-full flex flex-col justify-end p-4 relative shrink-0">
+          {configData.storeCoverUrl && (
+            <img src={configData.storeCoverUrl} className="absolute inset-0 w-full h-full object-cover opacity-65" />
+          )}
+          <div className="absolute top-3 right-3 px-2 py-0.5 bg-blue-600 text-[8px] font-bold text-white rounded tracking-wide shadow-sm uppercase">PRO</div>
+        </div>
+        
+        {/* Profile Details */}
+        <div className="flex flex-col items-center -mt-10 px-6 mb-4 relative z-10 shrink-0">
+          <div className="w-20 h-20 bg-white rounded-full border-4 border-white overflow-hidden shadow-md">
+            <img src={configData.storeAvatarUrl || "/placeholder.png"} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.png" }} />
+          </div>
+          <span className="text-sm font-extrabold mt-2 text-slate-800">{configData.storeUsername || ("@" + username)}</span>
+          <p className="text-xs text-slate-500 font-medium tracking-tight mt-0.5">{configData.storeBio || "C-Level Executive Consultant"}</p>
+        </div>
+        
+        {/* Cards List */}
+        <div className="px-6 pb-6 space-y-4 shrink-0">
+          {previewCards.map((card: any, idx: number) => (
+            <div key={idx} className="bg-white shadow-xl rounded-2xl p-5 border border-slate-100 space-y-4">
+              <div className="text-center md:text-left">
+                <h4 className="text-sm font-extrabold text-slate-800 tracking-tight leading-snug">{card.title || "Q3 Executive Briefing"}</h4>
+                <p className="text-xs text-slate-400 font-medium mt-1 leading-relaxed">{card.description || "Corporate & Strategy"}</p>
+              </div>
+              <button 
+                type="button" 
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl tracking-wide transition-all border-0 shadow-md shadow-blue-500/10 cursor-pointer"
+              >
+                {card.buttonText || "Schedule Consultation"}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
 
   case "NEWSLETTER":
   return (
