@@ -128,6 +128,7 @@ export default function PlayableAddon({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hiddenPlayerRef = useRef<HTMLDivElement>(null);
 
   // ── VIDEO STATES ──
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -198,10 +199,65 @@ export default function PlayableAddon({
     if (audioRef.current) {
       audioRef.current.load();
     }
+    // Remove any hidden player iframe when URL changes
+    if (hiddenPlayerRef.current) {
+      hiddenPlayerRef.current.innerHTML = '';
+    }
   }, [url]);
+
+  // ── CLEANUP HIDDEN PLAYER ON UNMOUNT ──
+  useEffect(() => {
+    return () => {
+      if (hiddenPlayerRef.current) {
+        hiddenPlayerRef.current.innerHTML = '';
+      }
+    };
+  }, []);
+
+  // ── IMPERATIVE HIDDEN IFRAME MANAGEMENT ──
+  // Creates/removes iframe directly in click handler so browser recognizes user gesture for autoplay
+  const mountHiddenPlayer = (embedUrl: string) => {
+    if (!hiddenPlayerRef.current) return;
+    hiddenPlayerRef.current.innerHTML = '';
+    const iframe = document.createElement('iframe');
+    iframe.src = embedUrl;
+    iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-popups');
+    iframe.style.width = '320px';
+    iframe.style.height = '180px';
+    iframe.style.border = 'none';
+    iframe.title = 'background-audio-player';
+    hiddenPlayerRef.current.appendChild(iframe);
+  };
+
+  const unmountHiddenPlayer = () => {
+    if (hiddenPlayerRef.current) {
+      hiddenPlayerRef.current.innerHTML = '';
+    }
+  };
 
   const handlePlayPause = () => {
     if (!url) return;
+    const newIsPlaying = !isPlaying;
+    setIsPlaying(newIsPlaying);
+
+    // For external (non-direct-audio) URLs, imperatively manage hidden iframe
+    if (!isDirectAudio) {
+      if (newIsPlaying) {
+        const embedSrc = getHiddenEmbedSrc(url);
+        if (embedSrc) {
+          mountHiddenPlayer(embedSrc);
+        }
+      } else {
+        unmountHiddenPlayer();
+      }
+    }
+  };
+
+  // Video play handler (for FUTURE_WAVE, CINEMATIC_THEATER)
+  const handleVideoPlayPause = () => {
+    const videoUrl = (activeVideo.videoUrl || '').trim();
+    if (!videoUrl) return;
     setIsPlaying(!isPlaying);
   };
 
@@ -1469,7 +1525,7 @@ export default function PlayableAddon({
                   <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,3px_100%] pointer-events-none" />
 
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <button onClick={handlePlayPause} className="w-14 h-14 rounded-none bg-pink-500 flex items-center justify-center text-black border-2 border-cyan-400 shadow-[0_0_15px_rgba(236,72,153,0.8)] hover:scale-105 transition-all cursor-pointer">
+                    <button onClick={handleVideoPlayPause} className="w-14 h-14 rounded-none bg-pink-500 flex items-center justify-center text-black border-2 border-cyan-400 shadow-[0_0_15px_rgba(236,72,153,0.8)] hover:scale-105 transition-all cursor-pointer">
                       <span className="text-lg ml-0.5">▶</span>
                     </button>
                   </div>
@@ -1543,7 +1599,7 @@ export default function PlayableAddon({
                   <div className="absolute right-0 inset-y-0 w-4 bg-gradient-to-l from-red-950 to-red-800 border-l border-red-900/50 shadow-lg z-10"></div>
 
                   <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <button onClick={handlePlayPause} className="w-16 h-16 rounded-full bg-red-700/80 backdrop-blur-sm flex items-center justify-center text-white border border-red-500/50 shadow-2xl hover:bg-red-650 hover:scale-105 transition-all cursor-pointer">
+                    <button onClick={handleVideoPlayPause} className="w-16 h-16 rounded-full bg-red-700/80 backdrop-blur-sm flex items-center justify-center text-white border border-red-500/50 shadow-2xl hover:bg-red-650 hover:scale-105 transition-all cursor-pointer">
                       <span className="text-xl ml-1">▶</span>
                     </button>
                   </div>
@@ -1592,26 +1648,23 @@ export default function PlayableAddon({
     }
   };
 
-  const hiddenEmbedSrc = !isDirectAudio ? getHiddenEmbedSrc(url) : null;
-
   return (
     <>
       {renderContent()}
-      {isPlaying && !isDirectAudio && hiddenEmbedSrc && (
-        <iframe
-          src={hiddenEmbedSrc}
-          allow="autoplay; encrypted-media"
-          style={{
-            position: "absolute",
-            opacity: 0,
-            pointerEvents: "none",
-            width: "1px",
-            height: "1px",
-            left: "-9999px",
-          }}
-          title="background-player"
-        />
-      )}
+      {/* Hidden container for imperative iframe player - positioned off-screen but at a real size so browsers allow playback */}
+      <div
+        ref={hiddenPlayerRef}
+        style={{
+          position: 'fixed',
+          top: '-9999px',
+          left: '-9999px',
+          width: '320px',
+          height: '180px',
+          overflow: 'hidden',
+          pointerEvents: 'none',
+          opacity: 0,
+        }}
+      />
     </>
   );
 }
