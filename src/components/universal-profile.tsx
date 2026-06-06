@@ -112,7 +112,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 
   const hasPurchasedModule = (purchasedModules && purchasedModules.length > 0) ?? false;
 
-  const shouldShowBranding = plan === "FREE" && !hasPurchasedPremiumTemplate && !hasPurchasedModule;
+  const shouldShowBranding = plan === "FREE" && !hasPurchasedPremiumTemplate && !hasPurchasedModule && !isDashboardPreview && !isCompactMode;
 
  // Fallback styling for backward compatibility when customCss is empty or "Start from Scratch"
  const getFallbackStyles = (themeId: string) => {
