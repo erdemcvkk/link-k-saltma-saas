@@ -403,6 +403,71 @@ export const ADDON_TYPES: AddonTypeData[] = [
       { id: "d1", title: "Bana Bir Kahve Ismarla", type: "Destek", price: "99", imageUrl: "/placeholder.png" },
       { id: "d2", title: "Büyük Destek", type: "Destek", price: "99", imageUrl: "/placeholder.png" },
     ]
+  },
+  { 
+    id: "RETRO_CASSETTE", 
+    name: "Retro Kaset Çalar", 
+    desc: "90'ların nostaljik kaset görünümünde, dönen makaralı ses oynatıcısı.", 
+    color: "bg-amber-600",
+    theme: "classic",
+    price: "99",
+    username: "@vintage.tapes",
+    bio: "90s Music Curator",
+    avatarUrl: "/placeholder.png",
+    category: "Müzik & Audio",
+    mockProducts: []
+  },
+  { 
+    id: "MINIMAL_DARK_AUDIO", 
+    name: "Minimalist Dark Player", 
+    desc: "Siyahın en asil tonunda, sade çizgilere sahip ultra modern müzik çalar.", 
+    color: "bg-zinc-900",
+    theme: "classic",
+    price: "99",
+    username: "@minimal.dark",
+    bio: "Techno & Ambient Artist",
+    avatarUrl: "/placeholder.png",
+    category: "Müzik & Audio",
+    mockProducts: []
+  },
+  { 
+    id: "VINTAGE_RADIO", 
+    name: "Antika Radyo Oynatıcı", 
+    desc: "Klasik ahşap radyo ve frekans ayarlı nostaljik ses modülü.", 
+    color: "bg-amber-800",
+    theme: "classic",
+    price: "99",
+    username: "@antique.radio",
+    bio: "Classic Rock & Jazz collector",
+    avatarUrl: "/placeholder.png",
+    category: "Müzik & Audio",
+    mockProducts: []
+  },
+  { 
+    id: "FUTURE_WAVE", 
+    name: "Future Synthwave Video", 
+    desc: "Neon cyberpunk çerçeve ve VHS filtre esintili video oynatıcı.", 
+    color: "bg-pink-500",
+    theme: "classic",
+    price: "99",
+    username: "@cyber.waves",
+    bio: "Motion Designer & VJ",
+    avatarUrl: "/placeholder.png",
+    category: "Satış & Gelir",
+    mockProducts: []
+  },
+  { 
+    id: "CINEMATIC_THEATER", 
+    name: "Sinematik Tiyatro Video", 
+    desc: "Kırmızı kadife perdeler ve sinema projektörü efektli film/eğitim modülü.", 
+    color: "bg-red-700",
+    theme: "classic",
+    price: "99",
+    username: "@cine.theater",
+    bio: "Indie Filmmaker",
+    avatarUrl: "/placeholder.png",
+    category: "Satış & Gelir",
+    mockProducts: []
   }
 ];
 

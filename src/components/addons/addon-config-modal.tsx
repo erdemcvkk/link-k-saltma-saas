@@ -88,7 +88,12 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  if (type === "GAMER_HUB") return "gamer-hub";
  if (type === "CORP_EXEC") return "corporate";
  if (type === "COMIC_MANGA") return "comic-manga";
- if (type === "SPOTIFY_CLASSIC") return "spotify-player";
+ if (type === "RETRO_CASSETTE") return "retro-cassette";
+  if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
+  if (type === "VINTAGE_RADIO") return "vintage-radio";
+  if (type === "FUTURE_WAVE") return "future-wave";
+  if (type === "CINEMATIC_THEATER") return "cinematic-theater";
+  if (type === "SPOTIFY_CLASSIC") return "spotify-player";
  if (type === "VINYL_RETRO") return "vinyl-player";
  if (type === "GLASS_AUDIO") return "glass-audio";
  if (type === "NEON_CYBERPUNK") return "neon-player";
@@ -752,7 +757,12 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  case "FAQ": return { icon: <HelpCircle className="h-5 w-5" />, title: "FAQ" };
  case "MAP": return { icon: <MapPin className="h-5 w-5" />, title: lang === "tr" ? "Harita" : "Map" };
  case "WHATSAPP": return { icon: <MessageCircle className="h-5 w-5" />, title: "WhatsApp" };
-  case "SPOTIFY_CLASSIC": return { icon: <Music className="h-5 w-5" />, title: "Spotify Classic Player" };
+  case "RETRO_CASSETTE": return { icon: <Music className="h-5 w-5" />, title: "Retro Kaset Çalar" };
+    case "MINIMAL_DARK_AUDIO": return { icon: <Music className="h-5 w-5" />, title: "Minimalist Dark Player" };
+    case "VINTAGE_RADIO": return { icon: <Music className="h-5 w-5" />, title: "Antika Radyo Oynatıcı" };
+    case "FUTURE_WAVE": return { icon: <Store className="h-5 w-5" />, title: "Future Synthwave Video" };
+    case "CINEMATIC_THEATER": return { icon: <Store className="h-5 w-5" />, title: "Sinematik Tiyatro Video" };
+    case "SPOTIFY_CLASSIC": return { icon: <Music className="h-5 w-5" />, title: "Spotify Classic Player" };
   case "VINYL_RETRO": return { icon: <Music className="h-5 w-5" />, title: "Retro Plak Çalar" };
   case "GLASS_AUDIO": return { icon: <Music className="h-5 w-5" />, title: "Modern Cam Efekti" };
   case "NEON_CYBERPUNK": return { icon: <Music className="h-5 w-5" />, title: "Neon Cyberpunk Player" };
@@ -1053,8 +1063,10 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   </>
   );
   break;
- case "PREMIUM_VIDEO":
- specificFields = (
+ case "FUTURE_WAVE":
+  case "CINEMATIC_THEATER":
+  case "PREMIUM_VIDEO":
+  specificFields = (
  <>
  {renderVideosEditor()}
  </>
@@ -1147,8 +1159,11 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  );
  break;
  // ── MUSIC & AUDIO PLUGINS ──
- case "SPOTIFY_CLASSIC":
- case "VINYL_RETRO":
+ case "RETRO_CASSETTE":
+  case "MINIMAL_DARK_AUDIO":
+  case "VINTAGE_RADIO":
+  case "SPOTIFY_CLASSIC":
+  case "VINYL_RETRO":
  case "GLASS_AUDIO":
  case "NEON_CYBERPUNK":
  case "MINIMAL_LIGHT_AUDIO":
@@ -1426,9 +1441,14 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   </div>
   </div>
   );
+  case "FUTURE_WAVE":
+  case "CINEMATIC_THEATER":
   case "PREMIUM_VIDEO":
+  case "RETRO_CASSETTE":
+  case "MINIMAL_DARK_AUDIO":
+  case "VINTAGE_RADIO":
   case "SPOTIFY_CLASSIC":
-    case "VINYL_RETRO":
+  case "VINYL_RETRO":
     case "GLASS_AUDIO":
     case "NEON_CYBERPUNK":
     case "MINIMAL_LIGHT_AUDIO":
@@ -1441,8 +1461,8 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
         const displayAvatar = configData.avatarUrl || addon.settings?.avatarUrl || "";
         const displayUsername = configData.username || addon.settings?.username || ("@" + username);
         const displayBio = configData.bio || addon.settings?.bio || "";
-        const displayTitle = configData.title || (type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MINIMAL_LIGHT_AUDIO" ? "Minimalist Light Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "Müşteri Yorumları");
-        const displayDesc = configData.description || (type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MINIMAL_LIGHT_AUDIO" ? "Ferah, aydınlık ve dikkat dağıtmayan net tasarım." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "Referanslarınızı ve 5 yıldızlı değerlendirmelerinizi öne çıkararak güven inşa edin.");
+        const displayTitle = configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "FUTURE_WAVE" ? "Future Synthwave Video" : type === "CINEMATIC_THEATER" ? "Sinematik Tiyatro Video" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MINIMAL_LIGHT_AUDIO" ? "Minimalist Light Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "Müşteri Yorumları");
+        const displayDesc = configData.description || (type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "MINIMAL_DARK_AUDIO" ? "Siyahın asil tonunda ultra modern tasarım." : type === "VINTAGE_RADIO" ? "Klasik ahşap radyo kadranı tasarımı." : type === "FUTURE_WAVE" ? "Neon pembe ve camgöbeği synthwave video tasarımı." : type === "CINEMATIC_THEATER" ? "Kırmızı kadife perdeli sinematik video tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MINIMAL_LIGHT_AUDIO" ? "Ferah, aydınlık ve dikkat dağıtmayan net tasarım." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "Referanslarınızı ve 5 yıldızlı değerlendirmelerinizi öne çıkararak güven inşa edin.");
 
         return (
           <div className="w-full h-full bg-zinc-950 flex flex-col justify-between overflow-y-auto no-scrollbar">

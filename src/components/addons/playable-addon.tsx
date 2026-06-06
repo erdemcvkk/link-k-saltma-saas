@@ -274,6 +274,30 @@ export default function PlayableAddon({
         subtextClass = "text-[10px] text-purple-300 truncate";
         durationClass = "text-[10px] text-purple-400 font-mono ml-auto";
         break;
+      case "RETRO_CASSETTE":
+        containerClass = "mt-4 bg-stone-900/60 border border-amber-900/30 rounded-xl p-3 max-h-48 overflow-y-auto no-scrollbar";
+        itemClass = "flex items-center gap-3 p-2.5 rounded-lg hover:bg-stone-800/40 cursor-pointer transition-colors";
+        activeItemClass = "bg-[#2e1d1b] border-l-4 border-amber-500";
+        textClass = "text-xs font-bold text-amber-100 truncate";
+        subtextClass = "text-[10px] text-amber-500/80 truncate";
+        durationClass = "text-[10px] text-amber-600 font-mono ml-auto";
+        break;
+      case "MINIMAL_DARK_AUDIO":
+        containerClass = "mt-4 bg-black border border-zinc-900 rounded-none p-3 max-h-48 overflow-y-auto no-scrollbar";
+        itemClass = "flex items-center gap-3 p-2.5 border border-transparent hover:border-zinc-800 cursor-pointer transition-all";
+        activeItemClass = "bg-zinc-950 border border-white";
+        textClass = "text-xs font-medium text-white truncate";
+        subtextClass = "text-[10px] text-zinc-500 truncate";
+        durationClass = "text-[10px] text-zinc-400 font-mono ml-auto";
+        break;
+      case "VINTAGE_RADIO":
+        containerClass = "mt-4 bg-[#1c0f0d] border border-amber-900/20 rounded-xl p-3 max-h-48 overflow-y-auto no-scrollbar";
+        itemClass = "flex items-center gap-3 p-2.5 rounded-lg hover:bg-[#2c1a17]/45 cursor-pointer transition-colors";
+        activeItemClass = "bg-[#2c1a17] border-l-4 border-amber-600";
+        textClass = "text-xs font-bold text-amber-100/90 truncate";
+        subtextClass = "text-[10px] text-amber-600/70 truncate";
+        durationClass = "text-[10px] text-amber-700 font-mono ml-auto";
+        break;
       default:
         containerClass = "mt-4 bg-zinc-900 rounded-2xl p-3 max-h-48 overflow-y-auto";
         itemClass = "flex items-center gap-3 p-2 hover:bg-zinc-800 cursor-pointer";
@@ -1114,6 +1138,316 @@ export default function PlayableAddon({
           </div>
         );
       }
+
+    case "RETRO_CASSETTE":
+      return (
+        <div className="w-full h-full bg-[#1b1210] flex flex-col p-6 text-amber-500 relative z-0">
+          {isDirectAudio && (
+            <audio
+              ref={audioRef}
+              src={url}
+              onTimeUpdate={() => audioRef.current && setCurrentTime(audioRef.current.currentTime)}
+              onLoadedMetadata={() => audioRef.current && setDuration(audioRef.current.duration)}
+              onEnded={() => setIsPlaying(false)}
+            />
+          )}
+
+          <div className="flex flex-col items-center mt-8 mb-4">
+            <span className="text-sm font-bold text-amber-100">{username}</span>
+            <p className="text-xs text-amber-500/60 mt-1">{bio}</p>
+          </div>
+
+          <div className="bg-[#2e1d1b] border-2 border-amber-900/40 rounded-2xl p-4 my-4 shadow-inner relative">
+            <div className="w-full h-24 bg-amber-100/5 border border-amber-900/20 rounded-xl p-3 flex flex-col justify-between">
+              <div className="flex justify-between items-center text-[8px] font-mono text-amber-400">
+                <span>SIDE A</span>
+                <span>NR SYSTEM</span>
+              </div>
+              
+              <div className="flex gap-16 justify-center my-1 relative z-10">
+                <div className={`w-8 h-8 rounded-full bg-stone-950 border-2 border-amber-900/40 flex items-center justify-center ${isPlaying ? 'animate-[spin_4s_linear_infinite]' : ''}`}>
+                  <div className="w-2.5 h-2.5 bg-amber-900/30 rounded-full border border-amber-900/60"></div>
+                </div>
+                <div className={`w-8 h-8 rounded-full bg-stone-950 border-2 border-amber-900/40 flex items-center justify-center ${isPlaying ? 'animate-[spin_4s_linear_infinite]' : ''}`}>
+                  <div className="w-2.5 h-2.5 bg-amber-900/30 rounded-full border border-amber-900/60"></div>
+                </div>
+              </div>
+
+              <div className="text-center text-[9px] font-mono text-amber-300 truncate">
+                {activeTrack.trackName || title}
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-[#241715] rounded-2xl p-4 border border-amber-900/25 text-center space-y-3 mt-auto">
+            <div className="flex items-center justify-center gap-6 text-amber-500">
+              <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
+              {renderThemePlayButton(config.accentColor || "#d97706", "w-10 h-10", 14)}
+              <span className="text-sm cursor-pointer select-none hover:opacity-85" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
+            </div>
+
+            {isDirectAudio && (
+              <div className="space-y-1">
+                <div className="w-full h-1 bg-amber-950 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${progressPercent}%`,
+                      backgroundColor: config.accentColor || "#d97706",
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between text-[8px] text-amber-600/80 font-mono">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                </div>
+              </div>
+            )}
+            {url && !isDirectAudio && (
+              <button onClick={handlePlayPause} className="text-[10px] text-amber-400 hover:underline font-bold bg-transparent border-0 cursor-pointer">
+                Bağlantıyı Aç ↗
+              </button>
+            )}
+          </div>
+          {renderPlaylist("RETRO_CASSETTE")}
+        </div>
+      );
+
+    case "MINIMAL_DARK_AUDIO":
+      return (
+        <div className="w-full h-full bg-black flex flex-col p-6 text-white border border-zinc-900 relative z-0">
+          {isDirectAudio && (
+            <audio
+              ref={audioRef}
+              src={url}
+              onTimeUpdate={() => audioRef.current && setCurrentTime(audioRef.current.currentTime)}
+              onLoadedMetadata={() => audioRef.current && setDuration(audioRef.current.duration)}
+              onEnded={() => setIsPlaying(false)}
+            />
+          )}
+
+          <div className="flex flex-col items-center mt-8 mb-6">
+            <span className="text-xs uppercase tracking-widest text-zinc-500 font-bold">{username}</span>
+          </div>
+
+          <div className="w-full border-t border-b border-zinc-900 py-6 my-4 space-y-4">
+            <div className="text-center space-y-1">
+              <h4 className="text-sm font-light text-white tracking-wide truncate max-w-full">{activeTrack.trackName || title}</h4>
+              <p className="text-[10px] text-zinc-500 truncate max-w-full">{activeTrack.artistName || desc}</p>
+            </div>
+
+            <div className="flex items-center justify-center gap-8 text-white">
+              <span className="text-xs font-mono cursor-pointer select-none hover:text-zinc-400" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>PREV</span>
+              {renderThemePlayButton("#ffffff", "w-12 h-12 bg-white text-black border border-white hover:bg-black hover:text-white transition-all", 16)}
+              <span className="text-xs font-mono cursor-pointer select-none hover:text-zinc-400" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>NEXT</span>
+            </div>
+          </div>
+
+          <div className="mt-auto space-y-3">
+            {isDirectAudio && (
+              <div className="space-y-1.5">
+                <div className="w-full h-0.5 bg-zinc-900 overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
+                  <div
+                    className="h-full"
+                    style={{
+                      width: `${progressPercent}%`,
+                      backgroundColor: "#ffffff",
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between text-[8px] text-zinc-500 font-mono">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                </div>
+              </div>
+            )}
+            {url && !isDirectAudio && (
+              <button onClick={handlePlayPause} className="text-[10px] text-zinc-400 hover:text-white uppercase font-mono tracking-wider bg-transparent border-0 cursor-pointer">
+                Open External Link ↗
+              </button>
+            )}
+          </div>
+          {renderPlaylist("MINIMAL_DARK_AUDIO")}
+        </div>
+      );
+
+    case "VINTAGE_RADIO":
+      return (
+        <div className="w-full h-full bg-[#2c1a17] flex flex-col p-6 text-amber-600 border-4 border-[#170e0d] rounded-3xl relative z-0">
+          {isDirectAudio && (
+            <audio
+              ref={audioRef}
+              src={url}
+              onTimeUpdate={() => audioRef.current && setCurrentTime(audioRef.current.currentTime)}
+              onLoadedMetadata={() => audioRef.current && setDuration(audioRef.current.duration)}
+              onEnded={() => setIsPlaying(false)}
+            />
+          )}
+
+          <div className="flex flex-col items-center mt-6 mb-2">
+            <span className="text-xs font-serif italic text-amber-100">{username}</span>
+          </div>
+
+          <div className="bg-[#1c0f0d] border border-amber-900/35 rounded-2xl p-4 my-3 flex flex-col gap-3 shadow-inner">
+            <div className="w-full bg-[#120807] border border-amber-950 rounded-xl p-2.5 text-center shadow-inner relative overflow-hidden">
+              <div className="text-[8px] text-amber-500/70 font-mono tracking-widest uppercase">FM STEREO TUNER</div>
+              
+              <div className="h-8 w-full relative flex items-center justify-center mt-1 overflow-hidden">
+                <div className="absolute inset-x-0 h-0.5 bg-amber-950"></div>
+                <div className="absolute w-0.5 h-6 bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,1)]" style={{ left: isPlaying ? '60%' : '35%', transition: 'all 2s ease' }}></div>
+                <div className="flex justify-between w-full px-2 text-[7px] text-amber-600/50 font-mono">
+                  <span>88</span><span>92</span><span>98</span><span>104</span><span>108</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <h4 className="text-xs font-bold text-amber-100/90 truncate max-w-full">{activeTrack.trackName || title}</h4>
+              <p className="text-[10px] text-amber-600/70 truncate max-w-full">{activeTrack.artistName || desc}</p>
+            </div>
+          </div>
+
+          <div className="bg-[#1c0f0d] rounded-2xl p-4 border border-amber-900/20 text-center space-y-3 mt-auto">
+            <div className="flex items-center justify-center gap-6">
+              <span className="text-sm cursor-pointer select-none text-amber-600 hover:text-amber-500" onClick={() => { if (audioRef.current) audioRef.current.currentTime = 0; }}>⏮</span>
+              {renderThemePlayButton(config.accentColor || "#d97706", "w-10 h-10", 14)}
+              <span className="text-sm cursor-pointer select-none text-amber-600 hover:text-amber-500" onClick={() => { if (audioRef.current) audioRef.current.currentTime = audioRef.current.duration; }}>⏭</span>
+            </div>
+
+            {isDirectAudio && (
+              <div className="space-y-1">
+                <div className="w-full h-1 bg-[#120807] rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${progressPercent}%`,
+                      backgroundColor: config.accentColor || "#d97706",
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between text-[8px] text-amber-700/80 font-mono">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+                </div>
+              </div>
+            )}
+            {url && !isDirectAudio && (
+              <button onClick={handlePlayPause} className="text-[10px] text-amber-500 hover:underline bg-transparent border-0 cursor-pointer">
+                Radyoyu Aç ↗
+              </button>
+            )}
+          </div>
+          {renderPlaylist("VINTAGE_RADIO")}
+        </div>
+      );
+
+    case "FUTURE_WAVE":
+      return (
+        <div className="w-full h-full bg-black flex flex-col p-6 text-pink-500 relative z-0 overflow-hidden shadow-[inset_0_0_40px_rgba(236,72,153,0.1)]">
+          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(236,72,153,0.05)_1px,transparent_1px),linear-gradient(to_right,rgba(236,72,153,0.05)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+          
+          <div className="flex flex-col items-center mt-6 mb-4 relative z-10">
+            <span className="text-xs font-black uppercase tracking-widest text-cyan-400">{username}</span>
+          </div>
+
+          <div className="w-full aspect-video rounded-xl bg-zinc-950 mt-2 relative border border-pink-500/30 overflow-hidden group shadow-[0_0_20px_rgba(236,72,153,0.2)]">
+            <img src={activeVideo.coverUrl || "/placeholder.png"} className="absolute inset-0 w-full h-full object-cover opacity-80" alt="Video cover" />
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,3px_100%] pointer-events-none" />
+
+            <div className="absolute inset-0 flex items-center justify-center">
+              <button onClick={handlePlayPause} className="w-14 h-14 rounded-none bg-pink-500 flex items-center justify-center text-black border-2 border-cyan-400 shadow-[0_0_15px_rgba(236,72,153,0.8)] hover:scale-105 transition-all cursor-pointer">
+                <span className="text-lg ml-0.5">▶</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col mt-6 flex-1 relative z-10">
+            <h4 className="text-base font-black uppercase tracking-wider text-cyan-400">{activeVideo.title || title}</h4>
+            <p className="text-zinc-400 text-xs mt-1.5 leading-relaxed">{activeVideo.description || desc}</p>
+            
+            {activeVideo.actionUrl && (
+              <a href={activeVideo.actionUrl} target="_blank" rel="noopener noreferrer" className="w-full text-center py-3.5 bg-pink-500 text-black font-black uppercase text-xs tracking-widest border border-cyan-400 shadow-[0_0_10px_rgba(236,72,153,0.5)] hover:bg-cyan-400 transition-all mt-6">
+                {activeVideo.buttonText || "Watch Now"}
+              </a>
+            )}
+
+            {videos.length > 1 && (
+              <div className="mt-6 border-t border-zinc-900 pt-4">
+                <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400 mb-3 block">Playlist ({videos.length})</span>
+                <div className="space-y-2 max-h-44 overflow-y-auto no-scrollbar">
+                  {videos.map((v: any, idx: number) => {
+                    const isVActive = idx === currentVideoIndex;
+                    return (
+                      <div key={idx} onClick={() => { setCurrentVideoIndex(idx); setIsPlaying(false); }} className={`flex items-center gap-3 p-2 border cursor-pointer transition-all ${isVActive ? 'border-pink-500 bg-zinc-950' : 'border-zinc-900 hover:border-pink-500/30'}`}>
+                        <div className="w-10 h-7 bg-zinc-800 flex-shrink-0 overflow-hidden relative">
+                          <img src={v.coverUrl || "/placeholder.png"} className="w-full h-full object-cover" alt="thumb" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[11px] font-bold text-white truncate">{v.title || "Untitled Video"}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+
+    case "CINEMATIC_THEATER":
+      return (
+        <div className="w-full h-full bg-[#080808] flex flex-col p-6 text-zinc-100 relative z-0">
+          <div className="flex flex-col items-center mt-6 mb-4">
+            <span className="text-xs font-serif uppercase tracking-widest text-zinc-500">{username}</span>
+          </div>
+
+          <div className="w-full aspect-video rounded-xl bg-zinc-950 mt-2 relative overflow-hidden group shadow-[0_15px_35px_rgba(0,0,0,0.8)] border border-zinc-850">
+            <img src={activeVideo.coverUrl || "/placeholder.png"} className="absolute inset-0 w-full h-full object-cover opacity-70" alt="Video cover" />
+            <div className="absolute left-0 inset-y-0 w-4 bg-gradient-to-r from-red-950 to-red-800 border-r border-red-900/50 shadow-lg z-10"></div>
+            <div className="absolute right-0 inset-y-0 w-4 bg-gradient-to-l from-red-950 to-red-800 border-l border-red-900/50 shadow-lg z-10"></div>
+
+            <div className="absolute inset-0 flex items-center justify-center z-20">
+              <button onClick={handlePlayPause} className="w-16 h-16 rounded-full bg-red-700/80 backdrop-blur-sm flex items-center justify-center text-white border border-red-500/50 shadow-2xl hover:bg-red-650 hover:scale-105 transition-all cursor-pointer">
+                <span className="text-xl ml-1">▶</span>
+              </button>
+            </div>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-full bg-gradient-to-b from-white/5 via-transparent to-transparent pointer-events-none" />
+          </div>
+
+          <div className="flex flex-col mt-6 flex-1">
+            <h4 className="text-base font-serif italic text-zinc-200">{activeVideo.title || title}</h4>
+            <p className="text-zinc-500 text-xs mt-1.5 leading-relaxed">{activeVideo.description || desc}</p>
+            
+            {activeVideo.actionUrl && (
+              <a href={activeVideo.actionUrl} target="_blank" rel="noopener noreferrer" className="w-full text-center py-3.5 bg-red-700 hover:bg-red-650 text-white font-serif text-xs tracking-wider rounded-xl transition-all mt-6 shadow-[0_4px_12px_rgba(185,28,28,0.3)]">
+                {activeVideo.buttonText || "Watch Film"}
+              </a>
+            )}
+
+            {videos.length > 1 && (
+              <div className="mt-6 border-t border-zinc-900 pt-4">
+                <span className="text-[10px] font-bold text-zinc-400 mb-3 block">Playlist ({videos.length})</span>
+                <div className="space-y-2 max-h-44 overflow-y-auto no-scrollbar">
+                  {videos.map((v: any, idx: number) => {
+                    const isVActive = idx === currentVideoIndex;
+                    return (
+                      <div key={idx} onClick={() => { setCurrentVideoIndex(idx); setIsPlaying(false); }} className={`flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all ${isVActive ? 'bg-zinc-900 border border-zinc-800' : 'bg-transparent border border-transparent hover:bg-zinc-900/45'}`}>
+                        <div className="w-12 h-8 bg-zinc-800 rounded-lg flex-shrink-0 overflow-hidden relative">
+                          <img src={v.coverUrl || "/placeholder.png"} className="w-full h-full object-cover" alt="thumb" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[11px] font-bold text-zinc-300 truncate">{v.title || "Untitled Video"}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
 
     default:
       return null;

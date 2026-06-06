@@ -65,6 +65,11 @@ export default async function AddonPage({
   if (type === "QA") return "qa";
   if (type === "DONATION") return "donation";
   if (type === "PREMIUM_CREATOR") return "creator-store";
+  if (type === "RETRO_CASSETTE") return "retro-cassette";
+  if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
+  if (type === "VINTAGE_RADIO") return "vintage-radio";
+  if (type === "FUTURE_WAVE") return "future-wave";
+  if (type === "CINEMATIC_THEATER") return "cinematic-theater";
   if (type === "PREMIUM_VIDEO") return "masterclass";
   return type.toLowerCase();
   }
@@ -515,6 +520,11 @@ export default async function AddonPage({
 
   // Custom layout check for new Audio / Testimonial / Portfolio / Countdown addons
   if (
+    matchingAddon.addonType === "RETRO_CASSETTE" ||
+    matchingAddon.addonType === "MINIMAL_DARK_AUDIO" ||
+    matchingAddon.addonType === "VINTAGE_RADIO" ||
+    matchingAddon.addonType === "FUTURE_WAVE" ||
+    matchingAddon.addonType === "CINEMATIC_THEATER" ||
     matchingAddon.addonType === "SPOTIFY_CLASSIC" ||
     matchingAddon.addonType === "VINYL_RETRO" ||
     matchingAddon.addonType === "GLASS_AUDIO" ||

@@ -570,6 +570,11 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     if (t === "QA") return "qa";
     if (t === "DONATION") return "donation";
     if (t === "PREMIUM_CREATOR") return "creator-store";
+    if (t === "RETRO_CASSETTE") return "retro-cassette";
+    if (t === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
+    if (t === "VINTAGE_RADIO") return "vintage-radio";
+    if (t === "FUTURE_WAVE") return "future-wave";
+    if (t === "CINEMATIC_THEATER") return "cinematic-theater";
     if (t === "PREMIUM_VIDEO") return "masterclass";
     return t.toLowerCase();
   };
@@ -681,6 +686,8 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
           </div>
         </CardWrapper>
       );
+    case "FUTURE_WAVE":
+    case "CINEMATIC_THEATER":
     case "PREMIUM_VIDEO":
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
@@ -780,6 +787,9 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
           </div>
         </CardWrapper>
       );
+    case "RETRO_CASSETTE":
+    case "MINIMAL_DARK_AUDIO":
+    case "VINTAGE_RADIO":
     case "SPOTIFY_CLASSIC":
     case "VINYL_RETRO":
     case "GLASS_AUDIO":
@@ -794,7 +804,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
                 <Music className="h-5 w-5 text-purple-650" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-slate-800">{configData.title || (type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MINIMAL_LIGHT_AUDIO" ? "Minimalist Light Player" : "Müzik & Podcast Çalar")}</h4>
+                <h4 className="text-sm font-bold text-slate-800">{configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MINIMAL_LIGHT_AUDIO" ? "Minimalist Light Player" : "Müzik & Podcast Çalar")}</h4>
                 <p className="text-xs opacity-70 mt-0.5 truncate max-w-[200px]">{configData.description || "Müziklerimi dinlemek için tıklayın."}</p>
               </div>
             </div>
