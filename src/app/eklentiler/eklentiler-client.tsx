@@ -56,7 +56,7 @@ export const ADDON_TYPES: AddonTypeData[] = [
   },
   { 
     id: "COMIC_MANGA", 
-    name: "Şık & Sade Mağaza", 
+    name: "Çizgi Roman & Manga", 
     desc: "Sade, şık ve minimal bir tasarımla ürünlerinizi ön plana çıkarın.", 
     color: "bg-[#000000]",
     theme: "neo-brutalism",

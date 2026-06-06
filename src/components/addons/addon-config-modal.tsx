@@ -993,7 +993,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  <div className="space-y-1.5">
  <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">{lang === "tr" ? "Mağaza Teması" : "Store Theme"}</label>
  <select
- value={configData["theme"] || "classic"}
+ value={configData["theme"] || getDefaultTheme(addon.addonType)}
  onChange={(e) => setConfigData({ ...configData, theme: e.target.value })}
  className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
  >
