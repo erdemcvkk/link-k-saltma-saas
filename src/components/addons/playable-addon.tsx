@@ -114,7 +114,7 @@ export default function PlayableAddon({
     if (!url) return null;
 
     // Spotify track/album/playlist/episode
-    const spotifyMatch = url.match(/open\.spotify\.com\/(track|album|playlist|episode)\/([a-zA-Z0-9]+)/);
+    const spotifyMatch = url.match(/open\.spotify\.com\/(?:[a-zA-Z-]+\/)?(track|album|playlist|episode)\/([a-zA-Z0-9]+)/i);
     if (spotifyMatch) {
       return (
         <div className="w-full rounded-xl overflow-hidden shadow-lg bg-zinc-900 border border-zinc-800">
@@ -131,8 +131,8 @@ export default function PlayableAddon({
       );
     }
 
-    // YouTube
-    const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+    // YouTube (handles watch?v=, embed/, shorts/, v/, music.youtube.com, youtu.be/)
+    const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
     if (ytMatch) {
       return (
         <div className="w-full aspect-video rounded-xl overflow-hidden shadow-lg bg-zinc-900 border border-white/5">
@@ -170,7 +170,7 @@ export default function PlayableAddon({
     }
 
     // Apple Music
-    const appleMusicMatch = url.match(/music\.apple\.com\/([a-z]{2})\/(?:album|playlist)\/[^/]+\/([a-zA-Z0-9.]+)/);
+    const appleMusicMatch = url.match(/music\.apple\.com\/(?:([a-z]{2})\/)?(?:album|playlist)\/[^/]+\/([a-zA-Z0-9.]+)/i);
     if (appleMusicMatch) {
       return (
         <div className="w-full rounded-xl overflow-hidden shadow-lg bg-zinc-900 border border-zinc-800">
@@ -180,7 +180,7 @@ export default function PlayableAddon({
             height={175}
             width="100%"
             sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-            src={`https://embed.music.apple.com/${appleMusicMatch[1]}/album/${appleMusicMatch[2]}`}
+            src={`https://embed.music.apple.com/${appleMusicMatch[1] || "us"}/album/${appleMusicMatch[2]}`}
             className="rounded-xl"
           />
         </div>
@@ -218,8 +218,8 @@ export default function PlayableAddon({
     const videoUrl = (config.videoUrl || "").trim();
     if (!videoUrl) return null;
 
-    // YouTube
-    const ytMatch = videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+    // YouTube (handles watch?v=, embed/, shorts/, v/, music.youtube.com, youtu.be/)
+    const ytMatch = videoUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
     if (ytMatch) {
       return (
         <iframe
