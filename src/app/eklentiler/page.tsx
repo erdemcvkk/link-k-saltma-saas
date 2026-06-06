@@ -1,6 +1,7 @@
 import EklentilerClient from "./eklentiler-client";
 import { getAddonSettings, getAddonDummyProducts } from "../actions";
 import { auth } from "@clerk/nextjs/server";
+import { db } from "@/lib/db";
 
 export const metadata = {
   title: "Premium Eklentiler | Link.SaaS",
@@ -13,12 +14,24 @@ export default async function AddonsPage() {
   const { userId } = await auth();
   const settings = await getAddonSettings();
   const products = await getAddonDummyProducts();
+
+  let userAddonTypes: string[] = [];
+  if (userId) {
+    const user = await db.user.findUnique({
+      where: { clerkUserId: userId },
+      include: { addons: true }
+    });
+    if (user) {
+      userAddonTypes = user.addons.map(a => a.addonType);
+    }
+  }
   
   return (
     <EklentilerClient 
       settings={settings} 
       products={products.map((p: any) => ({ ...p, type: p.type || "PRODUCT", imageUrl: p.imageUrl || null }))} 
       userId={userId}
+      purchasedAddons={userAddonTypes}
     />
   );
 }
