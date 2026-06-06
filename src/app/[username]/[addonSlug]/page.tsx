@@ -190,7 +190,7 @@ export default async function AddonPage({
     const bgClass = getThemeBgClass(currentTheme);
 
     return (
-      <div className={`w-full min-h-screen ${bgClass} flex justify-center`}>
+      <div className={`w-full min-h-screen ${matchingAddon.addonType === "COMIC_MANGA" ? "bg-zinc-950" : bgClass} flex justify-center`}>
         <div className="w-full max-w-full md:w-[480px] min-h-screen relative shadow-2xl overflow-hidden bg-white">
           <StorefrontPreview 
             theme={currentTheme} 

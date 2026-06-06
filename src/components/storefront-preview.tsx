@@ -90,7 +90,7 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
       return {
         wrapper: "bg-white text-black",
         wrapperFont: "'Space Grotesk', sans-serif",
-        headerBg: "bg-white border-b-4 border-black",
+        headerBg: "bg-white border-none",
         heroContainer: "flex flex-col items-center justify-center pt-8 pb-5 px-4 text-center",
         avatarWrapper: "w-24 h-24 mb-4 rounded-none border-4 border-black overflow-hidden shadow-[4px_4px_0px_0px_#000] bg-white",
         nameText: "text-black font-black uppercase text-sm tracking-tight bg-[#FFDE4D] border-4 border-black px-4 py-1.5 shadow-[4px_4px_0px_0px_#000] inline-block",
