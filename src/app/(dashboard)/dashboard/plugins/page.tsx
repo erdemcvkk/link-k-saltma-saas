@@ -21,7 +21,7 @@ export default async function PluginsPage() {
     id: a.id,
     addonType: a.addonType,
     isActive: a.isActive,
-    config: a.config
+    settings: a.settings
   }));
 
   // Fetch products (needed for config modal)

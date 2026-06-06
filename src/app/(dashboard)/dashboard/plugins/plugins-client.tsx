@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import { Puzzle, ShoppingBag, Settings, Globe, ExternalLink, Copy, Check } from "lucide-react";
 import AddonConfigModal from "@/components/addons/addon-config-modal";
 import PhonePreview from "@/components/dashboard/phone-preview";
 import { parseButtonStyle } from "@/lib/parse-button-style";
 import { useDashboard } from "../dashboard-context";
+import { saveAddonConfig } from "@/app/actions";
 
 interface AddonItem {
   id: string;
   addonType: string;
   isActive: boolean;
-  config: string | null;
+  settings: any;
 }
 
 interface ProductItem {
@@ -47,6 +48,7 @@ export default function PluginsClient({
   const { user, lang, activeTemplate, simulatedPlan, setSuccessMsg, setErrorMsg } = useDashboard();
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons);
   const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
+  const [isPending, startTransition] = useTransition();
   const [origin, setOrigin] = useState("");
 
   useEffect(() => {
@@ -76,7 +78,7 @@ export default function PluginsClient({
     if (firstAddon) {
       let slug = getDefaultSlug(firstAddon.addonType);
       try {
-        const config = firstAddon.config ? JSON.parse(firstAddon.config) : {};
+        const config = firstAddon.settings ? (typeof firstAddon.settings === "string" ? JSON.parse(firstAddon.settings) : firstAddon.settings) : {};
         if (config.customSlug) {
           slug = config.customSlug;
         }
@@ -151,7 +153,7 @@ export default function PluginsClient({
               {addons.map((addon) => {
                 let addonLink = `${origin}/@${user.username}/store`;
                 try {
-                  const config = addon.config ? JSON.parse(addon.config) : {};
+                  const config = addon.settings ? (typeof addon.settings === "string" ? JSON.parse(addon.settings) : addon.settings) : {};
                   addonLink = `${origin}/@${user.username}/${(config.customSlug || getDefaultSlug(addon.addonType)).toLowerCase()}`;
                 } catch (e) {}
 
@@ -175,6 +177,50 @@ export default function PluginsClient({
                           )}
                         </div>
                       </div>
+
+                      {/* Toggle Switch */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-zinc-400">
+                          {addon.isActive ? (lang === "tr" ? "Aktif" : "Active") : (lang === "tr" ? "Pasif" : "Inactive")}
+                        </span>
+                        <button
+                          type="button"
+                          disabled={isPending}
+                          onClick={() => {
+                            const nextActive = !addon.isActive;
+                            startTransition(async () => {
+                              try {
+                                const res = await saveAddonConfig(addon.id, addon.settings || {}, nextActive);
+                                if (res.error) {
+                                  setErrorMsg(res.error);
+                                  setTimeout(() => setErrorMsg(""), 3000);
+                                } else {
+                                  setAddons(prev => prev.map(a => {
+                                    if (a.id === addon.id) {
+                                      return { ...a, isActive: nextActive };
+                                    }
+                                    return a;
+                                  }));
+                                  setSuccessMsg(lang === "tr" ? "Durum güncellendi!" : "Status updated!");
+                                  setTimeout(() => setSuccessMsg(""), 3000);
+                                }
+                              } catch (err: any) {
+                                setErrorMsg(err.message || "Error");
+                                setTimeout(() => setErrorMsg(""), 3000);
+                              }
+                            });
+                          }}
+                          className={`w-9 h-5 rounded-full p-0.5 transition-colors duration-200 focus:outline-none cursor-pointer flex items-center ${
+                            addon.isActive ? "bg-rose-500" : "bg-zinc-300"
+                          }`}
+                        >
+                          <div
+                            className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                              addon.isActive ? "translate-x-4" : "translate-x-0"
+                            }`}
+                          />
+                        </button>
+                      </div>
                     </div>
 
                     <div className="mt-4 pt-4 border-t border-zinc-200/60 flex items-center gap-2">
@@ -183,7 +229,7 @@ export default function PluginsClient({
                         className="flex-1 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2"
                       >
                         <Settings className="h-3.5 w-3.5" />
-                        <span>{lang === "tr" ? "Ayarla" : "Config"}</span>
+                        <span>{lang === "tr" ? "Ayarları Düzenle" : "Edit Settings"}</span>
                       </button>
                       {addon.isActive ? (
                         <div className="flex flex-1 gap-1">
@@ -324,11 +370,11 @@ export default function PluginsClient({
         <AddonConfigModal
           addon={editingAddon}
           products={initialProducts}
-          onClose={(updatedConfig, updatedIsActive) => {
-            if (updatedConfig !== undefined || updatedIsActive !== undefined) {
+          onClose={(updatedSettings, updatedIsActive) => {
+            if (updatedSettings !== undefined || updatedIsActive !== undefined) {
               setAddons(prev => prev.map(a => a.id === editingAddon.id ? {
                 ...a,
-                config: updatedConfig !== undefined ? updatedConfig : a.config,
+                settings: updatedSettings !== undefined ? (typeof updatedSettings === "string" ? JSON.parse(updatedSettings) : updatedSettings) : a.settings,
                 isActive: updatedIsActive !== undefined ? updatedIsActive : a.isActive
               } : a));
             }

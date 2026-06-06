@@ -253,11 +253,11 @@ export default async function PublicProfilePage({ params, searchParams }: { para
       ...(previewAddons === "true" ? {} : { isActive: true })
     }
   });
- const serializedAddons = addons.map(a => ({
- id: a.id,
- addonType: a.addonType,
- config: a.config
- }));
+  const serializedAddons = addons.map(a => ({
+    id: a.id,
+    addonType: a.addonType,
+    settings: a.settings
+  }));
 
  const systemSettings = await db.systemSettings.findFirst();
  const serializedSystemSettings = systemSettings ? {

@@ -1902,13 +1902,15 @@ export async function purchaseAddon(userId: string, addonType: string) {
       userId: userId,
       addonType,
       isActive: true,
-      config: JSON.stringify({ theme: defaultTheme })
+      settings: { theme: defaultTheme }
     }
   });
 }
 
-export async function updateUserAddonConfig(userId: string, addonType: string, config: string) {
+export async function updateUserAddonConfig(userId: string, addonType: string, settings: any) {
   if (!userId) throw new Error("Unauthorized");
+
+  const settingsJson = typeof settings === "string" ? JSON.parse(settings) : settings;
 
   return await db.userAddon.update({
     where: {
@@ -1918,7 +1920,7 @@ export async function updateUserAddonConfig(userId: string, addonType: string, c
       }
     },
     data: {
-      config
+      settings: settingsJson
     }
   });
 }
@@ -1935,7 +1937,7 @@ export async function buyAddonAction(addonType: string) {
   return res;
 }
 
-export async function saveAddonConfig(addonId: string, configJson: string, isActive?: boolean) {
+export async function saveAddonConfig(addonId: string, settingsJson: any, isActive?: boolean) {
   try {
     const user = await checkAndSyncUser();
     if (!user) return { success: false, error: "Unauthorized" };
@@ -1948,20 +1950,17 @@ export async function saveAddonConfig(addonId: string, configJson: string, isAct
       return { success: false, error: "Addon not found or unauthorized" };
     }
 
+    const parsedSettings = typeof settingsJson === "string" ? JSON.parse(settingsJson) : settingsJson;
+
     const updated = await db.userAddon.update({
       where: { id: addonId },
       data: { 
-        config: configJson,
+        settings: parsedSettings,
         ...(isActive !== undefined ? { isActive } : {})
       }
     });
 
-    if (isActive === true) {
-      await db.userAddon.updateMany({
-        where: { userId: user.id, id: { not: addonId } },
-        data: { isActive: false }
-      });
-    }
+
 
     try {
       revalidatePath("/dashboard");

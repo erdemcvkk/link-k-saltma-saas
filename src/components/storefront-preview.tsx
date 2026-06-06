@@ -66,6 +66,14 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
  const handlePurchase = (id: string) => {
  if (hasDragged) return;
  setClickedItem(id);
+ const prod = products.find(p => p.id === id);
+ if (prod && (prod as any).buyLink) {
+   setTimeout(() => {
+     setClickedItem(null);
+     window.open((prod as any).buyLink, "_blank", "noopener,noreferrer");
+   }, 200);
+   return;
+ }
  if (onProductClick) {
  setTimeout(() => {
  setClickedItem(null);

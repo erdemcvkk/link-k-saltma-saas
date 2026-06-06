@@ -9,11 +9,15 @@ export async function PUT(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { addonType, config } = await req.json();
+    const body = await req.json();
+    const addonType = body.addonType;
+    const settings = body.settings || body.config;
 
-    if (!addonType || !config) {
+    if (!addonType || !settings) {
       return new NextResponse("Missing data", { status: 400 });
     }
+
+    const settingsJson = typeof settings === "string" ? JSON.parse(settings) : settings;
 
     const updated = await db.userAddon.update({
       where: {
@@ -23,7 +27,7 @@ export async function PUT(req: Request) {
         },
       },
       data: {
-        config,
+        settings: settingsJson,
       },
     });
 
