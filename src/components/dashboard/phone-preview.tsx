@@ -179,6 +179,7 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
           username={parsedConfig.storeUsername || ("@" + data.username)}
           bio={parsedConfig.storeBio || data.bio}
           buyButtonText={parsedConfig.buyButtonText || "Satın Al"}
+          addonType={type}
         />
       );
     }

@@ -26,9 +26,10 @@ interface StorefrontPreviewProps {
  avatarUrl?: string | null;
  onProductClick?: (id: string) => void;
  buyButtonText?: string;
+ addonType?: string;
 }
 
-export default function StorefrontPreview({ theme, products, storeTitle = "Digital Store", storeCoverUrl, username, bio, avatarUrl, onProductClick, buyButtonText = "Satın Al" }: StorefrontPreviewProps) {
+export default function StorefrontPreview({ theme, products, storeTitle = "Digital Store", storeCoverUrl, username, bio, avatarUrl, onProductClick, buyButtonText = "Satın Al", addonType }: StorefrontPreviewProps) {
  const [layout, setLayout] = useState<"GRID" | "LIST">("GRID");
  const [clickedItem, setClickedItem] = useState<string | null>(null);
 
@@ -84,7 +85,26 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
  }
  };
 
- const getThemeStyles = () => {
+  const getThemeStyles = () => {
+    if (addonType === "COMIC_MANGA") {
+      return {
+        wrapper: "bg-white text-black",
+        wrapperFont: "'Space Grotesk', sans-serif",
+        headerBg: "bg-white border-b-4 border-black",
+        heroContainer: "flex flex-col items-center justify-center pt-8 pb-5 px-4 text-center",
+        avatarWrapper: "w-24 h-24 mb-4 rounded-none border-4 border-black overflow-hidden shadow-[4px_4px_0px_0px_#000] bg-white",
+        nameText: "text-black font-black uppercase text-sm tracking-tight bg-[#FFDE4D] border-4 border-black px-4 py-1.5 shadow-[4px_4px_0px_0px_#000] inline-block",
+        bioText: "text-black/80 text-xs mt-3 font-bold max-w-[250px]",
+        searchBg: "bg-white border-2 border-black rounded-none shadow-[3px_3px_0px_0px_#000]",
+        cardBg: "bg-white border-2 border-black rounded-none neo-brutal-card shadow-[4px_4px_0px_0px_#000] overflow-hidden",
+        titleColor: "text-black font-bold",
+        priceColor: "text-black font-black text-lg",
+        btnClass: "bg-white text-black hover:bg-zinc-100 border-2 border-black rounded-none font-black uppercase neo-brutal-btn shadow-[3px_3px_0px_0px_#000]",
+        badgeClass: "bg-black text-white rounded-none font-bold border-none",
+        extraOverlay: null,
+      };
+    }
+
  switch (theme) {
  case "dark-drill":
  return {
@@ -339,11 +359,12 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
  )}
  </div>
  <h1 className={styles.nameText}>{storeTitle || username || "Digital Store"}</h1>
- {username && <p className="text-sm opacity-70 font-medium mb-1">{username}</p>}
+ {username && addonType !== "COMIC_MANGA" && <p className="text-sm opacity-70 font-medium mb-1">{username}</p>}
  <p className={styles.bioText}>{displayBio}</p>
  </div>
 
  {/* Controls */}
+ {addonType !== "COMIC_MANGA" && (
  <div className="px-4 pb-4 flex gap-2 relative z-10">
  <div className={`flex-1 flex items-center px-3 py-3 md:py-2 gap-2 ${styles.searchBg} transition-all`}>
  <Search className="h-4 w-4 opacity-50" />
@@ -368,43 +389,77 @@ export default function StorefrontPreview({ theme, products, storeTitle = "Digit
  </button>
  </div>
  </div>
+ )}
  </div>
 
  {/* Product Feed */}
  <div className={`p-4 ${layout === "GRID" ? "grid grid-cols-1 md:grid-cols-2 gap-3" : "flex flex-col gap-3"}`}>
- {products.map((product) => (
- <div
- key={product.id}
- className={`overflow-hidden flex ${layout === "LIST" ? "flex-row items-center gap-4 p-3" : "flex-col"} ${styles.cardBg}`}
- >
- {product.imageUrl && (
- <div className={`${layout === "LIST" ? "w-16 h-16 shrink-0 rounded-lg" : "w-full h-28"} relative overflow-hidden bg-black/5`}>
- <img src={product.imageUrl} className="w-full h-full object-cover" alt={product.title} />
- </div>
- )}
- <div className={`${layout === "LIST" ? "flex-1" : "p-3"} flex flex-col justify-between h-full`}>
- <div>
- <span className={`px-1.5 py-0.5 text-[8px] uppercase tracking-wider ${styles.badgeClass}`}>
- {product.type}
- </span>
- <h4 className={`mt-1.5 ${textSizeClass} ${styles.titleColor} ${layout === "LIST" ? "line-clamp-1" : "line-clamp-2"}`}>
- {product.title}
- </h4>
- </div>
- <div className={`mt-3 flex ${layout === "LIST" ? "flex-row items-center justify-between" : "flex-col items-start"} gap-2`}>
- <span className={`${priceSizeClass} ${styles.priceColor}`}>{product.price}₺</span>
- <button
- onClick={() => handlePurchase(product.id)}
- className={`w-full ${layout === "LIST" ? "w-auto px-3" : ""} py-3 md:py-2 text-[10px] flex items-center justify-center gap-1.5 ${styles.btnClass} ${
- clickedItem === product.id ? "scale-95 opacity-80" : ""
- }`}
- >
- {buyButtonText}
- </button>
- </div>
- </div>
- </div>
- ))}
+ {products.map((product) => {
+    if (addonType === "COMIC_MANGA") {
+      return (
+        <div
+          key={product.id}
+          className={`${styles.cardBg} flex flex-col justify-between h-full`}
+        >
+          {product.imageUrl && (
+            <div className="w-full h-48 relative overflow-hidden bg-zinc-100 border-b-2 border-black">
+              <img src={product.imageUrl} className="w-full h-full object-cover" alt={product.title} />
+            </div>
+          )}
+          <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+            <div>
+              <h4 className="text-base font-black text-black tracking-tight leading-snug">{product.title}</h4>
+              {product.description && (
+                <p className="text-xs text-zinc-500 font-bold tracking-tight mt-1.5 leading-relaxed">{product.description}</p>
+              )}
+            </div>
+            <div className="w-full pt-1">
+              <button
+                onClick={() => handlePurchase(product.id)}
+                className="w-full py-3.5 bg-white text-black hover:bg-zinc-100 border-2 border-black rounded-none font-black text-xs uppercase tracking-wide transition-all shadow-[3px_3px_0px_0px_#000] cursor-pointer"
+              >
+                {buyButtonText}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        key={product.id}
+        className={`overflow-hidden flex ${layout === "LIST" ? "flex-row items-center gap-4 p-3" : "flex-col"} ${styles.cardBg}`}
+      >
+        {product.imageUrl && (
+          <div className={`${layout === "LIST" ? "w-16 h-16 shrink-0 rounded-lg" : "w-full h-28"} relative overflow-hidden bg-black/5`}>
+            <img src={product.imageUrl} className="w-full h-full object-cover" alt={product.title} />
+          </div>
+        )}
+        <div className={`${layout === "LIST" ? "flex-1" : "p-3"} flex flex-col justify-between h-full`}>
+          <div>
+            <span className={`px-1.5 py-0.5 text-[8px] uppercase tracking-wider ${styles.badgeClass}`}>
+              {product.type}
+            </span>
+            <h4 className={`mt-1.5 ${textSizeClass} ${styles.titleColor} ${layout === "LIST" ? "line-clamp-1" : "line-clamp-2"}`}>
+              {product.title}
+            </h4>
+          </div>
+          <div className={`mt-3 flex ${layout === "LIST" ? "flex-row items-center justify-between" : "flex-col items-start"} gap-2`}>
+            <span className={`${priceSizeClass} ${styles.priceColor}`}>{product.price}₺</span>
+            <button
+              onClick={() => handlePurchase(product.id)}
+              className={`w-full ${layout === "LIST" ? "w-auto px-3" : ""} py-3 md:py-2 text-[10px] flex items-center justify-center gap-1.5 ${styles.btnClass} ${
+                clickedItem === product.id ? "scale-95 opacity-80" : ""
+              }`}
+            >
+              {buyButtonText}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  })}
  </div>
  </div>
  );

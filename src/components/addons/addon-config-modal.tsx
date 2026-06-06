@@ -1528,6 +1528,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   bio={configData.storeBio}
   avatarUrl={configData.storeAvatarUrl}
   buyButtonText={configData.buyButtonText}
+  addonType={addon.addonType}
   />
   </div>
   );

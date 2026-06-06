@@ -202,6 +202,7 @@ export default async function AddonPage({
             username={parsedConfig.storeUsername || ("@" + user.username)}
             bio={parsedConfig.storeBio || user.profile.bio}
             buyButtonText={parsedConfig.buyButtonText || "Satın Al"}
+            addonType={matchingAddon.addonType}
           />
         </div>
       </div>
