@@ -393,6 +393,341 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     );
   };
 
+  const renderTracksEditor = () => {
+    const items = configData.tracks || [];
+    const effectiveItems = items.length > 0 ? items : (configData.trackUrl ? [
+      {
+        trackUrl: configData.trackUrl || "",
+        trackName: configData.trackName || "",
+        artistName: configData.artistName || "",
+        albumCoverUrl: configData.albumCoverUrl || "",
+        trackDuration: configData.trackDuration || "3:45"
+      }
+    ] : []);
+
+    const updateTracks = (newItems: any[]) => {
+      setConfigData({
+        ...configData,
+        trackUrl: newItems[0]?.trackUrl || "",
+        trackName: newItems[0]?.trackName || "",
+        artistName: newItems[0]?.artistName || "",
+        albumCoverUrl: newItems[0]?.albumCoverUrl || "",
+        trackDuration: newItems[0]?.trackDuration || "3:45",
+        tracks: newItems
+      });
+    };
+
+    return (
+      <div className="space-y-4">
+        <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+          {lang === "tr" ? "Şarkı Listesi (Playlist)" : "Song List (Playlist)"}
+        </label>
+        {effectiveItems.map((item: any, idx: number) => (
+          <div key={idx} className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50 relative group space-y-3 shadow-sm">
+            <button
+              type="button"
+              onClick={() => {
+                const newItems = [...effectiveItems];
+                newItems.splice(idx, 1);
+                updateTracks(newItems);
+              }}
+              className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-red-100 hover:bg-red-200 text-red-650 flex items-center justify-center transition-colors shadow-md border border-red-200 z-10"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+            <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md uppercase tracking-wider">
+              {lang === "tr" ? `${idx + 1}. Parça` : `Track ${idx + 1}`}
+            </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Şarkı Adı" : "Track Name"}</label>
+                <input
+                  type="text"
+                  placeholder={lang === "tr" ? "Gece Yağmuru" : "Night Rain"}
+                  value={item.trackName || ""}
+                  onChange={(e) => {
+                    const newItems = [...effectiveItems];
+                    newItems[idx] = { ...newItems[idx], trackName: e.target.value };
+                    updateTracks(newItems);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Sanatçı" : "Artist"}</label>
+                <input
+                  type="text"
+                  placeholder={lang === "tr" ? "DJ Yağmur" : "DJ Rain"}
+                  value={item.artistName || ""}
+                  onChange={(e) => {
+                    const newItems = [...effectiveItems];
+                    newItems[idx] = { ...newItems[idx], artistName: e.target.value };
+                    updateTracks(newItems);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Spotify / SoundCloud / Ses Dosyası Linki" : "Track / Audio URL"}</label>
+              <input
+                type="text"
+                placeholder="https://..."
+                value={item.trackUrl || ""}
+                onChange={(e) => {
+                  const newItems = [...effectiveItems];
+                  newItems[idx] = { ...newItems[idx], trackUrl: e.target.value };
+                  updateTracks(newItems);
+                }}
+                className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Süre (örn: 3:45)" : "Duration (e.g. 3:45)"}</label>
+                <input
+                  type="text"
+                  placeholder="3:45"
+                  value={item.trackDuration || ""}
+                  onChange={(e) => {
+                    const newItems = [...effectiveItems];
+                    newItems[idx] = { ...newItems[idx], trackDuration: e.target.value };
+                    updateTracks(newItems);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Kapak Görseli (URL veya Yükle)" : "Cover Image (URL or Upload)"}</label>
+                <div className="flex gap-1.5 relative">
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={item.albumCoverUrl || ""}
+                    onChange={(e) => {
+                      const newItems = [...effectiveItems];
+                      newItems[idx] = { ...newItems[idx], albumCoverUrl: e.target.value };
+                      updateTracks(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none pr-16"
+                  />
+                  <label className="absolute right-0.5 top-0.5 bottom-0.5 flex items-center justify-center px-2 bg-zinc-100 hover:bg-zinc-250 text-zinc-700 text-[9px] font-bold rounded-lg cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+                    {lang === "tr" ? "Seç" : "File"}
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          try {
+                            const url = await handleFileUpload(file);
+                            const newItems = [...effectiveItems];
+                            newItems[idx] = { ...newItems[idx], albumCoverUrl: url };
+                            updateTracks(newItems);
+                          } catch (err: any) { showAlert(err.message); }
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => {
+            const newItems = [...effectiveItems, { trackUrl: "", trackName: "", artistName: "", albumCoverUrl: "", trackDuration: "3:45" }];
+            updateTracks(newItems);
+          }}
+          className="w-full py-3 md:py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>{lang === "tr" ? "Yeni Parça Ekle" : "Add New Track"}</span>
+        </button>
+      </div>
+    );
+  };
+
+  const renderVideosEditor = () => {
+    const items = configData.videos || [];
+    const effectiveItems = items.length > 0 ? items : (configData.videoUrl ? [
+      {
+        videoUrl: configData.videoUrl || "",
+        coverUrl: configData.coverUrl || "",
+        title: configData.title || "",
+        description: configData.description || "",
+        actionUrl: configData.actionUrl || "",
+        buttonText: configData.buttonText || "Tamamını İzle"
+      }
+    ] : []);
+
+    const updateVideos = (newItems: any[]) => {
+      setConfigData({
+        ...configData,
+        videoUrl: newItems[0]?.videoUrl || "",
+        coverUrl: newItems[0]?.coverUrl || "",
+        title: newItems[0]?.title || "",
+        description: newItems[0]?.description || "",
+        actionUrl: newItems[0]?.actionUrl || "",
+        buttonText: newItems[0]?.buttonText || "Tamamını İzle",
+        videos: newItems
+      });
+    };
+
+    return (
+      <div className="space-y-4">
+        <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+          {lang === "tr" ? "Video Listesi (Playlist)" : "Video List (Playlist)"}
+        </label>
+        {effectiveItems.map((item: any, idx: number) => (
+          <div key={idx} className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50 relative group space-y-3 shadow-sm">
+            <button
+              type="button"
+              onClick={() => {
+                const newItems = [...effectiveItems];
+                newItems.splice(idx, 1);
+                updateVideos(newItems);
+              }}
+              className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-red-100 hover:bg-red-200 text-red-650 flex items-center justify-center transition-colors shadow-md border border-red-200 z-10"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+            <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md uppercase tracking-wider">
+              {lang === "tr" ? `${idx + 1}. Video` : `Video ${idx + 1}`}
+            </span>
+            
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Video Başlığı" : "Video Title"}</label>
+              <input
+                type="text"
+                placeholder="UI/UX Masterclass Bölüm 1"
+                value={item.title || ""}
+                onChange={(e) => {
+                  const newItems = [...effectiveItems];
+                  newItems[idx] = { ...newItems[idx], title: e.target.value };
+                  updateVideos(newItems);
+                }}
+                className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Video Açıklaması" : "Video Description"}</label>
+              <textarea
+                placeholder={lang === "tr" ? "Tasarım sistemleri..." : "Design systems..."}
+                value={item.description || ""}
+                rows={2}
+                onChange={(e) => {
+                  const newItems = [...effectiveItems];
+                  newItems[idx] = { ...newItems[idx], description: e.target.value };
+                  updateVideos(newItems);
+                }}
+                className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none resize-none"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Video Linki (YouTube / MP4 vb.)" : "Video URL"}</label>
+              <input
+                type="text"
+                placeholder="https://..."
+                value={item.videoUrl || ""}
+                onChange={(e) => {
+                  const newItems = [...effectiveItems];
+                  newItems[idx] = { ...newItems[idx], videoUrl: e.target.value };
+                  updateVideos(newItems);
+                }}
+                className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Kapak Fotoğrafı (URL veya Yükle)" : "Cover Photo (URL or Upload)"}</label>
+              <div className="flex gap-1.5 relative">
+                <input
+                  type="text"
+                  placeholder="https://..."
+                  value={item.coverUrl || ""}
+                  onChange={(e) => {
+                    const newItems = [...effectiveItems];
+                    newItems[idx] = { ...newItems[idx], coverUrl: e.target.value };
+                    updateVideos(newItems);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none pr-16"
+                />
+                <label className="absolute right-0.5 top-0.5 bottom-0.5 flex items-center justify-center px-2 bg-zinc-100 hover:bg-zinc-250 text-zinc-700 text-[9px] font-bold rounded-lg cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+                  {lang === "tr" ? "Seç" : "File"}
+                  <input 
+                    type="file" 
+                    className="hidden" 
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        try {
+                          const url = await handleFileUpload(file);
+                          const newItems = [...effectiveItems];
+                          newItems[idx] = { ...newItems[idx], coverUrl: url };
+                          updateVideos(newItems);
+                        } catch (err: any) { showAlert(err.message); }
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Aksiyon Butonu Linki" : "Action Button URL"}</label>
+                <input
+                  type="text"
+                  placeholder="https://..."
+                  value={item.actionUrl || ""}
+                  onChange={(e) => {
+                    const newItems = [...effectiveItems];
+                    newItems[idx] = { ...newItems[idx], actionUrl: e.target.value };
+                    updateVideos(newItems);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Buton Metni" : "Button Text"}</label>
+                <input
+                  type="text"
+                  placeholder="Tamamını İzle"
+                  value={item.buttonText || ""}
+                  onChange={(e) => {
+                    const newItems = [...effectiveItems];
+                    newItems[idx] = { ...newItems[idx], buttonText: e.target.value };
+                    updateVideos(newItems);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => {
+            const newItems = [...effectiveItems, { videoUrl: "", coverUrl: "", title: "", description: "", actionUrl: "", buttonText: "Tamamını İzle" }];
+            updateVideos(newItems);
+          }}
+          className="w-full py-3 md:py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>{lang === "tr" ? "Yeni Video Ekle" : "Add New Video"}</span>
+        </button>
+      </div>
+    );
+  };
+
  const getAddonDetails = () => {
  switch (addon.addonType) {
     case "MINI_STORE":
@@ -721,12 +1056,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  case "PREMIUM_VIDEO":
  specificFields = (
  <>
- {renderImageUpload("coverUrl", lang === "tr" ? "Kapak Fotoğrafı (URL)" : "Cover Photo URL")}
- {renderInput("videoUrl", lang === "tr" ? "Video Linki (YouTube/Vimeo)" : "Video URL", "https://youtube.com/...")}
- {renderInput("title", lang === "tr" ? "Video Başlığı" : "Video Title", "UI/UX Masterclass Bölüm 1")}
- {renderTextarea("description", lang === "tr" ? "Açıklama" : "Description", "Tasarım sistemleri...")}
- {renderInput("actionUrl", lang === "tr" ? "Aksiyon Butonu Linki" : "Action URL", "https://...")}
- {renderInput("buttonText", lang === "tr" ? "Aksiyon Butonu Metni" : "Action Button Text", "Tamamını İzle")}
+ {renderVideosEditor()}
  </>
  );
  break;
@@ -837,20 +1167,13 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  </div>
 
  <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
- <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
- 🎵 {lang === "tr" ? "Parça Detayları" : "Track Details"}
- </h4>
- {renderInput("trackName", lang === "tr" ? "Şarkı / Parça Adı" : "Track / Song Name", lang === "tr" ? "Gece Yağmuru" : "Night Rain")}
- {renderInput("artistName", lang === "tr" ? "Sanatçı / Prodüktör Adı" : "Artist / Producer Name", lang === "tr" ? "DJ Yağmur" : "DJ Rain")}
- {renderInput("trackUrl", lang === "tr" ? "Spotify / SoundCloud / Ses Linki" : "Spotify / SoundCloud / Audio URL", "https://open.spotify.com/track/...")}
- {renderInput("trackDuration", lang === "tr" ? "Parça Süresi (Opsiyonel)" : "Track Duration (Optional)", "3:45")}
+ {renderTracksEditor()}
  </div>
 
  <div className="space-y-4 pt-2">
  <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
  🎨 {lang === "tr" ? "Görsel Özelleştirme" : "Visual Customization"}
  </h4>
- {renderImageUpload("albumCoverUrl", lang === "tr" ? "Albüm / Kapak Görseli" : "Album / Cover Image")}
  {renderInput("accentColor", lang === "tr" ? "Vurgu Rengi (HEX, Opsiyonel)" : "Accent Color (HEX, Optional)", "#1db954")}
  </div>
  </>
