@@ -8,7 +8,8 @@ import {
   updateAllLinksCustomStyle,
   applyTemplateToProfile,
   addLink,
-  deleteLink
+  deleteLink,
+  removeUserTemplateRelation
 } from "@/app/actions";
 import {
   Palette,
@@ -190,6 +191,34 @@ export default function TemplatesClient({
 
   const [avatarUrl, setAvatarUrl] = useState(user.profile?.avatarUrl ?? "");
   const [newLinkTitle, setNewLinkTitle] = useState("");
+
+  const handleDeleteOwnedTemplate = async (templateId: string) => {
+    if (!confirm(lang === "tr" ? "Bu şablonu hesabınızdan silmek istediğinize emin misiniz? (Bu işlem sadece sizin hesabınızı etkiler, şablon sistemden silinmez)" : "Are you sure you want to delete this template from your account? (This only affects your account, the template will not be deleted from the system)")) {
+      return;
+    }
+    setErrorMsg("");
+    setSuccessMsg("");
+    startTransition(async () => {
+      try {
+        const res = await removeUserTemplateRelation(templateId);
+        if (res && res.success) {
+          setOwnedTemplates(prev => prev.filter(t => t.id !== templateId));
+          if (activeTemplate?.id === templateId) {
+            setActiveTemplate(null);
+            setBackground("");
+            setFontStyle("Inter");
+            setTheme("dark");
+            setActiveTemplateCss(null);
+          }
+          setSuccessMsg(lang === "tr" ? "Şablon hesabınızdan başarıyla silindi." : "Template deleted from your account successfully.");
+        } else {
+          setErrorMsg(res.error || "Failed to delete template");
+        }
+      } catch (err: any) {
+        setErrorMsg(err.message || "Failed to delete template");
+      }
+    });
+  };
   const [newLinkUrl, setNewLinkUrl] = useState("");
   const [newLinkType, setNewLinkType] = useState("WEBSITE");
 
@@ -1010,6 +1039,16 @@ export default function TemplatesClient({
  >
  <Settings className="h-3.5 w-3.5" />
  <span>{lang === "tr" ? "Düzenle" : "Customize"}</span>
+ </button>
+
+ <button
+ type="button"
+ onClick={() => handleDeleteOwnedTemplate(template.id)}
+ disabled={isPending}
+ className="px-2.5 py-2.5 md:py-2 rounded-xl border border-zinc-200 hover:border-red-200 hover:bg-red-50 text-zinc-500 hover:text-red-600 transition-all cursor-pointer flex items-center justify-center shadow-sm disabled:opacity-50"
+ title={lang === "tr" ? "Şablonu Sil" : "Delete Template"}
+ >
+ <Trash2 className="h-3.5 w-3.5" />
  </button>
  </div>
 

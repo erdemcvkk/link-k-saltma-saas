@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useTransition } from "react";
-import { Puzzle, ShoppingBag, Settings, Globe, ExternalLink, Copy, Check } from "lucide-react";
+import { Puzzle, ShoppingBag, Settings, Globe, ExternalLink, Copy, Check, Trash2 } from "lucide-react";
 import AddonConfigModal from "@/components/addons/addon-config-modal";
 import PhonePreview from "@/components/dashboard/phone-preview";
 import { parseButtonStyle } from "@/lib/parse-button-style";
 import { useDashboard } from "../dashboard-context";
-import { saveAddonConfig } from "@/app/actions";
+import { saveAddonConfig, removeUserAddonRelation } from "@/app/actions";
 
 interface AddonItem {
   id: string;
@@ -48,6 +48,31 @@ export default function PluginsClient({
   const { user, lang, activeTemplate, simulatedPlan, setSuccessMsg, setErrorMsg } = useDashboard();
   const [addons, setAddons] = useState<AddonItem[]>(initialAddons);
   const [activeAddonId, setActiveAddonId] = useState<string | undefined>(undefined);
+
+  const handleDeleteAddon = async (addonId: string) => {
+    if (!confirm(lang === "tr" ? "Bu eklentiyi hesabınızdan silmek istediğinize emin misiniz? (Bu işlem sadece sizin hesabınızı etkiler, eklenti sistemden silinmez)" : "Are you sure you want to delete this addon from your account? (This only affects your account, the addon will not be deleted from the system)")) {
+      return;
+    }
+    setErrorMsg("");
+    setSuccessMsg("");
+    startTransition(async () => {
+      try {
+        const res = await removeUserAddonRelation(addonId);
+        if (res && res.success) {
+          setAddons(prev => prev.filter(a => a.id !== addonId));
+          setSuccessMsg(lang === "tr" ? "Eklenti hesabınızdan başarıyla silindi." : "Addon deleted from your account successfully.");
+          setTimeout(() => {
+            setSuccessMsg("");
+            window.location.reload();
+          }, 1000);
+        } else {
+          setErrorMsg(res.error || "Failed to delete addon");
+        }
+      } catch (err: any) {
+        setErrorMsg(err.message || "Failed to delete addon");
+      }
+    });
+  };
   const [editingAddon, setEditingAddon] = useState<AddonItem | null>(null);
   const [isPending, startTransition] = useTransition();
   const [origin, setOrigin] = useState("");
@@ -316,6 +341,16 @@ export default function PluginsClient({
                           </button>
                         </div>
                       )}
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteAddon(addon.id)}
+                        disabled={isPending}
+                        className="px-2.5 py-2 rounded-xl border border-zinc-200 hover:border-red-200 hover:bg-red-50 text-zinc-500 hover:text-red-600 transition-colors flex items-center justify-center cursor-pointer shadow-sm disabled:opacity-50"
+                        title={lang === "tr" ? "Eklentiyi Sil" : "Delete Addon"}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
                     </div>
                   </div>
                 );

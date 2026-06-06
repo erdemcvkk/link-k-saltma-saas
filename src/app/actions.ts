@@ -2222,3 +2222,97 @@ export async function saveSystemSettings(
   } catch (err) {}
   return settings;
 }
+
+export async function removeUserTemplateRelation(templateId: string) {
+  try {
+    const user = await checkAndSyncUser();
+    if (!user) throw new Error("Unauthorized");
+
+    const userTemplate = await db.userTemplate.findFirst({
+      where: {
+        userId: user.id,
+        templateId: templateId
+      },
+      include: {
+        template: true
+      }
+    });
+
+    if (!userTemplate) {
+      throw new Error("Template not owned by user");
+    }
+
+    if (userTemplate.isActive) {
+      await db.profile.update({
+        where: { userId: user.id },
+        data: {
+          background: null,
+          fontStyle: "Inter",
+          theme: "dark",
+          customCss: null,
+          buttonClass: null
+        }
+      });
+    }
+
+    await db.userTemplate.delete({
+      where: {
+        id: userTemplate.id
+      }
+    });
+
+    if (userTemplate.template.category === "Özel") {
+      await db.template.delete({
+        where: { id: templateId }
+      });
+    }
+
+    revalidatePath("/dashboard");
+    revalidatePath("/sablonlar");
+    revalidatePath("/[username]", "page");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Failed to remove template" };
+  }
+}
+
+export async function removeUserAddonRelation(addonId: string) {
+  try {
+    const user = await checkAndSyncUser();
+    if (!user) throw new Error("Unauthorized");
+
+    const userAddon = await db.userAddon.findUnique({
+      where: {
+        id: addonId
+      }
+    });
+
+    if (!userAddon || userAddon.userId !== user.id) {
+      throw new Error("Addon not found or unauthorized");
+    }
+
+    await db.userAddon.delete({
+      where: {
+        id: addonId
+      }
+    });
+
+    try {
+      await db.userPurchasedModule.delete({
+        where: {
+          userId_moduleId: {
+            userId: user.id,
+            moduleId: userAddon.addonType
+          }
+        }
+      });
+    } catch (e) {}
+
+    revalidatePath("/dashboard");
+    revalidatePath("/eklentiler");
+    revalidatePath("/[username]", "page");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Failed to remove addon" };
+  }
+}
