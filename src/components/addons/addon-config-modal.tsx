@@ -2130,13 +2130,34 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
             <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
               {lang === "tr" ? "Ses Dosyası URL (Audio Source URL)" : "Audio Source URL"}
             </label>
-            <input
-              type="text"
-              value={configData["audioUrl"] || ""}
-              onChange={(e) => setConfigData({ ...configData, audioUrl: e.target.value })}
-              placeholder="https://domain.com/track.mp3"
-              className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
-            />
+            <div className="flex items-center gap-3">
+              <div className="flex-1 relative">
+                <input
+                  type="text"
+                  value={configData["audioUrl"] || ""}
+                  onChange={(e) => setConfigData({ ...configData, audioUrl: e.target.value })}
+                  placeholder="https://domain.com/track.mp3"
+                  className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none pr-24 shadow-sm"
+                />
+                <label className="absolute right-1 top-1 bottom-1 flex items-center justify-center px-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-lg cursor-pointer transition-colors">
+                  {lang === "tr" ? "Dosya Seç" : "Upload"}
+                  <input 
+                    type="file" 
+                    className="hidden" 
+                    accept="audio/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        try {
+                          const url = await handleFileUpload(file);
+                          setConfigData({ ...configData, audioUrl: url });
+                        } catch (err: any) { showAlert(err.message); }
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
             <p className="text-xs text-amber-500 font-medium mt-1.5 block">
               {lang === "tr" 
                 ? "⚠️ Lütfen doğrudan bir .mp3 veya .wav bağlantısı girin. Telif hakları sebebiyle diğer müzik platformlarının linkleri bu özel oynatıcıda çalışmaz."
