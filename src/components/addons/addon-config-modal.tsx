@@ -1390,7 +1390,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Sanatçı" : "Artist"}</label>
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Sanatçı Adı" : "Artist Name"}</label>
                 <input
                   type="text"
                   placeholder={lang === "tr" ? "DJ Yağmur" : "DJ Rain"}
@@ -1407,9 +1407,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
             
             <div className="space-y-1">
               <label className="text-[10px] font-bold text-slate-550 block uppercase">
-                {lang === "tr" ? "Ses Dosyası (URL veya Yükle)" : "Audio Source (URL or Upload)"}
+                {lang === "tr" ? "Ses Dosyası URL (.MP3/.WAV)" : "Audio File URL (.MP3/.WAV)"}
               </label>
-              <div className="flex gap-1.5 relative">
+              <div className="flex gap-2">
                 <input
                   type="text"
                   placeholder="https://..."
@@ -1419,9 +1419,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                     newItems[idx] = { ...newItems[idx], trackUrl: e.target.value };
                     updateTracks(newItems);
                   }}
-                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none pr-16"
+                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
                 />
-                <label className="absolute right-0.5 top-0.5 bottom-0.5 flex items-center justify-center px-2 bg-zinc-100 hover:bg-zinc-250 text-zinc-700 text-[9px] font-bold rounded-lg cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+                <label className="flex items-center justify-center px-4 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap shadow-sm">
                   {lang === "tr" ? "Dosya Seç" : "Select File"}
                   <input 
                     type="file" 
@@ -1459,8 +1459,8 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Kapak Görseli (URL veya Yükle)" : "Cover Image (URL or Upload)"}</label>
-                <div className="flex gap-1.5 relative">
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Kapak Görseli URL veya Dosya" : "Cover Image URL or File"}</label>
+                <div className="flex gap-2">
                   <input
                     type="text"
                     placeholder="https://..."
@@ -1470,9 +1470,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                       newItems[idx] = { ...newItems[idx], albumCoverUrl: e.target.value };
                       updateTracks(newItems);
                     }}
-                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none pr-16"
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
                   />
-                  <label className="absolute right-0.5 top-0.5 bottom-0.5 flex items-center justify-center px-2 bg-zinc-100 hover:bg-zinc-250 text-zinc-700 text-[9px] font-bold rounded-lg cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+                  <label className="flex items-center justify-center px-4 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap shadow-sm">
                     {lang === "tr" ? "Dosya Seç" : "Select File"}
                     <input 
                       type="file" 
