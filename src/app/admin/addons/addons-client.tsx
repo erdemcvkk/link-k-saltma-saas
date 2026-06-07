@@ -340,7 +340,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
  {/* A subtle glow behind the simulator */}
  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-[800px] h-[400px] bg-rose-500/10 blur-[120px] rounded-full pointer-events-none" />
  
- <div className="w-full md:w-[1600px] transform scale-[0.6] lg:scale-[0.8] 2xl:scale-[0.9] origin-center transition-transform duration-500">
+ <div className={selectedAddonId ? "w-full max-w-sm flex justify-center" : "w-full md:w-[1600px] transform scale-[0.6] lg:scale-[0.8] 2xl:scale-[0.9] origin-center transition-transform duration-500"}>
  <EklentilerClient products={initialProducts.filter(p => p.isActive)} settings={settings} singleAddonId={selectedAddonId} />
  </div>
  </div>
