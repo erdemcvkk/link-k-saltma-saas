@@ -28,7 +28,9 @@ export interface StorefrontBanner {
   heroDesc?: string;
   heroBtnText?: string;
   heroBtnLink?: string;
+  textColor?: string;
 }
+
 
 export interface StorefrontConfig {
   heroBgUrl?: string;
@@ -46,6 +48,8 @@ export interface StorefrontConfig {
   bottomNav?: {
     show: boolean;
   };
+  textColor?: string;
+  fontFamily?: string;
 }
 
 interface AdvancedStorefrontViewProps {
@@ -65,6 +69,7 @@ export default function AdvancedStorefrontView({
 
   const safeConfig = config || {};
   const globalTextColor = safeConfig.textColor || "#1e293b";
+  const globalFontFamily = safeConfig.fontFamily || "Inter";
 
   // Fallback banners construction
   const banners: StorefrontBanner[] = Array.isArray(safeConfig.banners) && safeConfig.banners.length > 0
@@ -646,7 +651,10 @@ export default function AdvancedStorefrontView({
   };
 
   return (
-    <div className="w-full h-full bg-white flex flex-col relative overflow-hidden font-sans select-none text-slate-900">
+    <div 
+      className="w-full h-full bg-white flex flex-col relative overflow-hidden select-none text-slate-900"
+      style={{ fontFamily: globalFontFamily }}
+    >
       {renderTabContent()}
 
       {/* Bottom Navigation */}

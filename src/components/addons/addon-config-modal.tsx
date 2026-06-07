@@ -22,6 +22,57 @@ interface AddonConfigModalProps {
  username: string;
 }
 
+const STOREFRONT_FONTS = [
+  {
+    category: { tr: "Modern / Sans-Serif", en: "Modern / Sans-Serif" },
+    options: [
+      { name: "Inter", value: "Inter" },
+      { name: "Outfit", value: "Outfit" },
+      { name: "Roboto", value: "Roboto" },
+      { name: "Poppins", value: "Poppins" },
+      { name: "Montserrat", value: "Montserrat" },
+      { name: "Plus Jakarta Sans", value: "Plus Jakarta Sans" },
+      { name: "Open Sans", value: "Open Sans" },
+      { name: "Manrope", value: "Manrope" },
+      { name: "DM Sans", value: "DM Sans" },
+      { name: "Sora", value: "Sora" },
+      { name: "Lexend", value: "Lexend" }
+    ]
+  },
+  {
+    category: { tr: "Klasik / Serif", en: "Classic / Serif" },
+    options: [
+      { name: "Playfair Display", value: "Playfair Display" },
+      { name: "Lora", value: "Lora" },
+      { name: "Merriweather", value: "Merriweather" },
+      { name: "Cormorant Garamond", value: "Cormorant Garamond" },
+      { name: "Cinzel", value: "Cinzel" },
+      { name: "Italiana", value: "Italiana" }
+    ]
+  },
+  {
+    category: { tr: "Özgün / Kreatif", en: "Display / Creative" },
+    options: [
+      { name: "Space Grotesk", value: "Space Grotesk" },
+      { name: "Syne", value: "Syne" },
+      { name: "Clash Display", value: "Clash Display" },
+      { name: "Cabinet Grotesk", value: "Cabinet Grotesk" },
+      { name: "Bebas Neue", value: "Bebas Neue" },
+      { name: "Archivo Black", value: "Archivo Black" },
+      { name: "Unbounded", value: "Unbounded" },
+      { name: "Dela Gothic One", value: "Dela Gothic One" },
+      { name: "Pacifico", value: "Pacifico" },
+      { name: "Lobster", value: "Lobster" },
+      { name: "Permanent Marker", value: "Permanent Marker" },
+      { name: "Righteous", value: "Righteous" },
+      { name: "Satisfy", value: "Satisfy" },
+      { name: "Space Mono", value: "Space Mono" }
+    ]
+  }
+];
+
+
+
 export default function AddonConfigModal({ addon, products = [], onClose, lang, username }: AddonConfigModalProps) {
  const router = useRouter();
  const [isLoading, setIsLoading] = useState(false);
@@ -812,6 +863,26 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                 className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm"
               />
             </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+              {lang === "tr" ? "Yazı Tipi (Font)" : "Font Family"}
+            </label>
+            <select
+              value={configData.fontFamily || "Inter"}
+              onChange={(e) => setConfigData({ ...configData, fontFamily: e.target.value })}
+              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-semibold focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm cursor-pointer"
+            >
+              {STOREFRONT_FONTS.map((group) => (
+                <optgroup key={group.category.en} label={lang === "tr" ? group.category.tr : group.category.en}>
+                  {group.options.map((font) => (
+                    <option key={font.value} value={font.value} style={{ fontFamily: font.value }}>
+                      {font.name}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
           </div>
         </div>
 
