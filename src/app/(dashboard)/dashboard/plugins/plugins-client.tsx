@@ -66,7 +66,6 @@ export default function PluginsClient({
       case "COUNTDOWN_LAUNCH": return lang === "tr" ? "Geri Sayım & Lansman" : "Countdown & Launch";
       case "PREMIUM_VIDEO": return lang === "tr" ? "Premium Video" : "Premium Video";
       case "FAQ": return lang === "tr" ? "Sıkça Sorulan Sorular" : "FAQ";
-      case "WEB3_NFT": return lang === "tr" ? "Web3 NFT Vitrini" : "Web3 NFT Gallery";
       case "CORP_EXEC": return lang === "tr" ? "Kurumsal Yönetici Kartı" : "Corporate Executive Card";
       case "MINI_STORE": return lang === "tr" ? "Mini Mağaza" : "Mini Store";
       case "NEO_BRUTAL": return lang === "tr" ? "Neo Brutalism Vitrin" : "Neo Brutalism Gallery";
@@ -163,7 +162,6 @@ export default function PluginsClient({
     if (type === "NEWSLETTER") return "newsletter";
     if (type === "QA") return "qa";
     if (type === "PREMIUM_VIDEO") return "masterclass";
-    if (type === "WEB3_NFT") return "web3-nft";
     if (type === "CORP_EXEC") return "corporate";
     if (type === "RETRO_CASSETTE") return "retro-cassette";
     if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";

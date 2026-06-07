@@ -1887,7 +1887,6 @@ export async function purchaseAddon(userId: string, addonType: string) {
   if (addonType === "ORGANIC") defaultTheme = "organic-earth";
   if (addonType === "RETRO") defaultTheme = "retro-arcade";
   if (addonType === "Y2K") defaultTheme = "y2k-holographic";
-  if (addonType === "WEB3_NFT") defaultTheme = "dark-drill";
   if (addonType === "CORP_EXEC") defaultTheme = "classic";
 
   // Deactivate all other addons first to ensure only 1 active addon exists

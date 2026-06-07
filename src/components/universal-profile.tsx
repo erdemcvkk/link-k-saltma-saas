@@ -593,7 +593,6 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     if (t === "MUSIC_PODCAST") return "music-podcast";
     if (t === "PORTFOLIO_GALLERY") return "portfolio-gallery";
     if (t === "COUNTDOWN_LAUNCH") return "countdown";
-    if (t === "WEB3_NFT") return "web3-nft";
     if (t === "CORP_EXEC") return "corporate";
     return t.toLowerCase();
   };
@@ -838,7 +837,6 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     case "ORGANIC":
     case "RETRO":
     case "Y2K":
-    case "WEB3_NFT":
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
           <div className="flex items-center gap-3">

@@ -35,7 +35,6 @@ export default async function CheckoutSuccessPage({ searchParams }: PageProps) {
     VINYL_RETRO: "Retro Plak Oynatıcı",
     GLASS_AUDIO: "Modern Cam Efekti",
     NEON_CYBERPUNK: "Neon Cyberpunk Player",
-    WEB3_NFT: "Web3 & NFT Koleksiyonu",
     FAQ: "Sıkça Sorulan Sorular",
     NEWSLETTER: "Bülten Aboneliği",
   };

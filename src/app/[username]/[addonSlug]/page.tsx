@@ -63,7 +63,6 @@ export default async function AddonPage({
     if (type === "NEWSLETTER") return "newsletter";
     if (type === "QA") return "qa";
     if (type === "PREMIUM_VIDEO") return "masterclass";
-    if (type === "WEB3_NFT") return "web3-nft";
     if (type === "CORP_EXEC") return "corporate";
     if (type === "RETRO_CASSETTE") return "retro-cassette";
     if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
@@ -96,7 +95,6 @@ export default async function AddonPage({
    case "ORGANIC": return "organic-earth";
    case "RETRO": return "retro-arcade";
    case "Y2K": return "y2k-holographic";
-   case "WEB3_NFT": return "dark-drill";
    case "CORP_EXEC": return "classic";
    default: return "classic";
    }
@@ -139,8 +137,7 @@ export default async function AddonPage({
     matchingAddon.addonType === "NEO_BRUTAL" || 
     matchingAddon.addonType === "ORGANIC" || 
     matchingAddon.addonType === "RETRO" || 
-    matchingAddon.addonType === "Y2K" ||
-    matchingAddon.addonType === "WEB3_NFT") {
+    matchingAddon.addonType === "Y2K") {
     
     const displayProducts = (parsedConfig.products && Array.isArray(parsedConfig.products) && parsedConfig.products.length > 0)
       ? parsedConfig.products.map((p: any) => ({

@@ -223,22 +223,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     mockProducts: []
   },
   { 
-    id: "WEB3_NFT", 
-    name: "Web3 & NFT Koleksiyonu", 
-    desc: "Kripto, NFT ve Web3 projelerinizi fütüristik karanlık sergi alanında sergileyin.", 
-    color: "bg-[#8b5cf6]",
-    theme: "dark-drill",
-    price: "99",
-    username: "@cryptopunk.eth",
-    bio: "NFT Artist & Web3 Dev",
-    avatarUrl: "/placeholder.png",
-    category: "Premium Temalar",
-    mockProducts: [
-      { id: "w1", title: "Genesis NFT Collectible", type: "NFT", price: "99", imageUrl: "/placeholder.png" },
-      { id: "w2", title: "Solidity Smart Contract Template", type: "Kod", price: "99", imageUrl: "/placeholder.png" }
-    ]
-  },
-  { 
     id: "FAQ", 
     name: "Sıkça Sorulan Sorular", 
     desc: "Sıkça sorulan soruları profilinizde listeleyerek kullanıcılarınızı bilgilendirin.", 
@@ -922,28 +906,6 @@ export default function EklentilerClient({ products, settings, userId = null, db
       </button>
     </div>
   </div>
-  ) : addon.id === "WEB3_NFT" ? (
-    <div className="w-full h-full bg-[#0B0A10] flex flex-col p-6 text-white relative z-0 shadow-[inset_0_0_50px_rgba(139,92,246,0.2)]">
-      <div className="flex flex-col items-center mt-6 mb-4">
-        <div className="w-20 h-20 bg-zinc-900 rounded-none overflow-hidden border border-purple-500/30">
-          <img src={addon.avatarUrl} className="w-full h-full object-cover" />
-        </div>
-        <span className="text-xs font-bold mt-2 text-purple-400 tracking-wider font-mono">{addon.username}</span>
-        <p className="text-[9px] text-zinc-500 font-mono mt-0.5">{addon.bio}</p>
-      </div>
-      
-      <div className="bg-[#161424]/80 backdrop-blur-md rounded-none p-4 mt-2 border border-purple-500/50 space-y-3">
-        <div className="flex justify-between items-center">
-          <div>
-            <h4 className="text-[10px] font-bold text-cyan-400 font-mono tracking-widest uppercase">Web3 Project alpha</h4>
-            <p className="text-[8px] text-purple-300 font-mono">Floor: 1.45 ETH</p>
-          </div>
-          <div className="w-8 h-8 rounded-none bg-purple-600 flex items-center justify-center text-white cursor-pointer font-bold text-xs">
-            ▲
-          </div>
-        </div>
-      </div>
-    </div>
   ) : addon.id === "CORP_EXEC" ? (
     <div className="w-full h-full bg-slate-50 flex flex-col relative z-0 text-slate-800 overflow-hidden">
       <div className="bg-slate-900 h-28 w-full flex flex-col justify-end p-4 relative">

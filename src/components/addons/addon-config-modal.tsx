@@ -60,7 +60,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       case "ORGANIC": return "organic-earth";
       case "RETRO": return "retro-arcade";
       case "Y2K": return "y2k-holographic";
-      case "WEB3_NFT": return "dark-drill";
       case "CORP_EXEC": return "classic";
       default: return "classic";
     }
@@ -76,7 +75,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     if (type === "NEWSLETTER") return "newsletter";
     if (type === "QA") return "qa";
     if (type === "PREMIUM_VIDEO") return "masterclass";
-    if (type === "WEB3_NFT") return "web3-nft";
     if (type === "CORP_EXEC") return "corporate";
     if (type === "RETRO_CASSETTE") return "retro-cassette";
     if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
@@ -905,7 +903,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     case "ORGANIC":
     case "RETRO":
     case "Y2K":
-    case "WEB3_NFT":
       specificFields = (
  <>
  <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
@@ -1549,8 +1546,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   addon.addonType !== "NEO_BRUTAL" && 
   addon.addonType !== "ORGANIC" && 
   addon.addonType !== "RETRO" && 
-  addon.addonType !== "Y2K" &&
-  addon.addonType !== "WEB3_NFT" ? renderSlugAndAvatar() : null}
+  addon.addonType !== "Y2K" ? renderSlugAndAvatar() : null}
  {specificFields}
  </div>
  );
@@ -1563,7 +1559,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "ORGANIC":
   case "RETRO":
   case "Y2K":
-  case "WEB3_NFT":
 
   return (
   <div className="w-full h-full relative overflow-hidden flex flex-col">
