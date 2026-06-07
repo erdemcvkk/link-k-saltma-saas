@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Music, Play, Pause, Clock, MessageCircle, Image, Star, ArrowLeft } from "lucide-react";
+import { Music, Play, Pause, Clock, MessageCircle, Image, Star, ArrowLeft, SkipBack, SkipForward, Volume2, VolumeX, ListMusic, MoreHorizontal, Laptop, Sliders } from "lucide-react";
 
 function getMediaEmbed(url: string, accentColor?: string, playing?: boolean, onClose?: () => void) {
   if (!url) return null;
@@ -135,7 +135,15 @@ export default function PlayableAddon({
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
 
   // ── VIDEO STATES ──
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -761,7 +769,10 @@ export default function PlayableAddon({
 
     case "MUSIC_PODCAST":
       return (
-        <div className="w-full h-full bg-gradient-to-br from-purple-900 to-indigo-950 flex flex-col p-6 text-white relative z-0">
+        <div 
+          className="w-full h-full min-h-[580px] flex flex-col justify-between p-6 text-white relative z-0 select-none overflow-hidden rounded-[2rem] shadow-2xl"
+          style={{ background: "radial-gradient(circle at 50% 30%, #d47e1d 0%, #613306 60%, #170d02 100%)" }}
+        >
           {isDirectAudio && (
             <audio
               ref={audioRef}
@@ -772,96 +783,228 @@ export default function PlayableAddon({
             />
           )}
 
-          <div className="flex flex-col items-center mt-8 mb-6">
-            <div className="w-20 h-20 bg-zinc-800 rounded-t-full rounded-b-xl overflow-hidden border border-purple-500/30">
-              <img
-                src={activeTrack.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&q=80"}
-                className="w-full h-full object-cover"
-                alt="Cover"
-              />
-            </div>
-            <span className="text-sm font-bold mt-3 text-purple-300">{username}</span>
-            <p className="text-xs text-purple-200/60 mt-1">{bio}</p>
+          {/* Spotify Branding Logo */}
+          <div className="flex items-center justify-center gap-2 mt-4 opacity-90">
+            <svg viewBox="0 0 24 24" className="w-6 h-6 fill-[#1DB954]" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.783-8.893-.982-.336.075-.668-.135-.744-.47-.075-.336.135-.668.47-.743 3.856-.88 7.15-.506 9.822 1.13.295.178.387.563.205.858zm1.225-2.72c-.227.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.077-1.182-.413.125-.85-.107-.975-.52-.125-.413.107-.85.52-.975 3.667-1.112 8.24-.57 11.346 1.343.366.227.485.707.26 1.074zm.106-2.833C14.384 8.71 8.563 8.52 5.175 9.548c-.513.155-1.053-.137-1.208-.65-.155-.514.137-1.054.65-1.208 3.882-1.178 10.314-.955 14.373 1.453.46.273.61.867.337 1.328-.273.46-.867.61-1.328.337z"/>
+            </svg>
+            <span className="text-white text-base font-bold tracking-tight">Spotify</span>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 mt-2 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-sm font-bold text-white truncate max-w-[170px]">{activeTrack.trackName || title}</h4>
-                <p className="text-xs text-purple-300 mt-1 truncate max-w-[170px]">{activeTrack.artistName || desc}</p>
-              </div>
+          {/* 3D Cover Flow Carousel */}
+          <div className="relative w-full h-64 flex items-center justify-center my-6" style={{ perspective: "1000px" }}>
+            {tracks.map((t: any, idx: number) => {
+              const offset = idx - currentTrackIndex;
+              const absOffset = Math.abs(offset);
+              
+              if (absOffset > 2) return null;
+              
+              const scale = 1 - absOffset * 0.15;
+              const rotateY = offset * -25;
+              const translateX = offset * 65;
+              const translateZ = absOffset * -100;
+              const zIndex = 10 - absOffset;
+              
+              const isActive = idx === currentTrackIndex;
+              
+              return (
+                <div
+                  key={idx}
+                  onClick={() => {
+                    setCurrentTrackIndex(idx);
+                    setIsPlaying(false);
+                  }}
+                  className={`absolute w-44 h-44 rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 ease-out`}
+                  style={{
+                    transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                    zIndex: zIndex,
+                    transformStyle: "preserve-3d",
+                    boxShadow: isActive ? "0 20px 35px -5px rgba(0,0,0,0.6), 0 0 25px 2px rgba(255,255,255,0.1)" : "0 5px 15px -3px rgba(0,0,0,0.5)",
+                    border: isActive ? "2px solid rgba(255,255,255,0.45)" : "1px solid rgba(255,255,255,0.1)",
+                  }}
+                >
+                  <img
+                    src={t.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&q=80"}
+                    className="w-full h-full object-cover"
+                    alt="Cover"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-3 pt-6 flex flex-col justify-end text-left h-2/3">
+                    <span className="text-white text-xs font-black truncate leading-tight">{t.artistName || (config.lang === "tr" ? "Bilinmeyen Sanatçı" : "Unknown Artist")}</span>
+                    <span className="text-zinc-300 text-[9px] font-medium truncate mt-0.5">{t.trackName || (config.lang === "tr" ? "Bilinmeyen Parça" : "Unknown Track")}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
 
-              {!mediaEmbed && renderThemePlayButton(config.accentColor || "#ec4899", "w-12 h-12", 18)}
+          {/* Active Track Metadata & External Embed Display */}
+          <div className="flex flex-col items-center justify-center w-full mb-4">
+            <div className="text-center min-h-[48px] px-4">
+              <h3 className="text-base font-extrabold text-white tracking-wide truncate max-w-[280px] mx-auto">
+                {activeTrack.artistName || (config.lang === "tr" ? "Bilinmeyen Sanatçı" : "Unknown Artist")}
+              </h3>
+              <p className="text-xs text-zinc-300 truncate max-w-[280px] mx-auto mt-0.5">
+                {activeTrack.trackName || (config.lang === "tr" ? "Bilinmeyen Parça" : "Unknown Track")}
+              </p>
             </div>
 
-            {mediaEmbed ? mediaEmbed : (
-              <div className="space-y-3">
-                {isDirectAudio && (
-                  <div className="space-y-1">
-                    <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden cursor-pointer relative" onClick={handleTimelineClick}>
-                      <div
-                        className="h-full rounded-full"
-                        style={{
-                          width: `${progressPercent}%`,
-                          backgroundColor: config.accentColor || "#ec4899",
-                        }}
-                      />
-                    </div>
-                    <div className="flex justify-between text-[8px] text-purple-300/60 font-mono">
-                      <span>{formatTime(currentTime)}</span>
-                      <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Animated waves while playing */}
-                <div className="flex items-end gap-1.5 justify-center h-10 pt-2">
-                  <div
-                    className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
-                      isPlaying ? "h-6 animate-pulse" : "h-3"
-                    }`}
-                    style={{ animationDuration: "0.6s", backgroundColor: config.accentColor || "#ec4899" }}
-                  />
-                  <div
-                    className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
-                      isPlaying ? "h-10 animate-pulse" : "h-4"
-                    }`}
-                    style={{ animationDuration: "0.9s", animationDelay: "0.15s", backgroundColor: config.accentColor || "#ec4899" }}
-                  />
-                  <div
-                    className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
-                      isPlaying ? "h-7 animate-pulse" : "h-3"
-                    }`}
-                    style={{ animationDuration: "0.7s", animationDelay: "0.3s", backgroundColor: config.accentColor || "#ec4899" }}
-                  />
-                  <div
-                    className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
-                      isPlaying ? "h-11 animate-pulse" : "h-5"
-                    }`}
-                    style={{ animationDuration: "0.8s", animationDelay: "0.1s", backgroundColor: config.accentColor || "#ec4899" }}
-                  />
-                  <div
-                    className={`w-1.5 bg-pink-500 rounded-full transition-all duration-300 ${
-                      isPlaying ? "h-5 animate-pulse" : "h-2"
-                    }`}
-                    style={{ animationDuration: "0.5s", animationDelay: "0.4s", backgroundColor: config.accentColor || "#ec4899" }}
-                  />
-                </div>
-
-                {url && !isDirectAudio && (
-                  <div className="text-center pt-1">
-                    <button
-                      onClick={handlePlayPause}
-                      className="text-[10px] text-pink-400 font-bold hover:underline"
-                    >
-                      Bağlantıyı Aç ↗
-                    </button>
-                  </div>
-                )}
+            {/* If the song has an iframe embed (e.g. Spotify widget), show it here */}
+            {mediaEmbed && (
+              <div className="w-full max-w-sm mx-auto my-2 px-2 animate-fadeIn relative z-20">
+                {mediaEmbed}
               </div>
             )}
           </div>
-          {renderPlaylist("MUSIC_PODCAST")}
+
+          {/* Glassmorphic Player Controls Bar */}
+          <div className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-full py-2.5 px-4 flex items-center justify-between shadow-2xl relative z-10 mt-auto">
+            {/* Left Controls: Prev, Play/Pause, Next */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const prevIdx = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+                  setCurrentTrackIndex(prevIdx);
+                  setIsPlaying(false);
+                }}
+                className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
+              >
+                <SkipBack size={16} className="fill-current" />
+              </button>
+              
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePlayPause();
+                }}
+                className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer"
+              >
+                {isPlaying ? (
+                  <Pause size={12} className="fill-black" />
+                ) : (
+                  <Play size={12} className="fill-black ml-0.5" />
+                )}
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const nextIdx = (currentTrackIndex + 1) % tracks.length;
+                  setCurrentTrackIndex(nextIdx);
+                  setIsPlaying(false);
+                }}
+                className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
+              >
+                <SkipForward size={16} className="fill-current" />
+              </button>
+            </div>
+
+            {/* Center: Mini Status Pill */}
+            <div className="flex-1 max-w-[170px] xs:max-w-[200px] bg-black/40 border border-white/10 rounded-full px-2.5 py-1 flex items-center gap-2.5 relative overflow-hidden h-9">
+              <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 bg-zinc-850">
+                <img
+                  src={activeTrack.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&q=80"}
+                  className="w-full h-full object-cover"
+                  alt="mini cover"
+                />
+              </div>
+              <div className="flex-1 min-w-0 flex flex-col justify-center">
+                <span className="text-[9px] font-bold text-white truncate leading-tight">
+                  {activeTrack.artistName || (config.lang === "tr" ? "Sanatçı" : "Artist")}
+                </span>
+                <span className="text-[7px] text-zinc-400 truncate leading-none mt-0.5">
+                  {activeTrack.trackName || (config.lang === "tr" ? "Şarkı" : "Track")}
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-0.5 shrink-0 pr-1">
+                {isPlaying ? (
+                  <div className="flex items-end gap-[2px] h-3">
+                    <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-2" style={{ animationDuration: '0.6s' }}></span>
+                    <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-3" style={{ animationDuration: '0.8s', animationDelay: '0.1s' }}></span>
+                    <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-1.5" style={{ animationDuration: '0.5s', animationDelay: '0.2s' }}></span>
+                  </div>
+                ) : (
+                  <Volume2 size={10} className="text-zinc-400" />
+                )}
+                <MoreHorizontal size={10} className="text-zinc-500 ml-1 cursor-pointer hover:text-white" />
+              </div>
+
+              {/* Progress line inside pill */}
+              {isDirectAudio && (
+                <div className="absolute bottom-0 inset-x-0 h-0.5 bg-white/20">
+                  <div
+                    className="h-full bg-white transition-all duration-300"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Right Controls: CAST, LIST, MUTE */}
+            <div className="flex items-center gap-2.5 text-white/75">
+              <button className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer">
+                <Laptop size={12} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsPlaylistOpen(!isPlaylistOpen);
+                }}
+                className={`p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer ${isPlaylistOpen ? "text-[#1DB954] bg-white/10" : "hover:text-white"}`}
+              >
+                <ListMusic size={12} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMuted(!isMuted);
+                }}
+                className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+              >
+                {isMuted ? <VolumeX size={12} className="text-red-400" /> : <Volume2 size={12} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Playlist Drawer/Panel */}
+          {isPlaylistOpen && (
+            <div className="w-full bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-3.5 mt-3 space-y-2 max-h-44 overflow-y-auto no-scrollbar animate-slideUp">
+              <div className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
+                {config.lang === "tr" ? "Çalma Listesi" : "Playlist"} ({tracks.length})
+              </div>
+              <div className="space-y-1">
+                {tracks.map((t: any, idx: number) => {
+                  const isActive = idx === currentTrackIndex;
+                  return (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setCurrentTrackIndex(idx);
+                        setIsPlaying(false);
+                      }}
+                      className={`flex items-center gap-2.5 p-1.5 rounded-lg cursor-pointer transition-colors ${isActive ? "bg-white/15" : "hover:bg-white/5"}`}
+                    >
+                      <div className="w-6 h-6 rounded overflow-hidden shrink-0 bg-zinc-800 relative">
+                        <img src={t.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=50&q=80"} className="w-full h-full object-cover" />
+                        {isActive && isPlaying && (
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <span className="w-1 bg-[#1DB954] h-2 rounded-full animate-pulse mx-0.5"></span>
+                            <span className="w-1 bg-[#1DB954] h-3 rounded-full animate-pulse mx-0.5" style={{ animationDelay: '0.15s' }}></span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className={`text-[10px] font-bold truncate ${isActive ? "text-[#1DB954]" : "text-white"}`}>{t.trackName || "Unknown Track"}</div>
+                        <div className="text-[8px] text-zinc-400 truncate mt-0.5">{t.artistName || "Unknown Artist"}</div>
+                      </div>
+                      <div className="text-[8px] text-zinc-500 font-mono">{t.trackDuration || "3:45"}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       );
 
