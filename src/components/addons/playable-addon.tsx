@@ -1651,28 +1651,7 @@ export default function PlayableAddon({
           </div>
 
           {/* Bottom Dark Footer Bar */}
-          <div className="bg-zinc-900 px-6 py-4 flex justify-around items-center text-zinc-400">
-            <button
-              onClick={() => {
-                if (audioRef.current) {
-                  audioRef.current.loop = !audioRef.current.loop;
-                  const loopBtn = document.getElementById("audio-player-loop");
-                  if (loopBtn) {
-                    if (audioRef.current.loop) {
-                      loopBtn.classList.add("text-indigo-400");
-                    } else {
-                      loopBtn.classList.remove("text-indigo-400");
-                    }
-                  }
-                }
-              }}
-              id="audio-player-loop"
-              className="bg-transparent border-0 outline-none p-0 cursor-pointer text-inherit hover:text-white transition-colors"
-              title={config.lang === "tr" ? "Tekrarla" : "Repeat"}
-            >
-              <Clock size={16} />
-            </button>
-
+          <div className="bg-zinc-900 px-6 py-4 flex justify-center items-center text-zinc-400">
             <button
               onClick={() => setIsPlaylistOpen(!isPlaylistOpen)}
               className={`bg-transparent border-0 outline-none p-0 cursor-pointer text-inherit hover:text-white transition-colors ${
@@ -1680,7 +1659,7 @@ export default function PlayableAddon({
               }`}
               title={config.lang === "tr" ? "Çalma Listesi" : "Playlist"}
             >
-              <ListMusic size={16} />
+              <ListMusic size={18} />
             </button>
           </div>
 

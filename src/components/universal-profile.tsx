@@ -1049,8 +1049,7 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
               </div>
             </div>
 
-            <div className="bg-zinc-900 px-4 py-2.5 flex items-center justify-around text-zinc-400">
-              <span className="text-[8px] font-bold uppercase tracking-wider text-zinc-450">Loop</span>
+            <div className="bg-zinc-900 px-4 py-2.5 flex items-center justify-center text-zinc-400">
               <ListMusic size={12} />
             </div>
           </div>
