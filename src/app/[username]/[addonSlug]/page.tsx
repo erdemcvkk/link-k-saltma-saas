@@ -4,6 +4,7 @@ import StorefrontPreview from "@/components/storefront-preview";
 import { Store, Music, Image, Clock, MessageCircle } from "lucide-react";
 import { Metadata } from "next";
 import PlayableAddon from "@/components/addons/playable-addon";
+import AdvancedStorefrontView from "@/components/addons/advanced-storefront-view";
 
 export async function generateMetadata({ params }: { params: Promise<{ username: string; addonSlug: string }> }): Promise<Metadata> {
  const resolvedParams = await params;
@@ -56,6 +57,7 @@ export default async function AddonPage({
   function getDefaultSlug(type: string) {
     if (!type) return "store";
     if (type === "MINI_STORE") return "store";
+    if (type === "ADVANCED_STOREFRONT") return "advanced-storefront";
     if (type === "NEO_BRUTAL") return "neo-brutal";
     if (type === "ORGANIC") return "organic";
     if (type === "RETRO") return "retro";
@@ -128,6 +130,16 @@ export default async function AddonPage({
   let parsedConfig: any = { theme: 'classic' };
   if (matchingAddon.settings) {
     parsedConfig = typeof matchingAddon.settings === "string" ? JSON.parse(matchingAddon.settings) : matchingAddon.settings;
+  }
+
+  if (matchingAddon.addonType === "ADVANCED_STOREFRONT") {
+    return (
+      <div className="w-full min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="w-full max-w-md min-h-screen md:min-h-[85vh] md:max-h-[90vh] md:rounded-[3rem] md:my-8 relative overflow-hidden bg-white shadow-2xl border-4 border-zinc-800">
+          <AdvancedStorefrontView config={parsedConfig} lang="tr" />
+        </div>
+      </div>
+    );
   }
 
   if (matchingAddon.addonType === "MINI_STORE" || 

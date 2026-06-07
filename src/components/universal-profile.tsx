@@ -576,6 +576,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
   const getSlug = (t: string, config: any) => {
     if (config.customSlug) return config.customSlug;
     if (t === "MINI_STORE") return "store";
+    if (t === "ADVANCED_STOREFRONT") return "advanced-storefront";
     if (t === "NEO_BRUTAL") return "neo-brutal";
     if (t === "ORGANIC") return "organic";
     if (t === "RETRO") return "retro";
@@ -803,6 +804,24 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
           </div>
           <div className={btnClassName}>
             {configData.buttonText || "Lansmanı İncele"}
+          </div>
+        </CardWrapper>
+      );
+
+    case "ADVANCED_STOREFRONT":
+      return (
+        <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-violet-500/10 flex items-center justify-center shrink-0">
+              <ShoppingBag className="h-5 w-5 text-violet-500" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-slate-800">{configData.heroTitle || "Gelişmiş E-Ticaret Vitrini"}</h4>
+              <p className="text-xs opacity-70 mt-0.5">{configData.heroSub || "Yeni ürün koleksiyonlarımızı keşfedin."}</p>
+            </div>
+          </div>
+          <div className={btnClassName}>
+            {configData.heroBtnText || "Vitrine Git"}
           </div>
         </CardWrapper>
       );

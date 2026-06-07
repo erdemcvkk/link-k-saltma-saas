@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { saveAddonConfig, addAddonProduct, deleteAddonProduct } from "@/app/actions";
 import { X, Loader2, Save, Store, Calendar, FileQuestion, Mail, Heart, Clock, Briefcase, HelpCircle, MapPin, MessageCircle, Trash2, Plus, ShoppingBag, Music, Image } from "lucide-react";
 import StorefrontPreview from "@/components/storefront-preview";
+import AdvancedStorefrontView from "./advanced-storefront-view";
 import PlayableAddon from "./playable-addon";
 
 interface AddonConfigModalProps {
@@ -68,6 +69,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   const getDefaultSlug = (type: string) => {
     if (!type) return "store";
     if (type === "MINI_STORE") return "store";
+    if (type === "ADVANCED_STOREFRONT") return "advanced-storefront";
     if (type === "NEO_BRUTAL") return "neo-brutal";
     if (type === "ORGANIC") return "organic";
     if (type === "RETRO") return "retro";
@@ -491,6 +493,532 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     );
   };
 
+  const renderAdvancedStorefrontEditor = () => {
+    // Hero Section values
+    const heroBgUrl = configData.heroBgUrl || "";
+    const heroSub = configData.heroSub || "";
+    const heroTitle = configData.heroTitle || "";
+    const heroDesc = configData.heroDesc || "";
+    const heroBtnText = configData.heroBtnText || "";
+    const heroBtnLink = configData.heroBtnLink || "";
+
+    // Collections
+    const collections = configData.collections || [];
+
+    // Bottom Nav
+    const bottomNavShow = configData.bottomNav?.show !== false;
+    const bottomNavItems = configData.bottomNav?.items || [
+      { label: "Shop", link: "#", icon: "Shop" },
+      { label: "Explore", link: "#", icon: "Explore" },
+      { label: "Brands", link: "#", icon: "Brands" },
+      { label: "Profile", link: "#", icon: "Profile" }
+    ];
+
+    const updateHero = (field: string, value: any) => {
+      setConfigData({
+        ...configData,
+        [field]: value
+      });
+    };
+
+    const updateCollections = (newCollections: any[]) => {
+      setConfigData({
+        ...configData,
+        collections: newCollections
+      });
+    };
+
+    const updateBottomNav = (newBottomNav: any) => {
+      setConfigData({
+        ...configData,
+        bottomNav: newBottomNav
+      });
+    };
+
+    return (
+      <div className="space-y-6">
+        {/* Hero Section */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            📸 {lang === "tr" ? "Kahraman Alanı (Hero Section)" : "Hero Section"}
+          </h4>
+          
+          <div className="space-y-1.5 mb-4">
+            <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+              {lang === "tr" ? "Arka Plan Görseli" : "Background Image"}
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={heroBgUrl}
+                onChange={(e) => updateHero("heroBgUrl", e.target.value)}
+                placeholder="https://..."
+                className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm"
+              />
+              <label className="flex items-center justify-center px-4 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+                {lang === "tr" ? "Dosya Seç" : "Upload"}
+                <input 
+                  type="file" 
+                  className="hidden" 
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      try {
+                        const url = await handleFileUpload(file);
+                        updateHero("heroBgUrl", url);
+                      } catch (err: any) { showAlert(err.message); }
+                    }
+                  }}
+                />
+              </label>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {renderInput("heroSub", lang === "tr" ? "Üst Başlık (Küçük)" : "Subheading", "SPRING COLLECTION")}
+            {renderInput("heroTitle", lang === "tr" ? "Ana Başlık (Büyük)" : "Headline", "20% OFF")}
+          </div>
+          {renderInput("heroDesc", lang === "tr" ? "Açıklama Alt Metni" : "Description text", "For Selected Spring Style")}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {renderInput("heroBtnText", lang === "tr" ? "Buton Yazısı" : "Button Text", "Shop now")}
+            {renderInput("heroBtnLink", lang === "tr" ? "Buton Linki" : "Button Link", "#")}
+          </div>
+        </div>
+
+        {/* Collections Manager */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+              📦 {lang === "tr" ? "Ürün Koleksiyonları" : "Product Collections"}
+            </h4>
+            <button
+              type="button"
+              onClick={() => {
+                const newCol = {
+                  id: "col-" + Date.now(),
+                  title: lang === "tr" ? "Yeni Koleksiyon" : "New Collection",
+                  showAllLink: "#",
+                  displayType: "horizontal-scroll",
+                  products: []
+                };
+                updateCollections([...collections, newCol]);
+              }}
+              className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-650 text-xs font-bold rounded-lg transition-colors border-0 cursor-pointer"
+            >
+              + {lang === "tr" ? "Koleksiyon Ekle" : "Add Collection"}
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {collections.map((col: any, colIdx: number) => (
+              <div key={col.id} className="p-5 rounded-2xl border border-zinc-200 bg-zinc-50 relative space-y-4 shadow-sm">
+                {/* Collection Delete / Reorder Controls */}
+                <div className="absolute top-4 right-4 flex items-center gap-2">
+                  <button
+                    type="button"
+                    disabled={colIdx === 0}
+                    onClick={() => {
+                      const newCols = [...collections];
+                      const temp = newCols[colIdx];
+                      newCols[colIdx] = newCols[colIdx - 1];
+                      newCols[colIdx - 1] = temp;
+                      updateCollections(newCols);
+                    }}
+                    className="p-1 rounded bg-zinc-200 hover:bg-zinc-300 text-zinc-700 disabled:opacity-40 transition-colors text-xs font-bold"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    disabled={colIdx === collections.length - 1}
+                    onClick={() => {
+                      const newCols = [...collections];
+                      const temp = newCols[colIdx];
+                      newCols[colIdx] = newCols[colIdx + 1];
+                      newCols[colIdx + 1] = temp;
+                      updateCollections(newCols);
+                    }}
+                    className="p-1 rounded bg-zinc-200 hover:bg-zinc-300 text-zinc-700 disabled:opacity-40 transition-colors text-xs font-bold"
+                  >
+                    ▼
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (confirm(lang === "tr" ? "Bu koleksiyonu ve içindeki ürünleri silmek istediğinize emin misiniz?" : "Are you sure you want to delete this collection and its products?")) {
+                        const newCols = [...collections];
+                        newCols.splice(colIdx, 1);
+                        updateCollections(newCols);
+                      }
+                    }}
+                    className="p-1.5 rounded-lg bg-red-550 hover:bg-red-100 text-red-500 transition-colors border-0 cursor-pointer"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="pr-24 space-y-3">
+                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md uppercase tracking-wider">
+                    {lang === "tr" ? `${colIdx + 1}. Koleksiyon` : `Collection ${colIdx + 1}`}
+                  </span>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase">{lang === "tr" ? "Koleksiyon Adı" : "Collection Name"}</label>
+                      <input
+                        type="text"
+                        value={col.title || ""}
+                        onChange={(e) => {
+                          const newCols = [...collections];
+                          newCols[colIdx] = { ...newCols[colIdx], title: e.target.value };
+                          updateCollections(newCols);
+                        }}
+                        className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-500 uppercase">{lang === "tr" ? "Tümünü Gör Linki" : "Show All Link"}</label>
+                      <input
+                        type="text"
+                        value={col.showAllLink || ""}
+                        onChange={(e) => {
+                          const newCols = [...collections];
+                          newCols[colIdx] = { ...newCols[colIdx], showAllLink: e.target.value };
+                          updateCollections(newCols);
+                        }}
+                        className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase">{lang === "tr" ? "Gösterim Şekli" : "Display Type"}</label>
+                    <select
+                      value={col.displayType || "horizontal-scroll"}
+                      onChange={(e) => {
+                        const newCols = [...collections];
+                        newCols[colIdx] = { ...newCols[colIdx], displayType: e.target.value };
+                        updateCollections(newCols);
+                      }}
+                      className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm"
+                    >
+                      <option value="horizontal-scroll">{lang === "tr" ? "Yatay Kaydırmalı Liste (Horizontal Scroll)" : "Horizontal Scroll"}</option>
+                      <option value="vertical-list">{lang === "tr" ? "İkili Grid Görünümü (Vertical List)" : "Grid View"}</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Products Manager Inside Collection */}
+                <div className="border-t border-zinc-200/60 pt-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h5 className="text-xs font-bold text-slate-700">{lang === "tr" ? "Koleksiyon Ürünleri" : "Products"}</h5>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newProd = {
+                          id: "p-" + Date.now(),
+                          title: lang === "tr" ? "Yeni Ürün" : "New Product",
+                          price: "29.99",
+                          imageUrl: "",
+                          badge: "New",
+                          isFavorite: false,
+                          buyLink: "#"
+                        };
+                        const newCols = [...collections];
+                        newCols[colIdx] = {
+                          ...newCols[colIdx],
+                          products: [...(col.products || []), newProd]
+                        };
+                        updateCollections(newCols);
+                      }}
+                      className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-650 text-[10px] font-bold rounded-md transition-colors border-0 cursor-pointer"
+                    >
+                      + {lang === "tr" ? "Ürün Ekle" : "Add Product"}
+                    </button>
+                  </div>
+
+                  <div className="space-y-2 max-h-[300px] overflow-y-auto no-scrollbar pr-1">
+                    {(col.products || []).map((p: any, pIdx: number) => (
+                      <div key={p.id} className="bg-white border border-zinc-150 rounded-xl p-3 relative space-y-3 shadow-sm">
+                        {/* Product Action Buttons */}
+                        <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            disabled={pIdx === 0}
+                            onClick={() => {
+                              const newProds = [...col.products];
+                              const temp = newProds[pIdx];
+                              newProds[pIdx] = newProds[pIdx - 1];
+                              newProds[pIdx - 1] = temp;
+                              const newCols = [...collections];
+                              newCols[colIdx] = { ...newCols[colIdx], products: newProds };
+                              updateCollections(newCols);
+                            }}
+                            className="p-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-650 disabled:opacity-40 text-[9px] font-bold"
+                          >
+                            ▲
+                          </button>
+                          <button
+                            type="button"
+                            disabled={pIdx === col.products.length - 1}
+                            onClick={() => {
+                              const newProds = [...col.products];
+                              const temp = newProds[pIdx];
+                              newProds[pIdx] = newProds[pIdx + 1];
+                              newProds[pIdx + 1] = temp;
+                              const newCols = [...collections];
+                              newCols[colIdx] = { ...newCols[colIdx], products: newProds };
+                              updateCollections(newCols);
+                            }}
+                            className="p-0.5 rounded bg-zinc-100 hover:bg-zinc-200 text-zinc-650 disabled:opacity-40 text-[9px] font-bold"
+                          >
+                            ▼
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newProds = [...col.products];
+                              newProds.splice(pIdx, 1);
+                              const newCols = [...collections];
+                              newCols[colIdx] = { ...newCols[colIdx], products: newProds };
+                              updateCollections(newCols);
+                            }}
+                            className="p-1 rounded bg-red-50 hover:bg-red-100 text-red-550 border-0 transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        </div>
+
+                        {/* Product edit forms */}
+                        <div className="pr-16 space-y-2">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="space-y-0.5">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">{lang === "tr" ? "Ürün Adı" : "Product Title"}</label>
+                              <input
+                                type="text"
+                                value={p.title || ""}
+                                onChange={(e) => {
+                                  const newProds = [...col.products];
+                                  newProds[pIdx] = { ...newProds[pIdx], title: e.target.value };
+                                  const newCols = [...collections];
+                                  newCols[colIdx] = { ...newCols[colIdx], products: newProds };
+                                  updateCollections(newCols);
+                                }}
+                                className="w-full px-2 py-1 border border-zinc-200 rounded text-xs"
+                              />
+                            </div>
+                            <div className="space-y-0.5">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">{lang === "tr" ? "Fiyat" : "Price"}</label>
+                              <input
+                                type="text"
+                                value={p.price || ""}
+                                onChange={(e) => {
+                                  const newProds = [...col.products];
+                                  newProds[pIdx] = { ...newProds[pIdx], price: e.target.value };
+                                  const newCols = [...collections];
+                                  newCols[colIdx] = { ...newCols[colIdx], products: newProds };
+                                  updateCollections(newCols);
+                                }}
+                                className="w-full px-2 py-1 border border-zinc-200 rounded text-xs"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="space-y-0.5">
+                              <label className="text-[8px] font-bold text-slate-500 uppercase">{lang === "tr" ? "Etiket (Badge)" : "Badge"}</label>
+                              <input
+                                type="text"
+                                value={p.badge || ""}
+                                onChange={(e) => {
+                                  const newProds = [...col.products];
+                                  newProds[pIdx] = { ...newProds[pIdx], badge: e.target.value };
+                                  const newCols = [...collections];
+                                  newCols[colIdx] = { ...newCols[colIdx], products: newProds };
+                                  updateCollections(newCols);
+                                }}
+                                placeholder="New, Sale, vb."
+                                className="w-full px-2 py-1 border border-zinc-200 rounded text-xs"
+                              />
+                            </div>
+                            <div className="space-y-0.5 flex items-center justify-start pt-3 pl-1">
+                              <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-bold text-slate-700">
+                                <input
+                                  type="checkbox"
+                                  checked={!!p.isFavorite}
+                                  onChange={(e) => {
+                                    const newProds = [...col.products];
+                                    newProds[pIdx] = { ...newProds[pIdx], isFavorite: e.target.checked };
+                                    const newCols = [...collections];
+                                    newCols[colIdx] = { ...newCols[colIdx], products: newProds };
+                                    updateCollections(newCols);
+                                  }}
+                                  className="rounded text-indigo-600 focus:ring-indigo-400"
+                                />
+                                {lang === "tr" ? "Favori İkonu" : "Favorite Icon"}
+                              </label>
+                            </div>
+                          </div>
+
+                          <div className="space-y-0.5">
+                            <label className="text-[8px] font-bold text-slate-500 uppercase">{lang === "tr" ? "Satın Alma Linki" : "Buy Link"}</label>
+                            <input
+                              type="text"
+                              value={p.buyLink || ""}
+                              onChange={(e) => {
+                                  const newProds = [...col.products];
+                                  newProds[pIdx] = { ...newProds[pIdx], buyLink: e.target.value };
+                                  const newCols = [...collections];
+                                  newCols[colIdx] = { ...newCols[colIdx], products: newProds };
+                                  updateCollections(newCols);
+                              }}
+                              placeholder="https://stripe.com/..."
+                              className="w-full px-2 py-1 border border-zinc-200 rounded text-xs"
+                            />
+                          </div>
+
+                          {/* Product Image input with upload */}
+                          <div className="space-y-0.5">
+                            <label className="text-[8px] font-bold text-slate-500 uppercase block">{lang === "tr" ? "Ürün Görseli" : "Product Image"}</label>
+                            <div className="flex gap-1.5 relative">
+                              <input
+                                type="text"
+                                value={p.imageUrl || ""}
+                                onChange={(e) => {
+                                  const newProds = [...col.products];
+                                  newProds[pIdx] = { ...newProds[pIdx], imageUrl: e.target.value };
+                                  const newCols = [...collections];
+                                  newCols[colIdx] = { ...newCols[colIdx], products: newProds };
+                                  updateCollections(newCols);
+                                }}
+                                placeholder="https://..."
+                                className="w-full px-2 py-1 border border-zinc-200 rounded text-xs pr-16"
+                              />
+                              <label className="absolute right-0.5 top-0.5 bottom-0.5 flex items-center justify-center px-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-[10px] font-bold rounded cursor-pointer transition-colors whitespace-nowrap">
+                                {lang === "tr" ? "Seç" : "Upload"}
+                                <input 
+                                  type="file" 
+                                  className="hidden" 
+                                  accept="image/*"
+                                  onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      try {
+                                        const url = await handleFileUpload(file);
+                                        const newProds = [...col.products];
+                                        newProds[pIdx] = { ...newProds[pIdx], imageUrl: url };
+                                        const newCols = [...collections];
+                                        newCols[colIdx] = { ...newCols[colIdx], products: newProds };
+                                        updateCollections(newCols);
+                                      } catch (err: any) { showAlert(err.message); }
+                                    }
+                                  }}
+                                />
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    {(col.products || []).length === 0 && (
+                      <p className="text-[10px] text-zinc-400 text-center py-2">{lang === "tr" ? "Henüz ürün eklenmemiş." : "No products added yet."}</p>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+            ))}
+            {collections.length === 0 && (
+              <p className="text-xs text-zinc-400 text-center py-4">{lang === "tr" ? "Henüz koleksiyon oluşturulmamış." : "No collections created yet."}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Nav Editor */}
+        <div className="space-y-4 pt-2">
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+              📱 {lang === "tr" ? "Alt Navigasyon Menüsü" : "Bottom Navigation Menu"}
+            </h4>
+            <label className="flex items-center gap-1.5 cursor-pointer text-xs font-bold text-slate-700">
+              <input
+                type="checkbox"
+                checked={bottomNavShow}
+                onChange={(e) => {
+                  updateBottomNav({
+                    ...configData.bottomNav,
+                    show: e.target.checked,
+                    items: bottomNavItems
+                  });
+                }}
+                className="rounded text-indigo-650 focus:ring-indigo-400"
+              />
+              {lang === "tr" ? "Menüyü Göster" : "Show Menu"}
+            </label>
+          </div>
+
+          {bottomNavShow && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {bottomNavItems.map((item: any, idx: number) => (
+                <div key={idx} className="p-3 bg-zinc-50 border border-zinc-200 rounded-xl space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded uppercase tracking-wider">
+                      {idx + 1}. Buton
+                    </span>
+                    <select
+                      value={item.icon || "Shop"}
+                      onChange={(e) => {
+                        const newItems = [...bottomNavItems];
+                        newItems[idx] = { ...newItems[idx], icon: e.target.value };
+                        updateBottomNav({ ...configData.bottomNav, items: newItems });
+                      }}
+                      className="text-[10px] font-bold text-slate-700 bg-white border border-zinc-200 rounded px-1 py-0.5"
+                    >
+                      <option value="Shop">Shop (⚡)</option>
+                      <option value="Explore">Explore (👁️)</option>
+                      <option value="Brands">Brands (🔖)</option>
+                      <option value="Profile">Profile (👤)</option>
+                    </select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-0.5">
+                      <label className="text-[8px] font-bold text-slate-500 uppercase">{lang === "tr" ? "Buton Yazısı" : "Label"}</label>
+                      <input
+                        type="text"
+                        value={item.label || ""}
+                        onChange={(e) => {
+                          const newItems = [...bottomNavItems];
+                          newItems[idx] = { ...newItems[idx], label: e.target.value };
+                          updateBottomNav({ ...configData.bottomNav, items: newItems });
+                        }}
+                        className="w-full px-2 py-1 border border-zinc-200 rounded text-xs bg-white"
+                      />
+                    </div>
+                    <div className="space-y-0.5">
+                      <label className="text-[8px] font-bold text-slate-500 uppercase">{lang === "tr" ? "Yönlendirme Linki" : "Link"}</label>
+                      <input
+                        type="text"
+                        value={item.link || ""}
+                        onChange={(e) => {
+                          const newItems = [...bottomNavItems];
+                          newItems[idx] = { ...newItems[idx], link: e.target.value };
+                          updateBottomNav({ ...configData.bottomNav, items: newItems });
+                        }}
+                        className="w-full px-2 py-1 border border-zinc-200 rounded text-xs bg-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   const renderTracksEditor = () => {
     const items = configData.tracks || [];
     const effectiveItems = items.length > 0 ? items : (configData.trackUrl ? [
@@ -892,6 +1420,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  let specificFields = null;
 
   switch (addon.addonType) {
+    case "ADVANCED_STOREFRONT":
+      specificFields = renderAdvancedStorefrontEditor();
+      break;
     case "MINI_STORE":
     case "NEO_BRUTAL":
     case "ORGANIC":
@@ -1523,6 +2054,12 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
 
   const renderLivePreview = () => {
   switch (addon.addonType) {
+  case "ADVANCED_STOREFRONT":
+    return (
+      <div className="w-full h-full relative overflow-hidden flex flex-col">
+        <AdvancedStorefrontView config={configData} lang={lang} />
+      </div>
+    );
   case "MINI_STORE":
   case "NEO_BRUTAL":
   case "ORGANIC":

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ShoppingBag, Zap, CreditCard, ChevronRight, Search, ArrowUpDown, ChevronDown, Rewind, FastForward, Play, Airplay, SlidersHorizontal, Volume2, MoreHorizontal, Laptop, ListMusic } from "lucide-react";
 import StorefrontPreview, { StoreThemeType, DummyProduct } from "@/components/storefront-preview";
+import AdvancedStorefrontView from "@/components/addons/advanced-storefront-view";
 import { buyAddonAction } from "../actions";
 
 interface AddonTypeData {
@@ -37,6 +38,19 @@ export const ADDON_TYPES: AddonTypeData[] = [
       { id: "p1", title: "Video Düzenleme Masterclass'ı", type: "Kurs", price: "99", imageUrl: "/placeholder.png" },
       { id: "p2", title: "Sosyal Medya İçerik Takvimi", type: "Şablon", price: "99", imageUrl: "/placeholder.png" },
     ]
+  },
+  { 
+    id: "ADVANCED_STOREFRONT", 
+    name: "Gelişmiş E-Ticaret Vitrini", 
+    desc: "Birebir mobil e-ticaret tasarımlı, zengin kahraman (hero) alanı ve çoklu koleksiyon destekleyen dinamik vitrin.", 
+    color: "bg-violet-600",
+    theme: "classic",
+    price: "199",
+    username: "@moda.boutique",
+    bio: "Premium Wear & Design Studio",
+    avatarUrl: "/placeholder.png",
+    category: "Satış & Gelir",
+    mockProducts: []
   },
   { 
     id: "CORP_EXEC", 
@@ -450,7 +464,9 @@ export default function EklentilerClient({ products, settings, userId = null, db
  <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
  
  <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">
- {addon.id === "PREMIUM_VIDEO" ? (
+ {addon.id === "ADVANCED_STOREFRONT" ? (
+    <AdvancedStorefrontView config={{}} lang="tr" />
+  ) : addon.id === "PREMIUM_VIDEO" ? (
   <div className="w-full h-full bg-black flex flex-col p-4 relative z-0">
   {/* 16:9 Media Player Area */}
   <div className="w-full aspect-video rounded-2xl bg-zinc-900 mt-6 relative shadow-[0_0_40px_rgba(255,255,255,0.1)] overflow-hidden group">

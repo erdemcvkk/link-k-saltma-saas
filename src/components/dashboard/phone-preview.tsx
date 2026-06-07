@@ -4,6 +4,7 @@ import React from "react";
 import { Laptop, Zap, Clock, Store, Music, Image, MessageCircle, Calendar } from "lucide-react";
 import UniversalProfile, { UniversalProfileData } from "@/components/universal-profile";
 import StorefrontPreview from "@/components/storefront-preview";
+import AdvancedStorefrontView from "@/components/addons/advanced-storefront-view";
 import PlayableAddon from "@/components/addons/playable-addon";
 
 interface PhonePreviewProps {
@@ -129,6 +130,12 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
     }
 
     const type = activeAddon.addonType;
+
+    if (type === "ADVANCED_STOREFRONT") {
+      return (
+        <AdvancedStorefrontView config={parsedConfig} lang="tr" />
+      );
+    }
 
     // 1. Storefront Addons (Magaza)
     if (["MINI_STORE", "NEO_BRUTAL", "ORGANIC", "RETRO", "Y2K"].includes(type)) {

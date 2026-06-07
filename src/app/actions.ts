@@ -1887,6 +1887,82 @@ export async function purchaseAddon(userId: string, addonType: string) {
   if (addonType === "RETRO") defaultTheme = "retro-arcade";
   if (addonType === "Y2K") defaultTheme = "y2k-holographic";
   if (addonType === "CORP_EXEC") defaultTheme = "classic";
+  if (addonType === "ADVANCED_STOREFRONT") defaultTheme = "classic";
+
+  let defaultSettings: any = { theme: defaultTheme };
+  if (addonType === "ADVANCED_STOREFRONT") {
+    defaultSettings = {
+      heroBgUrl: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
+      heroSub: "SPRING COLLECTION",
+      heroTitle: "20% OFF",
+      heroDesc: "For Selected Spring Style",
+      heroBtnText: "Shop now",
+      heroBtnLink: "#",
+      collections: [
+        {
+          id: "col-1",
+          title: "Designer Collection",
+          showAllLink: "#",
+          displayType: "horizontal-scroll",
+          products: [
+            {
+              id: "p-1",
+              title: "Main Title",
+              price: "44.99",
+              imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80",
+              badge: "New",
+              isFavorite: true,
+              buyLink: "#"
+            },
+            {
+              id: "p-2",
+              title: "Atom Dress",
+              price: "44.99",
+              imageUrl: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80",
+              badge: "",
+              isFavorite: false,
+              buyLink: "#"
+            }
+          ]
+        },
+        {
+          id: "col-2",
+          title: "Top Trends",
+          showAllLink: "#",
+          displayType: "vertical-list",
+          products: [
+            {
+              id: "p-3",
+              title: "KOR Slim-Fit Shirt",
+              price: "24.99",
+              imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&q=80",
+              badge: "",
+              isFavorite: false,
+              buyLink: "#"
+            },
+            {
+              id: "p-4",
+              title: "West Side Blouse",
+              price: "24.99",
+              imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80",
+              badge: "",
+              isFavorite: false,
+              buyLink: "#"
+            }
+          ]
+        }
+      ],
+      bottomNav: {
+        show: true,
+        items: [
+          { label: "Shop", link: "#", icon: "Shop" },
+          { label: "Explore", link: "#", icon: "Explore" },
+          { label: "Brands", link: "#", icon: "Brands" },
+          { label: "Profile", link: "#", icon: "Profile" }
+        ]
+      }
+    };
+  }
 
   // Deactivate all other addons first to ensure only 1 active addon exists
   await db.userAddon.updateMany({
@@ -1899,7 +1975,7 @@ export async function purchaseAddon(userId: string, addonType: string) {
       userId: userId,
       addonType,
       isActive: true,
-      settings: { theme: defaultTheme }
+      settings: defaultSettings
     }
   });
 }
