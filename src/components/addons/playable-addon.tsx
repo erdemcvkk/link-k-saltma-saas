@@ -837,7 +837,7 @@ export default function PlayableAddon({
             })}
           </div>
 
-          {/* Active Track Metadata & External Embed Display */}
+          {/* Active Track Metadata */}
           <div className="flex flex-col items-center justify-center w-full mb-4">
             <div className="text-center min-h-[48px] px-4">
               <h3 className="text-base font-extrabold text-white tracking-wide truncate max-w-[280px] mx-auto">
@@ -847,125 +847,125 @@ export default function PlayableAddon({
                 {activeTrack.trackName || (config.lang === "tr" ? "Bilinmeyen Parça" : "Unknown Track")}
               </p>
             </div>
-
-            {/* If the song has an iframe embed (e.g. Spotify widget), show it here */}
-            {mediaEmbed && (
-              <div className="w-full max-w-sm mx-auto my-2 px-2 animate-fadeIn relative z-20">
-                {mediaEmbed}
-              </div>
-            )}
           </div>
 
-          {/* Glassmorphic Player Controls Bar */}
-          <div className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-full py-2.5 px-4 flex items-center justify-between shadow-2xl relative z-10 mt-auto">
-            {/* Left Controls: Prev, Play/Pause, Next */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const prevIdx = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-                  setCurrentTrackIndex(prevIdx);
-                  setIsPlaying(false);
-                }}
-                className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
-              >
-                <SkipBack size={16} className="fill-current" />
-              </button>
-              
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handlePlayPause();
-                }}
-                className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer"
-              >
-                {isPlaying ? (
-                  <Pause size={12} className="fill-black" />
-                ) : (
-                  <Play size={12} className="fill-black ml-0.5" />
-                )}
-              </button>
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const nextIdx = (currentTrackIndex + 1) % tracks.length;
-                  setCurrentTrackIndex(nextIdx);
-                  setIsPlaying(false);
-                }}
-                className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
-              >
-                <SkipForward size={16} className="fill-current" />
-              </button>
+          {/* Player Controls or External Embed at the Bottom */}
+          {mediaEmbed ? (
+            <div className="w-full max-w-sm mx-auto mb-2 px-2 animate-fadeIn relative z-20 mt-auto">
+              {mediaEmbed}
             </div>
+          ) : (
+            /* Glassmorphic Player Controls Bar */
+            <div className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-full py-2.5 px-4 flex items-center justify-between shadow-2xl relative z-10 mt-auto">
+              {/* Left Controls: Prev, Play/Pause, Next */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const prevIdx = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+                    setCurrentTrackIndex(prevIdx);
+                    setIsPlaying(false);
+                  }}
+                  className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
+                >
+                  <SkipBack size={16} className="fill-current" />
+                </button>
+                
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePlayPause();
+                  }}
+                  className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer"
+                >
+                  {isPlaying ? (
+                    <Pause size={12} className="fill-black" />
+                  ) : (
+                    <Play size={12} className="fill-black ml-0.5" />
+                  )}
+                </button>
 
-            {/* Center: Mini Status Pill */}
-            <div className="flex-1 max-w-[170px] xs:max-w-[200px] bg-black/40 border border-white/10 rounded-full px-2.5 py-1 flex items-center gap-2.5 relative overflow-hidden h-9">
-              <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 bg-zinc-850">
-                <img
-                  src={activeTrack.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&q=80"}
-                  className="w-full h-full object-cover"
-                  alt="mini cover"
-                />
-              </div>
-              <div className="flex-1 min-w-0 flex flex-col justify-center">
-                <span className="text-[9px] font-bold text-white truncate leading-tight">
-                  {activeTrack.artistName || (config.lang === "tr" ? "Sanatçı" : "Artist")}
-                </span>
-                <span className="text-[7px] text-zinc-400 truncate leading-none mt-0.5">
-                  {activeTrack.trackName || (config.lang === "tr" ? "Şarkı" : "Track")}
-                </span>
-              </div>
-              
-              <div className="flex items-center gap-0.5 shrink-0 pr-1">
-                {isPlaying ? (
-                  <div className="flex items-end gap-[2px] h-3">
-                    <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-2" style={{ animationDuration: '0.6s' }}></span>
-                    <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-3" style={{ animationDuration: '0.8s', animationDelay: '0.1s' }}></span>
-                    <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-1.5" style={{ animationDuration: '0.5s', animationDelay: '0.2s' }}></span>
-                  </div>
-                ) : (
-                  <Volume2 size={10} className="text-zinc-400" />
-                )}
-                <MoreHorizontal size={10} className="text-zinc-500 ml-1 cursor-pointer hover:text-white" />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const nextIdx = (currentTrackIndex + 1) % tracks.length;
+                    setCurrentTrackIndex(nextIdx);
+                    setIsPlaying(false);
+                  }}
+                  className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
+                >
+                  <SkipForward size={16} className="fill-current" />
+                </button>
               </div>
 
-              {/* Progress line inside pill */}
-              {isDirectAudio && (
-                <div className="absolute bottom-0 inset-x-0 h-0.5 bg-white/20">
-                  <div
-                    className="h-full bg-white transition-all duration-300"
-                    style={{ width: `${progressPercent}%` }}
+              {/* Center: Mini Status Pill */}
+              <div className="flex-1 max-w-[170px] xs:max-w-[200px] bg-black/40 border border-white/10 rounded-full px-2.5 py-1 flex items-center gap-2.5 relative overflow-hidden h-9">
+                <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 bg-zinc-850">
+                  <img
+                    src={activeTrack.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&q=80"}
+                    className="w-full h-full object-cover"
+                    alt="mini cover"
                   />
                 </div>
-              )}
-            </div>
+                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                  <span className="text-[9px] font-bold text-white truncate leading-tight">
+                    {activeTrack.artistName || (config.lang === "tr" ? "Sanatçı" : "Artist")}
+                  </span>
+                  <span className="text-[7px] text-zinc-400 truncate leading-none mt-0.5">
+                    {activeTrack.trackName || (config.lang === "tr" ? "Şarkı" : "Track")}
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-0.5 shrink-0 pr-1">
+                  {isPlaying ? (
+                    <div className="flex items-end gap-[2px] h-3">
+                      <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-2" style={{ animationDuration: '0.6s' }}></span>
+                      <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-3" style={{ animationDuration: '0.8s', animationDelay: '0.1s' }}></span>
+                      <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-1.5" style={{ animationDuration: '0.5s', animationDelay: '0.2s' }}></span>
+                    </div>
+                  ) : (
+                    <Volume2 size={10} className="text-zinc-400" />
+                  )}
+                  <MoreHorizontal size={10} className="text-zinc-500 ml-1 cursor-pointer hover:text-white" />
+                </div>
 
-            {/* Right Controls: CAST, LIST, MUTE */}
-            <div className="flex items-center gap-2.5 text-white/75">
-              <button className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer">
-                <Laptop size={12} />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsPlaylistOpen(!isPlaylistOpen);
-                }}
-                className={`p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer ${isPlaylistOpen ? "text-[#1DB954] bg-white/10" : "hover:text-white"}`}
-              >
-                <ListMusic size={12} />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsMuted(!isMuted);
-                }}
-                className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer"
-              >
-                {isMuted ? <VolumeX size={12} className="text-red-400" /> : <Volume2 size={12} />}
-              </button>
+                {/* Progress line inside pill */}
+                {isDirectAudio && (
+                  <div className="absolute bottom-0 inset-x-0 h-0.5 bg-white/20">
+                    <div
+                      className="h-full bg-white transition-all duration-300"
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Right Controls: CAST, LIST, MUTE */}
+              <div className="flex items-center gap-2.5 text-white/75">
+                <button className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer">
+                  <Laptop size={12} />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsPlaylistOpen(!isPlaylistOpen);
+                  }}
+                  className={`p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer ${isPlaylistOpen ? "text-[#1DB954] bg-white/10" : "hover:text-white"}`}
+                >
+                  <ListMusic size={12} />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMuted(!isMuted);
+                  }}
+                  className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+                >
+                  {isMuted ? <VolumeX size={12} className="text-red-400" /> : <Volume2 size={12} />}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Playlist Drawer/Panel */}
           {isPlaylistOpen && (
