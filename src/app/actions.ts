@@ -1892,12 +1892,24 @@ export async function purchaseAddon(userId: string, addonType: string) {
   let defaultSettings: any = { theme: defaultTheme };
   if (addonType === "ADVANCED_STOREFRONT") {
     defaultSettings = {
-      heroBgUrl: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
-      heroSub: "SPRING COLLECTION",
-      heroTitle: "20% OFF",
-      heroDesc: "For Selected Spring Style",
-      heroBtnText: "Shop now",
-      heroBtnLink: "#",
+      banners: [
+        {
+          heroBgUrl: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
+          heroSub: "SPRING COLLECTION",
+          heroTitle: "20% OFF",
+          heroDesc: "For Selected Spring Style",
+          heroBtnText: "Shop now",
+          heroBtnLink: "#"
+        },
+        {
+          heroBgUrl: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80",
+          heroSub: "NEW ARRIVALS",
+          heroTitle: "LIMITED EDITION",
+          heroDesc: "Discover our new seasonal designer pieces.",
+          heroBtnText: "Explore Collection",
+          heroBtnLink: "#"
+        }
+      ],
       brandName: "Moda Boutique",
       brandDescription: "Premium Wear & Design Studio since 2018.",
       brandLogoUrl: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=150&q=80",

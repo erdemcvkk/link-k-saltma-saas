@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Heart, ShoppingBag, Zap, Bookmark, User, Store, ArrowLeft } from "lucide-react";
 
 export interface StorefrontProduct {
@@ -21,6 +21,15 @@ export interface StorefrontCollection {
   products: StorefrontProduct[];
 }
 
+export interface StorefrontBanner {
+  heroBgUrl?: string;
+  heroSub?: string;
+  heroTitle?: string;
+  heroDesc?: string;
+  heroBtnText?: string;
+  heroBtnLink?: string;
+}
+
 export interface StorefrontConfig {
   heroBgUrl?: string;
   heroSub?: string;
@@ -28,6 +37,7 @@ export interface StorefrontConfig {
   heroDesc?: string;
   heroBtnText?: string;
   heroBtnLink?: string;
+  banners?: StorefrontBanner[];
   brandName?: string;
   brandDescription?: string;
   brandLogoUrl?: string;
@@ -51,14 +61,30 @@ export default function AdvancedStorefrontView({
 }: AdvancedStorefrontViewProps) {
   const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"shop" | "explore" | "brands">("shop");
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
-  // Default fallback values
-  const heroBgUrl = config.heroBgUrl || "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80";
-  const heroSub = config.heroSub || "SPRING COLLECTION";
-  const heroTitle = config.heroTitle || "20% OFF";
-  const heroDesc = config.heroDesc || "For Selected Spring Style";
-  const heroBtnText = config.heroBtnText || "Shop now";
-  const heroBtnLink = config.heroBtnLink || "#";
+  // Fallback banners construction
+  const banners: StorefrontBanner[] = config.banners && config.banners.length > 0
+    ? config.banners
+    : [
+        {
+          heroBgUrl: config.heroBgUrl || "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
+          heroSub: config.heroSub || "SPRING COLLECTION",
+          heroTitle: config.heroTitle || "20% OFF",
+          heroDesc: config.heroDesc || "For Selected Spring Style",
+          heroBtnText: config.heroBtnText || "Shop now",
+          heroBtnLink: config.heroBtnLink || "#",
+        },
+      ];
+
+  // Autoplay effect
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBannerIndex((prev) => (prev + 1) % banners.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [banners.length]);
 
   // Brand Info
   const brandName = config.brandName || "Moda Boutique";
@@ -356,67 +382,87 @@ export default function AdvancedStorefrontView({
     return (
       /* Main Shop Feed View (Hero + Horizontal Collections) */
       <div className="flex-1 overflow-y-auto no-scrollbar pb-24">
-        {/* Hero Section */}
-        <div 
-          className="w-full h-[360px] md:h-[400px] relative bg-cover bg-center flex flex-col justify-between p-6"
-          style={{ backgroundImage: `url(${heroBgUrl})` }}
-        >
-          {/* Dark overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/40 z-0 pointer-events-none" />
+        {/* Hero Slider Section */}
+        <div className="w-full h-[360px] md:h-[400px] relative overflow-hidden bg-zinc-950">
+          {banners.map((banner, index) => {
+            const isActive = index === currentBannerIndex;
+            const bgUrl = banner.heroBgUrl || "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80";
+            const sub = banner.heroSub || "SPRING COLLECTION";
+            const title = banner.heroTitle || "20% OFF";
+            const desc = banner.heroDesc || "For Selected Spring Style";
+            const btnText = banner.heroBtnText || "Shop now";
+            const btnLink = banner.heroBtnLink || "#";
 
-          {/* Hero Header Icons */}
-          <div className="w-full flex justify-end gap-4 relative z-10">
-            <button type="button" className="w-9 h-9 rounded-full bg-black/10 backdrop-blur-md hover:bg-black/20 flex items-center justify-center transition-colors border-0">
-              <Heart className="h-4.5 w-4.5 text-white" />
-            </button>
-            <button type="button" className="w-9 h-9 rounded-full bg-black/10 backdrop-blur-md hover:bg-black/20 flex items-center justify-center transition-colors border-0">
-              <ShoppingBag className="h-4.5 w-4.5 text-white" />
-            </button>
-          </div>
-
-          {/* Hero Typography & Content */}
-          <div className="w-full space-y-4 relative z-10 mt-auto">
-            <div className="space-y-1">
-              <span className="text-[10px] tracking-[0.25em] font-extrabold text-white/95 uppercase select-none">
-                {heroSub}
-              </span>
-              <div className="w-16 h-[1.5px] bg-white/80" />
-            </div>
-
-            <h1 className="text-4xl md:text-5xl font-black text-white leading-none tracking-tight">
-              {heroTitle}
-            </h1>
-            <p className="text-sm font-semibold text-white/90 leading-tight">
-              {heroDesc}
-            </p>
-
-            <div className="flex items-center justify-between pt-1">
-              {/* Pagination indicators mockup */}
-              <div className="flex gap-1.5 items-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-white/40"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-white flex items-center justify-center p-0.5 shadow-sm">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-900"></span>
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-white/40"></span>
-                <span className="w-1.5 h-1.5 rounded-full bg-white/40"></span>
-              </div>
-
-              {/* Shop now button */}
-              <a 
-                href={heroBtnLink || "#"} 
-                target={(heroBtnLink && heroBtnLink !== "#") ? "_blank" : undefined}
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  if (heroBtnLink === "#" || !heroBtnLink) {
-                    e.preventDefault();
-                  }
-                }}
-                className="px-6 py-2.5 bg-[#17181a] hover:bg-black hover:scale-[1.05] active:scale-95 text-white font-bold text-xs rounded-full tracking-wide transition-all border-0 shadow-lg shadow-black/20 text-center"
+            return (
+              <div
+                key={index}
+                className={`absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6 transition-all duration-700 ease-in-out ${
+                  isActive ? "opacity-100 pointer-events-auto scale-100" : "opacity-0 pointer-events-none scale-105"
+                }`}
+                style={{ backgroundImage: `url(${bgUrl})` }}
               >
-                {heroBtnText}
-              </a>
-            </div>
-          </div>
+                {/* Dark overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/40 z-0 pointer-events-none" />
+
+                {/* Spacer (Header icons removed) */}
+                <div className="h-10 relative z-10" />
+
+                {/* Hero Typography & Content */}
+                <div className="w-full space-y-4 relative z-10 mt-auto">
+                  <div className="space-y-1">
+                    <span className="text-[10px] tracking-[0.25em] font-extrabold text-white/95 uppercase select-none">
+                      {sub}
+                    </span>
+                    <div className="w-16 h-[1.5px] bg-white/80" />
+                  </div>
+
+                  <h1 className="text-4xl md:text-5xl font-black text-white leading-none tracking-tight">
+                    {title}
+                  </h1>
+                  <p className="text-sm font-semibold text-white/90 leading-tight">
+                    {desc}
+                  </p>
+
+                  <div className="flex items-center justify-between pt-1">
+                    {/* Pagination indicators */}
+                    <div className="flex gap-1.5 items-center">
+                      {banners.map((_, dotIdx) => (
+                        <button
+                          key={dotIdx}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            setCurrentBannerIndex(dotIdx);
+                          }}
+                          className={`w-2 h-2 rounded-full transition-all border-0 cursor-pointer ${
+                            dotIdx === currentBannerIndex
+                              ? "bg-white scale-125 shadow-sm"
+                              : "bg-white/50 hover:bg-white/70"
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Shop now button */}
+                    <a 
+                      href={btnLink || "#"} 
+                      target={(btnLink && btnLink !== "#" && !btnLink.startsWith("#")) ? "_blank" : undefined}
+                      rel="noopener noreferrer"
+                      onClick={(e) => {
+                        if (btnLink === "#" || !btnLink) {
+                          e.preventDefault();
+                        }
+                      }}
+                      className="px-6 py-2.5 bg-[#17181a] hover:bg-black hover:scale-[1.05] active:scale-95 text-white font-bold text-xs rounded-full tracking-wide transition-all border-0 shadow-lg shadow-black/20 text-center"
+                    >
+                      {btnText}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Collections */}

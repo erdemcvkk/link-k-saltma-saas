@@ -494,13 +494,17 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   };
 
   const renderAdvancedStorefrontEditor = () => {
-    // Hero Section values
-    const heroBgUrl = configData.heroBgUrl || "";
-    const heroSub = configData.heroSub || "";
-    const heroTitle = configData.heroTitle || "";
-    const heroDesc = configData.heroDesc || "";
-    const heroBtnText = configData.heroBtnText || "";
-    const heroBtnLink = configData.heroBtnLink || "";
+    // Banners (with fallback to singular hero fields for backward compatibility)
+    const banners = configData.banners || (configData.heroBgUrl ? [
+      {
+        heroBgUrl: configData.heroBgUrl || "",
+        heroSub: configData.heroSub || "",
+        heroTitle: configData.heroTitle || "",
+        heroDesc: configData.heroDesc || "",
+        heroBtnText: configData.heroBtnText || "",
+        heroBtnLink: configData.heroBtnLink || ""
+      }
+    ] : []);
 
     // Collections
     const collections = configData.collections || [];
@@ -513,10 +517,10 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       { label: "Brands", link: "#", icon: "Brands" }
     ]).filter((item: any) => item.icon !== "Profile");
 
-    const updateHero = (field: string, value: any) => {
+    const updateBanners = (newBanners: any[]) => {
       setConfigData({
         ...configData,
-        [field]: value
+        banners: newBanners
       });
     };
 
@@ -536,52 +540,212 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
 
     return (
       <div className="space-y-6">
-        {/* Hero Section */}
+        {/* Hero Slider Section */}
         <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
-          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-            📸 {lang === "tr" ? "Kahraman Alanı (Hero Section)" : "Hero Section"}
-          </h4>
-          
-          <div className="space-y-1.5 mb-4">
-            <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
-              {lang === "tr" ? "Arka Plan Görseli" : "Background Image"}
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={heroBgUrl}
-                onChange={(e) => updateHero("heroBgUrl", e.target.value)}
-                placeholder="https://..."
-                className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm"
-              />
-              <label className="flex items-center justify-center px-4 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
-                {lang === "tr" ? "Dosya Seç" : "Upload"}
-                <input 
-                  type="file" 
-                  className="hidden" 
-                  accept="image/*"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      try {
-                        const url = await handleFileUpload(file);
-                        updateHero("heroBgUrl", url);
-                      } catch (err: any) { showAlert(err.message); }
-                    }
-                  }}
-                />
-              </label>
-            </div>
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+              📸 {lang === "tr" ? "Kahraman Alanı Slider (Banner Listesi)" : "Hero Slider (Banner List)"}
+            </h4>
+            <button
+              type="button"
+              onClick={() => {
+                const newBanner = {
+                  heroBgUrl: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
+                  heroSub: lang === "tr" ? "YENİ KOLEKSİYON" : "NEW COLLECTION",
+                  heroTitle: lang === "tr" ? "%20 İNDİRİM" : "20% OFF",
+                  heroDesc: lang === "tr" ? "Seçili modellerde geçerli" : "On selected styles",
+                  heroBtnText: lang === "tr" ? "İncele" : "Shop now",
+                  heroBtnLink: "#"
+                };
+                updateBanners([...banners, newBanner]);
+              }}
+              className="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-650 text-xs font-bold rounded-lg transition-colors border-0 cursor-pointer"
+            >
+              + {lang === "tr" ? "Banner Ekle" : "Add Banner"}
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {renderInput("heroSub", lang === "tr" ? "Üst Başlık (Küçük)" : "Subheading", "SPRING COLLECTION")}
-            {renderInput("heroTitle", lang === "tr" ? "Ana Başlık (Büyük)" : "Headline", "20% OFF")}
-          </div>
-          {renderInput("heroDesc", lang === "tr" ? "Açıklama Alt Metni" : "Description text", "For Selected Spring Style")}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {renderInput("heroBtnText", lang === "tr" ? "Buton Yazısı" : "Button Text", "Shop now")}
-            {renderInput("heroBtnLink", lang === "tr" ? "Buton Linki" : "Button Link", "#")}
+          <div className="space-y-4">
+            {banners.map((banner: any, bIdx: number) => (
+              <div key={bIdx} className="p-5 rounded-2xl border border-zinc-200 bg-zinc-50 relative space-y-4 shadow-sm">
+                {/* Banner Delete / Reorder Controls */}
+                <div className="absolute top-4 right-4 flex items-center gap-2">
+                  <button
+                    type="button"
+                    disabled={bIdx === 0}
+                    onClick={() => {
+                      const newBanners = [...banners];
+                      const temp = newBanners[bIdx];
+                      newBanners[bIdx] = newBanners[bIdx - 1];
+                      newBanners[bIdx - 1] = temp;
+                      updateBanners(newBanners);
+                    }}
+                    className="p-1 rounded bg-zinc-200 hover:bg-zinc-300 text-zinc-700 disabled:opacity-40 transition-colors text-xs font-bold"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    disabled={bIdx === banners.length - 1}
+                    onClick={() => {
+                      const newBanners = [...banners];
+                      const temp = newBanners[bIdx];
+                      newBanners[bIdx] = newBanners[bIdx + 1];
+                      newBanners[bIdx + 1] = temp;
+                      updateBanners(newBanners);
+                    }}
+                    className="p-1 rounded bg-zinc-200 hover:bg-zinc-300 text-zinc-700 disabled:opacity-40 transition-colors text-xs font-bold"
+                  >
+                    ▼
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (confirm(lang === "tr" ? "Bu banner görselini silmek istediğinize emin misiniz?" : "Are you sure you want to delete this banner?")) {
+                        const newBanners = [...banners];
+                        newBanners.splice(bIdx, 1);
+                        updateBanners(newBanners);
+                      }
+                    }}
+                    className="p-1.5 rounded-lg bg-red-550 hover:bg-red-100 text-red-500 transition-colors border-0 cursor-pointer"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="pr-24 space-y-3">
+                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md uppercase tracking-wider">
+                    {lang === "tr" ? `${bIdx + 1}. Banner` : `Banner ${bIdx + 1}`}
+                  </span>
+
+                  {/* Arka Plan Görseli (with upload helper) */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+                      {lang === "tr" ? "Arka Plan Görseli" : "Background Image"}
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={banner.heroBgUrl || ""}
+                        onChange={(e) => {
+                          const newBanners = [...banners];
+                          newBanners[bIdx] = { ...newBanners[bIdx], heroBgUrl: e.target.value };
+                          updateBanners(newBanners);
+                        }}
+                        placeholder="https://..."
+                        className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-xs"
+                      />
+                      <label className="flex items-center justify-center px-3 py-2 bg-zinc-150 hover:bg-zinc-200 text-zinc-700 text-xs font-bold rounded-lg cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+                        {lang === "tr" ? "Seç" : "Upload"}
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              try {
+                                const url = await handleFileUpload(file);
+                                const newBanners = [...banners];
+                                newBanners[bIdx] = { ...newBanners[bIdx], heroBgUrl: url };
+                                updateBanners(newBanners);
+                              } catch (err: any) { showAlert(err.message); }
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-550 uppercase">
+                        {lang === "tr" ? "Üst Başlık (Küçük)" : "Subheading"}
+                      </label>
+                      <input
+                        type="text"
+                        value={banner.heroSub || ""}
+                        onChange={(e) => {
+                          const newBanners = [...banners];
+                          newBanners[bIdx] = { ...newBanners[bIdx], heroSub: e.target.value };
+                          updateBanners(newBanners);
+                        }}
+                        className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-xs"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-550 uppercase">
+                        {lang === "tr" ? "Ana Başlık (Büyük)" : "Headline"}
+                      </label>
+                      <input
+                        type="text"
+                        value={banner.heroTitle || ""}
+                        onChange={(e) => {
+                          const newBanners = [...banners];
+                          newBanners[bIdx] = { ...newBanners[bIdx], heroTitle: e.target.value };
+                          updateBanners(newBanners);
+                        }}
+                        className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-550 uppercase">
+                      {lang === "tr" ? "Açıklama Alt Metni" : "Description Text"}
+                    </label>
+                    <input
+                      type="text"
+                      value={banner.heroDesc || ""}
+                      onChange={(e) => {
+                        const newBanners = [...banners];
+                        newBanners[bIdx] = { ...newBanners[bIdx], heroDesc: e.target.value };
+                        updateBanners(newBanners);
+                      }}
+                      className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-xs"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-550 uppercase">
+                        {lang === "tr" ? "Buton Yazısı" : "Button Text"}
+                      </label>
+                      <input
+                        type="text"
+                        value={banner.heroBtnText || ""}
+                        onChange={(e) => {
+                          const newBanners = [...banners];
+                          newBanners[bIdx] = { ...newBanners[bIdx], heroBtnText: e.target.value };
+                          updateBanners(newBanners);
+                        }}
+                        className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-xs"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] font-bold text-slate-550 uppercase">
+                        {lang === "tr" ? "Buton Linki" : "Button Link"}
+                      </label>
+                      <input
+                        type="text"
+                        value={banner.heroBtnLink || ""}
+                        onChange={(e) => {
+                          const newBanners = [...banners];
+                          newBanners[bIdx] = { ...newBanners[bIdx], heroBtnLink: e.target.value };
+                          updateBanners(newBanners);
+                        }}
+                        className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {banners.length === 0 && (
+              <p className="text-xs text-zinc-400 text-center py-4">
+                {lang === "tr" ? "Henüz banner eklenmemiş." : "No banners added yet."}
+              </p>
+            )}
           </div>
         </div>
 
