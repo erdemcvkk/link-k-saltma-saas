@@ -2115,6 +2115,45 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  </>
  );
  break;
+ case "AUDIO_PLAYER":
+    specificFields = (
+      <>
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <Music className="h-4 w-4" />
+            {lang === "tr" ? "Premium Müzik Çalar Ayarları" : "Premium Audio Player Settings"}
+          </h4>
+          {renderInput("trackName", lang === "tr" ? "Şarkı Adı (Track Title)" : "Track Title", lang === "tr" ? "Örn: Gece Yağmuru" : "e.g. Night Rain")}
+          {renderInput("artistName", lang === "tr" ? "Sanatçı Adı (Artist Name)" : "Artist Name", lang === "tr" ? "Örn: DJ Yağmur" : "e.g. DJ Rain")}
+          {renderImageUpload("albumCoverUrl", lang === "tr" ? "Kapak Görseli URL (Cover Image URL)" : "Cover Image URL")}
+          <div className="space-y-1.5 mb-4">
+            <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+              {lang === "tr" ? "Ses Dosyası URL (Audio Source URL)" : "Audio Source URL"}
+            </label>
+            <input
+              type="text"
+              value={configData["audioUrl"] || ""}
+              onChange={(e) => setConfigData({ ...configData, audioUrl: e.target.value })}
+              placeholder="https://domain.com/track.mp3"
+              className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
+            />
+            <p className="text-xs text-amber-500 font-medium mt-1.5 block">
+              {lang === "tr" 
+                ? "⚠️ Lütfen doğrudan bir .mp3 veya .wav bağlantısı girin. Telif hakları sebebiyle diğer müzik platformlarının linkleri bu özel oynatıcıda çalışmaz."
+                : "⚠️ Please enter a direct .mp3 or .wav link. Due to copyrights, other music platform links will not work in this custom player."}
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-4 pt-2">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            🎨 {lang === "tr" ? "Görsel Özelleştirme" : "Visual Customization"}
+          </h4>
+          {renderInput("accentColor", lang === "tr" ? "Tema Vurgu Rengi (Accent Color - Hex Code)" : "Accent Color (Hex Code)", "#22c55e")}
+        </div>
+      </>
+    );
+    break;
  // ── MUSIC & AUDIO PLUGINS ──
  case "RETRO_CASSETTE":
  case "SPOTIFY_CLASSIC":
@@ -2495,20 +2534,20 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "RETRO_CASSETTE":
   case "SPOTIFY_CLASSIC":
   case "VINYL_RETRO":
-    case "GLASS_AUDIO":
-    case "NEON_CYBERPUNK":
-  
-    case "MUSIC_PODCAST":
-    case "PORTFOLIO_GALLERY":
-    case "COUNTDOWN_LAUNCH":
+  case "GLASS_AUDIO":
+  case "NEON_CYBERPUNK":
+  case "AUDIO_PLAYER":
+  case "MUSIC_PODCAST":
+  case "PORTFOLIO_GALLERY":
+  case "COUNTDOWN_LAUNCH":
 
       {
         const type = addon.addonType;
         const displayAvatar = configData.avatarUrl || addon.settings?.avatarUrl || "";
         const displayUsername = configData.username || addon.settings?.username || ("@" + username);
         const displayBio = configData.bio || addon.settings?.bio || "";
-        const displayTitle = configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "");
-        const displayDesc = configData.description || (type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "");
+        const displayTitle = configData.title || (type === "AUDIO_PLAYER" ? "Premium Müzik Oynatıcı" : type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "");
+        const displayDesc = configData.description || (type === "AUDIO_PLAYER" ? "100% yerel, çalışır ve animasyonlu premium müzik çalar modülü." : type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "");
 
         return (
           <div className="w-full h-full bg-zinc-950 flex flex-col justify-between overflow-y-auto no-scrollbar">

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Music, Play, Pause, Clock, MessageCircle, Image, Star, ArrowLeft, SkipBack, SkipForward, Volume2, VolumeX, ListMusic, MoreHorizontal, Laptop, Sliders, Rewind, FastForward, Share2, Airplay, SlidersHorizontal } from "lucide-react";
+import { Music, Play, Pause, Clock, MessageCircle, Image, Star, ArrowLeft, SkipBack, SkipForward, Volume2, VolumeX, ListMusic, MoreHorizontal, Laptop, Sliders, Rewind, FastForward, Share2, Airplay, SlidersHorizontal, Heart } from "lucide-react";
 
 function getMediaEmbed(url: string, accentColor?: string, playing?: boolean, onClose?: () => void) {
   if (!url) return null;
@@ -192,7 +192,7 @@ export default function PlayableAddon({
     ? config.tracks 
     : [
         {
-          trackUrl: config.trackUrl || "",
+          trackUrl: config.trackUrl || config.audioUrl || "",
           trackName: config.trackName || title,
           artistName: config.artistName || desc,
           albumCoverUrl: config.albumCoverUrl || "",
@@ -511,6 +511,14 @@ export default function PlayableAddon({
         textClass = "text-xs font-bold text-amber-100 truncate";
         subtextClass = "text-[10px] text-amber-500/80 truncate";
         durationClass = "text-[10px] text-amber-600 font-mono ml-auto";
+        break;
+      case "AUDIO_PLAYER":
+        containerClass = "w-full bg-zinc-900/40 rounded-xl p-2 max-h-48 overflow-y-auto no-scrollbar";
+        itemClass = "flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-800/60 cursor-pointer transition-colors";
+        activeItemClass = "bg-zinc-800 border-l-4 border-indigo-400";
+        textClass = "text-xs font-bold text-white truncate";
+        subtextClass = "text-[10px] text-zinc-400 truncate";
+        durationClass = "text-[10px] text-zinc-500 font-mono ml-auto";
         break;
       default:
         containerClass = "mt-4 bg-zinc-900 rounded-2xl p-3 max-h-48 overflow-y-auto";
@@ -1536,6 +1544,169 @@ export default function PlayableAddon({
           {renderPlaylist("RETRO_CASSETTE")}
         </div>
       );
+
+    case "AUDIO_PLAYER": {
+      const accent = config.accentColor || "#3b82f6";
+      return (
+        <div className="w-full h-full bg-white flex flex-col justify-between text-slate-800 rounded-3xl overflow-hidden relative shadow-lg">
+          {url && (
+            <audio
+              ref={audioRef}
+              src={url}
+              onTimeUpdate={() => audioRef.current && setCurrentTime(audioRef.current.currentTime)}
+              onLoadedMetadata={() => audioRef.current && setDuration(audioRef.current.duration)}
+              onEnded={() => setIsPlaying(false)}
+            />
+          )}
+
+          {/* Header */}
+          <div className="px-6 pt-6 pb-4 flex justify-between items-center">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              {config.lang === "tr" ? "Şimdi Çalınıyor" : "Now Playing"}
+            </span>
+            <div className="flex items-center gap-3 text-slate-400">
+              <Laptop size={16} className="cursor-pointer hover:text-slate-600 transition-colors" />
+              <button
+                onClick={() => setIsMuted(!isMuted)}
+                className="bg-transparent border-0 outline-none p-0 cursor-pointer text-inherit"
+              >
+                {isMuted ? (
+                  <VolumeX size={16} className="text-red-500 transition-colors" />
+                ) : (
+                  <Volume2 size={16} className="hover:text-slate-600 transition-colors" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Vinyl / Cover Art Section */}
+          <div className="flex-1 flex flex-col items-center justify-center py-6 px-8 relative">
+            <div className="relative w-40 h-40 rounded-full bg-zinc-950 flex items-center justify-center shadow-2xl border-4 border-zinc-900 group">
+              <div className="absolute inset-3 rounded-full border border-zinc-800/40"></div>
+              <div className="absolute inset-6 rounded-full border border-zinc-800/40"></div>
+              <div className="absolute inset-9 rounded-full border border-zinc-800/40"></div>
+              
+              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center p-0.5 z-10 shadow-inner">
+                <div className="w-3.5 h-3.5 rounded-full bg-zinc-900"></div>
+              </div>
+              
+              <img
+                src={activeTrack.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&q=80"}
+                className={`absolute inset-0 w-full h-full object-cover rounded-full pointer-events-none transition-transform duration-500 ${
+                  isPlaying ? "animate-[spin_8s_linear_infinite]" : "opacity-90"
+                }`}
+                alt="vinyl record"
+              />
+
+              <div className="absolute inset-0 flex items-center justify-center z-20">
+                <button
+                  onClick={handlePlayPause}
+                  className="w-12 h-12 rounded-full bg-white/90 hover:bg-white text-zinc-900 flex items-center justify-center shadow-lg transition-transform active:scale-95 cursor-pointer border-0"
+                >
+                  {isPlaying ? (
+                    <Pause size={20} className="fill-zinc-900" />
+                  ) : (
+                    <Play size={20} className="ml-1 fill-zinc-900" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="text-center mt-6 w-full max-w-[240px]">
+              <h4 className="text-sm font-extrabold text-slate-800 truncate">
+                {activeTrack.trackName || (config.lang === "tr" ? "Bilinmeyen Parça" : "Unknown Track")}
+              </h4>
+              <p className="text-[11px] text-slate-400 mt-0.5 font-medium truncate">
+                {activeTrack.artistName || (config.lang === "tr" ? "Bilinmeyen Sanatçı" : "Unknown Artist")}
+              </p>
+            </div>
+          </div>
+
+          {/* Timeline & Controls */}
+          <div className="px-6 pb-6">
+            <div className="space-y-1">
+              <div className="relative w-full flex items-center group">
+                <input
+                  type="range"
+                  min="0"
+                  max={duration || 100}
+                  value={currentTime}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value);
+                    setCurrentTime(val);
+                    if (audioRef.current) audioRef.current.currentTime = val;
+                  }}
+                  className="w-full h-1.5 rounded-lg appearance-none cursor-pointer outline-none focus:outline-none transition-all"
+                  style={{
+                    background: `linear-gradient(to right, ${accent} ${progressPercent}%, #e5e7eb ${progressPercent}%)`,
+                  }}
+                />
+              </div>
+
+              <div className="flex justify-between text-[10px] text-slate-400 font-mono font-medium">
+                <span>{formatTime(currentTime)}</span>
+                <span>{activeTrack.trackDuration || formatTime(duration) || "3:45"}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Dark Footer Bar */}
+          <div className="bg-zinc-900 px-6 py-4 flex justify-between items-center text-zinc-400">
+            <button
+              onClick={() => {
+                if (audioRef.current) {
+                  audioRef.current.loop = !audioRef.current.loop;
+                  const loopBtn = document.getElementById("audio-player-loop");
+                  if (loopBtn) {
+                    if (audioRef.current.loop) {
+                      loopBtn.classList.add("text-indigo-400");
+                    } else {
+                      loopBtn.classList.remove("text-indigo-400");
+                    }
+                  }
+                }
+              }}
+              id="audio-player-loop"
+              className="bg-transparent border-0 outline-none p-0 cursor-pointer text-inherit hover:text-white transition-colors"
+              title={config.lang === "tr" ? "Tekrarla" : "Repeat"}
+            >
+              <Clock size={16} />
+            </button>
+
+            <button
+              onClick={() => setIsPlaylistOpen(!isPlaylistOpen)}
+              className={`bg-transparent border-0 outline-none p-0 cursor-pointer text-inherit hover:text-white transition-colors ${
+                isPlaylistOpen ? "text-indigo-400" : ""
+              }`}
+              title={config.lang === "tr" ? "Çalma Listesi" : "Playlist"}
+            >
+              <ListMusic size={16} />
+            </button>
+
+            <button
+              onClick={() => {
+                const heartBtn = document.getElementById("audio-player-heart");
+                if (heartBtn) {
+                  heartBtn.classList.toggle("text-red-500");
+                  heartBtn.classList.toggle("fill-red-500");
+                }
+              }}
+              id="audio-player-heart"
+              className="bg-transparent border-0 outline-none p-0 cursor-pointer text-inherit hover:text-white transition-colors"
+              title={config.lang === "tr" ? "Beğen" : "Like"}
+            >
+              <Heart size={16} />
+            </button>
+          </div>
+
+          {isPlaylistOpen && (
+            <div className="absolute inset-x-0 bottom-[52px] bg-zinc-900/95 border-t border-zinc-800 p-4 max-h-56 overflow-y-auto z-30 transition-all duration-300">
+              {renderPlaylist("AUDIO_PLAYER")}
+            </div>
+          )}
+        </div>
+      );
+    }
 
     default:
       return null;

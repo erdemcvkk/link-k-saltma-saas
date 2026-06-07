@@ -66,6 +66,7 @@ export default async function AddonPage({
     if (type === "PREMIUM_VIDEO") return "masterclass";
     if (type === "CORP_EXEC") return "corporate";
     if (type === "RETRO_CASSETTE") return "retro-cassette";
+    if (type === "AUDIO_PLAYER") return "audio-player";
     if (type === "SPOTIFY_CLASSIC") return "spotify-player";
     if (type === "VINYL_RETRO") return "vinyl-player";
     if (type === "GLASS_AUDIO") return "glass-audio";
@@ -486,6 +487,7 @@ export default async function AddonPage({
   // Custom layout check for new Audio / Testimonial / Portfolio / Countdown addons
   if (
     matchingAddon.addonType === "RETRO_CASSETTE" ||
+    matchingAddon.addonType === "AUDIO_PLAYER" ||
     matchingAddon.addonType === "SPOTIFY_CLASSIC" ||
     matchingAddon.addonType === "VINYL_RETRO" ||
     matchingAddon.addonType === "GLASS_AUDIO" ||
@@ -498,8 +500,8 @@ export default async function AddonPage({
     const displayAvatar = parsedConfig.avatarUrl || user.profile.avatarUrl || "";
     const displayUsername = parsedConfig.username || ("@" + user.username);
     const displayBio = parsedConfig.bio || user.profile.bio || "";
-    const displayTitle = parsedConfig.title || (type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : "");
-    const displayDesc = parsedConfig.description || (type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : "");
+    const displayTitle = parsedConfig.title || (type === "AUDIO_PLAYER" ? "Premium Müzik Oynatıcı" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : "");
+    const displayDesc = parsedConfig.description || (type === "AUDIO_PLAYER" ? "100% yerel, çalışır ve animasyonlu premium müzik çalar modülü." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : "");
 
     return (
       <div className="w-full min-h-screen bg-black flex justify-center">

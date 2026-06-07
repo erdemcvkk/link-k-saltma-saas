@@ -1979,6 +1979,16 @@ export async function purchaseAddon(userId: string, addonType: string) {
     };
   }
 
+  if (addonType === "AUDIO_PLAYER") {
+    defaultSettings = {
+      trackName: "Örnek Şarkı",
+      artistName: "Örnek Sanatçı",
+      albumCoverUrl: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&q=80",
+      audioUrl: "",
+      accentColor: "#22c55e"
+    };
+  }
+
   // Deactivate all other addons first to ensure only 1 active addon exists
   await db.userAddon.updateMany({
     where: { userId: userId },

@@ -32,6 +32,7 @@ export default async function CheckoutSuccessPage({ searchParams }: PageProps) {
     MUSIC_PODCAST: "Müzik & Podcast Çalar",
     PORTFOLIO_GALLERY: "Portfolyo & Galeri",
     COUNTDOWN_LAUNCH: "Geri Sayım & Lansman",
+    AUDIO_PLAYER: "Premium Müzik Oynatıcı",
     SPOTIFY_CLASSIC: "Spotify Classic Player",
     VINYL_RETRO: "Retro Plak Oynatıcı",
     GLASS_AUDIO: "Modern Cam Efekti",

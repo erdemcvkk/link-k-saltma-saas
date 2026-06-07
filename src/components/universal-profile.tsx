@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useId } from "react";
-import { User, Globe, MessageCircle, ArrowUpRight, Play, Image, Utensils, Smartphone, Percent, Wifi, Music, ShoppingBag, FileText, List, Briefcase, Zap, Calendar, FileQuestion, Mail, Heart, Clock, HelpCircle, MapPin, Store } from "lucide-react";
+import { User, Globe, MessageCircle, ArrowUpRight, Play, Image, Utensils, Smartphone, Percent, Wifi, Music, ShoppingBag, FileText, List, Briefcase, Zap, Calendar, FileQuestion, Mail, Heart, Clock, HelpCircle, MapPin, Store, Laptop, Volume2, ListMusic } from "lucide-react";
 import { YoutubeIcon, TwitterIcon, LinkedinIcon, TiktokIcon, PinterestIcon, InstagramIcon } from "@/components/brand-icons";
 import VideoPlayer from "@/components/blocks/video-player";
 import BeforeAfterSlider from "@/components/blocks/before-after-slider";
@@ -585,6 +585,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     if (t === "QA") return "qa";
     if (t === "RETRO_CASSETTE") return "retro-cassette";
     if (t === "PREMIUM_VIDEO") return "masterclass";
+    if (t === "AUDIO_PLAYER") return "audio-player";
     if (t === "SPOTIFY_CLASSIC") return "spotify-player";
     if (t === "VINYL_RETRO") return "vinyl-player";
     if (t === "GLASS_AUDIO") return "glass-audio";
@@ -747,6 +748,25 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
           </p>
           <div className={btnClassName}>
             {configData.buttonText || "Sohbete Başla"}
+          </div>
+        </CardWrapper>
+      );
+    case "AUDIO_PLAYER":
+      return (
+        <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
+                <Music className="h-5 w-5 text-green-600" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-800">{configData.trackName || "Premium Müzik Oynatıcı"}</h4>
+                <p className="text-xs opacity-70 mt-0.5 truncate max-w-[200px]">{configData.artistName || "Müzik dinlemek için tıklayın."}</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-green-550 flex items-center justify-center text-white shrink-0">
+              <span className="text-[10px] ml-0.5">▶</span>
+            </div>
           </div>
         </CardWrapper>
       );
@@ -982,6 +1002,61 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
   const mediaEmbed = getMediaEmbed(config.trackUrl, config.accentColor);
   
   switch (type) {
+    case "AUDIO_PLAYER":
+      return (
+        <div className="w-full h-full bg-[#f8f9fa] flex flex-col p-4 relative z-0 justify-between select-none">
+          <div className="w-full bg-white rounded-3xl overflow-hidden border border-zinc-200/80 flex flex-col shadow-md mt-6">
+            <div className="p-4 bg-white flex flex-col items-center">
+              <div className="w-full flex items-center justify-between text-zinc-400 mb-3">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-500">Now playing</span>
+                <div className="flex items-center gap-2">
+                  <Laptop size={11} />
+                  <Volume2 size={11} />
+                </div>
+              </div>
+
+              <div className="relative w-28 h-28 mx-auto mb-3 flex items-center justify-center">
+                <div className="w-28 h-28 rounded-full bg-zinc-950 border-4 border-zinc-800 flex items-center justify-center relative shadow-md animate-[spin_6s_linear_infinite]">
+                  <div className="absolute inset-2 rounded-full border border-zinc-900 opacity-60"></div>
+                  <div className="absolute inset-4 rounded-full border border-zinc-900 opacity-60"></div>
+                  <div className="absolute inset-6 rounded-full border border-zinc-900 opacity-60"></div>
+                  <img src={config.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&q=80"} className="w-12 h-12 rounded-full object-cover border border-zinc-950" />
+                  <div className="absolute w-2.5 h-2.5 rounded-full bg-white flex items-center justify-center">
+                    <div className="w-1 h-1 rounded-full bg-zinc-950"></div>
+                  </div>
+                </div>
+                
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-zinc-900 shadow border border-zinc-200/30 pointer-events-none">
+                    <span className="text-[10px] ml-0.5">▶</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="text-center mb-3">
+                <h4 className="text-[11px] font-black text-zinc-900 leading-tight">{config.trackName || title}</h4>
+                <p className="text-[9px] text-zinc-500 font-bold mt-0.5">{config.artistName || desc}</p>
+              </div>
+
+              <div className="w-full space-y-1">
+                <div className="w-full h-1 bg-zinc-200 rounded-full overflow-hidden">
+                  <div className="w-1/3 h-full bg-[#22c55e] rounded-full" style={{ backgroundColor: config.accentColor || "#22c55e" }}></div>
+                </div>
+                <div className="flex justify-between text-[7px] text-zinc-400 font-mono font-bold">
+                  <span>0:00</span>
+                  <span>{config.trackDuration || "3:45"}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-zinc-900 px-4 py-2.5 flex items-center justify-between text-zinc-400">
+              <span className="text-[8px] font-bold uppercase tracking-wider text-zinc-450">Loop</span>
+              <ListMusic size={12} />
+              <Heart size={12} className="fill-current" />
+            </div>
+          </div>
+        </div>
+      );
     case "SPOTIFY_CLASSIC":
       return (
         <div className="w-full h-full bg-zinc-950 flex flex-col p-6 text-white relative z-0">

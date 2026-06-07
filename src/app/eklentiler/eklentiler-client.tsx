@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ShoppingBag, Zap, CreditCard, ChevronRight, Search, ArrowUpDown, ChevronDown, Rewind, FastForward, Play, Airplay, SlidersHorizontal, Volume2, MoreHorizontal, Laptop, ListMusic } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Zap, CreditCard, ChevronRight, Search, ArrowUpDown, ChevronDown, Rewind, FastForward, Play, Airplay, SlidersHorizontal, Volume2, MoreHorizontal, Laptop, ListMusic, Heart } from "lucide-react";
 import StorefrontPreview, { StoreThemeType, DummyProduct } from "@/components/storefront-preview";
 import AdvancedStorefrontView from "@/components/addons/advanced-storefront-view";
 import { buyAddonAction } from "../actions";
@@ -258,6 +258,19 @@ export const ADDON_TYPES: AddonTypeData[] = [
     price: "99",
     username: "@vintage.tapes",
     bio: "90s Music Curator",
+    avatarUrl: "/placeholder.png",
+    category: "Müzik & Audio",
+    mockProducts: []
+  },
+  { 
+    id: "AUDIO_PLAYER", 
+    name: "Premium Müzik Oynatıcı", 
+    desc: "100% yerel, çalışır ve animasyonlu premium müzik çalar modülü.", 
+    color: "bg-green-500",
+    theme: "classic",
+    price: "99",
+    username: "@muzik.dinle",
+    bio: "Premium Müzik Oynatıcı",
     avatarUrl: "/placeholder.png",
     category: "Müzik & Audio",
     mockProducts: []
@@ -810,6 +823,69 @@ export default function EklentilerClient({ products, settings, userId = null, db
     </div>
   </div>
 
+  ) : addon.id === "AUDIO_PLAYER" ? (
+    <div className="w-full h-full bg-[#f8f9fa] flex flex-col p-4 relative z-0 justify-between select-none">
+      {/* Top part in white background */}
+      <div className="w-full bg-white rounded-3xl overflow-hidden border border-zinc-200/80 flex flex-col shadow-md mt-6">
+        {/* Upper Area */}
+        <div className="p-4 bg-white flex flex-col items-center">
+          {/* Header */}
+          <div className="w-full flex items-center justify-between text-zinc-400 mb-3">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-zinc-500">Now playing</span>
+            <div className="flex items-center gap-2">
+              <Laptop size={11} />
+              <Volume2 size={11} />
+            </div>
+          </div>
+
+          {/* Rotating Vinyl */}
+          <div className="relative w-28 h-28 mx-auto mb-3 flex items-center justify-center">
+            <div className="w-28 h-28 rounded-full bg-zinc-950 border-4 border-zinc-800 flex items-center justify-center relative shadow-md animate-[spin_6s_linear_infinite]">
+              <div className="absolute inset-2 rounded-full border border-zinc-900 opacity-60"></div>
+              <div className="absolute inset-4 rounded-full border border-zinc-900 opacity-60"></div>
+              <div className="absolute inset-6 rounded-full border border-zinc-900 opacity-60"></div>
+              <img src={addon.avatarUrl} className="w-12 h-12 rounded-full object-cover border border-zinc-950" />
+              <div className="absolute w-2.5 h-2.5 rounded-full bg-white flex items-center justify-center">
+                <div className="w-1 h-1 rounded-full bg-zinc-950"></div>
+              </div>
+            </div>
+            
+            {/* Centered play button */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <button className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-zinc-900 shadow border border-zinc-200/30 pointer-events-none">
+                <span className="text-[10px] ml-0.5">▶</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Song info */}
+          <div className="text-center mb-3">
+            <h4 className="text-[11px] font-black text-zinc-900 leading-tight">Gece Yağmuru</h4>
+            <p className="text-[9px] text-zinc-500 font-bold mt-0.5">DJ Yağmur</p>
+          </div>
+
+          {/* Timeline waveform slider */}
+          <div className="w-full space-y-1">
+            <div className="w-full h-1 bg-zinc-200 rounded-full overflow-hidden">
+              <div className="w-1/3 h-full bg-[#22c55e] rounded-full"></div>
+            </div>
+            <div className="flex justify-between text-[7px] text-zinc-400 font-mono font-bold">
+              <span>1:12</span>
+              <span>3:45</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom part is dark antrasit bg-zinc-900 */}
+        <div className="bg-zinc-900 px-4 py-2.5 flex items-center justify-between text-zinc-400">
+          <span className="text-[8px] font-bold uppercase tracking-wider hover:text-white transition-colors cursor-pointer">Loop</span>
+          <ListMusic size={12} className="hover:text-white transition-colors cursor-pointer" />
+          <Heart size={12} className="hover:text-white transition-colors cursor-pointer fill-current" />
+        </div>
+      </div>
+      
+      <div className="h-6"></div>
+    </div>
   ) : addon.id === "FAQ" ? (
   <div className="w-full h-full bg-[#fcfcfd] flex flex-col p-6 text-zinc-800 relative z-0">
     <div className="bg-white rounded-2xl p-4 mt-8 border border-zinc-200 shadow-md">
