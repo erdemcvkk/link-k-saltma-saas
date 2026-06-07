@@ -230,7 +230,7 @@ export default function PlayableAddon({
 
   const activeTrack = tracks[currentTrackIndex] || tracks[0] || {};
   const url = (activeTrack.trackUrl || "").trim();
-  const isDirectAudio = /\.(mp3|wav|ogg|m4a|aac|flac)(\?.*)?$/i.test(url);
+  const isDirectAudio = /\.(mp3|wav|ogg|m4a|aac|flac)(\?.*)?$/i.test(url) || url.startsWith("/api/media/") || url.startsWith("data:audio/");
   
   // ── SPOTIFY / DIRECT AUDIO RESOLVING ──
   const [resolvedAudioUrl, setResolvedAudioUrl] = useState<string | null>(null);
@@ -244,7 +244,7 @@ export default function PlayableAddon({
       }
 
       const isSpotify = /open\.spotify\.com\/(?:[a-zA-Z0-9_-]+\/)?track\/([a-zA-Z0-9]+)/i.test(url);
-      const isDirect = /\.(mp3|wav|ogg|m4a|aac|flac)(\?.*)?$/i.test(url);
+      const isDirect = /\.(mp3|wav|ogg|m4a|aac|flac)(\?.*)?$/i.test(url) || url.startsWith("/api/media/") || url.startsWith("data:audio/");
 
       if (isDirect) {
         setResolvedAudioUrl(url);

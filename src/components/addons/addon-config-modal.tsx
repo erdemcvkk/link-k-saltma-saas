@@ -155,7 +155,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       throw new Error(err.error || (lang === "tr" ? "Yükleme başarısız oldu." : "Upload failed."));
     }
     const data = await res.json();
-    return data.url;
+    return `/api/media/${data.id}`;
   };
 
  const handleSave = () => {
