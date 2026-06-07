@@ -877,10 +877,8 @@ export default function EklentilerClient({ products, settings, userId = null, db
         </div>
 
         {/* Bottom part is dark antrasit bg-zinc-900 */}
-        <div className="bg-zinc-900 px-4 py-2.5 flex items-center justify-between text-zinc-400">
-          <span className="text-[8px] font-bold uppercase tracking-wider hover:text-white transition-colors cursor-pointer">Loop</span>
+        <div className="bg-zinc-900 px-4 py-2.5 flex items-center justify-center text-zinc-400">
           <ListMusic size={12} className="hover:text-white transition-colors cursor-pointer" />
-          <Heart size={12} className="hover:text-white transition-colors cursor-pointer fill-current" />
         </div>
       </div>
       
