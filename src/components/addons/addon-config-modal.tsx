@@ -140,18 +140,23 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   };
  const activeSlug = configData.customSlug || getDefaultSlug(addon?.addonType);
 
-
- const handleFileUpload = async (file: File): Promise<string> => {
- return new Promise((resolve, reject) => {
- if (file.size > 2 * 1024 * 1024) {
- return reject(new Error("Dosya boyutu 2MB'den büyük olamaz. Lütfen daha küçük bir dosya seçin."));
- }
- const reader = new FileReader();
- reader.readAsDataURL(file);
- reader.onload = (event) => resolve(event.target?.result as string);
- reader.onerror = () => reject(new Error("Dosya okuma hatası"));
- });
- };
+  const handleFileUpload = async (file: File): Promise<string> => {
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error(lang === "tr" ? "Dosya boyutu 10MB'den büyük olamaz." : "File size cannot be larger than 10MB.");
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("/api/media", {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || (lang === "tr" ? "Yükleme başarısız oldu." : "Upload failed."));
+    }
+    const data = await res.json();
+    return data.url;
+  };
 
  const handleSave = () => {
  startTransition(async () => {

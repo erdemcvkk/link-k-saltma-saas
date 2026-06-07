@@ -32,15 +32,22 @@ export async function POST(req: Request) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const mimeType = file.type || 'application/octet-stream';
-    const base64String = buffer.toString('base64');
-    const url = `data:${mimeType};base64,${base64String}`;
+
+    const uploadsDir = path.join(process.cwd(), "public", "uploads");
+    await fs.promises.mkdir(uploadsDir, { recursive: true });
+
+    const ext = path.extname(file.name || ".bin");
+    const newFileName = `${crypto.randomUUID()}${ext}`;
+    const newPath = path.join(uploadsDir, newFileName);
+
+    await fs.promises.writeFile(newPath, buffer);
+    const url = `/uploads/${newFileName}`;
 
     const media = await db.media.create({
       data: {
-        filename: file.name ?? 'uploaded-file',
+        filename: file.name ?? newFileName,
         url,
-        mimeType,
+        mimeType: file.type ?? 'application/octet-stream',
         size: file.size,
       },
     });
