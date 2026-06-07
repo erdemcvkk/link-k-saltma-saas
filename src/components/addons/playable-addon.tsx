@@ -914,10 +914,10 @@ export default function PlayableAddon({
               
               if (absOffset > 2) return null;
               
-              const scale = 1 - absOffset * 0.15;
+              const scale = 1 - absOffset * 0.2;
               const rotateY = offset * -25;
-              const translateX = offset * 65;
-              const translateZ = absOffset * -100;
+              const translateX = offset * 45;
+              const translateZ = absOffset * -60;
               const zIndex = 10 - absOffset;
               
               const isActive = idx === currentTrackIndex;
@@ -965,7 +965,7 @@ export default function PlayableAddon({
           </div>
 
           {/* Glassmorphic Player Controls Bar */}
-          <div className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-full py-2 px-5 flex items-center justify-between shadow-2xl relative z-10 mt-auto">
+          <div className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-full py-2.5 px-4 flex items-center justify-between shadow-2xl relative z-10 mt-auto">
             {/* Left Controls: Prev (Rewind), Play/Pause, Next (FastForward) */}
             <div className="flex items-center gap-4 shrink-0">
               <button
@@ -985,12 +985,12 @@ export default function PlayableAddon({
                   e.stopPropagation();
                   handlePlayPause();
                 }}
-                className="hover:scale-110 text-white/80 hover:text-white transition-all cursor-pointer bg-transparent border-0 outline-none p-0 flex items-center"
+                className="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer bg-transparent border-0 outline-none"
               >
                 {isPlaying ? (
-                  <Pause size={18} className="fill-current" />
+                  <Pause size={14} className="fill-black text-black" />
                 ) : (
-                  <Play size={18} className="fill-current ml-0.5" />
+                  <Play size={14} className="fill-black text-black ml-0.5" />
                 )}
               </button>
 
@@ -1051,21 +1051,13 @@ export default function PlayableAddon({
                   )}
                   <MoreHorizontal size={12} className="text-zinc-400 cursor-pointer hover:text-white" />
                 </div>
-
-                {/* Progress line inside pill (works for both direct and simulated playing) */}
-                <div className="absolute bottom-0 inset-x-0 h-0.5 bg-white/20">
-                  <div
-                    className="h-full bg-white transition-all duration-300"
-                    style={{ width: `${progressPercent}%` }}
-                  />
-                </div>
               </div>
             </div>
 
-            {/* Right Controls: Airplay, SlidersHorizontal, Volume */}
+            {/* Right Controls: Laptop, ListMusic, Volume */}
             <div className="flex items-center gap-3 text-white/75 shrink-0">
               <button className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer bg-transparent border-0 outline-none p-0 flex items-center">
-                <Airplay size={14} />
+                <Laptop size={14} />
               </button>
               <button
                 onClick={(e) => {
@@ -1074,7 +1066,7 @@ export default function PlayableAddon({
                 }}
                 className={`p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer bg-transparent border-0 outline-none p-0 flex items-center ${isPlaylistOpen ? "text-[#1DB954] bg-white/10" : "hover:text-white"}`}
               >
-                <SlidersHorizontal size={14} />
+                <ListMusic size={14} />
               </button>
               <button
                 onClick={(e) => {

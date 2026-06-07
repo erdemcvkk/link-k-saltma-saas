@@ -668,16 +668,6 @@ export default function EklentilerClient({ products, settings, userId = null, db
 
     {/* 3D Cover Flow Carousel Mock */}
     <div className="relative w-full h-36 flex items-center justify-center my-3" style={{ perspective: "1000px" }}>
-      {/* Left Cover */}
-      <div 
-        className="absolute w-22 h-22 rounded-xl overflow-hidden shadow-lg border border-white/10"
-        style={{
-          transform: "translateX(-45px) translateZ(-60px) rotateY(25deg) scale(0.8)",
-          zIndex: 5,
-        }}
-      >
-        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=150&q=80" className="w-full h-full object-cover" />
-      </div>
 
       {/* Middle Cover (Active) */}
       <div 
