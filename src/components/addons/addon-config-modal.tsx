@@ -507,12 +507,11 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
 
     // Bottom Nav
     const bottomNavShow = configData.bottomNav?.show !== false;
-    const bottomNavItems = configData.bottomNav?.items || [
+    const bottomNavItems = (configData.bottomNav?.items || [
       { label: "Shop", link: "#", icon: "Shop" },
       { label: "Explore", link: "#", icon: "Explore" },
-      { label: "Brands", link: "#", icon: "Brands" },
-      { label: "Profile", link: "#", icon: "Profile" }
-    ];
+      { label: "Brands", link: "#", icon: "Brands" }
+    ]).filter((item: any) => item.icon !== "Profile");
 
     const updateHero = (field: string, value: any) => {
       setConfigData({
@@ -584,6 +583,17 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
             {renderInput("heroBtnText", lang === "tr" ? "Buton Yazısı" : "Button Text", "Shop now")}
             {renderInput("heroBtnLink", lang === "tr" ? "Buton Linki" : "Button Link", "#")}
           </div>
+        </div>
+
+        {/* Brand Info Section */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            🏷️ {lang === "tr" ? "Marka Bilgileri (Brand Info)" : "Brand Info"}
+          </h4>
+          {renderInput("brandName", lang === "tr" ? "Marka Adı" : "Brand Name", "Moda Boutique")}
+          {renderTextarea("brandDescription", lang === "tr" ? "Marka Hakkında / Açıklama" : "Brand Description", "Premium Wear & Design Studio since 2018.")}
+          {renderImageUpload("brandLogoUrl", lang === "tr" ? "Logo Görseli" : "Logo Image")}
+          {renderInput("brandContact", lang === "tr" ? "İletişim / Destek Linki veya Email" : "Contact Link or Email", "mailto:info@modaboutique.com")}
         </div>
 
         {/* Collections Manager */}
@@ -978,7 +988,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                       <option value="Shop">Shop (⚡)</option>
                       <option value="Explore">Explore (👁️)</option>
                       <option value="Brands">Brands (🔖)</option>
-                      <option value="Profile">Profile (👤)</option>
                     </select>
                   </div>
 

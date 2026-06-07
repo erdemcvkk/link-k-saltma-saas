@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Heart, ShoppingBag, Zap, Eye, Bookmark, User, Plus, ArrowLeft } from "lucide-react";
+import { Heart, ShoppingBag, Zap, Bookmark, User, Store, ArrowLeft } from "lucide-react";
 
 export interface StorefrontProduct {
   id: string;
@@ -28,14 +28,13 @@ export interface StorefrontConfig {
   heroDesc?: string;
   heroBtnText?: string;
   heroBtnLink?: string;
+  brandName?: string;
+  brandDescription?: string;
+  brandLogoUrl?: string;
+  brandContact?: string;
   collections?: StorefrontCollection[];
   bottomNav?: {
     show: boolean;
-    items?: Array<{
-      label: string;
-      link: string;
-      icon: "Shop" | "Explore" | "Brands" | "Profile";
-    }>;
   };
 }
 
@@ -51,6 +50,7 @@ export default function AdvancedStorefrontView({
   onProductClick,
 }: AdvancedStorefrontViewProps) {
   const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"shop" | "explore" | "brands">("shop");
 
   // Default fallback values
   const heroBgUrl = config.heroBgUrl || "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80";
@@ -59,6 +59,12 @@ export default function AdvancedStorefrontView({
   const heroDesc = config.heroDesc || "For Selected Spring Style";
   const heroBtnText = config.heroBtnText || "Shop now";
   const heroBtnLink = config.heroBtnLink || "#";
+
+  // Brand Info
+  const brandName = config.brandName || "Moda Boutique";
+  const brandDescription = config.brandDescription || "Premium Wear & Design Studio since 2018.";
+  const brandLogoUrl = config.brandLogoUrl || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=150&q=80";
+  const brandContact = config.brandContact || "mailto:info@modaboutique.com";
 
   const collections = config.collections || [
     {
@@ -125,33 +131,146 @@ export default function AdvancedStorefrontView({
   ];
 
   const bottomNavShow = config.bottomNav?.show !== false;
-  const bottomNavItems = config.bottomNav?.items || [
-    { label: "Shop", link: "#", icon: "Shop" as const },
-    { label: "Explore", link: "#", icon: "Explore" as const },
-    { label: "Brands", link: "#", icon: "Brands" as const },
-    { label: "Profile", link: "#", icon: "Profile" as const },
-  ];
 
-  const renderNavIcon = (iconType: string) => {
-    switch (iconType) {
-      case "Shop":
-        return <Zap className="h-5 w-5" />;
-      case "Explore":
-        return <Eye className="h-5 w-5" />;
-      case "Brands":
-        return <Bookmark className="h-5 w-5" />;
-      case "Profile":
-        return <User className="h-5 w-5" />;
-      default:
-        return <Zap className="h-5 w-5" />;
+  const handleProductClick = (product: StorefrontProduct) => {
+    if (onProductClick) {
+      onProductClick(product);
+      return;
+    }
+    if (product.buyLink && product.buyLink !== "#") {
+      window.open(product.buyLink, "_blank", "noopener,noreferrer");
     }
   };
 
   const selectedCollection = collections.find(c => c.id === selectedCollectionId);
 
-  return (
-    <div className="w-full h-full bg-white flex flex-col relative overflow-hidden font-sans select-none text-slate-900">
-      {selectedCollection ? (
+  // Combine all products for All Products tab
+  const allProducts = collections.reduce<StorefrontProduct[]>((acc, col) => {
+    return [...acc, ...(col.products || [])];
+  }, []);
+
+  const renderTabContent = () => {
+    if (activeTab === "explore") {
+      return (
+        /* Tüm Ürünler View */
+        <div className="flex-1 overflow-y-auto no-scrollbar pb-24 animate-in fade-in duration-300">
+          <div className="p-4 sticky top-0 bg-white/95 backdrop-blur-md border-b border-gray-100 z-10 text-center">
+            <h2 className="text-sm font-black text-slate-800 tracking-tight">
+              {lang === "tr" ? "Tüm Ürünler" : "All Products"}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 p-4">
+            {allProducts.map((p) => (
+              <a 
+                key={p.id} 
+                href={p.buyLink || "#"}
+                target={(p.buyLink && p.buyLink !== "#") ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  if (onProductClick) {
+                    e.preventDefault();
+                    onProductClick(p);
+                  } else if (!p.buyLink || p.buyLink === "#") {
+                    e.preventDefault();
+                  }
+                }}
+                className="flex flex-col space-y-2 cursor-pointer group hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 block"
+              >
+                <div className="w-full aspect-[4/5] rounded-2xl bg-gray-100 relative overflow-hidden shadow-sm">
+                  {p.imageUrl ? (
+                    <img 
+                      src={p.imageUrl} 
+                      alt={p.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-300">
+                      <ShoppingBag className="h-10 w-10" />
+                    </div>
+                  )}
+
+                  <button 
+                    type="button" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    className="absolute top-2.5 right-2.5 w-7.5 h-7.5 rounded-full bg-white flex items-center justify-center shadow-md border-0 hover:scale-105 transition-transform"
+                  >
+                    <Heart 
+                      className={`h-3.5 w-3.5 ${p.isFavorite ? "text-red-500 fill-red-500" : "text-gray-400"}`} 
+                    />
+                  </button>
+
+                  {p.badge && (
+                    <span className="absolute bottom-2.5 left-2.5 bg-white text-[9px] font-black text-slate-800 px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wide">
+                      {p.badge}
+                    </span>
+                  )}
+                </div>
+
+                <div className="px-1 text-left">
+                  <h4 className="text-xs font-bold text-slate-800 truncate leading-tight">
+                    {p.title}
+                  </h4>
+                  <span className="text-[11px] font-black text-slate-500 block mt-0.5">
+                    ${p.price}
+                  </span>
+                </div>
+              </a>
+            ))}
+            {allProducts.length === 0 && (
+              <div className="col-span-2 text-center py-12 text-sm text-gray-400">
+                {lang === "tr" ? "Henüz ürün eklenmemiş." : "No products added yet."}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    if (activeTab === "brands") {
+      return (
+        /* Marka Bilgileri (Hakkımızda) View */
+        <div className="flex-1 overflow-y-auto no-scrollbar pb-24 p-6 flex flex-col items-center text-center space-y-6 animate-in fade-in duration-300">
+          <div className="w-24 h-24 rounded-full border border-gray-150 overflow-hidden shadow-sm bg-gray-50 flex items-center justify-center mt-12 shrink-0">
+            {brandLogoUrl ? (
+              <img src={brandLogoUrl} alt={brandName} className="w-full h-full object-cover" />
+            ) : (
+              <Store className="h-10 w-10 text-gray-400" />
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black tracking-tight text-slate-800">
+              {brandName}
+            </h2>
+            <div className="w-12 h-1 bg-slate-800 mx-auto rounded-full" />
+          </div>
+
+          <p className="text-sm text-slate-500 font-medium leading-relaxed max-w-[280px]">
+            {brandDescription}
+          </p>
+
+          <div className="w-full max-w-[200px] h-[1px] bg-gray-100 pt-2" />
+
+          {brandContact && (
+            <a 
+              href={brandContact}
+              target={brandContact.startsWith("mailto:") ? undefined : "_blank"}
+              rel="noopener noreferrer"
+              className="w-full max-w-[280px] py-3.5 bg-slate-900 hover:bg-black hover:scale-[1.02] active:scale-98 text-white font-bold text-sm rounded-xl tracking-wide transition-all border-0 shadow-lg shadow-black/15 text-center block"
+            >
+              {lang === "tr" ? "İletişime Geç" : "Contact Us"}
+            </a>
+          )}
+        </div>
+      );
+    }
+
+    // 'shop' Tab
+    if (selectedCollection) {
+      return (
         /* Collection Detail View */
         <div className="flex-1 overflow-y-auto no-scrollbar pb-24 animate-in fade-in slide-in-from-right duration-300">
           {/* Header */}
@@ -231,9 +350,12 @@ export default function AdvancedStorefrontView({
             ))}
           </div>
         </div>
-      ) : (
-        /* Scrollable Container */
-        <div className="flex-1 overflow-y-auto no-scrollbar pb-24">
+      );
+    }
+
+    return (
+      /* Main Shop Feed View (Hero + Horizontal Collections) */
+      <div className="flex-1 overflow-y-auto no-scrollbar pb-24">
         {/* Hero Section */}
         <div 
           className="w-full h-[360px] md:h-[400px] relative bg-cover bg-center flex flex-col justify-between p-6"
@@ -357,7 +479,6 @@ export default function AdvancedStorefrontView({
                           type="button" 
                           onClick={(e) => {
                             e.stopPropagation();
-                            // Optional local state toggle or callback
                           }}
                           className="absolute top-2.5 right-2.5 w-7.5 h-7.5 rounded-full bg-white flex items-center justify-center shadow-md border-0 hover:scale-105 transition-transform"
                         >
@@ -457,34 +578,62 @@ export default function AdvancedStorefrontView({
           ))}
         </div>
       </div>
-      )}
+    );
+  };
+
+  return (
+    <div className="w-full h-full bg-white flex flex-col relative overflow-hidden font-sans select-none text-slate-900">
+      {renderTabContent()}
 
       {/* Bottom Navigation */}
       {bottomNavShow && (
         <div 
-          className="absolute bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-t border-gray-100 flex items-center justify-around px-4 shadow-[0_-4px_10px_rgba(0,0,0,0.03)] z-30"
+          className="absolute bottom-0 left-0 right-0 h-16 bg-white/95 backdrop-blur-md border-t border-gray-100 grid grid-cols-3 items-center px-4 shadow-[0_-4px_10px_rgba(0,0,0,0.03)] z-30"
         >
-          {bottomNavItems.map((item, idx) => (
-            <a 
-              key={idx}
-              href={item.link || "#"}
-              target={(item.link && item.link !== "#") ? "_blank" : undefined}
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                if (!item.link || item.link === "#") {
-                  e.preventDefault();
-                }
-              }}
-              className={`flex flex-col items-center justify-center flex-1 text-gray-400 hover:text-slate-800 hover:scale-[1.05] active:scale-95 transition-all py-1 ${
-                idx === 0 ? "text-slate-800 font-bold" : "text-gray-400"
-              }`}
-            >
-              {renderNavIcon(item.icon)}
-              <span className="text-[9px] font-bold mt-1 tracking-wider uppercase">
-                {item.label}
-              </span>
-            </a>
-          ))}
+          <button
+            onClick={() => {
+              setSelectedCollectionId(null);
+              setActiveTab("shop");
+            }}
+            className={`flex flex-col items-center justify-center flex-1 transition-all py-1 border-0 bg-transparent cursor-pointer hover:scale-[1.05] active:scale-95 ${
+              activeTab === "shop" ? "text-slate-900 font-extrabold" : "text-gray-400"
+            }`}
+          >
+            <Zap className="h-5 w-5" />
+            <span className="text-[9px] font-black mt-1 tracking-wider uppercase">
+              {lang === "tr" ? "Mağaza" : "Shop"}
+            </span>
+          </button>
+
+          <button
+            onClick={() => {
+              setSelectedCollectionId(null);
+              setActiveTab("explore");
+            }}
+            className={`flex flex-col items-center justify-center flex-1 transition-all py-1 border-0 bg-transparent cursor-pointer hover:scale-[1.05] active:scale-95 ${
+              activeTab === "explore" ? "text-slate-900 font-extrabold" : "text-gray-400"
+            }`}
+          >
+            <ShoppingBag className="h-5 w-5" />
+            <span className="text-[9px] font-black mt-1 tracking-wider uppercase">
+              {lang === "tr" ? "Tüm Ürünler" : "All Products"}
+            </span>
+          </button>
+
+          <button
+            onClick={() => {
+              setSelectedCollectionId(null);
+              setActiveTab("brands");
+            }}
+            className={`flex flex-col items-center justify-center flex-1 transition-all py-1 border-0 bg-transparent cursor-pointer hover:scale-[1.05] active:scale-95 ${
+              activeTab === "brands" ? "text-slate-900 font-extrabold" : "text-gray-400"
+            }`}
+          >
+            <Bookmark className="h-5 w-5" />
+            <span className="text-[9px] font-black mt-1 tracking-wider uppercase">
+              {lang === "tr" ? "Marka" : "Brand"}
+            </span>
+          </button>
         </div>
       )}
     </div>

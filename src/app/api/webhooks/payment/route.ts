@@ -70,6 +70,10 @@ export async function POST(req: Request) {
         heroDesc: "For Selected Spring Style",
         heroBtnText: "Shop now",
         heroBtnLink: "#",
+        brandName: "Moda Boutique",
+        brandDescription: "Premium Wear & Design Studio since 2018.",
+        brandLogoUrl: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=150&q=80",
+        brandContact: "mailto:info@modaboutique.com",
         collections: [
           {
             id: "col-1",
@@ -129,8 +133,7 @@ export async function POST(req: Request) {
           items: [
             { label: "Shop", link: "#", icon: "Shop" },
             { label: "Explore", link: "#", icon: "Explore" },
-            { label: "Brands", link: "#", icon: "Brands" },
-            { label: "Profile", link: "#", icon: "Profile" }
+            { label: "Brands", link: "#", icon: "Brands" }
           ]
         }
       };
