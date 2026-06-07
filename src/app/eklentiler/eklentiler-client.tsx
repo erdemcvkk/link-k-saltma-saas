@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ShoppingBag, Zap, CreditCard, ChevronRight, Search, ArrowUpDown, ChevronDown } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Zap, CreditCard, ChevronRight, Search, ArrowUpDown, ChevronDown, Rewind, FastForward, Play, Airplay, SlidersHorizontal, Volume2, MoreHorizontal, Laptop, ListMusic } from "lucide-react";
 import StorefrontPreview, { StoreThemeType, DummyProduct } from "@/components/storefront-preview";
 import { buyAddonAction } from "../actions";
 
@@ -654,34 +654,108 @@ export default function EklentilerClient({ products, settings, userId = null, db
   </div>
 
   ) : addon.id === "MUSIC_PODCAST" ? (
-  <div className="w-full h-full bg-gradient-to-br from-purple-900 to-indigo-950 flex flex-col p-6 text-white relative z-0">
-    <div className="flex flex-col items-center mt-6 mb-4">
-      <div className="w-20 h-20 bg-zinc-800 rounded-t-full rounded-b-xl overflow-hidden border border-purple-500/30">
-        <img src={addon.avatarUrl} className="w-full h-full object-cover" />
-      </div>
-      <span className="text-xs font-bold mt-2 text-purple-300">{addon.username}</span>
-      <p className="text-[10px] text-purple-200/60 mt-0.5">{addon.bio}</p>
+  <div 
+    className="w-full h-full flex flex-col justify-between p-4 text-white relative z-0 select-none overflow-hidden"
+    style={{ background: "radial-gradient(circle at 50% 30%, #d47e1d 0%, #613306 60%, #170d02 100%)" }}
+  >
+    {/* Spotify Branding Logo */}
+    <div className="flex items-center justify-center gap-1.5 mt-2 opacity-90">
+      <svg viewBox="0 0 24 24" className="w-5 h-5 fill-[#1DB954]" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.783-8.893-.982-.336.075-.668-.135-.744-.47-.075-.336.135-.668.47-.743 3.856-.88 7.15-.506 9.822 1.13.295.178.387.563.205.858zm1.225-2.72c-.227.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.077-1.182-.413.125-.85-.107-.975-.52-.125-.413.107-.85.52-.975 3.667-1.112 8.24-.57 11.346 1.343.366.227.485.707.26 1.074zm.106-2.833C14.384 8.71 8.563 8.52 5.175 9.548c-.513.155-1.053-.137-1.208-.65-.155-.514.137-1.054.65-1.208 3.882-1.178 10.314-.955 14.373 1.453.46.273.61.867.337 1.328-.273.46-.867.61-1.328.337z"/>
+      </svg>
+      <span className="text-white text-xs font-bold tracking-tight">Spotify</span>
     </div>
-    
-    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 mt-2 space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h4 className="text-xs font-bold text-white">Summer Beats 2026</h4>
-          <p className="text-[10px] text-purple-300">Podcast & Instrumental</p>
+
+    {/* 3D Cover Flow Carousel Mock */}
+    <div className="relative w-full h-36 flex items-center justify-center my-3" style={{ perspective: "1000px" }}>
+      {/* Left Cover */}
+      <div 
+        className="absolute w-22 h-22 rounded-xl overflow-hidden shadow-lg border border-white/10"
+        style={{
+          transform: "translateX(-45px) translateZ(-60px) rotateY(25deg) scale(0.8)",
+          zIndex: 5,
+        }}
+      >
+        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=150&q=80" className="w-full h-full object-cover" />
+      </div>
+
+      {/* Middle Cover (Active) */}
+      <div 
+        className="absolute w-26 h-26 rounded-xl overflow-hidden shadow-2xl border-2 border-white/40 z-10"
+        style={{
+          transform: "translateX(0) translateZ(0) rotateY(0) scale(1)",
+        }}
+      >
+        <img src={addon.avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=150&q=80"} className="w-full h-full object-cover" />
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent p-2 flex flex-col justify-end text-left h-2/3">
+          <span className="text-white text-[8px] font-black truncate leading-tight">Summer Beats 2026</span>
+          <span className="text-zinc-300 text-[6px] font-medium truncate mt-0.5">Podcast & Instrumental</span>
         </div>
-        <button className="w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center text-white border-0 shadow-[0_0_15px_rgba(236,72,153,0.5)]">
-          <span className="text-xs ml-0.5">▶</span>
-        </button>
+      </div>
+
+      {/* Right Cover */}
+      <div 
+        className="absolute w-22 h-22 rounded-xl overflow-hidden shadow-lg border border-white/10"
+        style={{
+          transform: "translateX(45px) translateZ(-60px) rotateY(-25deg) scale(0.8)",
+          zIndex: 5,
+        }}
+      >
+        <img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=150&q=80" className="w-full h-full object-cover" />
+      </div>
+    </div>
+
+    {/* Active Track Details */}
+    <div className="flex flex-col items-center justify-center w-full mb-3">
+      <div className="text-center px-4">
+        <h3 className="text-sm font-extrabold text-white tracking-wide truncate max-w-[200px] mx-auto">
+          Summer Beats 2026
+        </h3>
+        <p className="text-[10px] text-zinc-350 truncate max-w-[200px] mx-auto mt-0.5">
+          Podcast & Instrumental
+        </p>
+      </div>
+    </div>
+
+    {/* Glassmorphic Player Controls Bar */}
+    <div className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-full py-1.5 px-3.5 flex items-center justify-between shadow-2xl relative z-10 mt-auto">
+      {/* Left Controls */}
+      <div className="flex items-center gap-2.5 shrink-0">
+        <Rewind size={14} className="text-white/80 fill-current" />
+        <div className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center shadow-lg">
+          <Play size={10} className="fill-black text-black ml-0.5" />
+        </div>
+        <FastForward size={14} className="text-white/80 fill-current" />
       </div>
       
-      <div className="flex items-end gap-1 justify-center h-8 pt-2">
-        <div className="w-1 bg-pink-500 h-3 rounded-full animate-pulse"></div>
-        <div className="w-1 bg-pink-500 h-6 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
-        <div className="w-1 bg-pink-500 h-4 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-        <div className="w-1 bg-pink-500 h-8 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-        <div className="w-1 bg-pink-500 h-5 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-        <div className="w-1 bg-pink-500 h-7 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-        <div className="w-1 bg-pink-500 h-3 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+      {/* Center: Mini Status Pill */}
+      <div className="flex-1 flex justify-center px-1.5">
+        <div className="w-full max-w-[130px] bg-black/60 border border-white/10 rounded-xl px-1.5 py-0.5 flex items-center gap-1.5 relative overflow-hidden h-7">
+          <div className="w-5 h-5 rounded overflow-hidden shrink-0 bg-zinc-800">
+            <img
+              src={addon.avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=50&q=80"}
+              className="w-full h-full object-cover"
+              alt="mini cover"
+            />
+          </div>
+          <div className="flex-1 min-w-0 flex flex-col justify-center text-left">
+            <span className="text-[7px] font-bold text-white truncate leading-tight">Summer Beats</span>
+            <span className="text-[6px] text-zinc-400 truncate leading-none mt-0.5">Podcast & Inst.</span>
+          </div>
+          
+          <div className="flex items-end gap-[1px] h-2.5 shrink-0 pr-0.5">
+            <span className="w-[1px] bg-[#1DB954] h-1.5 rounded-full"></span>
+            <span className="w-[1px] bg-[#1DB954] h-2.5 rounded-full"></span>
+            <span className="w-[1px] bg-[#1DB954] h-1.5 rounded-full"></span>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Controls */}
+      <div className="flex items-center gap-2 text-white/75 shrink-0">
+        <Laptop size={11} />
+        <ListMusic size={11} />
+        <Volume2 size={11} />
       </div>
     </div>
   </div>
