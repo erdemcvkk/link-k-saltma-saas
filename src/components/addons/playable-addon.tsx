@@ -97,6 +97,77 @@ function getMediaEmbed(url: string, accentColor?: string, playing?: boolean, onC
   return null;
 }
 
+function getCompactMediaEmbed(url: string, accentColor?: string) {
+  if (!url) return null;
+  const trimmed = url.trim();
+
+  // Spotify
+  const spotifyMatch = trimmed.match(/open\.spotify\.com\/(?:[a-zA-Z0-9_-]+\/)?(track|album|playlist|episode)\/([a-zA-Z0-9]+)/i);
+  if (spotifyMatch) {
+    return (
+      <iframe
+        src={"https://open.spotify.com/embed/" + spotifyMatch[1] + "/" + spotifyMatch[2] + "?utm_source=generator&theme=0"}
+        width="100%"
+        height="80"
+        frameBorder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"
+        className="rounded-xl border-0"
+      />
+    );
+  }
+
+  // SoundCloud
+  if (trimmed.includes("soundcloud.com/")) {
+    const encodedUrl = encodeURIComponent(trimmed);
+    return (
+      <iframe
+        width="100%"
+        height="80"
+        scrolling="no"
+        frameBorder="0"
+        allow="autoplay"
+        src={"https://w.soundcloud.com/player/?url=" + encodedUrl + "&color=" + (accentColor ? accentColor.replace("#", "%23") : "%23ff5500") + "&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false"}
+        className="rounded-xl border-0"
+      />
+    );
+  }
+
+  // Apple Music
+  const appleMusicMatch = trimmed.match(/music\.apple\.com\/([a-z]{2})\/(?:album|playlist)\/(?:[^/]+\/)?([a-zA-Z0-9.]+)/i);
+  if (appleMusicMatch) {
+    return (
+      <iframe
+        allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+        frameBorder="0"
+        height="80"
+        width="100%"
+        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+        src={"https://embed.music.apple.com/" + appleMusicMatch[1] + "/album/" + appleMusicMatch[2]}
+        className="rounded-xl border-0"
+      />
+    );
+  }
+
+  // YouTube
+  const ytMatch = trimmed.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+  if (ytMatch) {
+    return (
+      <iframe
+        src={"https://www.youtube.com/embed/" + ytMatch[1]}
+        width="100%"
+        height="80"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="rounded-xl border-0"
+      />
+    );
+  }
+
+  return null;
+}
+
 interface PlayableAddonProps {
   type: string;
   avatarUrl: string;
@@ -159,6 +230,7 @@ export default function PlayableAddon({
   const isDirectAudio = /\.(mp3|wav|ogg|m4a|aac|flac)(\?.*)?$/i.test(url);
   const isEmbeddable = /open\.spotify\.com|youtube\.com|youtu\.be|soundcloud\.com|music\.apple\.com/i.test(url);
   const mediaEmbed = !isDirectAudio ? getMediaEmbed(url, config.accentColor, isPlaying, () => setIsPlaying(false)) : null;
+  const compactMediaEmbed = !isDirectAudio ? getCompactMediaEmbed(url, config.accentColor) : null;
 
   // ── VIDEOS DATA PARSING ──
   const videos = Array.isArray(config.videos) && config.videos.length > 0 
@@ -849,56 +921,64 @@ export default function PlayableAddon({
             </div>
           </div>
 
-          {/* Player Controls or External Embed at the Bottom */}
-          {mediaEmbed ? (
-            <div className="w-full max-w-sm mx-auto mb-2 px-2 animate-fadeIn relative z-20 mt-auto">
-              {mediaEmbed}
+          {/* Glassmorphic Player Controls Bar */}
+          <div 
+            className="w-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-between shadow-2xl relative z-10 mt-auto transition-all"
+            style={{ 
+              borderRadius: compactMediaEmbed ? "2rem" : "9999px",
+              paddingTop: compactMediaEmbed ? "0.25rem" : "0.625rem",
+              paddingBottom: compactMediaEmbed ? "0.25rem" : "0.625rem",
+              paddingLeft: "1rem",
+              paddingRight: "1rem"
+            }}
+          >
+            {/* Left Controls: Prev, Play/Pause, Next */}
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const prevIdx = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+                  setCurrentTrackIndex(prevIdx);
+                  setIsPlaying(false);
+                }}
+                className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
+              >
+                <SkipBack size={16} className="fill-current" />
+              </button>
+              
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePlayPause();
+                }}
+                className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer"
+              >
+                {isPlaying ? (
+                  <Pause size={12} className="fill-black" />
+                ) : (
+                  <Play size={12} className="fill-black ml-0.5" />
+                )}
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const nextIdx = (currentTrackIndex + 1) % tracks.length;
+                  setCurrentTrackIndex(nextIdx);
+                  setIsPlaying(false);
+                }}
+                className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
+              >
+                <SkipForward size={16} className="fill-current" />
+              </button>
             </div>
-          ) : (
-            /* Glassmorphic Player Controls Bar */
-            <div className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-full py-2.5 px-4 flex items-center justify-between shadow-2xl relative z-10 mt-auto">
-              {/* Left Controls: Prev, Play/Pause, Next */}
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const prevIdx = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-                    setCurrentTrackIndex(prevIdx);
-                    setIsPlaying(false);
-                  }}
-                  className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
-                >
-                  <SkipBack size={16} className="fill-current" />
-                </button>
-                
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePlayPause();
-                  }}
-                  className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer"
-                >
-                  {isPlaying ? (
-                    <Pause size={12} className="fill-black" />
-                  ) : (
-                    <Play size={12} className="fill-black ml-0.5" />
-                  )}
-                </button>
 
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const nextIdx = (currentTrackIndex + 1) % tracks.length;
-                    setCurrentTrackIndex(nextIdx);
-                    setIsPlaying(false);
-                  }}
-                  className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
-                >
-                  <SkipForward size={16} className="fill-current" />
-                </button>
+            {/* Center: Mini Status Pill or Compact Spotify Embed */}
+            {compactMediaEmbed ? (
+              <div className="flex-1 mx-3 max-w-[220px] xs:max-w-[250px] rounded-xl overflow-hidden h-[80px] shadow-lg flex items-center justify-center shrink-0">
+                {compactMediaEmbed}
               </div>
-
-              {/* Center: Mini Status Pill */}
+            ) : (
               <div className="flex-1 max-w-[170px] xs:max-w-[200px] bg-black/40 border border-white/10 rounded-full px-2.5 py-1 flex items-center gap-2.5 relative overflow-hidden h-9">
                 <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 bg-zinc-850">
                   <img
@@ -939,33 +1019,33 @@ export default function PlayableAddon({
                   </div>
                 )}
               </div>
+            )}
 
-              {/* Right Controls: CAST, LIST, MUTE */}
-              <div className="flex items-center gap-2.5 text-white/75">
-                <button className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer">
-                  <Laptop size={12} />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsPlaylistOpen(!isPlaylistOpen);
-                  }}
-                  className={`p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer ${isPlaylistOpen ? "text-[#1DB954] bg-white/10" : "hover:text-white"}`}
-                >
-                  <ListMusic size={12} />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsMuted(!isMuted);
-                  }}
-                  className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer"
-                >
-                  {isMuted ? <VolumeX size={12} className="text-red-400" /> : <Volume2 size={12} />}
-                </button>
-              </div>
+            {/* Right Controls: CAST, LIST, MUTE */}
+            <div className="flex items-center gap-2.5 text-white/75 shrink-0">
+              <button className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer">
+                <Laptop size={12} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsPlaylistOpen(!isPlaylistOpen);
+                }}
+                className={`p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer ${isPlaylistOpen ? "text-[#1DB954] bg-white/10" : "hover:text-white"}`}
+              >
+                <ListMusic size={12} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMuted(!isMuted);
+                }}
+                className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+              >
+                {isMuted ? <VolumeX size={12} className="text-red-400" /> : <Volume2 size={12} />}
+              </button>
             </div>
-          )}
+          </div>
 
           {/* Playlist Drawer/Panel */}
           {isPlaylistOpen && (
