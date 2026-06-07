@@ -270,9 +270,10 @@ interface EklentilerClientProps {
   userId?: string | null;
   dbUserId?: string | null;
   purchasedAddons?: string[];
+  singleAddonId?: string | null;
 }
 
-export default function EklentilerClient({ products, settings, userId = null, dbUserId = null, purchasedAddons = [] }: EklentilerClientProps = {}) {
+export default function EklentilerClient({ products, settings, userId = null, dbUserId = null, purchasedAddons = [], singleAddonId = null }: EklentilerClientProps = {}) {
   const lang = "tr";
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [purchased, setPurchased] = useState<string[]>(purchasedAddons);
@@ -295,8 +296,9 @@ export default function EklentilerClient({ products, settings, userId = null, db
   };
 
   return (
-    <div className="min-h-screen bg-black font-sans">
-      <nav className="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+    <div className={singleAddonId ? "w-full bg-transparent font-sans" : "min-h-screen bg-black font-sans"}>
+      {!singleAddonId && (
+        <nav className="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-all">
             <ArrowLeft className="h-5 w-5 text-zinc-400" />
@@ -321,9 +323,11 @@ export default function EklentilerClient({ products, settings, userId = null, db
           </div>
         </div>
       </nav>
+      )}
 
- <main className="max-w-full md:w-[1800px] mx-auto px-6 py-16">
- <div className="text-center max-w-2xl mx-auto mb-16">
+ <main className={singleAddonId ? "w-full flex justify-center p-2" : "max-w-full md:w-[1800px] mx-auto px-6 py-16"}>
+ {!singleAddonId && (
+      <div className="text-center max-w-2xl mx-auto mb-16">
  <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-neon-blue/10 text-neon-blue font-bold text-sm mb-6">
  <Zap className="h-4 w-4" />
  <span>26 Premium Eklenti Vitrini</span>
@@ -335,9 +339,11 @@ export default function EklentilerClient({ products, settings, userId = null, db
  İhtiyacınıza uygun modülü seçin, tek seferlik ödemeyle ömür boyu kullanın. 26 farklı premium eklenti ve tema arasından seçim yapın.
  </p>
  </div>
+    )}
 
  {/* Search + Sort bar */}
- <div className="flex flex-col gap-4 bg-zinc-900/40 p-4 rounded-3xl border border-zinc-800 backdrop-blur-sm max-w-4xl mx-auto mb-12">
+ {!singleAddonId && (
+          <div className="flex flex-col gap-4 bg-zinc-900/40 p-4 rounded-3xl border border-zinc-800 backdrop-blur-sm max-w-4xl mx-auto mb-12">
  <div className="flex flex-col sm:flex-row gap-3 items-center">
  <div className="relative flex-1 w-full">
  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
@@ -402,7 +408,8 @@ export default function EklentilerClient({ products, settings, userId = null, db
   const name = (settings?.[ `theme_NAME_${a.id}` ] || a.name).toLowerCase();
   const desc = (settings?.[ `theme_DESC_${a.id}` ] || a.desc).toLowerCase();
   const matchesSearch = name.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase());
-  const matchesCategory = selectedCategory === "Tümü" || a.category === selectedCategory;
+  const category = settings?.[`theme_CATEGORY_${a.id}`] || a.category;
+                  const matchesCategory = selectedCategory === "Tümü" || category === selectedCategory;
   return matchesSearch && matchesCategory;
   });
  return `${filtered.length} eklenti bulundu`;
@@ -410,30 +417,35 @@ export default function EklentilerClient({ products, settings, userId = null, db
  </span>
  </div>
  </div>
+        )}
 
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 pb-12">
- {ADDON_TYPES
- .filter((addon) => {
-  const name = (settings?.[ `theme_NAME_${addon.id}` ] || addon.name).toLowerCase();
-  const desc = (settings?.[ `theme_DESC_${addon.id}` ] || addon.desc).toLowerCase();
-  const matchesSearch = name.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase());
-  const matchesCategory = selectedCategory === "Tümü" || addon.category === selectedCategory;
-  return matchesSearch && matchesCategory;
-  })
- .sort((a, b) => {
- const nameA = settings?.[`theme_NAME_${a.id}`] || a.name;
- const nameB = settings?.[`theme_NAME_${b.id}`] || b.name;
- const priceA = Number(settings?.[`theme_PRICE_${a.id}`] || a.price);
- const priceB = Number(settings?.[`theme_PRICE_${b.id}`] || b.price);
- switch (sortOption) {
- case "name-asc": return nameA.localeCompare(nameB, "tr");
- case "name-desc": return nameB.localeCompare(nameA, "tr");
- case "price-asc": return priceA - priceB;
- case "price-desc": return priceB - priceA;
- default: return 0;
- }
- })
- .slice(0, visibleCount).map((addon) => {
+ <div className={singleAddonId ? "w-full max-w-sm flex justify-center" : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 pb-12"}>
+            {(singleAddonId 
+              ? ADDON_TYPES.filter(addon => addon.id === singleAddonId)
+              : ADDON_TYPES
+                  .filter((addon) => {
+                    const name = (settings?.[ `theme_NAME_${addon.id}` ] || addon.name).toLowerCase();
+                    const desc = (settings?.[ `theme_DESC_${addon.id}` ] || addon.desc).toLowerCase();
+                    const matchesSearch = name.includes(searchQuery.toLowerCase()) || desc.includes(searchQuery.toLowerCase());
+                    const category = settings?.[ `theme_CATEGORY_${addon.id}` ] || addon.category;
+                    const matchesCategory = selectedCategory === "Tümü" || category === selectedCategory;
+                    return matchesSearch && matchesCategory;
+                  })
+                  .sort((a, b) => {
+                    const nameA = settings?.[ `theme_NAME_${a.id}` ] || a.name;
+                    const nameB = settings?.[ `theme_NAME_${b.id}` ] || b.name;
+                    const priceA = Number(settings?.[ `theme_PRICE_${a.id}` ] || a.price);
+                    const priceB = Number(settings?.[ `theme_PRICE_${b.id}` ] || b.price);
+                    switch (sortOption) {
+                      case "name-asc": return nameA.localeCompare(nameB, "tr");
+                      case "name-desc": return nameB.localeCompare(nameA, "tr");
+                      case "price-asc": return priceA - priceB;
+                      case "price-desc": return priceB - priceA;
+                      default: return 0;
+                    }
+                  })
+                  .slice(0, visibleCount)
+            ).map((addon) => {
  const isPurchased = purchased.includes(addon.id);
  const isProcessing = purchasing === addon.id;
  
@@ -451,13 +463,15 @@ export default function EklentilerClient({ products, settings, userId = null, db
  return (
  <div key={addon.id} className="flex flex-col items-center">
  
- <div className="text-center mb-6 px-4">
+ {!singleAddonId && (
+                    <div className="text-center mb-6 px-4">
  <div className={`w-3 h-3 rounded-full mb-3 mx-auto ${addon.color} animate-pulse`} />
  <h3 className="text-xl font-bold text-white mb-2">{displayName}</h3>
  <p className="text-sm text-zinc-400 font-medium leading-relaxed h-[40px] flex items-center justify-center">
  {displayDesc}
  </p>
  </div>
+                  )}
 
  {/* Phone Mockup Frame */}
  <div className="relative w-full aspect-[1/2] max-w-full max-w-sm lg:w-[340px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6">
@@ -852,7 +866,8 @@ export default function EklentilerClient({ products, settings, userId = null, db
  </div>
 
   {/* Buy Section */}
-  <div className="w-full bg-zinc-900 rounded-2xl p-4 border border-zinc-800 text-center flex flex-col gap-3">
+  {!singleAddonId && (
+                    <div className="w-full bg-zinc-900 rounded-2xl p-4 border border-zinc-800 text-center flex flex-col gap-3">
     <div className="text-2xl font-black text-white">
       {displayPrice === "0" ? (lang === "tr" ? "Ücretsiz" : "Free") : `₺${displayPrice}`}
     </div>
@@ -893,13 +908,14 @@ export default function EklentilerClient({ products, settings, userId = null, db
       {displayPrice === "0" ? (lang === "tr" ? "Sınırsız Kullanım" : "Lifetime Free") : (lang === "tr" ? "Tek Seferlik Ödeme" : "One-Time Payment")}
     </p>
   </div>
+                  )}
 
  </div>
  );
  })}
  </div>
 
- {visibleCount < ADDON_TYPES.length && (
+ {!singleAddonId && visibleCount < ADDON_TYPES.length && (
  <div className="flex justify-center pt-4 pb-8">
  <button
  onClick={() => setVisibleCount(prev => prev + 4)}

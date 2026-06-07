@@ -22,10 +22,11 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
  const [activeTab, setActiveTab] = useState("themes"); 
 
  // Form State
+ const [selectedAddonId, setSelectedAddonId] = useState<string | null>(ADDON_TYPES[0]?.id || "MINI_STORE");
  const [isFormOpen, setIsFormOpen] = useState(false);
  const [editingId, setEditingId] = useState<string | null>(null);
  const [form, setForm] = useState({
- name: "", desc: "", price: "", paymentUrl: ""
+ name: "", desc: "", price: "", paymentUrl: "", category: ""
  });
 
  const showMsg = (text: string, type: "success" | "error") => {
@@ -52,52 +53,58 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
  };
 
  const handleEdit = (addon: any) => {
- setEditingId(addon.id);
- const nameKey = `theme_NAME_${addon.id}`;
- const descKey = `theme_DESC_${addon.id}`;
- const priceKey = `theme_PRICE_${addon.id}`;
- const paymentKey = `theme_PAYMENT_${addon.id}`;
+    setEditingId(addon.id);
+    setSelectedAddonId(addon.id);
+    const nameKey = `theme_NAME_${addon.id}`;
+    const descKey = `theme_DESC_${addon.id}`;
+    const priceKey = `theme_PRICE_${addon.id}`;
+    const paymentKey = `theme_PAYMENT_${addon.id}`;
+    const categoryKey = `theme_CATEGORY_${addon.id}`;
 
- setForm({
- name: settings[nameKey] || addon.name,
- desc: settings[descKey] || addon.desc,
- price: settings[priceKey] || addon.price.toString(),
- paymentUrl: settings[paymentKey] || ""
- });
- setIsFormOpen(true);
- };
+    setForm({
+      name: settings[nameKey] || addon.name,
+      desc: settings[descKey] || addon.desc,
+      price: settings[priceKey] || addon.price.toString(),
+      paymentUrl: settings[paymentKey] || "",
+      category: settings[categoryKey] || addon.category || "Premium Temalar"
+    });
+    setIsFormOpen(true);
+  };
 
- const handleSaveTheme = (e: React.FormEvent) => {
- e.preventDefault();
- if (!editingId) return;
+  const handleSaveTheme = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingId) return;
 
- startTransition(async () => {
- try {
- const nameKey = `theme_NAME_${editingId}`;
- const descKey = `theme_DESC_${editingId}`;
- const priceKey = `theme_PRICE_${editingId}`;
- const paymentKey = `theme_PAYMENT_${editingId}`;
+    startTransition(async () => {
+      try {
+        const nameKey = `theme_NAME_${editingId}`;
+        const descKey = `theme_DESC_${editingId}`;
+        const priceKey = `theme_PRICE_${editingId}`;
+        const paymentKey = `theme_PAYMENT_${editingId}`;
+        const categoryKey = `theme_CATEGORY_${editingId}`;
 
- await saveAddonSetting(adminUserId, nameKey, form.name);
- await saveAddonSetting(adminUserId, descKey, form.desc);
- await saveAddonSetting(adminUserId, priceKey, form.price);
- await saveAddonSetting(adminUserId, paymentKey, form.paymentUrl);
+        await saveAddonSetting(adminUserId, nameKey, form.name);
+        await saveAddonSetting(adminUserId, descKey, form.desc);
+        await saveAddonSetting(adminUserId, priceKey, form.price);
+        await saveAddonSetting(adminUserId, paymentKey, form.paymentUrl);
+        await saveAddonSetting(adminUserId, categoryKey, form.category);
 
- setSettings({
- ...settings,
- [nameKey]: form.name,
- [descKey]: form.desc,
- [priceKey]: form.price,
- [paymentKey]: form.paymentUrl
- });
+        setSettings({
+          ...settings,
+          [nameKey]: form.name,
+          [descKey]: form.desc,
+          [priceKey]: form.price,
+          [paymentKey]: form.paymentUrl,
+          [categoryKey]: form.category
+        });
 
- showMsg("Tema başarıyla güncellendi.", "success");
- closeForm();
- } catch (err: any) {
- showMsg("Tema kaydedilirken bir hata oluştu.", "error");
- }
- });
- };
+        showMsg("Tema başarıyla güncellendi.", "success");
+        closeForm();
+      } catch (err: any) {
+        showMsg("Tema kaydedilirken bir hata oluştu.", "error");
+      }
+    });
+  };
 
  return (
  <div className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-black text-white font-sans overflow-hidden">
@@ -173,31 +180,48 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
  const currentDesc = settings[descKey] || addon.desc;
  const currentPrice = settings[priceKey] || addon.price;
 
- return (
- <div key={addon.id} className="group p-3 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-between hover:border-zinc-700 transition-all hover:shadow-lg">
- <div className="flex items-center gap-4">
- <div className={`w-14 h-14 rounded-xl flex items-center justify-center shadow-sm ${addon.color}`}>
- <div className="text-white opacity-80 mix-blend-overlay font-bold text-xl">
- {currentName.charAt(0)}
- </div>
- </div>
- <div>
- <div className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors">{currentName}</div>
- <div className="text-xs text-zinc-400 font-medium mt-1 truncate max-w-[200px]">
- {currentDesc}
- </div>
- <div className="text-xs font-bold text-emerald-400 mt-1">
- {currentPrice} ₺
- </div>
- </div>
- </div>
- <div className="flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity pr-2">
- <button type="button" onClick={() => handleEdit(addon)} className="p-2.5 rounded-xl bg-zinc-800 hover:bg-white text-zinc-400 hover:text-black transition-colors" title="Düzenle">
- <Edit2 className="h-4 w-4" />
- </button>
- </div>
- </div>
- );
+    const isSelected = selectedAddonId === addon.id;
+    return (
+      <div 
+        key={addon.id} 
+        onClick={() => setSelectedAddonId(addon.id)}
+        className={`group p-3 rounded-2xl flex items-center justify-between transition-all hover:shadow-lg cursor-pointer ${
+          isSelected 
+            ? "bg-zinc-900 border-2 border-rose-500 shadow-md shadow-rose-500/10" 
+            : "bg-zinc-900 border border-zinc-800 hover:border-zinc-700"
+        }`}
+      >
+        <div className="flex items-center gap-4">
+          <div className={`w-14 h-14 rounded-xl flex items-center justify-center shadow-sm ${addon.color}`}>
+            <div className="text-white opacity-80 mix-blend-overlay font-bold text-xl">
+              {currentName.charAt(0)}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors">{currentName}</div>
+            <div className="text-xs text-zinc-400 font-medium mt-1 truncate max-w-[200px]">
+              {currentDesc}
+            </div>
+            <div className="text-xs font-bold text-emerald-400 mt-1">
+              {currentPrice} ₺
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity pr-2">
+          <button 
+            type="button" 
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(addon);
+            }} 
+            className="p-2.5 rounded-xl bg-zinc-800 hover:bg-white text-zinc-400 hover:text-black transition-colors" 
+            title="Düzenle"
+          >
+            <Edit2 className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+    );
  })}
  </div>
  </div>
@@ -271,6 +295,21 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
  </div>
 
  <div className="space-y-1.5">
+ <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Kategori</label>
+ <select 
+   value={form.category} 
+   onChange={e => setForm({...form, category: e.target.value})} 
+   required 
+   className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all text-white"
+ >
+   <option value="Müzik & Audio">Müzik & Audio</option>
+   <option value="Satış & Gelir">Satış & Gelir</option>
+   <option value="Etkileşim & Araçlar">Etkileşim & Araçlar</option>
+   <option value="Premium Temalar">Premium Temalar</option>
+ </select>
+ </div>
+
+ <div className="space-y-1.5">
  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Ödeme Linki (İsteğe Bağlı)</label>
  <input type="url" placeholder="https://buy.stripe.com/..." value={form.paymentUrl} onChange={e => setForm({...form, paymentUrl: e.target.value})} className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all text-emerald-400" />
  <p className="text-[10px] text-zinc-500 mt-1">Stripe, Iyzico veya Shopier ödeme linki ekleyebilirsiniz. Boş bırakırsanız sistem simülasyonu çalışır.</p>
@@ -302,7 +341,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-[800px] h-[400px] bg-rose-500/10 blur-[120px] rounded-full pointer-events-none" />
  
  <div className="w-full md:w-[1600px] transform scale-[0.6] lg:scale-[0.8] 2xl:scale-[0.9] origin-center transition-transform duration-500">
- <EklentilerClient products={initialProducts.filter(p => p.isActive)} settings={settings} />
+ <EklentilerClient products={initialProducts.filter(p => p.isActive)} settings={settings} singleAddonId={selectedAddonId} />
  </div>
  </div>
  </div>
