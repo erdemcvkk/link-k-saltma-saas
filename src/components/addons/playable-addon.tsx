@@ -1651,7 +1651,7 @@ export default function PlayableAddon({
           </div>
 
           {/* Bottom Dark Footer Bar */}
-          <div className="bg-zinc-900 px-6 py-4 flex justify-between items-center text-zinc-400">
+          <div className="bg-zinc-900 px-6 py-4 flex justify-around items-center text-zinc-400">
             <button
               onClick={() => {
                 if (audioRef.current) {
@@ -1681,21 +1681,6 @@ export default function PlayableAddon({
               title={config.lang === "tr" ? "Çalma Listesi" : "Playlist"}
             >
               <ListMusic size={16} />
-            </button>
-
-            <button
-              onClick={() => {
-                const heartBtn = document.getElementById("audio-player-heart");
-                if (heartBtn) {
-                  heartBtn.classList.toggle("text-red-500");
-                  heartBtn.classList.toggle("fill-red-500");
-                }
-              }}
-              id="audio-player-heart"
-              className="bg-transparent border-0 outline-none p-0 cursor-pointer text-inherit hover:text-white transition-colors"
-              title={config.lang === "tr" ? "Beğen" : "Like"}
-            >
-              <Heart size={16} />
             </button>
           </div>
 

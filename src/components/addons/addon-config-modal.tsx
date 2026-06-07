@@ -1402,18 +1402,41 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
             </div>
             
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Spotify / SoundCloud / Ses Dosyası Linki" : "Track / Audio URL"}</label>
-              <input
-                type="text"
-                placeholder="https://..."
-                value={item.trackUrl || ""}
-                onChange={(e) => {
-                  const newItems = [...effectiveItems];
-                  newItems[idx] = { ...newItems[idx], trackUrl: e.target.value };
-                  updateTracks(newItems);
-                }}
-                className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
-              />
+              <label className="text-[10px] font-bold text-slate-550 block uppercase">
+                {lang === "tr" ? "Ses Dosyası (URL veya Yükle)" : "Audio Source (URL or Upload)"}
+              </label>
+              <div className="flex gap-1.5 relative">
+                <input
+                  type="text"
+                  placeholder="https://..."
+                  value={item.trackUrl || ""}
+                  onChange={(e) => {
+                    const newItems = [...effectiveItems];
+                    newItems[idx] = { ...newItems[idx], trackUrl: e.target.value };
+                    updateTracks(newItems);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none pr-16"
+                />
+                <label className="absolute right-0.5 top-0.5 bottom-0.5 flex items-center justify-center px-2 bg-zinc-100 hover:bg-zinc-250 text-zinc-700 text-[9px] font-bold rounded-lg cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
+                  {lang === "tr" ? "Seç" : "File"}
+                  <input 
+                    type="file" 
+                    className="hidden" 
+                    accept="audio/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        try {
+                          const url = await handleFileUpload(file);
+                          const newItems = [...effectiveItems];
+                          newItems[idx] = { ...newItems[idx], trackUrl: url };
+                          updateTracks(newItems);
+                        } catch (err: any) { showAlert(err.message); }
+                      }
+                    }}
+                  />
+                </label>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -2126,49 +2149,19 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
         <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
           <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
             <Music className="h-4 w-4" />
-            {lang === "tr" ? "Premium Müzik Çalar Ayarları" : "Premium Audio Player Settings"}
+            {lang === "tr" ? "Premium Müzik Oynatıcı Ayarları" : "Premium Audio Player Settings"}
           </h4>
-          {renderInput("trackName", lang === "tr" ? "Şarkı Adı (Track Title)" : "Track Title", lang === "tr" ? "Örn: Gece Yağmuru" : "e.g. Night Rain")}
-          {renderInput("artistName", lang === "tr" ? "Sanatçı Adı (Artist Name)" : "Artist Name", lang === "tr" ? "Örn: DJ Yağmur" : "e.g. DJ Rain")}
-          {renderImageUpload("albumCoverUrl", lang === "tr" ? "Kapak Görseli URL (Cover Image URL)" : "Cover Image URL")}
-          <div className="space-y-1.5 mb-4">
-            <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
-              {lang === "tr" ? "Ses Dosyası URL (Audio Source URL)" : "Audio Source URL"}
-            </label>
-            <div className="flex items-center gap-3">
-              <div className="flex-1 relative">
-                <input
-                  type="text"
-                  value={configData["audioUrl"] || ""}
-                  onChange={(e) => setConfigData({ ...configData, audioUrl: e.target.value })}
-                  placeholder="https://domain.com/track.mp3"
-                  className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none pr-24 shadow-sm"
-                />
-                <label className="absolute right-1 top-1 bottom-1 flex items-center justify-center px-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-lg cursor-pointer transition-colors">
-                  {lang === "tr" ? "Dosya Seç" : "Upload"}
-                  <input 
-                    type="file" 
-                    className="hidden" 
-                    accept="audio/*"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        try {
-                          const url = await handleFileUpload(file);
-                          setConfigData({ ...configData, audioUrl: url });
-                        } catch (err: any) { showAlert(err.message); }
-                      }
-                    }}
-                  />
-                </label>
-              </div>
-            </div>
-            <p className="text-xs text-amber-500 font-medium mt-1.5 block">
-              {lang === "tr" 
-                ? "⚠️ Lütfen doğrudan bir .mp3 veya .wav bağlantısı girin. Telif hakları sebebiyle diğer müzik platformlarının linkleri bu özel oynatıcıda çalışmaz."
-                : "⚠️ Please enter a direct .mp3 or .wav link. Due to copyrights, other music platform links will not work in this custom player."}
-            </p>
-          </div>
+          {renderInput("title", lang === "tr" ? "Modül Başlığı" : "Module Title", lang === "tr" ? "Premium Müzik Oynatıcı" : "Premium Audio Player")}
+          {renderTextarea("description", lang === "tr" ? "Açıklama" : "Description", lang === "tr" ? "Premium müzik listesi..." : "Premium music playlist...")}
+        </div>
+
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          {renderTracksEditor()}
+          <p className="text-xs text-amber-500 font-medium mt-1.5 block">
+            {lang === "tr" 
+              ? "⚠️ Lütfen doğrudan bir .mp3 veya .wav bağlantısı girin. Telif hakları sebebiyle diğer müzik platformlarının linkleri bu özel oynatıcıda çalışmaz."
+              : "⚠️ Please enter a direct .mp3 or .wav link. Due to copyrights, other music platform links will not work in this custom player."}
+          </p>
         </div>
 
         <div className="space-y-4 pt-2">
