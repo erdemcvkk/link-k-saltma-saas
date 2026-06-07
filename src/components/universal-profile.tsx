@@ -586,6 +586,15 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     if (t === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
     if (t === "VINTAGE_RADIO") return "vintage-radio";
     if (t === "PREMIUM_VIDEO") return "masterclass";
+    if (t === "SPOTIFY_CLASSIC") return "spotify-player";
+    if (t === "VINYL_RETRO") return "vinyl-player";
+    if (t === "GLASS_AUDIO") return "glass-audio";
+    if (t === "NEON_CYBERPUNK") return "neon-player";
+    if (t === "MUSIC_PODCAST") return "music-podcast";
+    if (t === "PORTFOLIO_GALLERY") return "portfolio-gallery";
+    if (t === "COUNTDOWN_LAUNCH") return "countdown";
+    if (t === "WEB3_NFT") return "web3-nft";
+    if (t === "CORP_EXEC") return "corporate";
     return t.toLowerCase();
   };
 

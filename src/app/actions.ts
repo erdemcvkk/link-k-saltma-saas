@@ -1978,7 +1978,6 @@ export async function saveAddonConfig(addonId: string, settingsJson: any, isActi
       revalidatePath("/[username]", "page");
       if (user.username) {
         revalidatePath(`/${user.username}`, "page");
-        revalidatePath(`/${user.username}`, "layout");
       }
     } catch (revErr: any) {
       console.error("Revalidation error:", revErr);
