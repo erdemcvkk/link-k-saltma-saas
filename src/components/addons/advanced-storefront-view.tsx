@@ -206,10 +206,15 @@ export default function AdvancedStorefrontView({
 
               {/* Shop now button */}
               <a 
-                href={heroBtnLink} 
-                target={heroBtnLink !== "#" ? "_blank" : undefined}
+                href={heroBtnLink || "#"} 
+                target={(heroBtnLink && heroBtnLink !== "#") ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className="px-6 py-2.5 bg-[#17181a] hover:bg-black text-white font-bold text-xs rounded-full tracking-wide transition-all border-0 shadow-lg shadow-black/20 text-center"
+                onClick={(e) => {
+                  if (heroBtnLink === "#" || !heroBtnLink) {
+                    e.preventDefault();
+                  }
+                }}
+                className="px-6 py-2.5 bg-[#17181a] hover:bg-black hover:scale-[1.05] active:scale-95 text-white font-bold text-xs rounded-full tracking-wide transition-all border-0 shadow-lg shadow-black/20 text-center"
               >
                 {heroBtnText}
               </a>
@@ -220,7 +225,7 @@ export default function AdvancedStorefrontView({
         {/* Collections */}
         <div className="p-6 space-y-8">
           {collections.map((col) => (
-            <div key={col.id} className="space-y-4">
+            <div key={col.id} id={col.id} className="space-y-4 scroll-mt-6">
               {/* Collection Header */}
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-black tracking-tight text-slate-800">
@@ -229,6 +234,19 @@ export default function AdvancedStorefrontView({
                 {col.showAllLink && (
                   <a 
                     href={col.showAllLink} 
+                    target={(col.showAllLink && col.showAllLink !== "#" && !col.showAllLink.startsWith("#")) ? "_blank" : undefined}
+                    rel="noopener noreferrer"
+                    onClick={(e) => {
+                      if (col.showAllLink === "#" || !col.showAllLink) {
+                        e.preventDefault();
+                      } else if (col.showAllLink.startsWith("#")) {
+                        const targetEl = document.getElementById(col.showAllLink.substring(1));
+                        if (targetEl) {
+                          e.preventDefault();
+                          targetEl.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }
+                    }}
                     className="text-xs font-bold text-gray-400 hover:text-slate-600 transition-colors uppercase tracking-wider"
                   >
                     {lang === "tr" ? "Tümünü Gör" : "Show all"}
@@ -241,10 +259,20 @@ export default function AdvancedStorefrontView({
                 /* Horizontal Scroll View */
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory no-scrollbar pb-2 -mx-6 px-6">
                   {col.products.map((p) => (
-                    <div 
+                    <a 
                       key={p.id} 
-                      className="w-[160px] flex-shrink-0 snap-start space-y-2 cursor-pointer group"
-                      onClick={() => handleProductClick(p)}
+                      href={p.buyLink || "#"}
+                      target={(p.buyLink && p.buyLink !== "#") ? "_blank" : undefined}
+                      rel="noopener noreferrer"
+                      onClick={(e) => {
+                        if (onProductClick) {
+                          e.preventDefault();
+                          onProductClick(p);
+                        } else if (!p.buyLink || p.buyLink === "#") {
+                          e.preventDefault();
+                        }
+                      }}
+                      className="w-[160px] flex-shrink-0 snap-start space-y-2 cursor-pointer group block hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
                     >
                       {/* Product Image Wrapper */}
                       <div className="w-[160px] h-[200px] rounded-2xl bg-gray-100 relative overflow-hidden shadow-sm">
@@ -291,17 +319,27 @@ export default function AdvancedStorefrontView({
                           ${p.price}
                         </span>
                       </div>
-                    </div>
+                    </a>
                   ))}
                 </div>
               ) : (
                 /* Grid / Vertical Columns View */
                 <div className="grid grid-cols-2 gap-4">
                   {col.products.map((p) => (
-                    <div 
+                    <a 
                       key={p.id} 
-                      className="flex flex-col space-y-2 cursor-pointer group"
-                      onClick={() => handleProductClick(p)}
+                      href={p.buyLink || "#"}
+                      target={(p.buyLink && p.buyLink !== "#") ? "_blank" : undefined}
+                      rel="noopener noreferrer"
+                      onClick={(e) => {
+                        if (onProductClick) {
+                          e.preventDefault();
+                          onProductClick(p);
+                        } else if (!p.buyLink || p.buyLink === "#") {
+                          e.preventDefault();
+                        }
+                      }}
+                      className="flex flex-col space-y-2 cursor-pointer group hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 block"
                     >
                       {/* Product Image Wrapper */}
                       <div className="w-full aspect-[4/5] rounded-2xl bg-gray-100 relative overflow-hidden shadow-sm">
@@ -347,7 +385,7 @@ export default function AdvancedStorefrontView({
                           ${p.price}
                         </span>
                       </div>
-                    </div>
+                    </a>
                   ))}
                 </div>
               )}
@@ -364,8 +402,15 @@ export default function AdvancedStorefrontView({
           {bottomNavItems.map((item, idx) => (
             <a 
               key={idx}
-              href={item.link}
-              className={`flex flex-col items-center justify-center flex-1 text-gray-400 hover:text-slate-800 transition-colors py-1 ${
+              href={item.link || "#"}
+              target={(item.link && item.link !== "#") ? "_blank" : undefined}
+              rel="noopener noreferrer"
+              onClick={(e) => {
+                if (!item.link || item.link === "#") {
+                  e.preventDefault();
+                }
+              }}
+              className={`flex flex-col items-center justify-center flex-1 text-gray-400 hover:text-slate-800 hover:scale-[1.05] active:scale-95 transition-all py-1 ${
                 idx === 0 ? "text-slate-800 font-bold" : "text-gray-400"
               }`}
             >
