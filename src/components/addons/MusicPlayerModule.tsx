@@ -330,25 +330,10 @@ export default function MusicPlayerModule({
 
       {/* 1. Header (Now Playing) */}
       {showHeader && (
-        <div className="flex items-center justify-between w-full mb-3" id="player-header">
-          <button 
-            type="button"
-            onClick={() => setShowTrackList(true)}
-            className="p-2 -ml-2 transition-transform active:scale-95 text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white cursor-pointer border-0 bg-transparent"
-            title="Şarkı Listesi"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <span className={`text-[13px] font-sans font-medium tracking-tight truncate ${themeStyles.textHeader}`}>
-            {themeType === "neon" ? "● SYSTEM LIVE-DECK" : "Now playing"}
+        <div className="flex items-center justify-center w-full mb-3" id="player-header">
+          <span className={`text-[11px] font-sans font-extrabold tracking-widest uppercase ${themeStyles.textHeader}`}>
+            {isPlaying ? "Oynatılıyor" : "Durduruldu"}
           </span>
-          <button 
-            type="button"
-            onClick={() => setShowTrackList(!showTrackList)}
-            className="p-2 -mr-2 transition-transform active:scale-95 text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white cursor-pointer border-0 bg-transparent"
-          >
-            <MoreHorizontal className="w-5 h-5" />
-          </button>
         </div>
       )}
 
