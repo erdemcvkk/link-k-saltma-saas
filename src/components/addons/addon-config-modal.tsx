@@ -739,6 +739,34 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                       />
                     </div>
                   </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-slate-550 uppercase">
+                      {lang === "tr" ? "Yazı Rengi" : "Text Color"}
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="color"
+                        value={banner.textColor || "#ffffff"}
+                        onChange={(e) => {
+                          const newBanners = [...banners];
+                          newBanners[bIdx] = { ...newBanners[bIdx], textColor: e.target.value };
+                          updateBanners(newBanners);
+                        }}
+                        className="w-10 h-8 p-0 border border-zinc-200 rounded cursor-pointer shrink-0"
+                      />
+                      <input
+                        type="text"
+                        value={banner.textColor || "#ffffff"}
+                        onChange={(e) => {
+                          const newBanners = [...banners];
+                          newBanners[bIdx] = { ...newBanners[bIdx], textColor: e.target.value };
+                          updateBanners(newBanners);
+                        }}
+                        className="w-full px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-xs"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -759,6 +787,32 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
           {renderTextarea("brandDescription", lang === "tr" ? "Marka Hakkında / Açıklama" : "Brand Description", "Premium Wear & Design Studio since 2018.")}
           {renderImageUpload("brandLogoUrl", lang === "tr" ? "Logo Görseli" : "Logo Image")}
           {renderInput("brandContact", lang === "tr" ? "İletişim / Destek Linki veya Email" : "Contact Link or Email", "mailto:info@modaboutique.com")}
+        </div>
+
+        {/* Design Settings Section */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            🎨 {lang === "tr" ? "Tasarım Ayarları (Design Settings)" : "Design Settings"}
+          </h4>
+          <div className="space-y-1.5 mb-4">
+            <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+              {lang === "tr" ? "Genel Yazı Rengi" : "Global Text Color"}
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                value={configData.textColor || "#1e293b"}
+                onChange={(e) => setConfigData({ ...configData, textColor: e.target.value })}
+                className="w-12 h-10 p-0 border border-zinc-200 rounded-xl cursor-pointer"
+              />
+              <input
+                type="text"
+                value={configData.textColor || "#1e293b"}
+                onChange={(e) => setConfigData({ ...configData, textColor: e.target.value })}
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Collections Manager */}

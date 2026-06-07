@@ -64,6 +64,7 @@ export default function AdvancedStorefrontView({
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   const safeConfig = config || {};
+  const globalTextColor = safeConfig.textColor || "#1e293b";
 
   // Fallback banners construction
   const banners: StorefrontBanner[] = Array.isArray(safeConfig.banners) && safeConfig.banners.length > 0
@@ -185,7 +186,7 @@ export default function AdvancedStorefrontView({
         /* Tüm Ürünler View */
         <div className="flex-1 overflow-y-auto no-scrollbar pb-24 animate-in fade-in duration-300">
           <div className="p-4 sticky top-0 bg-white/95 backdrop-blur-md border-b border-gray-100 z-10 text-center">
-            <h2 className="text-sm font-black text-slate-800 tracking-tight">
+            <h2 className="text-sm font-black tracking-tight" style={{ color: globalTextColor }}>
               {lang === "tr" ? "Tüm Ürünler" : "All Products"}
             </h2>
           </div>
@@ -240,10 +241,10 @@ export default function AdvancedStorefrontView({
                 </div>
 
                 <div className="px-1 text-left">
-                  <h4 className="text-xs font-bold text-slate-800 truncate leading-tight">
+                  <h4 className="text-xs font-bold truncate leading-tight" style={{ color: globalTextColor }}>
                     {p.title}
                   </h4>
-                  <span className="text-[11px] font-black text-slate-500 block mt-0.5">
+                  <span className="text-[11px] font-black block mt-0.5" style={{ color: globalTextColor, opacity: 0.7 }}>
                     ${p.price}
                   </span>
                 </div>
@@ -272,13 +273,13 @@ export default function AdvancedStorefrontView({
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-2xl font-black tracking-tight text-slate-800">
+            <h2 className="text-2xl font-black tracking-tight" style={{ color: globalTextColor }}>
               {brandName}
             </h2>
-            <div className="w-12 h-1 bg-slate-800 mx-auto rounded-full" />
+            <div className="w-12 h-1 mx-auto rounded-full" style={{ backgroundColor: globalTextColor }} />
           </div>
 
-          <p className="text-sm text-slate-500 font-medium leading-relaxed max-w-[280px]">
+          <p className="text-sm font-medium leading-relaxed max-w-[280px]" style={{ color: globalTextColor, opacity: 0.85 }}>
             {brandDescription}
           </p>
 
@@ -312,7 +313,7 @@ export default function AdvancedStorefrontView({
             >
               <ArrowLeft className="h-5 w-5 text-slate-800" />
             </button>
-            <h2 className="text-sm font-black text-slate-800 tracking-tight">
+            <h2 className="text-sm font-black tracking-tight" style={{ color: globalTextColor }}>
               {selectedCollection.title}
             </h2>
             <div className="w-9 h-9" />
@@ -413,19 +414,26 @@ export default function AdvancedStorefrontView({
 
                 {/* Hero Typography & Content */}
                 <div className="w-full space-y-4 relative z-10 mt-auto">
-                  <div className="space-y-1">
-                    <span className="text-[10px] tracking-[0.25em] font-extrabold text-white/95 uppercase select-none">
-                      {sub}
-                    </span>
-                    <div className="w-16 h-[1.5px] bg-white/80" />
-                  </div>
+                  {(() => {
+                    const textColor = banner.textColor || "#ffffff";
+                    return (
+                      <>
+                        <div className="space-y-1">
+                          <span className="text-[10px] tracking-[0.25em] font-extrabold uppercase select-none" style={{ color: textColor }}>
+                            {sub}
+                          </span>
+                          <div className="w-16 h-[1.5px]" style={{ backgroundColor: textColor, opacity: 0.8 }} />
+                        </div>
 
-                  <h1 className="text-4xl md:text-5xl font-black text-white leading-none tracking-tight">
-                    {title}
-                  </h1>
-                  <p className="text-sm font-semibold text-white/90 leading-tight">
-                    {desc}
-                  </p>
+                        <h1 className="text-4xl md:text-5xl font-black leading-none tracking-tight" style={{ color: textColor }}>
+                          {title}
+                        </h1>
+                        <p className="text-sm font-semibold leading-tight" style={{ color: textColor, opacity: 0.9 }}>
+                          {desc}
+                        </p>
+                      </>
+                    );
+                  })()}
 
                   <div className="flex items-center justify-between pt-1">
                     {/* Pagination indicators */}
@@ -441,9 +449,14 @@ export default function AdvancedStorefrontView({
                           }}
                           className={`w-2 h-2 rounded-full transition-all border-0 cursor-pointer ${
                             dotIdx === currentBannerIndex
-                              ? "bg-white scale-125 shadow-sm"
-                              : "bg-white/50 hover:bg-white/70"
+                              ? "scale-125 shadow-sm"
+                              : "hover:scale-110"
                           }`}
+                          style={{
+                            backgroundColor: dotIdx === currentBannerIndex 
+                              ? (banner.textColor || "#ffffff") 
+                              : `${banner.textColor || "#ffffff"}80`
+                          }}
                         />
                       ))}
                     </div>
@@ -475,7 +488,7 @@ export default function AdvancedStorefrontView({
             <div key={col.id} id={col.id} className="space-y-4 scroll-mt-6">
               {/* Collection Header */}
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-black tracking-tight text-slate-800">
+                <h3 className="text-lg font-black tracking-tight" style={{ color: globalTextColor }}>
                   {col.title}
                 </h3>
                 <a 
@@ -484,7 +497,8 @@ export default function AdvancedStorefrontView({
                     e.preventDefault();
                     setSelectedCollectionId(col.id);
                   }}
-                  className="text-xs font-bold text-gray-400 hover:text-slate-600 transition-colors uppercase tracking-wider cursor-pointer"
+                  className="text-xs font-bold transition-colors uppercase tracking-wider cursor-pointer"
+                  style={{ color: globalTextColor, opacity: 0.6 }}
                 >
                   {lang === "tr" ? "Tümünü Gör" : "Show all"}
                 </a>
@@ -547,10 +561,10 @@ export default function AdvancedStorefrontView({
 
                       {/* Product Name & Price */}
                       <div className="px-1 text-left">
-                        <h4 className="text-xs font-bold text-slate-800 truncate leading-tight">
+                        <h4 className="text-xs font-bold truncate leading-tight" style={{ color: globalTextColor }}>
                           {p.title}
                         </h4>
-                        <span className="text-[11px] font-black text-slate-500 block mt-0.5">
+                        <span className="text-[11px] font-black block mt-0.5" style={{ color: globalTextColor, opacity: 0.7 }}>
                           ${p.price}
                         </span>
                       </div>
@@ -613,10 +627,10 @@ export default function AdvancedStorefrontView({
 
                       {/* Product Name & Price */}
                       <div className="px-1 text-left">
-                        <h4 className="text-xs font-bold text-slate-800 truncate leading-tight">
+                        <h4 className="text-xs font-bold truncate leading-tight" style={{ color: globalTextColor }}>
                           {p.title}
                         </h4>
-                        <span className="text-[11px] font-black text-slate-500 block mt-0.5">
+                        <span className="text-[11px] font-black block mt-0.5" style={{ color: globalTextColor, opacity: 0.7 }}>
                           ${p.price}
                         </span>
                       </div>
@@ -646,8 +660,9 @@ export default function AdvancedStorefrontView({
               setActiveTab("shop");
             }}
             className={`flex flex-col items-center justify-center flex-1 transition-all py-1 border-0 bg-transparent cursor-pointer hover:scale-[1.05] active:scale-95 ${
-              activeTab === "shop" ? "text-slate-900 font-extrabold" : "text-gray-400"
+              activeTab === "shop" ? "font-extrabold" : "text-gray-400"
             }`}
+            style={{ color: activeTab === "shop" ? globalTextColor : undefined }}
           >
             <Zap className="h-5 w-5" />
             <span className="text-[9px] font-black mt-1 tracking-wider uppercase">
@@ -661,8 +676,9 @@ export default function AdvancedStorefrontView({
               setActiveTab("explore");
             }}
             className={`flex flex-col items-center justify-center flex-1 transition-all py-1 border-0 bg-transparent cursor-pointer hover:scale-[1.05] active:scale-95 ${
-              activeTab === "explore" ? "text-slate-900 font-extrabold" : "text-gray-400"
+              activeTab === "explore" ? "font-extrabold" : "text-gray-400"
             }`}
+            style={{ color: activeTab === "explore" ? globalTextColor : undefined }}
           >
             <ShoppingBag className="h-5 w-5" />
             <span className="text-[9px] font-black mt-1 tracking-wider uppercase">
@@ -676,8 +692,9 @@ export default function AdvancedStorefrontView({
               setActiveTab("brands");
             }}
             className={`flex flex-col items-center justify-center flex-1 transition-all py-1 border-0 bg-transparent cursor-pointer hover:scale-[1.05] active:scale-95 ${
-              activeTab === "brands" ? "text-slate-900 font-extrabold" : "text-gray-400"
+              activeTab === "brands" ? "font-extrabold" : "text-gray-400"
             }`}
+            style={{ color: activeTab === "brands" ? globalTextColor : undefined }}
           >
             <Bookmark className="h-5 w-5" />
             <span className="text-[9px] font-black mt-1 tracking-wider uppercase">
