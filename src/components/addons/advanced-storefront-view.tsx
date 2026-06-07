@@ -226,17 +226,7 @@ export default function AdvancedStorefrontView({
                     </div>
                   )}
 
-                  <button 
-                    type="button" 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                    className="absolute top-2.5 right-2.5 w-7.5 h-7.5 rounded-full bg-white flex items-center justify-center shadow-md border-0 hover:scale-105 transition-transform"
-                  >
-                    <Heart 
-                      className={`h-3.5 w-3.5 ${p.isFavorite ? "text-red-500 fill-red-500" : "text-gray-400"}`} 
-                    />
-                  </button>
+
 
                   {p.badge && (
                     <span className="absolute bottom-2.5 left-2.5 bg-white text-[9px] font-black text-slate-800 px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wide">
@@ -355,17 +345,7 @@ export default function AdvancedStorefrontView({
                     </div>
                   )}
 
-                  <button 
-                    type="button" 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                    className="absolute top-2.5 right-2.5 w-7.5 h-7.5 rounded-full bg-white flex items-center justify-center shadow-md border-0 hover:scale-105 transition-transform"
-                  >
-                    <Heart 
-                      className={`h-3.5 w-3.5 ${p.isFavorite ? "text-red-500 fill-red-500" : "text-gray-400"}`} 
-                    />
-                  </button>
+
 
                   {p.badge && (
                     <span className="absolute bottom-2.5 left-2.5 bg-white text-[9px] font-black text-slate-800 px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wide">
@@ -543,18 +523,7 @@ export default function AdvancedStorefrontView({
                           </div>
                         )}
 
-                        {/* Heart Button */}
-                        <button 
-                          type="button" 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          className="absolute top-2.5 right-2.5 w-7.5 h-7.5 rounded-full bg-white flex items-center justify-center shadow-md border-0 hover:scale-105 transition-transform"
-                        >
-                          <Heart 
-                            className={`h-3.5 w-3.5 ${p.isFavorite ? "text-red-500 fill-red-500" : "text-gray-400"}`} 
-                          />
-                        </button>
+
 
                         {/* Badge */}
                         {p.badge && (
@@ -609,18 +578,7 @@ export default function AdvancedStorefrontView({
                           </div>
                         )}
 
-                        {/* Heart Button */}
-                        <button 
-                          type="button" 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          className="absolute top-2.5 right-2.5 w-7.5 h-7.5 rounded-full bg-white flex items-center justify-center shadow-md border-0 hover:scale-105 transition-transform"
-                        >
-                          <Heart 
-                            className={`h-3.5 w-3.5 ${p.isFavorite ? "text-red-500 fill-red-500" : "text-gray-400"}`} 
-                          />
-                        </button>
+
 
                         {/* Badge */}
                         {p.badge && (
