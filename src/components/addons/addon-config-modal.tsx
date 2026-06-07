@@ -1352,40 +1352,159 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
 
  // ── PORTFOLIO & GALLERY ──
  case "PORTFOLIO_GALLERY":
- specificFields = (
- <>
- <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
- <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
- <Image className="h-4 w-4" />
- {lang === "tr" ? "Portfolyo Ayarları" : "Portfolio Settings"}
- </h4>
- {renderInput("title", lang === "tr" ? "Galeri Başlığı" : "Gallery Title", lang === "tr" ? "Çalışmalarım" : "My Works")}
- {renderTextarea("description", lang === "tr" ? "Açıklama" : "Description", lang === "tr" ? "Tasarımlarım ve projelerim." : "My designs and projects.")}
- {renderInput("username", lang === "tr" ? "Görünen Kullanıcı Adı" : "Display Username", "@username")}
- {renderInput("bio", lang === "tr" ? "Kısa Biyografi" : "Short Bio", "Visual Artist & Designer")}
- </div>
+    {
+      const images = configData.galleryImages || [
+        configData.galleryImage1,
+        configData.galleryImage2,
+        configData.galleryImage3,
+        configData.galleryImage4
+      ].filter(Boolean);
 
- <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
- <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
- 🖼️ {lang === "tr" ? "Galeri Görselleri" : "Gallery Images"}
- </h4>
- {renderImageUpload("galleryImage1", lang === "tr" ? "Görsel 1" : "Image 1")}
- {renderImageUpload("galleryImage2", lang === "tr" ? "Görsel 2" : "Image 2")}
- {renderImageUpload("galleryImage3", lang === "tr" ? "Görsel 3" : "Image 3")}
- {renderImageUpload("galleryImage4", lang === "tr" ? "Görsel 4" : "Image 4")}
- </div>
+      const updateImages = (newImages: string[]) => {
+        setConfigData({
+          ...configData,
+          galleryImage1: newImages[0] || "",
+          galleryImage2: newImages[1] || "",
+          galleryImage3: newImages[2] || "",
+          galleryImage4: newImages[3] || "",
+          galleryImages: newImages
+        });
+      };
 
- <div className="space-y-4 pt-2">
- <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
- 🔗 {lang === "tr" ? "Bağlantılar" : "Links"}
- </h4>
- {renderInput("behanceUrl", lang === "tr" ? "Behance Linki (Opsiyonel)" : "Behance URL (Optional)", "https://behance.net/...")}
- {renderInput("dribbbleUrl", lang === "tr" ? "Dribbble Linki (Opsiyonel)" : "Dribbble URL (Optional)", "https://dribbble.com/...")}
- {renderInput("websiteUrl", lang === "tr" ? "Web Sitesi (Opsiyonel)" : "Website (Optional)", "https://...")}
- </div>
- </>
- );
- break;
+      specificFields = (
+        <>
+          <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+            <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+              <Image className="h-4 w-4" />
+              {lang === "tr" ? "Portfolyo Ayarları" : "Portfolio Settings"}
+            </h4>
+            {renderInput("title", lang === "tr" ? "Galeri Başlığı" : "Gallery Title", lang === "tr" ? "Çalışmalarım" : "My Works")}
+            {renderTextarea("description", lang === "tr" ? "Açıklama" : "Description", lang === "tr" ? "Tasarımlarım ve projelerim." : "My designs and projects.")}
+            {renderInput("username", lang === "tr" ? "Görünen Kullanıcı Adı" : "Display Username", "@username")}
+            {renderInput("bio", lang === "tr" ? "Kısa Biyografi" : "Short Bio", "Visual Artist & Designer")}
+          </div>
+
+          <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+            <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide mb-2">
+              {lang === "tr" ? "Galeri Görselleri" : "Gallery Images"}
+            </label>
+            <div className="space-y-3">
+              {images.map((imgUrl: string, idx: number) => (
+                <div key={idx} className="p-4 rounded-2xl border border-zinc-200 bg-zinc-50 relative group space-y-3 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newImages = [...images];
+                      newImages.splice(idx, 1);
+                      updateImages(newImages);
+                    }}
+                    className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-red-100 hover:bg-red-200 text-red-655 flex items-center justify-center transition-colors shadow-md border border-red-200 z-10"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-indigo-650 bg-indigo-50 px-2 py-1 rounded-md uppercase tracking-wider">
+                      {lang === "tr" ? `${idx + 1}. Görsel` : `Image ${idx + 1}`}
+                    </span>
+                    
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        disabled={idx === 0}
+                        onClick={() => {
+                          const newImages = [...images];
+                          const temp = newImages[idx];
+                          newImages[idx] = newImages[idx - 1];
+                          newImages[idx - 1] = temp;
+                          updateImages(newImages);
+                        }}
+                        className="p-1 rounded bg-zinc-200 hover:bg-zinc-300 text-zinc-700 disabled:opacity-40 disabled:hover:bg-zinc-200 transition-colors text-xs font-bold"
+                      >
+                        ▲
+                      </button>
+                      <button
+                        type="button"
+                        disabled={idx === images.length - 1}
+                        onClick={() => {
+                          const newImages = [...images];
+                          const temp = newImages[idx];
+                          newImages[idx] = newImages[idx + 1];
+                          newImages[idx + 1] = temp;
+                          updateImages(newImages);
+                        }}
+                        className="p-1 rounded bg-zinc-200 hover:bg-zinc-300 text-zinc-700 disabled:opacity-40 disabled:hover:bg-zinc-200 transition-colors text-xs font-bold"
+                      >
+                        ▼
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    {imgUrl && (
+                      <img src={imgUrl} alt="Preview" className="w-12 h-12 rounded-lg object-cover bg-zinc-100 flex-shrink-0" />
+                    )}
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={imgUrl || ""}
+                        onChange={(e) => {
+                          const newImages = [...images];
+                          newImages[idx] = e.target.value;
+                          updateImages(newImages);
+                        }}
+                        placeholder="https://..."
+                        className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-white text-sm text-slate-800 font-medium focus:border-indigo-500 outline-none pr-24"
+                      />
+                      <label className="absolute right-1 top-1 bottom-1 flex items-center justify-center px-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-lg cursor-pointer transition-colors">
+                        {lang === "tr" ? "Dosya Seç" : "Upload"}
+                        <input 
+                          type="file" 
+                          className="hidden" 
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              try {
+                                const url = await handleFileUpload(file);
+                                const newImages = [...images];
+                                newImages[idx] = url;
+                                updateImages(newImages);
+                              } catch (err: any) { showAlert(err.message); }
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => {
+                  const newImages = [...images, ""];
+                  updateImages(newImages);
+                }}
+                className="w-full py-3 md:py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors flex items-center justify-center gap-1.5"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                <span>{lang === "tr" ? "Yeni Görsel Ekle" : "Add New Image"}</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-4 pt-2">
+            <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+              🔗 {lang === "tr" ? "Bağlantılar" : "Links"}
+            </h4>
+            {renderInput("behanceUrl", lang === "tr" ? "Behance Linki (Opsiyonel)" : "Behance URL (Optional)", "https://behance.net/...")}
+            {renderInput("dribbbleUrl", lang === "tr" ? "Dribbble Linki (Opsiyonel)" : "Dribbble URL (Optional)", "https://dribbble.com/...")}
+            {renderInput("websiteUrl", lang === "tr" ? "Web Sitesi (Opsiyonel)" : "Website (Optional)", "https://...")}
+          </div>
+        </>
+      );
+    }
+    break;
 
  // ── COUNTDOWN & LAUNCH ──
  case "COUNTDOWN_LAUNCH":

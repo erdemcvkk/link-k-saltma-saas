@@ -219,6 +219,9 @@ export default function PlayableAddon({
   // ── VIDEO STATES ──
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
+  // ── PORTFOLIO GALLERY STATES ──
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
   // Reset track index if tracks array changes length
   useEffect(() => {
     setCurrentTrackIndex(0);
@@ -1122,90 +1125,151 @@ export default function PlayableAddon({
       );
 
     case "PORTFOLIO_GALLERY":
-      return (
-        <div className="w-full h-full bg-slate-50 flex flex-col p-6 text-slate-800 relative z-0">
-          <div className="flex flex-col items-center mt-8 mb-6">
-            <div className="w-20 h-20 bg-zinc-200 rounded-none border border-slate-300 overflow-hidden">
-              <img
-                src={avatarUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80"}
-                className="w-full h-full object-cover"
-                alt="Avatar"
-              />
+      {
+        const galleryImages = Array.isArray(config.galleryImages) && config.galleryImages.length > 0
+          ? config.galleryImages
+          : [
+              config.galleryImage1,
+              config.galleryImage2,
+              config.galleryImage3,
+              config.galleryImage4
+            ].filter(Boolean);
+
+        const effectiveGalleryImages = galleryImages.length > 0 ? galleryImages : [
+          "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=200&q=80",
+          "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&q=80",
+          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80",
+          "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=200&q=80"
+        ];
+
+        return (
+          <div className="w-full h-full bg-slate-50 flex flex-col p-6 text-slate-800 relative z-0">
+            <div className="flex flex-col items-center mt-8 mb-6">
+              <div className="w-20 h-20 bg-zinc-200 rounded-none border border-slate-300 overflow-hidden">
+                <img
+                  src={avatarUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80"}
+                  className="w-full h-full object-cover"
+                  alt="Avatar"
+                />
+              </div>
+              <span className="text-sm font-bold mt-3 text-slate-700">{username}</span>
+              <p className="text-xs text-slate-500 mt-1">{bio}</p>
             </div>
-            <span className="text-sm font-bold mt-3 text-slate-700">{username}</span>
-            <p className="text-xs text-slate-500 mt-1">{bio}</p>
+
+            <h3 className="text-sm font-bold text-slate-800 mb-3 px-1">{title}</h3>
+            <p className="text-xs text-slate-500 mb-4 px-1">{desc}</p>
+
+            <div className="grid grid-cols-2 gap-3 mt-2">
+              {effectiveGalleryImages.map((imgUrl: string, idx: number) => (
+                <div
+                  key={idx}
+                  onClick={() => setLightboxIndex(idx)}
+                  className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm cursor-pointer hover:scale-[1.03] hover:shadow-md active:scale-95 transition-all duration-300"
+                >
+                  <img
+                    src={imgUrl}
+                    className="w-full h-full object-cover rounded-lg"
+                    alt={`Gallery ${idx + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {(config.behanceUrl || config.dribbbleUrl || config.websiteUrl) && (
+              <div className="flex items-center justify-center gap-3 mt-6">
+                {config.behanceUrl && (
+                  <a
+                    href={config.behanceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-slate-500 hover:text-slate-800 underline"
+                  >
+                    Behance
+                  </a>
+                )}
+                {config.dribbbleUrl && (
+                  <a
+                    href={config.dribbbleUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-slate-500 hover:text-slate-800 underline"
+                  >
+                    Dribbble
+                  </a>
+                )}
+                {config.websiteUrl && (
+                  <a
+                    href={config.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-slate-500 hover:text-slate-800 underline"
+                  >
+                    Website
+                  </a>
+                )}
+              </div>
+            )}
+
+            {/* Premium Fullscreen Lightbox Modal */}
+            {lightboxIndex !== null && effectiveGalleryImages[lightboxIndex] && (
+              <div 
+                className="fixed inset-0 bg-black/95 backdrop-blur-md z-[200] flex flex-col justify-between items-center py-6 px-4 animate-in fade-in duration-200"
+                onClick={() => setLightboxIndex(null)}
+              >
+                {/* Top Bar */}
+                <div className="w-full flex justify-between items-center px-4 max-w-2xl z-10">
+                  <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                    {lightboxIndex + 1} / {effectiveGalleryImages.length}
+                  </span>
+                  <button
+                    onClick={() => setLightboxIndex(null)}
+                    className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer border-0 outline-none"
+                  >
+                    <span className="text-xl leading-none">✕</span>
+                  </button>
+                </div>
+
+                {/* Center Image and Navigations */}
+                <div className="flex items-center justify-between w-full max-w-4xl flex-1 px-2 relative" onClick={(e) => e.stopPropagation()}>
+                  {/* Left Arrow */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setLightboxIndex((lightboxIndex - 1 + effectiveGalleryImages.length) % effectiveGalleryImages.length);
+                    }}
+                    className="absolute left-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all hover:scale-105 active:scale-95 cursor-pointer border-0 outline-none"
+                  >
+                    <span className="text-lg font-bold">◀</span>
+                  </button>
+
+                  {/* Image Container */}
+                  <div className="w-full h-full max-h-[70vh] flex items-center justify-center px-8">
+                    <img
+                      src={effectiveGalleryImages[lightboxIndex]}
+                      alt={`Gallery view ${lightboxIndex + 1}`}
+                      className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl animate-in zoom-in-95 duration-200"
+                    />
+                  </div>
+
+                  {/* Right Arrow */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setLightboxIndex((lightboxIndex + 1) % effectiveGalleryImages.length);
+                    }}
+                    className="absolute right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all hover:scale-105 active:scale-95 cursor-pointer border-0 outline-none"
+                  >
+                    <span className="text-lg font-bold">▶</span>
+                  </button>
+                </div>
+
+                {/* Bottom Bar */}
+                <div className="h-6"></div>
+              </div>
+            )}
           </div>
-
-          <h3 className="text-sm font-bold text-slate-800 mb-3 px-1">{title}</h3>
-          <p className="text-xs text-slate-500 mb-4 px-1">{desc}</p>
-
-          <div className="grid grid-cols-2 gap-3 mt-2">
-            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img
-                src={config.galleryImage1 || "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=200&q=80"}
-                className="w-full h-full object-cover rounded-lg"
-                alt="Gallery 1"
-              />
-            </div>
-            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img
-                src={config.galleryImage2 || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&q=80"}
-                className="w-full h-full object-cover rounded-lg"
-                alt="Gallery 2"
-              />
-            </div>
-            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img
-                src={config.galleryImage3 || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80"}
-                className="w-full h-full object-cover rounded-lg"
-                alt="Gallery 3"
-              />
-            </div>
-            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img
-                src={config.galleryImage4 || "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=200&q=80"}
-                className="w-full h-full object-cover rounded-lg"
-                alt="Gallery 4"
-              />
-            </div>
-          </div>
-
-          {(config.behanceUrl || config.dribbbleUrl || config.websiteUrl) && (
-            <div className="flex items-center justify-center gap-3 mt-6">
-              {config.behanceUrl && (
-                <a
-                  href={config.behanceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-slate-500 hover:text-slate-800 underline"
-                >
-                  Behance
-                </a>
-              )}
-              {config.dribbbleUrl && (
-                <a
-                  href={config.dribbbleUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-slate-500 hover:text-slate-800 underline"
-                >
-                  Dribbble
-                </a>
-              )}
-              {config.websiteUrl && (
-                <a
-                  href={config.websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-slate-500 hover:text-slate-800 underline"
-                >
-                  Website
-                </a>
-              )}
-            </div>
-          )}
-        </div>
-      );
+        );
+      }
 
     case "COUNTDOWN_LAUNCH":
       {

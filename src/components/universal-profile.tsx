@@ -1159,43 +1159,54 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
         </div>
       );
     case "PORTFOLIO_GALLERY":
-      return (
-        <div className="w-full h-full bg-slate-50 flex flex-col p-6 text-slate-800 relative z-0">
-          <div className="flex flex-col items-center mt-8 mb-6">
-            <div className="w-20 h-20 bg-zinc-200 rounded-none border border-slate-300 overflow-hidden">
-              <img src={avatarUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80"} className="w-full h-full object-cover" />
+      {
+        const galleryImages = Array.isArray(config.galleryImages) && config.galleryImages.length > 0
+          ? config.galleryImages
+          : [
+              config.galleryImage1,
+              config.galleryImage2,
+              config.galleryImage3,
+              config.galleryImage4
+            ].filter(Boolean);
+
+        const effectiveGalleryImages = galleryImages.length > 0 ? galleryImages : [
+          "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=200&q=80",
+          "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&q=80",
+          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80",
+          "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=200&q=80"
+        ];
+
+        return (
+          <div className="w-full h-full bg-slate-50 flex flex-col p-6 text-slate-800 relative z-0">
+            <div className="flex flex-col items-center mt-8 mb-6">
+              <div className="w-20 h-20 bg-zinc-200 rounded-none border border-slate-300 overflow-hidden">
+                <img src={avatarUrl || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80"} className="w-full h-full object-cover" />
+              </div>
+              <span className="text-sm font-bold mt-3 text-slate-700">{username}</span>
+              <p className="text-xs text-slate-500 mt-1">{bio}</p>
             </div>
-            <span className="text-sm font-bold mt-3 text-slate-700">{username}</span>
-            <p className="text-xs text-slate-500 mt-1">{bio}</p>
+            
+            <h3 className="text-sm font-bold text-slate-800 mb-3 px-1">{title}</h3>
+            <p className="text-xs text-slate-500 mb-4 px-1">{desc}</p>
+            
+            <div className="grid grid-cols-2 gap-3 mt-2">
+              {effectiveGalleryImages.map((imgUrl: string, idx: number) => (
+                <div key={idx} className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
+                  <img src={imgUrl} className="w-full h-full object-cover rounded-lg" />
+                </div>
+              ))}
+            </div>
+            
+            {(config.behanceUrl || config.dribbbleUrl || config.websiteUrl) && (
+              <div className="flex items-center justify-center gap-3 mt-6">
+                {config.behanceUrl && <a href={config.behanceUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-slate-800 underline">Behance</a>}
+                {config.dribbbleUrl && <a href={config.dribbbleUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-slate-800 underline">Dribbble</a>}
+                {config.websiteUrl && <a href={config.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-slate-800 underline">Website</a>}
+              </div>
+            )}
           </div>
-          
-          <h3 className="text-sm font-bold text-slate-800 mb-3 px-1">{title}</h3>
-          <p className="text-xs text-slate-500 mb-4 px-1">{desc}</p>
-          
-          <div className="grid grid-cols-2 gap-3 mt-2">
-            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img src={config.galleryImage1 || "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=200&q=80"} className="w-full h-full object-cover rounded-lg" />
-            </div>
-            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img src={config.galleryImage2 || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&q=80"} className="w-full h-full object-cover rounded-lg" />
-            </div>
-            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img src={config.galleryImage3 || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80"} className="w-full h-full object-cover rounded-lg" />
-            </div>
-            <div className="aspect-square bg-white/60 backdrop-blur-md border border-slate-200/50 rounded-xl p-1.5 overflow-hidden shadow-sm">
-              <img src={config.galleryImage4 || "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=200&q=80"} className="w-full h-full object-cover rounded-lg" />
-            </div>
-          </div>
-          
-          {(config.behanceUrl || config.dribbbleUrl || config.websiteUrl) && (
-            <div className="flex items-center justify-center gap-3 mt-6">
-              {config.behanceUrl && <a href={config.behanceUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-slate-800 underline">Behance</a>}
-              {config.dribbbleUrl && <a href={config.dribbbleUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-slate-800 underline">Dribbble</a>}
-              {config.websiteUrl && <a href={config.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-slate-500 hover:text-slate-800 underline">Website</a>}
-            </div>
-          )}
-        </div>
-      );
+        );
+      }
     case "COUNTDOWN_LAUNCH":
       {
         const now = new Date();
