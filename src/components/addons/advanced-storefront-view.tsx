@@ -409,7 +409,7 @@ export default function AdvancedStorefrontView({
                 className={`absolute inset-0 bg-cover bg-center flex flex-col justify-between p-6 transition-all duration-700 ease-in-out ${
                   isActive ? "opacity-100 pointer-events-auto scale-100" : "opacity-0 pointer-events-none scale-105"
                 }`}
-                style={{ backgroundImage: `url(${bgUrl})` }}
+                style={{ backgroundImage: `url(${bgUrl})`, fontFamily: globalFontFamily }}
               >
                 {/* Dark overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/40 z-0 pointer-events-none" />
@@ -651,10 +651,7 @@ export default function AdvancedStorefrontView({
   };
 
   return (
-    <div 
-      className="w-full h-full bg-white flex flex-col relative overflow-hidden select-none text-slate-900"
-      style={{ fontFamily: globalFontFamily }}
-    >
+    <div className="w-full h-full bg-white flex flex-col relative overflow-hidden font-sans select-none text-slate-900">
       {renderTabContent()}
 
       {/* Bottom Navigation */}

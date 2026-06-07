@@ -866,7 +866,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
-              {lang === "tr" ? "Yazı Tipi (Font)" : "Font Family"}
+              {lang === "tr" ? "Banner Yazı Tipi (Font)" : "Banner Font Family"}
             </label>
             <select
               value={configData.fontFamily || "Inter"}
