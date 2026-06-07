@@ -66,7 +66,7 @@ export default function AdvancedStorefrontView({
   const safeConfig = config || {};
 
   // Fallback banners construction
-  const banners: StorefrontBanner[] = safeConfig.banners && safeConfig.banners.length > 0
+  const banners: StorefrontBanner[] = Array.isArray(safeConfig.banners) && safeConfig.banners.length > 0
     ? safeConfig.banners
     : [
         {
@@ -94,69 +94,71 @@ export default function AdvancedStorefrontView({
   const brandLogoUrl = safeConfig.brandLogoUrl || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=150&q=80";
   const brandContact = safeConfig.brandContact || "mailto:info@modaboutique.com";
 
-  const collections = safeConfig.collections || [
-    {
-      id: "demo-col-1",
-      title: "Designer Collection",
-      showAllLink: "#",
-      displayType: "horizontal-scroll" as const,
-      products: [
+  const collections = Array.isArray(safeConfig.collections)
+    ? safeConfig.collections
+    : [
         {
-          id: "demo-p-1",
-          title: "Main Title",
-          price: "44.99",
-          imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80",
-          badge: "New",
-          isFavorite: true,
-          buyLink: "#",
+          id: "demo-col-1",
+          title: "Designer Collection",
+          showAllLink: "#",
+          displayType: "horizontal-scroll" as const,
+          products: [
+            {
+              id: "demo-p-1",
+              title: "Main Title",
+              price: "44.99",
+              imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80",
+              badge: "New",
+              isFavorite: true,
+              buyLink: "#",
+            },
+            {
+              id: "demo-p-2",
+              title: "Atom Dress",
+              price: "44.99",
+              imageUrl: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80",
+              badge: "",
+              isFavorite: false,
+              buyLink: "#",
+            },
+            {
+              id: "demo-p-3",
+              title: "Main Blouse",
+              price: "44.99",
+              imageUrl: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80",
+              badge: "Sale",
+              isFavorite: false,
+              buyLink: "#",
+            }
+          ],
         },
         {
-          id: "demo-p-2",
-          title: "Atom Dress",
-          price: "44.99",
-          imageUrl: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80",
-          badge: "",
-          isFavorite: false,
-          buyLink: "#",
-        },
-        {
-          id: "demo-p-3",
-          title: "Main Blouse",
-          price: "44.99",
-          imageUrl: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80",
-          badge: "Sale",
-          isFavorite: false,
-          buyLink: "#",
+          id: "demo-col-2",
+          title: "Top Trends",
+          showAllLink: "#",
+          displayType: "vertical-list" as const,
+          products: [
+            {
+              id: "demo-p-4",
+              title: "KOR Slim-Fit Shirt",
+              price: "24.99",
+              imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&q=80",
+              badge: "",
+              isFavorite: false,
+              buyLink: "#",
+            },
+            {
+              id: "demo-p-5",
+              title: "West Side Blouse",
+              price: "24.99",
+              imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80",
+              badge: "",
+              isFavorite: false,
+              buyLink: "#",
+            }
+          ],
         }
-      ],
-    },
-    {
-      id: "demo-col-2",
-      title: "Top Trends",
-      showAllLink: "#",
-      displayType: "vertical-list" as const,
-      products: [
-        {
-          id: "demo-p-4",
-          title: "KOR Slim-Fit Shirt",
-          price: "24.99",
-          imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&q=80",
-          badge: "",
-          isFavorite: false,
-          buyLink: "#",
-        },
-        {
-          id: "demo-p-5",
-          title: "West Side Blouse",
-          price: "24.99",
-          imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80",
-          badge: "",
-          isFavorite: false,
-          buyLink: "#",
-        }
-      ],
-    }
-  ];
+      ];
 
   const bottomNavShow = safeConfig.bottomNav?.show !== false;
 
@@ -170,11 +172,11 @@ export default function AdvancedStorefrontView({
     }
   };
 
-  const selectedCollection = collections.find(c => c.id === selectedCollectionId);
+  const selectedCollection = collections.filter(Boolean).find(c => c && c.id === selectedCollectionId);
 
   // Combine all products for All Products tab
-  const allProducts = collections.reduce<StorefrontProduct[]>((acc, col) => {
-    return [...acc, ...(col.products || [])];
+  const allProducts = collections.filter(Boolean).reduce<StorefrontProduct[]>((acc, col) => {
+    return [...acc, ...(((col && col.products) || []).filter(Boolean))];
   }, []);
 
   const renderTabContent = () => {
@@ -189,7 +191,7 @@ export default function AdvancedStorefrontView({
           </div>
 
           <div className="grid grid-cols-2 gap-4 p-4">
-            {allProducts.map((p) => (
+            {allProducts.filter(Boolean).map((p) => (
               <a 
                 key={p.id} 
                 href={p.buyLink || "#"}
@@ -318,7 +320,7 @@ export default function AdvancedStorefrontView({
 
           {/* Product Grid */}
           <div className="grid grid-cols-2 gap-4 p-4">
-            {selectedCollection.products.map((p) => (
+            {((selectedCollection && selectedCollection.products) || []).filter(Boolean).map((p) => (
               <a 
                 key={p.id} 
                 href={p.buyLink || "#"}
@@ -386,14 +388,14 @@ export default function AdvancedStorefrontView({
       <div className="flex-1 overflow-y-auto no-scrollbar pb-24">
         {/* Hero Slider Section */}
         <div className="w-full h-[360px] md:h-[400px] relative overflow-hidden bg-zinc-950">
-          {banners.map((banner, index) => {
+          {banners.filter(Boolean).map((banner, index) => {
             const isActive = index === currentBannerIndex;
-            const bgUrl = banner.heroBgUrl || "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80";
-            const sub = banner.heroSub || "SPRING COLLECTION";
-            const title = banner.heroTitle || "20% OFF";
-            const desc = banner.heroDesc || "For Selected Spring Style";
-            const btnText = banner.heroBtnText || "Shop now";
-            const btnLink = banner.heroBtnLink || "#";
+            const bgUrl = (banner && banner.heroBgUrl) || "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80";
+            const sub = (banner && banner.heroSub) || "SPRING COLLECTION";
+            const title = (banner && banner.heroTitle) || "20% OFF";
+            const desc = (banner && banner.heroDesc) || "For Selected Spring Style";
+            const btnText = (banner && banner.heroBtnText) || "Shop now";
+            const btnLink = (banner && banner.heroBtnLink) || "#";
 
             return (
               <div
@@ -449,7 +451,7 @@ export default function AdvancedStorefrontView({
                     {/* Shop now button */}
                     <a 
                       href={btnLink || "#"} 
-                      target={(btnLink && btnLink !== "#" && !btnLink.startsWith("#")) ? "_blank" : undefined}
+                      target={(btnLink && btnLink !== "#" && typeof btnLink === "string" && !btnLink.startsWith("#")) ? "_blank" : undefined}
                       rel="noopener noreferrer"
                       onClick={(e) => {
                         if (btnLink === "#" || !btnLink) {
@@ -469,7 +471,7 @@ export default function AdvancedStorefrontView({
 
         {/* Collections */}
         <div className="p-6 space-y-8">
-          {collections.map((col) => (
+          {collections.filter(Boolean).map((col) => (
             <div key={col.id} id={col.id} className="space-y-4 scroll-mt-6">
               {/* Collection Header */}
               <div className="flex justify-between items-center">
@@ -492,7 +494,7 @@ export default function AdvancedStorefrontView({
               {col.displayType === "horizontal-scroll" ? (
                 /* Horizontal Scroll View */
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory no-scrollbar pb-2 -mx-6 px-6">
-                  {col.products.map((p) => (
+                  {((col && col.products) || []).filter(Boolean).map((p) => (
                     <a 
                       key={p.id} 
                       href={p.buyLink || "#"}
@@ -558,7 +560,7 @@ export default function AdvancedStorefrontView({
               ) : (
                 /* Grid / Vertical Columns View */
                 <div className="grid grid-cols-2 gap-4">
-                  {col.products.map((p) => (
+                  {((col && col.products) || []).filter(Boolean).map((p) => (
                     <a 
                       key={p.id} 
                       href={p.buyLink || "#"}

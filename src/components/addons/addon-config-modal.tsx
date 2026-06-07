@@ -495,7 +495,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
 
   const renderAdvancedStorefrontEditor = () => {
     // Banners (with fallback to singular hero fields for backward compatibility)
-    const banners = configData.banners || (configData.heroBgUrl ? [
+    const banners = (Array.isArray(configData.banners) ? configData.banners : (configData.heroBgUrl ? [
       {
         heroBgUrl: configData.heroBgUrl || "",
         heroSub: configData.heroSub || "",
@@ -504,18 +504,19 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
         heroBtnText: configData.heroBtnText || "",
         heroBtnLink: configData.heroBtnLink || ""
       }
-    ] : []);
+    ] : [])).filter(Boolean);
 
     // Collections
-    const collections = configData.collections || [];
+    const collections = (Array.isArray(configData.collections) ? configData.collections : []).filter(Boolean);
 
     // Bottom Nav
     const bottomNavShow = configData.bottomNav?.show !== false;
-    const bottomNavItems = (configData.bottomNav?.items || [
+    const rawBottomNavItems = configData.bottomNav?.items;
+    const bottomNavItems = (Array.isArray(rawBottomNavItems) ? rawBottomNavItems : [
       { label: "Shop", link: "#", icon: "Shop" },
       { label: "Explore", link: "#", icon: "Explore" },
       { label: "Brands", link: "#", icon: "Brands" }
-    ]).filter((item: any) => item.icon !== "Profile");
+    ]).filter((item: any) => item && item.icon !== "Profile");
 
     const updateBanners = (newBanners: any[]) => {
       setConfigData({
@@ -913,8 +914,8 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                   </div>
 
                   <div className="space-y-2 max-h-[300px] overflow-y-auto no-scrollbar pr-1">
-                    {(col.products || []).map((p: any, pIdx: number) => (
-                      <div key={p.id} className="bg-white border border-zinc-150 rounded-xl p-3 relative space-y-3 shadow-sm">
+                    {((col && col.products) || []).filter(Boolean).map((p: any, pIdx: number) => (
+                      <div key={p && p.id} className="bg-white border border-zinc-150 rounded-xl p-3 relative space-y-3 shadow-sm">
                         {/* Product Action Buttons */}
                         <div className="absolute top-3 right-3 flex items-center gap-1.5">
                           <button
