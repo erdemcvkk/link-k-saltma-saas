@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Music, Play, Pause, Clock, MessageCircle, Image, Star, ArrowLeft, SkipBack, SkipForward, Volume2, VolumeX, ListMusic, MoreHorizontal, Laptop, Sliders } from "lucide-react";
+import { Music, Play, Pause, Clock, MessageCircle, Image, Star, ArrowLeft, SkipBack, SkipForward, Volume2, VolumeX, ListMusic, MoreHorizontal, Laptop, Sliders, Rewind, FastForward, Share2, Airplay, SlidersHorizontal } from "lucide-react";
 
 function getMediaEmbed(url: string, accentColor?: string, playing?: boolean, onClose?: () => void) {
   if (!url) return null;
@@ -922,18 +922,9 @@ export default function PlayableAddon({
           </div>
 
           {/* Glassmorphic Player Controls Bar */}
-          <div 
-            className="w-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-between shadow-2xl relative z-10 mt-auto transition-all"
-            style={{ 
-              borderRadius: compactMediaEmbed ? "2rem" : "9999px",
-              paddingTop: compactMediaEmbed ? "0.25rem" : "0.625rem",
-              paddingBottom: compactMediaEmbed ? "0.25rem" : "0.625rem",
-              paddingLeft: "1rem",
-              paddingRight: "1rem"
-            }}
-          >
-            {/* Left Controls: Prev, Play/Pause, Next */}
-            <div className="flex items-center gap-3 shrink-0">
+          <div className="w-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-full py-2 px-5 flex items-center justify-between shadow-2xl relative z-10 mt-auto">
+            {/* Left Controls: Prev (Rewind), Play/Pause, Next (FastForward) */}
+            <div className="flex items-center gap-4 shrink-0">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -941,9 +932,9 @@ export default function PlayableAddon({
                   setCurrentTrackIndex(prevIdx);
                   setIsPlaying(false);
                 }}
-                className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
+                className="hover:scale-110 text-white/80 hover:text-white transition-all cursor-pointer bg-transparent border-0 outline-none p-0 flex items-center"
               >
-                <SkipBack size={16} className="fill-current" />
+                <Rewind size={18} className="fill-current" />
               </button>
               
               <button
@@ -951,12 +942,12 @@ export default function PlayableAddon({
                   e.stopPropagation();
                   handlePlayPause();
                 }}
-                className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-transform shadow-lg cursor-pointer"
+                className="hover:scale-110 text-white/80 hover:text-white transition-all cursor-pointer bg-transparent border-0 outline-none p-0 flex items-center"
               >
                 {isPlaying ? (
-                  <Pause size={12} className="fill-black" />
+                  <Pause size={18} className="fill-current" />
                 ) : (
-                  <Play size={12} className="fill-black ml-0.5" />
+                  <Play size={18} className="fill-current ml-0.5" />
                 )}
               </button>
 
@@ -967,82 +958,89 @@ export default function PlayableAddon({
                   setCurrentTrackIndex(nextIdx);
                   setIsPlaying(false);
                 }}
-                className="p-1.5 rounded-full hover:bg-white/10 text-white/80 hover:text-white transition-colors cursor-pointer"
+                className="hover:scale-110 text-white/80 hover:text-white transition-all cursor-pointer bg-transparent border-0 outline-none p-0 flex items-center"
               >
-                <SkipForward size={16} className="fill-current" />
+                <FastForward size={18} className="fill-current" />
               </button>
             </div>
 
-            {/* Center: Mini Status Pill or Compact Spotify Embed */}
-            {compactMediaEmbed ? (
-              <div className="flex-1 mx-3 max-w-[220px] xs:max-w-[250px] rounded-xl overflow-hidden h-[80px] shadow-lg flex items-center justify-center shrink-0">
-                {compactMediaEmbed}
-              </div>
-            ) : (
-              <div className="flex-1 max-w-[170px] xs:max-w-[200px] bg-black/40 border border-white/10 rounded-full px-2.5 py-1 flex items-center gap-2.5 relative overflow-hidden h-9">
-                <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 bg-zinc-850">
+            {/* Center: Mini Status Pill */}
+            <div className="flex-1 flex justify-center px-3">
+              <div 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (url && !isDirectAudio) {
+                    window.open(url, "_blank", "noopener,noreferrer");
+                  }
+                }}
+                title={url && !isDirectAudio ? (config.lang === "tr" ? "Spotify'da Aç" : "Open on Spotify") : undefined}
+                className={`w-full max-w-[240px] bg-black/60 border border-white/10 rounded-2xl px-3 py-1.5 flex items-center gap-3 relative overflow-hidden h-11 transition-all ${url && !isDirectAudio ? "cursor-pointer hover:bg-black/80" : ""}`}
+              >
+                <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 bg-zinc-800">
                   <img
                     src={activeTrack.albumCoverUrl || avatarUrl || "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&q=80"}
                     className="w-full h-full object-cover"
                     alt="mini cover"
                   />
                 </div>
-                <div className="flex-1 min-w-0 flex flex-col justify-center">
-                  <span className="text-[9px] font-bold text-white truncate leading-tight">
+                <div className="flex-1 min-w-0 flex flex-col justify-center text-left">
+                  <span className="text-[10px] font-bold text-white truncate leading-tight">
                     {activeTrack.artistName || (config.lang === "tr" ? "Sanatçı" : "Artist")}
                   </span>
-                  <span className="text-[7px] text-zinc-400 truncate leading-none mt-0.5">
+                  <span className="text-[8px] text-zinc-400 truncate leading-none mt-0.5">
                     {activeTrack.trackName || (config.lang === "tr" ? "Şarkı" : "Track")}
                   </span>
                 </div>
                 
-                <div className="flex items-center gap-0.5 shrink-0 pr-1">
+                <div className="flex items-center gap-1.5 shrink-0">
                   {isPlaying ? (
-                    <div className="flex items-end gap-[2px] h-3">
+                    <div className="flex items-end gap-[2px] h-3 pr-1">
                       <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-2" style={{ animationDuration: '0.6s' }}></span>
                       <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-3" style={{ animationDuration: '0.8s', animationDelay: '0.1s' }}></span>
                       <span className="w-[1.5px] bg-[#1DB954] rounded-full animate-bounce h-1.5" style={{ animationDuration: '0.5s', animationDelay: '0.2s' }}></span>
                     </div>
                   ) : (
-                    <Volume2 size={10} className="text-zinc-400" />
+                    <div className="flex items-end gap-[2px] h-3 pr-1 opacity-50">
+                      <span className="w-[1.5px] bg-[#1DB954] rounded-full h-1"></span>
+                      <span className="w-[1.5px] bg-[#1DB954] rounded-full h-2"></span>
+                      <span className="w-[1.5px] bg-[#1DB954] rounded-full h-1"></span>
+                    </div>
                   )}
-                  <MoreHorizontal size={10} className="text-zinc-500 ml-1 cursor-pointer hover:text-white" />
+                  <MoreHorizontal size={12} className="text-zinc-400 cursor-pointer hover:text-white" />
                 </div>
 
-                {/* Progress line inside pill */}
-                {isDirectAudio && (
-                  <div className="absolute bottom-0 inset-x-0 h-0.5 bg-white/20">
-                    <div
-                      className="h-full bg-white transition-all duration-300"
-                      style={{ width: `${progressPercent}%` }}
-                    />
-                  </div>
-                )}
+                {/* Progress line inside pill (works for both direct and simulated playing) */}
+                <div className="absolute bottom-0 inset-x-0 h-0.5 bg-white/20">
+                  <div
+                    className="h-full bg-white transition-all duration-300"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
               </div>
-            )}
+            </div>
 
-            {/* Right Controls: CAST, LIST, MUTE */}
-            <div className="flex items-center gap-2.5 text-white/75 shrink-0">
-              <button className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer">
-                <Laptop size={12} />
+            {/* Right Controls: Airplay, SlidersHorizontal, Volume */}
+            <div className="flex items-center gap-3 text-white/75 shrink-0">
+              <button className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer bg-transparent border-0 outline-none p-0 flex items-center">
+                <Airplay size={14} />
               </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsPlaylistOpen(!isPlaylistOpen);
                 }}
-                className={`p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer ${isPlaylistOpen ? "text-[#1DB954] bg-white/10" : "hover:text-white"}`}
+                className={`p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer bg-transparent border-0 outline-none p-0 flex items-center ${isPlaylistOpen ? "text-[#1DB954] bg-white/10" : "hover:text-white"}`}
               >
-                <ListMusic size={12} />
+                <SlidersHorizontal size={14} />
               </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsMuted(!isMuted);
                 }}
-                className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+                className="hover:text-white p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer bg-transparent border-0 outline-none p-0 flex items-center"
               >
-                {isMuted ? <VolumeX size={12} className="text-red-400" /> : <Volume2 size={12} />}
+                {isMuted ? <VolumeX size={14} className="text-red-400" /> : <Volume2 size={14} />}
               </button>
             </div>
           </div>
