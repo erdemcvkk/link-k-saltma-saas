@@ -63,17 +63,19 @@ export default function AdvancedStorefrontView({
   const [activeTab, setActiveTab] = useState<"shop" | "explore" | "brands">("shop");
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
+  const safeConfig = config || {};
+
   // Fallback banners construction
-  const banners: StorefrontBanner[] = config.banners && config.banners.length > 0
-    ? config.banners
+  const banners: StorefrontBanner[] = safeConfig.banners && safeConfig.banners.length > 0
+    ? safeConfig.banners
     : [
         {
-          heroBgUrl: config.heroBgUrl || "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
-          heroSub: config.heroSub || "SPRING COLLECTION",
-          heroTitle: config.heroTitle || "20% OFF",
-          heroDesc: config.heroDesc || "For Selected Spring Style",
-          heroBtnText: config.heroBtnText || "Shop now",
-          heroBtnLink: config.heroBtnLink || "#",
+          heroBgUrl: safeConfig.heroBgUrl || "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
+          heroSub: safeConfig.heroSub || "SPRING COLLECTION",
+          heroTitle: safeConfig.heroTitle || "20% OFF",
+          heroDesc: safeConfig.heroDesc || "For Selected Spring Style",
+          heroBtnText: safeConfig.heroBtnText || "Shop now",
+          heroBtnLink: safeConfig.heroBtnLink || "#",
         },
       ];
 
@@ -87,12 +89,12 @@ export default function AdvancedStorefrontView({
   }, [banners.length]);
 
   // Brand Info
-  const brandName = config.brandName || "Moda Boutique";
-  const brandDescription = config.brandDescription || "Premium Wear & Design Studio since 2018.";
-  const brandLogoUrl = config.brandLogoUrl || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=150&q=80";
-  const brandContact = config.brandContact || "mailto:info@modaboutique.com";
+  const brandName = safeConfig.brandName || "Moda Boutique";
+  const brandDescription = safeConfig.brandDescription || "Premium Wear & Design Studio since 2018.";
+  const brandLogoUrl = safeConfig.brandLogoUrl || "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=150&q=80";
+  const brandContact = safeConfig.brandContact || "mailto:info@modaboutique.com";
 
-  const collections = config.collections || [
+  const collections = safeConfig.collections || [
     {
       id: "demo-col-1",
       title: "Designer Collection",
@@ -156,7 +158,7 @@ export default function AdvancedStorefrontView({
     }
   ];
 
-  const bottomNavShow = config.bottomNav?.show !== false;
+  const bottomNavShow = safeConfig.bottomNav?.show !== false;
 
   const handleProductClick = (product: StorefrontProduct) => {
     if (onProductClick) {

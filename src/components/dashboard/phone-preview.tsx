@@ -126,7 +126,8 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
 
     let parsedConfig: any = {};
     if (activeAddon.settings) {
-      parsedConfig = typeof activeAddon.settings === "string" ? JSON.parse(activeAddon.settings) : activeAddon.settings;
+      const rawParsed = typeof activeAddon.settings === "string" ? JSON.parse(activeAddon.settings) : activeAddon.settings;
+      parsedConfig = rawParsed || {};
     }
 
     const type = activeAddon.addonType;

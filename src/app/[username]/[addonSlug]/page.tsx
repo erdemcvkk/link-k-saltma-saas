@@ -79,7 +79,8 @@ export default async function AddonPage({
   // Find the matching active/draft addon by slug
   const matchingAddon = addons.find(a => {
   if (!a.isActive && previewAddons !== "true") return false;
-  const parsed = a.settings ? (typeof a.settings === "string" ? JSON.parse(a.settings) : a.settings) : {};
+  const rawParsed = a.settings ? (typeof a.settings === "string" ? JSON.parse(a.settings) : a.settings) : {};
+  const parsed = rawParsed || {};
   const cSlug = (parsed.customSlug || getDefaultSlug(a.addonType)).toLowerCase();
   return cSlug === addonSlug.toLowerCase();
   });
@@ -129,7 +130,8 @@ export default async function AddonPage({
 
   let parsedConfig: any = { theme: 'classic' };
   if (matchingAddon.settings) {
-    parsedConfig = typeof matchingAddon.settings === "string" ? JSON.parse(matchingAddon.settings) : matchingAddon.settings;
+    const rawParsed = typeof matchingAddon.settings === "string" ? JSON.parse(matchingAddon.settings) : matchingAddon.settings;
+    parsedConfig = rawParsed || { theme: 'classic' };
   }
 
   if (matchingAddon.addonType === "ADVANCED_STOREFRONT") {

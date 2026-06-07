@@ -565,7 +565,8 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, isDark: boolean, products: any[], username: string, isCompactMode: boolean) {
   let configData: any = {};
   if (addon.settings) {
-    configData = typeof addon.settings === "string" ? JSON.parse(addon.settings) : addon.settings;
+    const parsed = typeof addon.settings === "string" ? JSON.parse(addon.settings) : addon.settings;
+    configData = parsed || {};
   }
 
   const type = addon.addonType;
