@@ -236,21 +236,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     mockProducts: []
   },
   { 
-    id: "NEWSLETTER", 
-    name: "Bülten Aboneliği", 
-    desc: "Takipçilerinizden e-posta toplayarak bülten aboneleri kazanın.", 
-    color: "bg-purple-500",
-    theme: "glassmorphism",
-    price: "99",
-    username: "@artisan.studio",
-    bio: "Dijital Sanatçı & Fotoğrafçı",
-    avatarUrl: "/placeholder.png",
-    category: "Etkileşim & Araçlar",
-    mockProducts: [
-      { id: "n1", title: "Haftalık Tasarım Bülteni", type: "Abonelik", price: "99", imageUrl: "/placeholder.png" },
-    ]
-  },
-  { 
     id: "RETRO_CASSETTE", 
     name: "Retro Kaset Çalar", 
     desc: "90'ların nostaljik kaset görünümünde, dönen makaralı ses oynatıcısı.", 
@@ -259,32 +244,6 @@ export const ADDON_TYPES: AddonTypeData[] = [
     price: "99",
     username: "@vintage.tapes",
     bio: "90s Music Curator",
-    avatarUrl: "/placeholder.png",
-    category: "Müzik & Audio",
-    mockProducts: []
-  },
-  { 
-    id: "MINIMAL_DARK_AUDIO", 
-    name: "Minimalist Dark Player", 
-    desc: "Siyahın en asil tonunda, sade çizgilere sahip ultra modern müzik çalar.", 
-    color: "bg-zinc-900",
-    theme: "classic",
-    price: "99",
-    username: "@minimal.dark",
-    bio: "Techno & Ambient Artist",
-    avatarUrl: "/placeholder.png",
-    category: "Müzik & Audio",
-    mockProducts: []
-  },
-  { 
-    id: "VINTAGE_RADIO", 
-    name: "Antika Radyo Oynatıcı", 
-    desc: "Klasik ahşap radyo ve frekans ayarlı nostaljik ses modülü.", 
-    color: "bg-amber-800",
-    theme: "classic",
-    price: "99",
-    username: "@antique.radio",
-    bio: "Classic Rock & Jazz collector",
     avatarUrl: "/placeholder.png",
     category: "Müzik & Audio",
     mockProducts: []
@@ -766,76 +725,6 @@ export default function EklentilerClient({ products, settings, userId = null, db
         <span className="text-[10px] ml-0.5">▶</span>
       </button>
       <span className="text-xs cursor-pointer">⏭</span>
-    </div>
-  </div>
-  ) : addon.id === "MINIMAL_DARK_AUDIO" ? (
-  <div className="w-full h-full bg-black flex flex-col p-6 text-white relative z-0">
-    <div className="flex flex-col items-center mt-6 mb-4">
-      <div className="w-16 h-16 bg-zinc-900 rounded-2xl overflow-hidden border border-zinc-800 shadow-xl">
-        <img src={addon.avatarUrl} className="w-full h-full object-cover" />
-      </div>
-      <span className="text-xs font-bold mt-2 text-white">{addon.username}</span>
-      <p className="text-[9px] text-zinc-500 mt-0.5">{addon.bio}</p>
-    </div>
-    
-    {/* Dark Player Card */}
-    <div className="bg-zinc-950 border border-zinc-900 rounded-2xl p-4 mt-2 space-y-3 shadow-2xl">
-      <div className="flex items-center justify-between">
-        <div>
-          <h4 className="text-xs font-bold text-zinc-200">Minimalist Dark Track</h4>
-          <p className="text-[9px] text-zinc-555">Techno & Ambient</p>
-        </div>
-        <button className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center border-0 cursor-pointer shadow-lg">
-          <span className="text-xs ml-0.5">▶</span>
-        </button>
-      </div>
-      
-      {/* Dark Progress Bar */}
-      <div className="w-full h-0.5 bg-zinc-900 rounded-full overflow-hidden">
-        <div className="w-2/3 h-full bg-white rounded-full"></div>
-      </div>
-    </div>
-  </div>
-  ) : addon.id === "VINTAGE_RADIO" ? (
-  <div className="w-full h-full bg-[#231510] flex flex-col p-6 text-[#d4a373] relative z-0">
-    <div className="flex flex-col items-center mt-6 mb-2">
-      <span className="text-xs font-bold text-[#fefae0]">{addon.username}</span>
-      <p className="text-[9px] text-[#faedcd]/80 mt-0.5">{addon.bio}</p>
-    </div>
-    
-    {/* Vintage Radio Body */}
-    <div className="bg-[#3b2015] border-2 border-[#26130b] rounded-2xl p-3 w-full max-w-[240px] mx-auto space-y-3 shadow-2xl relative">
-      {/* Dial area */}
-      <div className="bg-[#fefae0] rounded-lg p-1.5 border border-[#26130b] flex items-center justify-between text-zinc-900 font-mono">
-        <div className="text-[8px] font-bold">540 800 AM</div>
-        <div className="w-0.5 h-3 bg-red-650"></div>
-        <div className="text-[8px] font-bold">88 108 FM</div>
-      </div>
-      
-      {/* Speaker Grill */}
-      <div className="h-8 bg-zinc-950/30 rounded-lg border border-[#26130b]/50 grid grid-cols-6 gap-0.5 p-1">
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div key={i} className="bg-[#26130b]/60 rounded-sm"></div>
-        ))}
-      </div>
-      
-      <div className="text-center pt-0.5">
-        <h4 className="text-[10px] font-black uppercase tracking-wider text-[#fefae0]">Classic Radio Stream</h4>
-        <p className="text-[8px] text-[#faedcd]/70 mt-0.5">Nostalgic FM Tuner</p>
-      </div>
-    </div>
-    
-    {/* Controls */}
-    <div className="flex items-center justify-center gap-3 mt-auto pb-4">
-      <div className="w-5 h-5 rounded-full bg-[#26130b] border border-[#d4a373]/20 flex items-center justify-center">
-        <div className="w-1.5 h-1.5 rounded-full bg-[#d4a373]"></div>
-      </div>
-      <button className="w-8 h-8 rounded-full bg-[#d4a373] text-[#231510] flex items-center justify-center border-0 shadow-md cursor-pointer">
-        <span className="text-[10px] ml-0.5">▶</span>
-      </button>
-      <div className="w-5 h-5 rounded-full bg-[#26130b] border border-[#d4a373]/20 flex items-center justify-center">
-        <div className="w-1.5 h-1.5 rounded-full bg-[#d4a373]"></div>
-      </div>
     </div>
   </div>
   ) : addon.id === "PORTFOLIO_GALLERY" ? (

@@ -55,8 +55,6 @@ export default function PluginsClient({
   const getAddonName = (type: string, lang: string) => {
     switch (type) {
       case "RETRO_CASSETTE": return lang === "tr" ? "Retro Kaset Çalar" : "Retro Cassette Player";
-      case "MINIMAL_DARK_AUDIO": return lang === "tr" ? "Minimalist Dark Player" : "Minimalist Dark Player";
-      case "VINTAGE_RADIO": return lang === "tr" ? "Antika Radyo Oynatıcı" : "Vintage Radio Player";
       case "SPOTIFY_CLASSIC": return lang === "tr" ? "Classic Spotify Player" : "Classic Spotify Player";
       case "VINYL_RETRO": return lang === "tr" ? "Retro Plak Çalar" : "Retro Vinyl Player";
       case "GLASS_AUDIO": return lang === "tr" ? "Modern Cam Efekti" : "Modern Glass Effect";
@@ -72,7 +70,6 @@ export default function PluginsClient({
       case "ORGANIC": return lang === "tr" ? "Doğal Tasarım Vitrin" : "Organic Showcase";
       case "RETRO": return lang === "tr" ? "Retro Arcade Vitrin" : "Retro Arcade Gallery";
       case "Y2K": return lang === "tr" ? "Y2K Estetik Vitrin" : "Y2K Aesthetic Showcase";
-      case "NEWSLETTER": return lang === "tr" ? "Bülten Kaydı" : "Newsletter signup";
       case "QA": return lang === "tr" ? "Soru & Cevap" : "Q&A Module";
       default: return type;
     }
@@ -159,13 +156,10 @@ export default function PluginsClient({
     if (type === "ORGANIC") return "organic";
     if (type === "RETRO") return "retro";
     if (type === "Y2K") return "y2k";
-    if (type === "NEWSLETTER") return "newsletter";
     if (type === "QA") return "qa";
     if (type === "PREMIUM_VIDEO") return "masterclass";
     if (type === "CORP_EXEC") return "corporate";
     if (type === "RETRO_CASSETTE") return "retro-cassette";
-    if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
-    if (type === "VINTAGE_RADIO") return "vintage-radio";
     if (type === "SPOTIFY_CLASSIC") return "spotify-player";
     if (type === "VINYL_RETRO") return "vinyl-player";
     if (type === "GLASS_AUDIO") return "glass-audio";

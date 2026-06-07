@@ -54,7 +54,6 @@ export async function POST(req: Request) {
     // 2. Modülün varsayılan temasını belirle
     let defaultTheme = "classic";
     if (moduleId === "MINI_STORE") defaultTheme = "vibrant-pop";
-    if (moduleId === "NEWSLETTER") defaultTheme = "glassmorphism";
     if (moduleId === "QA") defaultTheme = "dark-drill";
     if (moduleId === "NEO_BRUTAL") defaultTheme = "neo-brutalism";
     if (moduleId === "ORGANIC") defaultTheme = "organic-earth";

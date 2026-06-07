@@ -36,7 +36,6 @@ export default async function CheckoutSuccessPage({ searchParams }: PageProps) {
     GLASS_AUDIO: "Modern Cam Efekti",
     NEON_CYBERPUNK: "Neon Cyberpunk Player",
     FAQ: "Sıkça Sorulan Sorular",
-    NEWSLETTER: "Bülten Aboneliği",
   };
 
   const currentModuleName = moduleId ? (moduleNames[moduleId] || moduleId) : "Premium Eklenti";

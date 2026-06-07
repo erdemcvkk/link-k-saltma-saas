@@ -72,13 +72,10 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     if (type === "ORGANIC") return "organic";
     if (type === "RETRO") return "retro";
     if (type === "Y2K") return "y2k";
-    if (type === "NEWSLETTER") return "newsletter";
     if (type === "QA") return "qa";
     if (type === "PREMIUM_VIDEO") return "masterclass";
     if (type === "CORP_EXEC") return "corporate";
     if (type === "RETRO_CASSETTE") return "retro-cassette";
-    if (type === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
-    if (type === "VINTAGE_RADIO") return "vintage-radio";
     if (type === "SPOTIFY_CLASSIC") return "spotify-player";
     if (type === "VINYL_RETRO") return "vinyl-player";
     if (type === "GLASS_AUDIO") return "glass-audio";
@@ -834,15 +831,12 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       case "CORP_EXEC": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
       case "PREMIUM_VIDEO": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Premium Video" : "Premium Video" };
       case "QA": return { icon: <FileQuestion className="h-5 w-5" />, title: lang === "tr" ? "Soru-Cevap" : "Q&A" };
-      case "NEWSLETTER": return { icon: <Mail className="h-5 w-5" />, title: lang === "tr" ? "Bülten" : "Newsletter" };
       case "COUNTDOWN": return { icon: <Clock className="h-5 w-5" />, title: lang === "tr" ? "Geri Sayım" : "Countdown" };
       case "PORTFOLIO": return { icon: <Briefcase className="h-5 w-5" />, title: lang === "tr" ? "Portfolyo" : "Portfolio" };
       case "FAQ": return { icon: <HelpCircle className="h-5 w-5" />, title: "FAQ" };
       case "MAP": return { icon: <MapPin className="h-5 w-5" />, title: lang === "tr" ? "Harita" : "Map" };
       case "WHATSAPP": return { icon: <MessageCircle className="h-5 w-5" />, title: "WhatsApp" };
       case "RETRO_CASSETTE": return { icon: <Music className="h-5 w-5" />, title: "Retro Kaset Çalar" };
-      case "MINIMAL_DARK_AUDIO": return { icon: <Music className="h-5 w-5" />, title: "Minimalist Dark Player" };
-      case "VINTAGE_RADIO": return { icon: <Music className="h-5 w-5" />, title: "Antika Radyo Oynatıcı" };
       case "SPOTIFY_CLASSIC": return { icon: <Music className="h-5 w-5" />, title: "Spotify Classic Player" };
       case "VINYL_RETRO": return { icon: <Music className="h-5 w-5" />, title: "Retro Plak Çalar" };
       case "GLASS_AUDIO": return { icon: <Music className="h-5 w-5" />, title: "Modern Cam Efekti" };
@@ -1206,29 +1200,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   </>
   );
   break;
-  case "NEWSLETTER":
-  specificFields = (
-  <>
-  {renderInput("title", lang === "tr" ? "Modül Başlığı" : "Module Title", lang === "tr" ? "Haftalık Bülten" : "Weekly Newsletter")}
-  {renderTextarea("incentiveMsg", lang === "tr" ? "Açıklama Metni" : "Description", lang === "tr" ? "Spam yok, sadece kaliteli içerik." : "No spam, just good content.")}
-  <div className="space-y-1.5 mb-4">
-    <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
-      {lang === "tr" ? "Abonelik Tipi" : "Subscription Type"}
-    </label>
-    <select
-      value={configData.integrationType || "MAILCHIMP"}
-      onChange={(e) => setConfigData({ ...configData, integrationType: e.target.value })}
-      className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all shadow-sm"
-    >
-      <option value="MAILCHIMP">{lang === "tr" ? "Yönlendirme Linki (Mailchimp, Substack vb.)" : "Redirect Link (Mailchimp, Substack, etc.)"}</option>
-      <option value="DIRECT">{lang === "tr" ? "Doğrudan Veritabanına Kayıt (Simüle Edilir)" : "Direct Database Registration (Simulated)"}</option>
-    </select>
-  </div>
-  {(configData.integrationType || "MAILCHIMP") === "MAILCHIMP" && renderInput("serviceUrl", lang === "tr" ? "Yönlendirme Linki (Mailchimp vb.)" : "Redirect URL", "https://mailchimp.com/...")}
-  {renderInput("buttonText", lang === "tr" ? "Buton Yazısı" : "Subscribe Button Text", lang === "tr" ? "Abone Ol" : "Subscribe")}
-  </>
-  );
-  break;
 
   case "PREMIUM_VIDEO":
     specificFields = (
@@ -1314,10 +1285,8 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
  break;
  // ── MUSIC & AUDIO PLUGINS ──
  case "RETRO_CASSETTE":
-  case "MINIMAL_DARK_AUDIO":
-  case "VINTAGE_RADIO":
-  case "SPOTIFY_CLASSIC":
-  case "VINYL_RETRO":
+ case "SPOTIFY_CLASSIC":
+ case "VINYL_RETRO":
  case "GLASS_AUDIO":
  case "NEON_CYBERPUNK":  case "MUSIC_PODCAST":
  specificFields = (
@@ -1623,26 +1592,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       </div>
     );
 
-  case "NEWSLETTER":
-  return (
-    <div className="w-full h-full bg-zinc-50 flex items-center justify-center p-3 md:p-6">
-      <div className="w-full p-4 bg-white rounded-3xl border border-zinc-200 shadow-lg flex flex-col items-center text-center space-y-4">
-        <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center mb-1 text-xl">
-          ✉️
-        </div>
-        <div>
-          <h3 className="font-bold text-lg text-slate-800">{configData.title || (lang === "tr" ? "Haftalık Bülten" : "Weekly Newsletter")}</h3>
-          <p className="text-xs text-slate-500 mt-1">{configData.incentiveMsg || (lang === "tr" ? "Spam yok, sadece kaliteli içerik." : "No spam, just good content.")}</p>
-        </div>
-        <div className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-3 text-left text-xs text-zinc-400">
-          email@example.com
-        </div>
-        <div className="w-full py-3 rounded-xl bg-slate-900 text-white font-bold text-sm shadow-md text-center">
-          {configData.buttonText || (lang === "tr" ? "Abone Ol" : "Subscribe")}
-        </div>
-      </div>
-    </div>
-  );
 
   case "QA":
   {
@@ -1706,8 +1655,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   );
   case "PREMIUM_VIDEO":
   case "RETRO_CASSETTE":
-  case "MINIMAL_DARK_AUDIO":
-  case "VINTAGE_RADIO":
   case "SPOTIFY_CLASSIC":
   case "VINYL_RETRO":
     case "GLASS_AUDIO":
@@ -1722,8 +1669,8 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
         const displayAvatar = configData.avatarUrl || addon.settings?.avatarUrl || "";
         const displayUsername = configData.username || addon.settings?.username || ("@" + username);
         const displayBio = configData.bio || addon.settings?.bio || "";
-        const displayTitle = configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "");
-        const displayDesc = configData.description || (type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "MINIMAL_DARK_AUDIO" ? "Siyahın asil tonunda ultra modern tasarım." : type === "VINTAGE_RADIO" ? "Klasik ahşap radyo kadranı tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "");
+        const displayTitle = configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "");
+        const displayDesc = configData.description || (type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "");
 
         return (
           <div className="w-full h-full bg-zinc-950 flex flex-col justify-between overflow-y-auto no-scrollbar">

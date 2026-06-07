@@ -262,34 +262,15 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
       );
     }
 
-    // 3.5 Newsletter Addon
-    if (type === "NEWSLETTER") {
-      return (
-        <div className="w-full h-full bg-emerald-50/20 flex items-center justify-center p-4">
-          <div className="w-full bg-white p-4 rounded-3xl shadow-md flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center mb-3 text-xl">
-              ✉️
-            </div>
-            <h1 className="text-sm font-black text-slate-800 mb-1">{parsedConfig.title || "Haftalık Bülten"}</h1>
-            <p className="text-[10px] text-slate-500 mb-4">{parsedConfig.incentiveMsg || "Spam yok, sadece kaliteli içerik."}</p>
-            <div className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-2 text-left text-[10px] text-zinc-400 mb-3">
-              email@example.com
-            </div>
-            <button className="w-full py-2 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-colors shadow-sm">
-              {parsedConfig.buttonText || "Abone Ol"}
-            </button>
-          </div>
-        </div>
-      );
-    }
+
 
     // 4. Premium Video / Audio / Portfolio / Countdown Addons
-    if (["PREMIUM_VIDEO", "SPOTIFY_CLASSIC", "VINYL_RETRO", "GLASS_AUDIO", "NEON_CYBERPUNK", "MUSIC_PODCAST", "PORTFOLIO_GALLERY", "COUNTDOWN_LAUNCH", "RETRO_CASSETTE", "MINIMAL_DARK_AUDIO", "VINTAGE_RADIO"].includes(type)) {
+    if (["PREMIUM_VIDEO", "SPOTIFY_CLASSIC", "VINYL_RETRO", "GLASS_AUDIO", "NEON_CYBERPUNK", "MUSIC_PODCAST", "PORTFOLIO_GALLERY", "COUNTDOWN_LAUNCH", "RETRO_CASSETTE"].includes(type)) {
       const displayAvatar = parsedConfig.avatarUrl || data.avatarUrl || "";
       const displayUsername = parsedConfig.username || ("@" + data.username);
       const displayBio = parsedConfig.bio || data.bio || "";
-      const displayTitle = parsedConfig.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "");
-      const displayDesc = parsedConfig.description || (type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "MINIMAL_DARK_AUDIO" ? "Siyahın asil tonunda ultra modern tasarım." : type === "VINTAGE_RADIO" ? "Klasik ahşap radyo kadranı tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "");
+      const displayTitle = parsedConfig.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : type === "MUSIC_PODCAST" ? "Müzik & Podcast Çalar" : type === "PORTFOLIO_GALLERY" ? "Portfolyo & Galeri" : type === "COUNTDOWN_LAUNCH" ? "Geri Sayım & Lansman" : type === "PREMIUM_VIDEO" ? "Premium Video" : "");
+      const displayDesc = parsedConfig.description || (type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "");
 
       return (
         <div className="w-full h-full bg-zinc-950 flex flex-col justify-between overflow-y-auto no-scrollbar">

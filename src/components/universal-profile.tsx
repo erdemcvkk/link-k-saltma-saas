@@ -580,11 +580,8 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     if (t === "ORGANIC") return "organic";
     if (t === "RETRO") return "retro";
     if (t === "Y2K") return "y2k";
-    if (t === "NEWSLETTER") return "newsletter";
     if (t === "QA") return "qa";
     if (t === "RETRO_CASSETTE") return "retro-cassette";
-    if (t === "MINIMAL_DARK_AUDIO") return "minimal-dark-audio";
-    if (t === "VINTAGE_RADIO") return "vintage-radio";
     if (t === "PREMIUM_VIDEO") return "masterclass";
     if (t === "SPOTIFY_CLASSIC") return "spotify-player";
     if (t === "VINYL_RETRO") return "vinyl-player";
@@ -652,26 +649,6 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
         );
       }
 
-    case "NEWSLETTER":
-      return (
-        <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-              <Mail className="h-5 w-5 text-emerald-500" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-slate-800">{configData.title || "Haftalık Bülten"}</h4>
-              <p className="text-xs opacity-70 mt-0.5">{configData.incentiveMsg || "Spam yok, sadece kaliteli içerik."}</p>
-            </div>
-          </div>
-          <div className="w-full bg-black/5 border border-black/10 rounded-lg p-2 h-10 flex items-center">
-            <span className="text-xs opacity-45">email@example.com</span>
-          </div>
-          <div className={btnClassName}>
-            {configData.buttonText || "Abone Ol"}
-          </div>
-        </CardWrapper>
-      );
     case "PREMIUM_VIDEO":
       return (
         <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
@@ -772,8 +749,6 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
         </CardWrapper>
       );
     case "RETRO_CASSETTE":
-    case "MINIMAL_DARK_AUDIO":
-    case "VINTAGE_RADIO":
     case "SPOTIFY_CLASSIC":
     case "VINYL_RETRO":
     case "GLASS_AUDIO":
@@ -787,7 +762,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
                 <Music className="h-5 w-5 text-purple-650" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-slate-800">{configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "MINIMAL_DARK_AUDIO" ? "Minimalist Dark Player" : type === "VINTAGE_RADIO" ? "Antika Radyo Oynatıcı" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : "Müzik & Podcast Çalar")}</h4>
+                <h4 className="text-sm font-bold text-slate-800">{configData.title || (type === "RETRO_CASSETTE" ? "Retro Kaset Çalar" : type === "SPOTIFY_CLASSIC" ? "Classic Spotify Player" : type === "VINYL_RETRO" ? "Retro Plak Çalar" : type === "GLASS_AUDIO" ? "Modern Cam Efekti" : type === "NEON_CYBERPUNK" ? "Neon Cyberpunk Player" : "Müzik & Podcast Çalar")}</h4>
                 <p className="text-xs opacity-70 mt-0.5 truncate max-w-[200px]">{configData.description || "Müziklerimi dinlemek için tıklayın."}</p>
               </div>
             </div>

@@ -1881,7 +1881,6 @@ export async function purchaseAddon(userId: string, addonType: string) {
 
   let defaultTheme = "classic";
   if (addonType === "MINI_STORE") defaultTheme = "vibrant-pop";
-  if (addonType === "NEWSLETTER") defaultTheme = "glassmorphism";
   if (addonType === "QA") defaultTheme = "dark-drill";
   if (addonType === "NEO_BRUTAL") defaultTheme = "neo-brutalism";
   if (addonType === "ORGANIC") defaultTheme = "organic-earth";
