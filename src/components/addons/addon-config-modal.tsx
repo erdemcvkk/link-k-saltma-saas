@@ -7,6 +7,7 @@ import { X, Loader2, Save, Store, Calendar, FileQuestion, Mail, Heart, Clock, Br
 import StorefrontPreview from "@/components/storefront-preview";
 import AdvancedStorefrontView from "./advanced-storefront-view";
 import PlayableAddon from "./playable-addon";
+import MusicPlayerModule from "./MusicPlayerModule";
 
 interface AddonConfigModalProps {
  addon: {
@@ -2151,17 +2152,89 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
             <Music className="h-4 w-4" />
             {lang === "tr" ? "Premium Müzik Oynatıcı Ayarları" : "Premium Audio Player Settings"}
           </h4>
-          {renderInput("title", lang === "tr" ? "Modül Başlığı" : "Module Title", lang === "tr" ? "Premium Müzik Oynatıcı" : "Premium Audio Player")}
-          {renderTextarea("description", lang === "tr" ? "Açıklama" : "Description", lang === "tr" ? "Premium müzik listesi..." : "Premium music playlist...")}
+          {renderInput("trackTitle", lang === "tr" ? "Şarkı Adı" : "Song Title", lang === "tr" ? "Gece Yağmuru" : "Night Rain")}
+          {renderInput("artistName", lang === "tr" ? "Sanatçı Adı" : "Artist Name", lang === "tr" ? "DJ Yağmur" : "DJ Rain")}
+          {renderImageUpload("coverImage", lang === "tr" ? "Kapak Görseli URL veya Dosya" : "Cover Image URL or File")}
+          
+          <div className="space-y-1.5 mb-4">
+            {renderInput("audioUrl", lang === "tr" ? "Ses Dosyası URL (.mp3/.wav)" : "Audio File URL (.mp3/.wav)", "https://...")}
+            <p className="text-xs text-amber-500 font-medium -mt-2 block">
+              {lang === "tr" 
+                ? "⚠️ Lütfen doğrudan bir .mp3 veya .wav bağlantısı girin. Spotify/Apple Music linkleri desteklenmez."
+                : "⚠️ Please enter a direct .mp3 or .wav link. Spotify/Apple Music links are not supported."}
+            </p>
+          </div>
         </div>
 
         <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
-          {renderTracksEditor()}
-          <p className="text-xs text-amber-500 font-medium mt-1.5 block">
-            {lang === "tr" 
-              ? "⚠️ Lütfen doğrudan bir .mp3 veya .wav bağlantısı girin. Telif hakları sebebiyle diğer müzik platformlarının linkleri bu özel oynatıcıda çalışmaz."
-              : "⚠️ Please enter a direct .mp3 or .wav link. Due to copyrights, other music platform links will not work in this custom player."}
-          </p>
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            ⚙️ {lang === "tr" ? "Oynatıcı Tercihleri" : "Player Preferences"}
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+                {lang === "tr" ? "Tasarım Teması" : "Design Theme"}
+              </label>
+              <select
+                value={configData["themeType"] || "light"}
+                onChange={(e) => setConfigData({ ...configData, themeType: e.target.value })}
+                className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm"
+              >
+                <option value="light">Light (Açık)</option>
+                <option value="dark">Dark (Koyu)</option>
+                <option value="glass">Glass (Cam Efekti)</option>
+                <option value="neon">Neon (Cyberpunk)</option>
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+                {lang === "tr" ? "Plak Dönüş Hızı" : "Vinyl Rotation Speed"}
+              </label>
+              <select
+                value={configData["vinylSpeed"] || "normal"}
+                onChange={(e) => setConfigData({ ...configData, vinylSpeed: e.target.value })}
+                className="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm"
+              >
+                <option value="slow">{lang === "tr" ? "Yavaş" : "Slow"}</option>
+                <option value="normal">{lang === "tr" ? "Normal" : "Normal"}</option>
+                <option value="fast">{lang === "tr" ? "Hızlı" : "Fast"}</option>
+                <option value="paused">{lang === "tr" ? "Durdurulmuş" : "Paused"}</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-6 pt-2">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
+              <input
+                type="checkbox"
+                checked={configData["autoplay"] !== undefined ? !!configData["autoplay"] : false}
+                onChange={(e) => setConfigData({ ...configData, autoplay: e.target.checked })}
+                className="rounded text-indigo-600 focus:ring-indigo-400"
+              />
+              {lang === "tr" ? "Otomatik Oynat" : "Autoplay"}
+            </label>
+
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
+              <input
+                type="checkbox"
+                checked={configData["loop"] !== undefined ? !!configData["loop"] : true}
+                onChange={(e) => setConfigData({ ...configData, loop: e.target.checked })}
+                className="rounded text-indigo-600 focus:ring-indigo-400"
+              />
+               {lang === "tr" ? "Döngüde Çal (Loop)" : "Loop Play"}
+            </label>
+
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
+              <input
+                type="checkbox"
+                checked={configData["showHeader"] !== undefined ? !!configData["showHeader"] : true}
+                onChange={(e) => setConfigData({ ...configData, showHeader: e.target.checked })}
+                className="rounded text-indigo-600 focus:ring-indigo-400"
+              />
+              {lang === "tr" ? "Başlığı Göster" : "Show Header"}
+            </label>
+          </div>
         </div>
 
         <div className="space-y-4 pt-2">
