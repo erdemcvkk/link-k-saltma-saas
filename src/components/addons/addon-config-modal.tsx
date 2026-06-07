@@ -826,6 +826,28 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                 {lang === "tr" ? "Henüz banner eklenmemiş." : "No banners added yet."}
               </p>
             )}
+
+            {/* Banner Font Stili */}
+            <div className="space-y-1.5 pt-4 border-t border-zinc-200 mt-4">
+              <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+                {lang === "tr" ? "Banner Font Stili" : "Banner Font Style"}
+              </label>
+              <select
+                value={configData.fontFamily || "Inter"}
+                onChange={(e) => setConfigData({ ...configData, fontFamily: e.target.value })}
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-semibold focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm cursor-pointer"
+              >
+                {STOREFRONT_FONTS.map((group) => (
+                  <optgroup key={group.category.en} label={lang === "tr" ? group.category.tr : group.category.en}>
+                    {group.options.map((font) => (
+                      <option key={font.value} value={font.value} style={{ fontFamily: font.value }}>
+                        {font.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
@@ -863,26 +885,6 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                 className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm"
               />
             </div>
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
-              {lang === "tr" ? "Banner Yazı Tipi (Font)" : "Banner Font Family"}
-            </label>
-            <select
-              value={configData.fontFamily || "Inter"}
-              onChange={(e) => setConfigData({ ...configData, fontFamily: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-semibold focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm cursor-pointer"
-            >
-              {STOREFRONT_FONTS.map((group) => (
-                <optgroup key={group.category.en} label={lang === "tr" ? group.category.tr : group.category.en}>
-                  {group.options.map((font) => (
-                    <option key={font.value} value={font.value} style={{ fontFamily: font.value }}>
-                      {font.name}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
           </div>
         </div>
 
