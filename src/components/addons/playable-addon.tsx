@@ -1018,9 +1018,27 @@ export default function PlayableAddon({
           videoUrl &&
           (/youtube\.com|youtu\.be/i.test(videoUrl) || /\.(mp4|webm|mov)(\?.*)?$/i.test(videoUrl));
 
+        const bgColor = config.backgroundColor || "#000000";
+        // Calculate contrast colors
+        const hex = bgColor.replace('#', '');
+        const r = parseInt(hex.substr(0, 2), 16) || 0;
+        const g = parseInt(hex.substr(2, 2), 16) || 0;
+        const b = parseInt(hex.substr(4, 2), 16) || 0;
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        const isLight = yiq >= 128;
+
+        const textColor = isLight ? "text-zinc-900" : "text-white";
+        const descColor = isLight ? "text-zinc-650" : "text-zinc-400";
+        const borderClass = isLight ? "border-zinc-200" : "border-white/5";
+        const listHeaderColor = isLight ? "text-zinc-500" : "text-zinc-400";
+        const listBorderColor = isLight ? "border-zinc-200" : "border-zinc-800/50";
+        const listItemBg = isLight ? "bg-white border-zinc-200 hover:bg-zinc-50" : "bg-zinc-900/50 border-white/5 hover:bg-zinc-800/80";
+        const buttonBgColor = isLight ? "bg-zinc-900 text-white hover:bg-zinc-800" : "bg-white text-black hover:bg-zinc-200";
+        const buttonShadow = isLight ? "shadow-[0_4px_14px_rgba(0,0,0,0.15)]" : "shadow-[0_0_30px_rgba(255,255,255,0.2)]";
+
         return (
-          <div className="w-full min-h-screen bg-black flex justify-center p-4">
-            <div className="w-full max-w-2xl bg-black rounded-[2rem] shadow-2xl flex flex-col items-center">
+          <div className="w-full min-h-screen flex justify-center p-4 transition-colors duration-350" style={{ backgroundColor: bgColor }}>
+            <div className="w-full max-w-2xl rounded-[2rem] shadow-2xl flex flex-col items-center transition-colors duration-350" style={{ backgroundColor: bgColor }}>
               {/* 16:9 Media Player Area */}
               <div className="w-full aspect-video rounded-3xl bg-zinc-900 mt-8 relative shadow-[0_0_50px_rgba(255,255,255,0.05)] overflow-hidden group border border-white/5 animate-all duration-300">
                 {isVideoPlaying && hasValidEmbed ? (
@@ -1028,7 +1046,7 @@ export default function PlayableAddon({
                     {renderVideoPlayer()}
                     <button
                       onClick={() => setIsVideoPlaying(false)}
-                      className="absolute top-4 left-4 p-2 bg-black/60 hover:bg-black/80 rounded-full text-white text-xs font-bold border border-white/10 z-20 flex items-center gap-1 shadow-md"
+                      className="absolute top-4 left-4 p-2 bg-black/60 hover:bg-black/80 rounded-full text-white text-xs font-bold border border-white/10 z-20 flex items-center gap-1 shadow-md cursor-pointer"
                     >
                       <ArrowLeft size={12} /> {config.lang === "tr" ? "Kapat" : "Close"}
                     </button>
@@ -1071,10 +1089,10 @@ export default function PlayableAddon({
 
               {/* Text Content */}
               <div className="flex flex-col mt-8 w-full px-4 text-center">
-                <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3">
+                <h1 className={`text-2xl sm:text-3xl font-bold tracking-tight mb-3 ${textColor}`}>
                   {activeVideo.title || "UI/UX Masterclass Bölüm 1"}
                 </h1>
-                <p className="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-lg mx-auto mb-10">
+                <p className={`text-sm sm:text-base leading-relaxed max-w-lg mx-auto mb-10 ${descColor}`}>
                   {activeVideo.description || "Tasarım sistemleri ve ileri düzey prototipleme tekniklerini keşfedin."}
                 </p>
 
@@ -1083,7 +1101,7 @@ export default function PlayableAddon({
                     href={activeVideo.actionUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full max-w-sm mx-auto py-5 rounded-2xl bg-white text-black font-extrabold text-lg hover:bg-zinc-200 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.2)] mb-8"
+                    className={`w-full max-w-sm mx-auto py-5 rounded-2xl font-extrabold text-lg transition-all mb-8 ${buttonBgColor} ${buttonShadow}`}
                   >
                     {activeVideo.buttonText || "Tamamını İzle"}
                   </a>
@@ -1092,8 +1110,8 @@ export default function PlayableAddon({
 
               {/* Videos Playlist */}
               {videos.length > 1 && (
-                <div className="w-full mt-2 px-4 pb-8 text-left border-t border-zinc-800/50 pt-6">
-                  <h3 className="text-zinc-400 text-xs font-bold uppercase tracking-wider mb-3 px-1">
+                <div className={`w-full mt-2 px-4 pb-8 text-left border-t pt-6 ${listBorderColor}`}>
+                  <h3 className={`text-xs font-bold uppercase tracking-wider mb-3 px-1 ${listHeaderColor}`}>
                     {config.lang === "tr" ? "Diğer Bölümler / Videolar" : "More Videos / Episodes"} ({videos.length})
                   </h3>
                   <div className="space-y-3 max-h-60 overflow-y-auto no-scrollbar">
@@ -1106,8 +1124,8 @@ export default function PlayableAddon({
                             setCurrentVideoIndex(idx);
                             setIsVideoPlaying(false);
                           }}
-                          className={`flex gap-4 p-3 rounded-2xl bg-zinc-900/50 border hover:bg-zinc-800/80 cursor-pointer transition-all ${
-                            isActive ? "border-white" : "border-white/5"
+                          className={`flex gap-4 p-3 rounded-2xl border cursor-pointer transition-all ${listItemBg} ${
+                            isActive ? (isLight ? "border-zinc-800 shadow-sm" : "border-white") : borderClass
                           }`}
                         >
                           <div className="w-24 aspect-video rounded-xl bg-zinc-800 overflow-hidden flex-shrink-0 relative">
@@ -1123,8 +1141,8 @@ export default function PlayableAddon({
                             )}
                           </div>
                           <div className="flex-1 min-w-0 flex flex-col justify-center">
-                            <h4 className="text-sm font-bold text-white truncate">{v.title || (config.lang === "tr" ? "Başlıksız Video" : "Untitled Video")}</h4>
-                            <p className="text-xs text-zinc-400 line-clamp-1 mt-0.5">{v.description || "..."}</p>
+                            <h4 className={`text-sm font-bold truncate ${textColor}`}>{v.title || (config.lang === "tr" ? "Başlıksız Video" : "Untitled Video")}</h4>
+                            <p className={`text-xs line-clamp-1 mt-0.5 ${descColor}`}>{v.description || "..."}</p>
                           </div>
                         </div>
                       );

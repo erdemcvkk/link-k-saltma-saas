@@ -1232,6 +1232,35 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   </>
   );
   break;
+
+  case "PREMIUM_VIDEO":
+    specificFields = (
+      <>
+        <div className="space-y-4">
+          <div className="space-y-1.5 mb-4">
+            <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+              {lang === "tr" ? "Arka Plan Rengi" : "Background Color"}
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="color"
+                value={configData.backgroundColor || "#000000"}
+                onChange={(e) => setConfigData({ ...configData, backgroundColor: e.target.value })}
+                className="w-12 h-10 p-0 border border-zinc-200 rounded-xl cursor-pointer"
+              />
+              <input
+                type="text"
+                value={configData.backgroundColor || "#000000"}
+                onChange={(e) => setConfigData({ ...configData, backgroundColor: e.target.value })}
+                className="w-full px-4 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50 text-sm text-slate-800 font-medium focus:bg-white focus:border-indigo-500 outline-none transition-all shadow-sm"
+              />
+            </div>
+          </div>
+          {renderVideosEditor()}
+        </div>
+      </>
+    );
+    break;
  
  case "COUNTDOWN":
  specificFields = (
