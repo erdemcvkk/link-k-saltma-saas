@@ -228,6 +228,49 @@ export default function PlayableAddon({
   const activeTrack = tracks[currentTrackIndex] || tracks[0] || {};
   const url = (activeTrack.trackUrl || "").trim();
   const isDirectAudio = /\.(mp3|wav|ogg|m4a|aac|flac)(\?.*)?$/i.test(url);
+  
+  // ── SPOTIFY / DIRECT AUDIO RESOLVING ──
+  const [resolvedAudioUrl, setResolvedAudioUrl] = useState<string | null>(null);
+  const [isLoadingAudio, setIsLoadingAudio] = useState(false);
+
+  useEffect(() => {
+    const resolveTrack = async () => {
+      if (!url) {
+        setResolvedAudioUrl(null);
+        return;
+      }
+
+      const isSpotify = /open\.spotify\.com\/(?:[a-zA-Z0-9_-]+\/)?track\/([a-zA-Z0-9]+)/i.test(url);
+      const isDirect = /\.(mp3|wav|ogg|m4a|aac|flac)(\?.*)?$/i.test(url);
+
+      if (isDirect) {
+        setResolvedAudioUrl(url);
+      } else if (isSpotify) {
+        setIsLoadingAudio(true);
+        try {
+          const res = await fetch(`/api/spotify-preview?url=${encodeURIComponent(url)}`);
+          const data = await res.json();
+          if (data.success && data.previewUrl) {
+            setResolvedAudioUrl(data.previewUrl);
+          } else {
+            setResolvedAudioUrl(null);
+          }
+        } catch (e) {
+          console.error("Error resolving Spotify track preview:", e);
+          setResolvedAudioUrl(null);
+        } finally {
+          setIsLoadingAudio(false);
+        }
+      } else {
+        setResolvedAudioUrl(null);
+      }
+    };
+
+    resolveTrack();
+  }, [url]);
+
+  const hasAudioUrl = resolvedAudioUrl || (isDirectAudio ? url : null);
+
   const isEmbeddable = /open\.spotify\.com|youtube\.com|youtu\.be|soundcloud\.com|music\.apple\.com/i.test(url);
   const mediaEmbed = !isDirectAudio ? getMediaEmbed(url, config.accentColor, isPlaying, () => setIsPlaying(false)) : null;
   const compactMediaEmbed = !isDirectAudio ? getCompactMediaEmbed(url, config.accentColor) : null;
@@ -283,7 +326,7 @@ export default function PlayableAddon({
 
   // ── EXTERNAL AUDIO PROGRESS SIMULATOR ──
   useEffect(() => {
-    if (isDirectAudio || !isPlaying) return;
+    if (hasAudioUrl || !isPlaying) return;
 
     const mockDuration = 225; // 3:45
     setDuration(mockDuration);
@@ -299,12 +342,12 @@ export default function PlayableAddon({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isPlaying, isDirectAudio]);
+  }, [isPlaying, hasAudioUrl]);
 
   // ── AUDIO PLAYBACK SYNC ──
   useEffect(() => {
     if (!audioRef.current) return;
-    if (isPlaying && isDirectAudio) {
+    if (isPlaying && hasAudioUrl) {
       audioRef.current.play().catch((err) => {
         console.error("Audio playback error:", err);
         setIsPlaying(false);
@@ -312,7 +355,7 @@ export default function PlayableAddon({
     } else {
       audioRef.current.pause();
     }
-  }, [isPlaying, isDirectAudio, url]);
+  }, [isPlaying, hasAudioUrl]);
 
   // Handle URL change
   useEffect(() => {
@@ -322,7 +365,7 @@ export default function PlayableAddon({
     if (audioRef.current) {
       audioRef.current.load();
     }
-  }, [url]);
+  }, [hasAudioUrl]);
 
   const handlePlayPause = () => {
     if (!url) return;
@@ -338,7 +381,7 @@ export default function PlayableAddon({
     const clickRatio = clickX / width;
     const newTime = clickRatio * (duration || 225);
     
-    if (isDirectAudio && audioRef.current) {
+    if (hasAudioUrl && audioRef.current) {
       audioRef.current.currentTime = newTime;
     }
     setCurrentTime(newTime);
@@ -845,10 +888,10 @@ export default function PlayableAddon({
           className="w-full h-full min-h-[580px] flex flex-col justify-between p-6 text-white relative z-0 select-none overflow-hidden rounded-[2rem] shadow-2xl"
           style={{ background: "radial-gradient(circle at 50% 30%, #d47e1d 0%, #613306 60%, #170d02 100%)" }}
         >
-          {isDirectAudio && (
+          {hasAudioUrl && (
             <audio
               ref={audioRef}
-              src={url}
+              src={hasAudioUrl}
               onTimeUpdate={() => audioRef.current && setCurrentTime(audioRef.current.currentTime)}
               onLoadedMetadata={() => audioRef.current && setDuration(audioRef.current.duration)}
               onEnded={() => setIsPlaying(false)}
