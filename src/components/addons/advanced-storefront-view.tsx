@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Heart, ShoppingBag, Zap, Eye, Bookmark, User, Plus } from "lucide-react";
+import { Heart, ShoppingBag, Zap, Eye, Bookmark, User, Plus, ArrowLeft } from "lucide-react";
 
 export interface StorefrontProduct {
   id: string;
@@ -50,6 +50,8 @@ export default function AdvancedStorefrontView({
   lang = "tr",
   onProductClick,
 }: AdvancedStorefrontViewProps) {
+  const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
+
   // Default fallback values
   const heroBgUrl = config.heroBgUrl || "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80";
   const heroSub = config.heroSub || "SPRING COLLECTION";
@@ -145,20 +147,93 @@ export default function AdvancedStorefrontView({
     }
   };
 
-  const handleProductClick = (product: StorefrontProduct) => {
-    if (onProductClick) {
-      onProductClick(product);
-      return;
-    }
-    if (product.buyLink && product.buyLink !== "#") {
-      window.open(product.buyLink, "_blank", "noopener,noreferrer");
-    }
-  };
+  const selectedCollection = collections.find(c => c.id === selectedCollectionId);
 
   return (
     <div className="w-full h-full bg-white flex flex-col relative overflow-hidden font-sans select-none text-slate-900">
-      {/* Scrollable Container */}
-      <div className="flex-1 overflow-y-auto no-scrollbar pb-24">
+      {selectedCollection ? (
+        /* Collection Detail View */
+        <div className="flex-1 overflow-y-auto no-scrollbar pb-24 animate-in fade-in slide-in-from-right duration-300">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur-md z-10">
+            <button 
+              type="button" 
+              onClick={() => setSelectedCollectionId(null)}
+              className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors border-0 cursor-pointer"
+            >
+              <ArrowLeft className="h-5 w-5 text-slate-800" />
+            </button>
+            <h2 className="text-sm font-black text-slate-800 tracking-tight">
+              {selectedCollection.title}
+            </h2>
+            <div className="w-9 h-9" />
+          </div>
+
+          {/* Product Grid */}
+          <div className="grid grid-cols-2 gap-4 p-4">
+            {selectedCollection.products.map((p) => (
+              <a 
+                key={p.id} 
+                href={p.buyLink || "#"}
+                target={(p.buyLink && p.buyLink !== "#") ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  if (onProductClick) {
+                    e.preventDefault();
+                    onProductClick(p);
+                  } else if (!p.buyLink || p.buyLink === "#") {
+                    e.preventDefault();
+                  }
+                }}
+                className="flex flex-col space-y-2 cursor-pointer group hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 block"
+              >
+                <div className="w-full aspect-[4/5] rounded-2xl bg-gray-100 relative overflow-hidden shadow-sm">
+                  {p.imageUrl ? (
+                    <img 
+                      src={p.imageUrl} 
+                      alt={p.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-300">
+                      <ShoppingBag className="h-10 w-10" />
+                    </div>
+                  )}
+
+                  <button 
+                    type="button" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    className="absolute top-2.5 right-2.5 w-7.5 h-7.5 rounded-full bg-white flex items-center justify-center shadow-md border-0 hover:scale-105 transition-transform"
+                  >
+                    <Heart 
+                      className={`h-3.5 w-3.5 ${p.isFavorite ? "text-red-500 fill-red-500" : "text-gray-400"}`} 
+                    />
+                  </button>
+
+                  {p.badge && (
+                    <span className="absolute bottom-2.5 left-2.5 bg-white text-[9px] font-black text-slate-800 px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wide">
+                      {p.badge}
+                    </span>
+                  )}
+                </div>
+
+                <div className="px-1 text-left">
+                  <h4 className="text-xs font-bold text-slate-800 truncate leading-tight">
+                    {p.title}
+                  </h4>
+                  <span className="text-[11px] font-black text-slate-500 block mt-0.5">
+                    ${p.price}
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* Scrollable Container */
+        <div className="flex-1 overflow-y-auto no-scrollbar pb-24">
         {/* Hero Section */}
         <div 
           className="w-full h-[360px] md:h-[400px] relative bg-cover bg-center flex flex-col justify-between p-6"
@@ -231,27 +306,16 @@ export default function AdvancedStorefrontView({
                 <h3 className="text-lg font-black tracking-tight text-slate-800">
                   {col.title}
                 </h3>
-                {col.showAllLink && (
-                  <a 
-                    href={col.showAllLink} 
-                    target={(col.showAllLink && col.showAllLink !== "#" && !col.showAllLink.startsWith("#")) ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    onClick={(e) => {
-                      if (col.showAllLink === "#" || !col.showAllLink) {
-                        e.preventDefault();
-                      } else if (col.showAllLink.startsWith("#")) {
-                        const targetEl = document.getElementById(col.showAllLink.substring(1));
-                        if (targetEl) {
-                          e.preventDefault();
-                          targetEl.scrollIntoView({ behavior: "smooth" });
-                        }
-                      }
-                    }}
-                    className="text-xs font-bold text-gray-400 hover:text-slate-600 transition-colors uppercase tracking-wider"
-                  >
-                    {lang === "tr" ? "Tümünü Gör" : "Show all"}
-                  </a>
-                )}
+                <a 
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedCollectionId(col.id);
+                  }}
+                  className="text-xs font-bold text-gray-400 hover:text-slate-600 transition-colors uppercase tracking-wider cursor-pointer"
+                >
+                  {lang === "tr" ? "Tümünü Gör" : "Show all"}
+                </a>
               </div>
 
               {/* Products Render */}
@@ -393,6 +457,7 @@ export default function AdvancedStorefrontView({
           ))}
         </div>
       </div>
+      )}
 
       {/* Bottom Navigation */}
       {bottomNavShow && (
