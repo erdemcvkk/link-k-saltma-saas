@@ -1328,12 +1328,12 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
 
   const renderTracksEditor = () => {
     const items = configData.tracks || [];
-    const effectiveItems = items.length > 0 ? items : (configData.trackUrl ? [
+    const effectiveItems = items.length > 0 ? items : ((configData.trackUrl || configData.audioUrl) ? [
       {
-        trackUrl: configData.trackUrl || "",
-        trackName: configData.trackName || "",
-        artistName: configData.artistName || "",
-        albumCoverUrl: configData.albumCoverUrl || "",
+        trackUrl: configData.trackUrl || configData.audioUrl || "",
+        trackName: configData.trackName || configData.trackTitle || "",
+        artistName: configData.artistName || configData.artistName || "",
+        albumCoverUrl: configData.albumCoverUrl || configData.coverImage || "",
         trackDuration: configData.trackDuration || "3:45"
       }
     ] : []);
@@ -1346,6 +1346,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
         artistName: newItems[0]?.artistName || "",
         albumCoverUrl: newItems[0]?.albumCoverUrl || "",
         trackDuration: newItems[0]?.trackDuration || "3:45",
+        audioUrl: newItems[0]?.trackUrl || "",
+        trackTitle: newItems[0]?.trackName || "",
+        coverImage: newItems[0]?.albumCoverUrl || "",
         tracks: newItems
       });
     };
@@ -1419,7 +1422,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                   className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none pr-16"
                 />
                 <label className="absolute right-0.5 top-0.5 bottom-0.5 flex items-center justify-center px-2 bg-zinc-100 hover:bg-zinc-250 text-zinc-700 text-[9px] font-bold rounded-lg cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
-                  {lang === "tr" ? "Seç" : "File"}
+                  {lang === "tr" ? "Dosya Seç" : "Select File"}
                   <input 
                     type="file" 
                     className="hidden" 
@@ -1470,7 +1473,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
                     className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none pr-16"
                   />
                   <label className="absolute right-0.5 top-0.5 bottom-0.5 flex items-center justify-center px-2 bg-zinc-100 hover:bg-zinc-250 text-zinc-700 text-[9px] font-bold rounded-lg cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap">
-                    {lang === "tr" ? "Seç" : "File"}
+                    {lang === "tr" ? "Dosya Seç" : "Select File"}
                     <input 
                       type="file" 
                       className="hidden" 
@@ -2152,18 +2155,12 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
             <Music className="h-4 w-4" />
             {lang === "tr" ? "Premium Müzik Oynatıcı Ayarları" : "Premium Audio Player Settings"}
           </h4>
-          {renderInput("trackTitle", lang === "tr" ? "Şarkı Adı" : "Song Title", lang === "tr" ? "Gece Yağmuru" : "Night Rain")}
-          {renderInput("artistName", lang === "tr" ? "Sanatçı Adı" : "Artist Name", lang === "tr" ? "DJ Yağmur" : "DJ Rain")}
-          {renderImageUpload("coverImage", lang === "tr" ? "Kapak Görseli URL veya Dosya" : "Cover Image URL or File")}
-          
-          <div className="space-y-1.5 mb-4">
-            {renderInput("audioUrl", lang === "tr" ? "Ses Dosyası URL (.mp3/.wav)" : "Audio File URL (.mp3/.wav)", "https://...")}
-            <p className="text-xs text-amber-500 font-medium -mt-2 block">
-              {lang === "tr" 
-                ? "⚠️ Lütfen doğrudan bir .mp3 veya .wav bağlantısı girin. Spotify/Apple Music linkleri desteklenmez."
-                : "⚠️ Please enter a direct .mp3 or .wav link. Spotify/Apple Music links are not supported."}
-            </p>
-          </div>
+          {renderTracksEditor()}
+          <p className="text-xs text-amber-500 font-medium -mt-2 block">
+            {lang === "tr" 
+              ? "⚠️ Lütfen doğrudan bir .mp3 veya .wav bağlantısı girin. Spotify/Apple Music linkleri desteklenmez."
+              : "⚠️ Please enter a direct .mp3 or .wav link. Spotify/Apple Music links are not supported."}
+          </p>
         </div>
 
         <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
