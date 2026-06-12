@@ -74,6 +74,7 @@ export default async function AddonPage({
     if (type === "MUSIC_PODCAST") return "music-podcast";
     if (type === "PORTFOLIO_GALLERY") return "portfolio-gallery";
     if (type === "COUNTDOWN_LAUNCH") return "countdown";
+    if (type === "TRAVEL_STOREFRONT") return "travel-store";
     return type.toLowerCase();
   }
 
@@ -494,7 +495,8 @@ export default async function AddonPage({
     matchingAddon.addonType === "NEON_CYBERPUNK" ||
     matchingAddon.addonType === "MUSIC_PODCAST" ||
     matchingAddon.addonType === "PORTFOLIO_GALLERY" ||
-    matchingAddon.addonType === "COUNTDOWN_LAUNCH"
+    matchingAddon.addonType === "COUNTDOWN_LAUNCH" ||
+    matchingAddon.addonType === "TRAVEL_STOREFRONT"
   ) {
     const type = matchingAddon.addonType;
     const displayAvatar = parsedConfig.avatarUrl || user.profile.avatarUrl || "";

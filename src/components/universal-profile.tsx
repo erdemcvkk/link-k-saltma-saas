@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useId } from "react";
-import { User, Globe, MessageCircle, ArrowUpRight, Play, Image, Utensils, Smartphone, Percent, Wifi, Music, ShoppingBag, FileText, List, Briefcase, Zap, Calendar, FileQuestion, Mail, Heart, Clock, HelpCircle, MapPin, Store, Laptop, Volume2, ListMusic } from "lucide-react";
+import { User, Globe, MessageCircle, ArrowUpRight, Play, Image, Utensils, Smartphone, Percent, Wifi, Music, ShoppingBag, FileText, List, Briefcase, Zap, Calendar, FileQuestion, Mail, Heart, Clock, HelpCircle, MapPin, Store, Laptop, Volume2, ListMusic, Compass } from "lucide-react";
 import { YoutubeIcon, TwitterIcon, LinkedinIcon, TiktokIcon, PinterestIcon, InstagramIcon } from "@/components/brand-icons";
 import VideoPlayer from "@/components/blocks/video-player";
 import BeforeAfterSlider from "@/components/blocks/before-after-slider";
@@ -593,6 +593,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     if (t === "MUSIC_PODCAST") return "music-podcast";
     if (t === "PORTFOLIO_GALLERY") return "portfolio-gallery";
     if (t === "COUNTDOWN_LAUNCH") return "countdown";
+    if (t === "TRAVEL_STOREFRONT") return "travel-store";
     if (t === "CORP_EXEC") return "corporate";
     return t.toLowerCase();
   };
@@ -748,6 +749,25 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
           </p>
           <div className={btnClassName}>
             {configData.buttonText || "Sohbete Başla"}
+          </div>
+        </CardWrapper>
+      );
+    case "TRAVEL_STOREFRONT":
+      return (
+        <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-sky-500/10 flex items-center justify-center shrink-0">
+                <Compass className="h-5 w-5 text-sky-600" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-800">{configData.heroTitle || "Seyahat & Tur Rezervasyon"}</h4>
+                <p className="text-xs opacity-70 mt-0.5 truncate max-w-[200px]">{isDark ? "Click to discover new tours." : "Yeni turları keşfetmek için tıklayın."}</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-sky-600 flex items-center justify-center text-white shrink-0">
+              <span className="text-[10px] ml-0.5">▶</span>
+            </div>
           </div>
         </CardWrapper>
       );
@@ -1336,6 +1356,42 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
       );
       }
 
+    case "TRAVEL_STOREFRONT":
+      return (
+        <div className="w-full h-full bg-[#f8f9fa] flex flex-col p-4 relative z-0 justify-between select-none">
+          <div className="w-full bg-white rounded-3xl overflow-hidden border border-zinc-200/80 flex flex-col shadow-md mt-6">
+            <div className="relative aspect-[4/3] min-h-[120px] flex flex-col justify-end p-4 bg-zinc-900">
+              <img src={config.heroBgImage || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"} className="absolute inset-0 w-full h-full object-cover opacity-60" />
+              <div className="relative z-10 text-left">
+                <span className="text-[7px] font-mono tracking-widest text-sky-400 bg-sky-950/40 px-2 py-0.5 rounded-full inline-block mb-1">Macera Seni Çağırıyor</span>
+                <h4 className="text-[10px] font-black text-white leading-tight font-serif truncate max-w-[200px]">{config.heroTitle || "Dünyayı Keşfetmeye Hazır Mısın?"}</h4>
+              </div>
+            </div>
+            <div className="p-3 bg-white space-y-2.5">
+              <div className="flex justify-between items-center text-[8px] font-bold text-slate-800 uppercase">
+                <span>📍 Öne Çıkan Turlar</span>
+                <span className="text-sky-500">Tümünü Gör</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="border border-zinc-100 rounded-xl p-1.5 space-y-1">
+                  <div className="h-14 bg-slate-100 rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=200&q=80" className="w-full h-full object-cover" />
+                  </div>
+                  <h5 className="text-[8px] font-black text-slate-800 truncate">Maldivler Balayı</h5>
+                  <span className="text-[8px] font-black text-orange-600">45.000 TL</span>
+                </div>
+                <div className="border border-zinc-100 rounded-xl p-1.5 space-y-1">
+                  <div className="h-14 bg-slate-100 rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=200&q=80" className="w-full h-full object-cover" />
+                  </div>
+                  <h5 className="text-[8px] font-black text-slate-800 truncate">Karadeniz Yaylaları</h5>
+                  <span className="text-[8px] font-black text-orange-600">12.500 TL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
     default:
       return null;
   }

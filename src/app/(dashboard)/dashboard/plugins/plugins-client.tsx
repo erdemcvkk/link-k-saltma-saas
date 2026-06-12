@@ -68,6 +68,7 @@ export default function PluginsClient({
       case "CORP_EXEC": return lang === "tr" ? "Kurumsal Yönetici Kartı" : "Corporate Executive Card";
       case "MINI_STORE": return lang === "tr" ? "Mini Mağaza" : "Mini Store";
       case "ADVANCED_STOREFRONT": return lang === "tr" ? "Gelişmiş E-Ticaret Vitrini" : "Advanced Storefront";
+      case "TRAVEL_STOREFRONT": return lang === "tr" ? "Seyahat & Tur Vitrini" : "Travel & Tour Storefront";
       case "NEO_BRUTAL": return lang === "tr" ? "Neo Brutalism Vitrin" : "Neo Brutalism Gallery";
       case "ORGANIC": return lang === "tr" ? "Doğal Tasarım Vitrin" : "Organic Showcase";
       case "RETRO": return lang === "tr" ? "Retro Arcade Vitrin" : "Retro Arcade Gallery";
@@ -155,6 +156,7 @@ export default function PluginsClient({
     if (!type) return "store";
     if (type === "MINI_STORE") return "store";
     if (type === "ADVANCED_STOREFRONT") return "advanced-storefront";
+    if (type === "TRAVEL_STOREFRONT") return "travel-store";
     if (type === "NEO_BRUTAL") return "neo-brutal";
     if (type === "ORGANIC") return "organic";
     if (type === "RETRO") return "retro";

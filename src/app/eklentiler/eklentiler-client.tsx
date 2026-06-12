@@ -6,6 +6,7 @@ import { ArrowLeft, ShoppingBag, Zap, CreditCard, ChevronRight, Search, ArrowUpD
 import StorefrontPreview, { StoreThemeType, DummyProduct } from "@/components/storefront-preview";
 import AdvancedStorefrontView from "@/components/addons/advanced-storefront-view";
 import MusicPlayerModule from "@/components/addons/MusicPlayerModule";
+import TravelStorefrontModule from "@/components/addons/TravelStorefrontModule";
 import { buyAddonAction } from "../actions";
 
 interface AddonTypeData {
@@ -49,6 +50,19 @@ export const ADDON_TYPES: AddonTypeData[] = [
     price: "199",
     username: "@moda.boutique",
     bio: "Premium Wear & Design Studio",
+    avatarUrl: "/placeholder.png",
+    category: "Satış & Gelir",
+    mockProducts: []
+  },
+  { 
+    id: "TRAVEL_STOREFRONT", 
+    name: "Seyahat & Tur Vitrini", 
+    desc: "Seyahat acenteleri ve tur satıcıları için in-app bottom bar navigasyonu, filtreleme ve öne çıkan turlar vitrini.", 
+    color: "bg-sky-600",
+    theme: "classic",
+    price: "149",
+    username: "@gezgin.tur",
+    bio: "Macera ve Doğa Turları Acentesi",
     avatarUrl: "/placeholder.png",
     category: "Satış & Gelir",
     mockProducts: []
@@ -492,7 +506,9 @@ export default function EklentilerClient({ products, settings, userId = null, db
  <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
  
  <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">
- {addon.id === "ADVANCED_STOREFRONT" ? (
+ {addon.id === "TRAVEL_STOREFRONT" ? (
+     <TravelStorefrontModule config={{}} avatarUrl={addon.avatarUrl} username={addon.username} bio={addon.bio} />
+   ) : addon.id === "ADVANCED_STOREFRONT" ? (
     <AdvancedStorefrontView config={{}} lang="tr" />
   ) : addon.id === "PREMIUM_VIDEO" ? (
   <div className="w-full h-full bg-black flex flex-col p-4 relative z-0">

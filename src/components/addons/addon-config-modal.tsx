@@ -3,7 +3,7 @@
 import React, { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { saveAddonConfig, addAddonProduct, deleteAddonProduct } from "@/app/actions";
-import { X, Loader2, Save, Store, Calendar, FileQuestion, Mail, Heart, Clock, Briefcase, HelpCircle, MapPin, MessageCircle, Trash2, Plus, ShoppingBag, Music, Image } from "lucide-react";
+import { X, Loader2, Save, Store, Calendar, FileQuestion, Mail, Heart, Clock, Briefcase, HelpCircle, MapPin, MessageCircle, Trash2, Plus, ShoppingBag, Music, Image, Compass } from "lucide-react";
 import StorefrontPreview from "@/components/storefront-preview";
 import AdvancedStorefrontView from "./advanced-storefront-view";
 import PlayableAddon from "./playable-addon";
@@ -1687,6 +1687,469 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     );
   };
 
+  const renderTravelCategoriesEditor = () => {
+    const items = configData.categories || [
+      { id: "c1", label: "Tüm Turlar" },
+      { id: "c2", label: "Yaz Tatili" },
+      { id: "c3", label: "Doğa Turları" },
+      { id: "c4", label: "Kültür Gezileri" }
+    ];
+
+    const updateCategories = (newItems: any[]) => {
+      setConfigData({
+        ...configData,
+        categories: newItems
+      });
+    };
+
+    return (
+      <div className="space-y-4">
+        <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+          {lang === "tr" ? "Kategoriler" : "Categories"}
+        </label>
+        <div className="space-y-3">
+          {items.map((item: any, idx: number) => (
+            <div key={item.id || idx} className="flex items-center gap-3 p-3 bg-zinc-50 border border-zinc-200 rounded-xl relative group shadow-sm">
+              <input 
+                type="text" 
+                placeholder="Kategori Adı" 
+                value={item.label || ""} 
+                onChange={(e) => {
+                  const newItems = [...items];
+                  newItems[idx] = { ...newItems[idx], label: e.target.value };
+                  updateCategories(newItems);
+                }}
+                className="flex-1 px-3 py-1.5 rounded-lg border border-zinc-200 text-sm font-medium focus:border-indigo-500 outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  const newItems = [...items];
+                  newItems.splice(idx, 1);
+                  updateCategories(newItems);
+                }}
+                className="text-red-500 hover:text-red-700 p-1.5"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            const newItems = [...items, { id: "c_" + Math.random().toString(36).substr(2, 5), label: "Yeni Kategori" }];
+            updateCategories(newItems);
+          }}
+          className="w-full py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>{lang === "tr" ? "Kategori Ekle" : "Add Category"}</span>
+        </button>
+      </div>
+    );
+  };
+
+  const renderTravelFeaturedToursEditor = () => {
+    const items = configData.featuredTours || [];
+
+    const updateFeaturedTours = (newItems: any[]) => {
+      setConfigData({
+        ...configData,
+        featuredTours: newItems
+      });
+    };
+
+    return (
+      <div className="space-y-4">
+        <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+          {lang === "tr" ? "Öne Çıkan Turlar" : "Featured Tours"}
+        </label>
+        <div className="space-y-4">
+          {items.map((item: any, idx: number) => (
+            <div key={item.id || idx} className="p-4 bg-zinc-50 border border-zinc-200 rounded-2xl relative space-y-3 shadow-sm">
+              <button
+                type="button"
+                onClick={() => {
+                  const newItems = [...items];
+                  newItems.splice(idx, 1);
+                  updateFeaturedTours(newItems);
+                }}
+                className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-red-100 hover:bg-red-200 text-red-650 flex items-center justify-center transition-colors shadow-md border border-red-200 z-10"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Tur Adı" : "Tour Title"}</label>
+                  <input
+                    type="text"
+                    placeholder="Ege Turu"
+                    value={item.title || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], title: e.target.value };
+                      updateFeaturedTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-850 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Fiyat (TL)" : "Price (TRY)"}</label>
+                  <input
+                    type="number"
+                    placeholder="15000"
+                    value={item.price || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], price: Number(e.target.value) || 0 };
+                      updateFeaturedTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-850 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Süre" : "Duration"}</label>
+                  <input
+                    type="text"
+                    placeholder="3 Gece 4 Gün"
+                    value={item.duration || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], duration: e.target.value };
+                      updateFeaturedTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-850 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Puan" : "Rating"}</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="1"
+                    max="5"
+                    placeholder="4.9"
+                    value={item.rating || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], rating: Number(e.target.value) || 5.0 };
+                      updateFeaturedTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-850 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Kategori" : "Category"}</label>
+                  <input
+                    type="text"
+                    placeholder="Yaz Tatili"
+                    value={item.category || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], category: e.target.value };
+                      updateFeaturedTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-850 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Yönlendirme Linki" : "Buy / Detail Link"}</label>
+                <input
+                  type="text"
+                  placeholder="https://..."
+                  value={item.buyLink || ""}
+                  onChange={(e) => {
+                    const newItems = [...items];
+                    newItems[idx] = { ...newItems[idx], buyLink: e.target.value };
+                    updateFeaturedTours(newItems);
+                  }}
+                  className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-850 font-medium focus:border-indigo-500 outline-none"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Görsel (URL veya Yükle)" : "Tour Image"}</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={item.image || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], image: e.target.value };
+                      updateFeaturedTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-850 font-medium focus:border-indigo-500 outline-none"
+                  />
+                  <label className="flex items-center justify-center px-4 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap shadow-sm">
+                    {lang === "tr" ? "Dosya Seç" : "Select File"}
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          try {
+                            const url = await handleFileUpload(file);
+                            const newItems = [...items];
+                            newItems[idx] = { ...newItems[idx], image: url };
+                            updateFeaturedTours(newItems);
+                          } catch (err: any) { showAlert(err.message); }
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            const newItems = [...items, { id: "ft_" + Math.random().toString(36).substr(2, 5), title: "", price: 0, duration: "3 Gece 4 Gün", rating: 5.0, category: "Yaz Tatili", image: "", buyLink: "" }];
+            updateFeaturedTours(newItems);
+          }}
+          className="w-full py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>{lang === "tr" ? "Yeni Tur Ekle" : "Add Tour"}</span>
+        </button>
+      </div>
+    );
+  };
+
+  const renderTravelLastMinuteDealsEditor = () => {
+    const items = configData.lastMinuteDeals || [];
+
+    const updateLastMinuteDeals = (newItems: any[]) => {
+      setConfigData({
+        ...configData,
+        lastMinuteDeals: newItems
+      });
+    };
+
+    return (
+      <div className="space-y-4">
+        <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+          {lang === "tr" ? "Son Dakika Fırsatları" : "Last Minute Deals"}
+        </label>
+        <div className="space-y-4">
+          {items.map((item: any, idx: number) => (
+            <div key={item.id || idx} className="p-4 bg-zinc-50 border border-zinc-200 rounded-2xl relative space-y-3 shadow-sm">
+              <button
+                type="button"
+                onClick={() => {
+                  const newItems = [...items];
+                  newItems.splice(idx, 1);
+                  updateLastMinuteDeals(newItems);
+                }}
+                className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-red-100 hover:bg-red-200 text-red-650 flex items-center justify-center transition-colors shadow-md border border-red-200 z-10"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Fırsat Başlığı" : "Deal Title"}</label>
+                  <input
+                    type="text"
+                    placeholder="Kapadokya Balon Turu"
+                    value={item.title || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], title: e.target.value };
+                      updateLastMinuteDeals(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Fırsat Etiketi" : "Discount Tag"}</label>
+                  <input
+                    type="text"
+                    placeholder="Son 3 Koltuk"
+                    value={item.discountBadge || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], discountBadge: e.target.value };
+                      updateLastMinuteDeals(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-800 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Fiyat" : "Price"}</label>
+                  <input
+                    type="number"
+                    placeholder="8900"
+                    value={item.price || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], price: Number(e.target.value) || 0 };
+                      updateLastMinuteDeals(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-850 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Yönlendirme Linki" : "Buy Link"}</label>
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={item.buyLink || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], buyLink: e.target.value };
+                      updateLastMinuteDeals(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-855 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Fırsat Görseli" : "Deal Image"}</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={item.image || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], image: e.target.value };
+                      updateLastMinuteDeals(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-850 font-medium focus:border-indigo-500 outline-none"
+                  />
+                  <label className="flex items-center justify-center px-4 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap shadow-sm">
+                    {lang === "tr" ? "Dosya Seç" : "Select File"}
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          try {
+                            const url = await handleFileUpload(file);
+                            const newItems = [...items];
+                            newItems[idx] = { ...newItems[idx], image: url };
+                            updateLastMinuteDeals(newItems);
+                          } catch (err: any) { showAlert(err.message); }
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            const newItems = [...items, { id: "deal_" + Math.random().toString(36).substr(2, 5), title: "", price: 0, discountBadge: "Fırsat", image: "", buyLink: "" }];
+            updateLastMinuteDeals(newItems);
+          }}
+          className="w-full py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>{lang === "tr" ? "Yeni Fırsat Ekle" : "Add Deal"}</span>
+        </button>
+      </div>
+    );
+  };
+
+  const renderTravelStorefrontEditor = () => {
+    return (
+      <div className="space-y-6">
+        {/* Tema Renkleri */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            🎨 {lang === "tr" ? "Tema Renkleri" : "Theme Colors"}
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+                {lang === "tr" ? "Ana Renk (Primary)" : "Primary Color"}
+              </label>
+              <div className="flex gap-2">
+                <input 
+                  type="color" 
+                  value={configData.primaryColor || "#0284c7"} 
+                  onChange={(e) => setConfigData({ ...configData, primaryColor: e.target.value })}
+                  className="w-10 h-10 p-0 border border-zinc-250 rounded-xl cursor-pointer bg-transparent"
+                />
+                <input 
+                  type="text" 
+                  value={configData.primaryColor || "#0284c7"} 
+                  onChange={(e) => setConfigData({ ...configData, primaryColor: e.target.value })}
+                  className="flex-1 px-3 py-2 rounded-xl border border-zinc-200 text-xs font-medium"
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+                {lang === "tr" ? "Vurgu Rengi (Accent)" : "Accent Color"}
+              </label>
+              <div className="flex gap-2">
+                <input 
+                  type="color" 
+                  value={configData.accentColor || "#ea580c"} 
+                  onChange={(e) => setConfigData({ ...configData, accentColor: e.target.value })}
+                  className="w-10 h-10 p-0 border border-zinc-250 rounded-xl cursor-pointer bg-transparent"
+                />
+                <input 
+                  type="text" 
+                  value={configData.accentColor || "#ea580c"} 
+                  onChange={(e) => setConfigData({ ...configData, accentColor: e.target.value })}
+                  className="flex-1 px-3 py-2 rounded-xl border border-zinc-200 text-xs font-medium"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Hero Alanı */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            📸 {lang === "tr" ? "Kahraman Alanı (Hero)" : "Hero Section"}
+          </h4>
+          {renderImageUpload("heroBgImage", lang === "tr" ? "Kapak Görseli" : "Cover Image")}
+          {renderInput("heroTitle", lang === "tr" ? "Başlık" : "Hero Title", "Dünyayı Keşfetmeye Hazır Mısın?")}
+          {renderInput("searchPlaceholder", lang === "tr" ? "Arama Çubuğu Placeholder" : "Search Placeholder", "Nereyi keşfetmek istersiniz?")}
+        </div>
+
+        {/* Kategoriler */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          {renderTravelCategoriesEditor()}
+        </div>
+
+        {/* Öne Çıkan Turlar */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          {renderTravelFeaturedToursEditor()}
+        </div>
+
+        {/* Son Dakika Fırsatları */}
+        <div className="space-y-4 pt-2">
+          {renderTravelLastMinuteDealsEditor()}
+        </div>
+      </div>
+    );
+  };
+
   const getAddonDetails = () => {
     switch (addon.addonType) {
       case "CORP_EXEC": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
@@ -1705,6 +2168,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       case "MUSIC_PODCAST": return { icon: <Music className="h-5 w-5" />, title: "Müzik & Podcast Çalar" };
       case "PORTFOLIO_GALLERY": return { icon: <Image className="h-5 w-5" />, title: "Portfolyo & Galeri" };
       case "COUNTDOWN_LAUNCH": return { icon: <Clock className="h-5 w-5" />, title: "Geri Sayım & Lansman" };
+      case "TRAVEL_STOREFRONT": return { icon: <Compass className="h-5 w-5" />, title: lang === "tr" ? "Seyahat & Tur Vitrini" : "Travel & Tour Storefront" };
       default: return { icon: <Store className="h-5 w-5" />, title: "Add-on" };
     }
   };
@@ -1755,6 +2219,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   switch (addon.addonType) {
     case "ADVANCED_STOREFRONT":
       specificFields = renderAdvancedStorefrontEditor();
+      break;
+    case "TRAVEL_STOREFRONT":
+      specificFields = renderTravelStorefrontEditor();
       break;
     case "MINI_STORE":
     case "NEO_BRUTAL":
@@ -2629,6 +3096,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "MUSIC_PODCAST":
   case "PORTFOLIO_GALLERY":
   case "COUNTDOWN_LAUNCH":
+  case "TRAVEL_STOREFRONT":
 
       {
         const type = addon.addonType;

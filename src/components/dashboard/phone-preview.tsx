@@ -273,7 +273,7 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
 
 
     // 4. Premium Video / Audio / Portfolio / Countdown Addons
-    if (["PREMIUM_VIDEO", "SPOTIFY_CLASSIC", "VINYL_RETRO", "GLASS_AUDIO", "NEON_CYBERPUNK", "MUSIC_PODCAST", "PORTFOLIO_GALLERY", "COUNTDOWN_LAUNCH", "RETRO_CASSETTE", "AUDIO_PLAYER"].includes(type)) {
+    if (["PREMIUM_VIDEO", "SPOTIFY_CLASSIC", "VINYL_RETRO", "GLASS_AUDIO", "NEON_CYBERPUNK", "MUSIC_PODCAST", "PORTFOLIO_GALLERY", "COUNTDOWN_LAUNCH", "RETRO_CASSETTE", "AUDIO_PLAYER", "TRAVEL_STOREFRONT"].includes(type)) {
       const displayAvatar = parsedConfig.avatarUrl || data.avatarUrl || "";
       const displayUsername = parsedConfig.username || ("@" + data.username);
       const displayBio = parsedConfig.bio || data.bio || "";

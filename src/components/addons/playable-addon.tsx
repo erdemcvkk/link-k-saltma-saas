@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Music, Play, Pause, Clock, MessageCircle, Image, Star, ArrowLeft, SkipBack, SkipForward, Volume2, VolumeX, ListMusic, MoreHorizontal, Laptop, Sliders, Rewind, FastForward, Share2, Airplay, SlidersHorizontal, Heart } from "lucide-react";
 import MusicPlayerModule from "./MusicPlayerModule";
+import TravelStorefrontModule from "./TravelStorefrontModule";
 
 function getMediaEmbed(url: string, accentColor?: string, playing?: boolean, onClose?: () => void) {
   if (!url) return null;
@@ -1556,6 +1557,17 @@ export default function PlayableAddon({
           desc={desc}
           config={config}
           previewMode={false}
+        />
+      );
+    }
+
+    case "TRAVEL_STOREFRONT": {
+      return (
+        <TravelStorefrontModule
+          avatarUrl={avatarUrl}
+          username={username}
+          bio={bio}
+          config={config}
         />
       );
     }
