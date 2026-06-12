@@ -3,7 +3,7 @@
 import React, { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { saveAddonConfig, addAddonProduct, deleteAddonProduct } from "@/app/actions";
-import { X, Loader2, Save, Store, Calendar, FileQuestion, Mail, Heart, Clock, Briefcase, HelpCircle, MapPin, MessageCircle, Trash2, Plus, ShoppingBag, Music, Image, Compass } from "lucide-react";
+import { X, Loader2, Save, Store, Calendar, FileQuestion, Mail, Heart, Clock, Briefcase, HelpCircle, MapPin, MessageCircle, Trash2, Plus, ShoppingBag, Music, Image, Compass, User } from "lucide-react";
 import StorefrontPreview from "@/components/storefront-preview";
 import AdvancedStorefrontView from "./advanced-storefront-view";
 import PlayableAddon from "./playable-addon";
@@ -2391,6 +2391,287 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     );
   };
 
+  const renderPremiumProfileLinksEditor = () => {
+    const items = configData.premiumLinks || [];
+
+    const updateLinks = (newItems: any[]) => {
+      setConfigData({
+        ...configData,
+        premiumLinks: newItems
+      });
+    };
+
+    return (
+      <div className="space-y-4">
+        <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+          {lang === "tr" ? "Premium Linkler" : "Premium Links"}
+        </label>
+        <div className="space-y-4">
+          {items.map((item: any, idx: number) => (
+            <div key={item.id || idx} className="p-4 bg-zinc-50 border border-zinc-200 rounded-2xl relative space-y-3 shadow-sm">
+              <button
+                type="button"
+                onClick={() => {
+                  const newItems = [...items];
+                  newItems.splice(idx, 1);
+                  updateLinks(newItems);
+                }}
+                className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-red-100 hover:bg-red-200 text-red-650 flex items-center justify-center transition-colors shadow-md border border-red-200 z-10"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-555 block uppercase">{lang === "tr" ? "Link Başlığı" : "Link Title"}</label>
+                  <input
+                    type="text"
+                    placeholder="🔥 En Son Videom"
+                    value={item.title || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], title: e.target.value };
+                      updateLinks(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-805 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-555 block uppercase">{lang === "tr" ? "Link URL" : "Link URL"}</label>
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={item.url || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], url: e.target.value };
+                      updateLinks(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-805 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-555 block uppercase">{lang === "tr" ? "Animasyon Efekti" : "Animation Effect"}</label>
+                  <select
+                    value={item.animation || "none"}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], animation: e.target.value };
+                      updateLinks(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-805 font-medium focus:border-indigo-500 outline-none"
+                  >
+                    <option value="none">{lang === "tr" ? "Yok" : "None"}</option>
+                    <option value="pulse">{lang === "tr" ? "Pulse (Yavaş Parlama)" : "Pulse (Glowing)"}</option>
+                    <option value="bounce">{lang === "tr" ? "Bounce (Zıplama)" : "Bounce"}</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-555 block uppercase">{lang === "tr" ? "İkon Görseli" : "Icon Image"}</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="https://..."
+                      value={item.iconUrl || ""}
+                      onChange={(e) => {
+                        const newItems = [...items];
+                        newItems[idx] = { ...newItems[idx], iconUrl: e.target.value };
+                        updateLinks(newItems);
+                      }}
+                      className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-805 font-medium focus:border-indigo-500 outline-none"
+                    />
+                    <label className="flex items-center justify-center px-4 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap shadow-sm">
+                      {lang === "tr" ? "Seç" : "Select"}
+                      <input 
+                        type="file" 
+                        className="hidden" 
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            try {
+                              const url = await handleFileUpload(file);
+                              const newItems = [...items];
+                              newItems[idx] = { ...newItems[idx], iconUrl: url };
+                              updateLinks(newItems);
+                            } catch (err: any) { showAlert(err.message); }
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            const newItems = [...items, { id: "pl_" + Math.random().toString(36).substr(2, 5), title: "", url: "", iconUrl: "", animation: "none" }];
+            updateLinks(newItems);
+          }}
+          className="w-full py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>{lang === "tr" ? "Yeni Link Ekle" : "Add Link"}</span>
+        </button>
+      </div>
+    );
+  };
+
+  const renderPremiumSocialLinksEditor = () => {
+    const items = configData.socialLinks || [];
+
+    const updateSocials = (newItems: any[]) => {
+      setConfigData({
+        ...configData,
+        socialLinks: newItems
+      });
+    };
+
+    return (
+      <div className="space-y-4">
+        <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+          {lang === "tr" ? "Sosyal İkonlar" : "Social Icons"}
+        </label>
+        <div className="space-y-3">
+          {items.map((item: any, idx: number) => (
+            <div key={item.id || idx} className="flex gap-2 items-center bg-zinc-50 border border-zinc-200 p-2.5 rounded-xl">
+              <select
+                value={item.platformName || "instagram"}
+                onChange={(e) => {
+                  const newItems = [...items];
+                  newItems[idx] = { ...newItems[idx], platformName: e.target.value };
+                  updateSocials(newItems);
+                }}
+                className="px-2 py-1.5 rounded-lg border border-zinc-200 bg-white text-xs font-bold focus:border-indigo-550 outline-none"
+              >
+                <option value="instagram">Instagram</option>
+                <option value="twitter">Twitter / X</option>
+                <option value="youtube">YouTube</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="github">GitHub</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="email">Email</option>
+                <option value="website">Web Sitesi</option>
+              </select>
+              <input
+                type="text"
+                placeholder="https://..."
+                value={item.url || ""}
+                onChange={(e) => {
+                  const newItems = [...items];
+                  newItems[idx] = { ...newItems[idx], url: e.target.value };
+                  updateSocials(newItems);
+                }}
+                className="flex-1 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-xs text-slate-805 font-medium focus:border-indigo-500 outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  const newItems = [...items];
+                  newItems.splice(idx, 1);
+                  updateSocials(newItems);
+                }}
+                className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            const newItems = [...items, { id: "s_" + Math.random().toString(36).substr(2, 5), platformName: "instagram", url: "" }];
+            updateSocials(newItems);
+          }}
+          className="w-full py-2 rounded-xl border border-zinc-200 text-slate-600 font-bold text-xs hover:bg-zinc-50 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+        >
+          <Plus className="h-3 w-3" />
+          <span>{lang === "tr" ? "Sosyal İkon Ekle" : "Add Social Icon"}</span>
+        </button>
+      </div>
+    );
+  };
+
+  const renderPremiumProfileEditor = () => {
+    return (
+      <div className="space-y-6">
+        {/* Üst Düzey Profil Header */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            👤 {lang === "tr" ? "VIP Profil Ayarları" : "VIP Profile Settings"}
+          </h4>
+          {renderImageUpload("avatarUrl", lang === "tr" ? "Profil Resmi (Avatar)" : "Profile Image (Avatar)")}
+          {renderInput("displayName", lang === "tr" ? "Görüntülenen İsim" : "Display Name", "John Doe")}
+          {renderInput("bioText", lang === "tr" ? "Biyografi Yazısı" : "Bio Description", "VIP Premium Link Hub")}
+          
+          <div className="flex items-center gap-2 pt-2">
+            <input 
+              type="checkbox" 
+              id="showVerifiedBadge"
+              checked={!!configData.showVerifiedBadge}
+              onChange={(e) => setConfigData({ ...configData, showVerifiedBadge: e.target.checked })}
+              className="w-4 h-4 rounded border-zinc-300 text-indigo-650 focus:ring-indigo-500"
+            />
+            <label htmlFor="showVerifiedBadge" className="text-xs font-bold text-slate-700 select-none cursor-pointer">
+              🔵 {lang === "tr" ? "Mavi Onay Rozeti Göster (Verified Badge)" : "Show Verified Badge"}
+            </label>
+          </div>
+        </div>
+
+        {/* Premium Background Gradients */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            🎨 {lang === "tr" ? "Premium Arka Plan Gradiyenti" : "Premium Background Gradient"}
+          </h4>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {[
+              { key: "slate-dark", name: "Slate Dark", class: "bg-gradient-to-tr from-slate-900 to-slate-700" },
+              { key: "royal-purple", name: "Royal Purple", class: "bg-gradient-to-tr from-purple-900 to-indigo-850" },
+              { key: "emerald-forest", name: "Emerald Forest", class: "bg-gradient-to-tr from-emerald-900 to-zinc-900" },
+              { key: "sunset-fire", name: "Sunset Fire", class: "bg-gradient-to-tr from-rose-900 to-slate-900" },
+              { key: "neon-blue", name: "Neon Blue", class: "bg-gradient-to-tr from-cyan-900 to-blue-900" }
+            ].map((preset) => {
+              const isSelected = (configData.bgGradient || "slate-dark") === preset.key;
+              return (
+                <button
+                  key={preset.key}
+                  type="button"
+                  onClick={() => setConfigData({ ...configData, bgGradient: preset.key })}
+                  className={`p-3 rounded-2xl border text-left flex flex-col justify-between aspect-[1.5] transition-all relative ${
+                    isSelected ? "border-indigo-600 ring-2 ring-indigo-500/20" : "border-zinc-200 hover:border-zinc-300"
+                  }`}
+                >
+                  <div className={`w-full h-8 rounded-lg ${preset.class}`} />
+                  <span className="text-[10px] font-bold text-slate-800">{preset.name}</span>
+                  {isSelected && (
+                    <span className="absolute top-2 right-2 w-3.5 h-3.5 rounded-full bg-indigo-650 flex items-center justify-center text-white text-[8px]">✓</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Premium Linkler */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          {renderPremiumProfileLinksEditor()}
+        </div>
+
+        {/* Sosyal İkonlar */}
+        <div className="space-y-4 pt-2">
+          {renderPremiumSocialLinksEditor()}
+        </div>
+      </div>
+    );
+  };
+
   const getAddonDetails = () => {
     switch (addon.addonType) {
       case "CORP_EXEC": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
@@ -2411,6 +2692,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       case "COUNTDOWN_LAUNCH": return { icon: <Clock className="h-5 w-5" />, title: "Geri Sayım & Lansman" };
       case "TRAVEL_STOREFRONT": return { icon: <Compass className="h-5 w-5" />, title: lang === "tr" ? "Seyahat & Tur Vitrini" : "Travel & Tour Storefront" };
       case "ELITE_TRAVEL": return { icon: <Compass className="h-5 w-5" />, title: lang === "tr" ? "Elite Travel (Bento Box)" : "Elite Travel (Bento Box)" };
+      case "PREMIUM_PROFILE": return { icon: <User className="h-5 w-5" />, title: lang === "tr" ? "Premium Profil & Link Vitrini" : "Premium Profile & Link Hub" };
       default: return { icon: <Store className="h-5 w-5" />, title: "Add-on" };
     }
   };
@@ -2467,6 +2749,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       break;
     case "ELITE_TRAVEL":
       specificFields = renderEliteTravelEditor();
+      break;
+    case "PREMIUM_PROFILE":
+      specificFields = renderPremiumProfileEditor();
       break;
     case "MINI_STORE":
     case "NEO_BRUTAL":
@@ -3343,6 +3628,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "COUNTDOWN_LAUNCH":
   case "TRAVEL_STOREFRONT":
   case "ELITE_TRAVEL":
+  case "PREMIUM_PROFILE":
 
       {
         const type = addon.addonType;

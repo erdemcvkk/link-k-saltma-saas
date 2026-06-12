@@ -595,6 +595,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     if (t === "COUNTDOWN_LAUNCH") return "countdown";
     if (t === "TRAVEL_STOREFRONT") return "travel-store";
     if (t === "ELITE_TRAVEL") return "elite-travel";
+    if (t === "PREMIUM_PROFILE") return "premium-hub";
     if (t === "CORP_EXEC") return "corporate";
     return t.toLowerCase();
   };
@@ -786,6 +787,25 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
               </div>
             </div>
             <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white shrink-0">
+              <span className="text-[10px] ml-0.5">▶</span>
+            </div>
+          </div>
+        </CardWrapper>
+      );
+    case "PREMIUM_PROFILE":
+      return (
+        <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-violet-500/10 flex items-center justify-center shrink-0">
+                <User className="h-5 w-5 text-violet-600" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-800">{configData.displayName || "Premium Profil & Linkler"}</h4>
+                <p className="text-xs opacity-70 mt-0.5 truncate max-w-[200px]">{isDark ? "VIP Glassmorphism Link Hub" : "VIP Cam Efektli Link Merkezi"}</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-violet-600 flex items-center justify-center text-white shrink-0">
               <span className="text-[10px] ml-0.5">▶</span>
             </div>
           </div>
@@ -1442,6 +1462,30 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
                 <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=200&q=80" className="absolute inset-0 w-full h-full object-cover opacity-60" />
                 <h5 className="text-[7px] font-black text-white relative z-10 leading-tight">Ege Yat Turu</h5>
                 <span className="text-[7px] font-black text-emerald-400 relative z-10">32.000 TL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    case "PREMIUM_PROFILE":
+      return (
+        <div className="w-full h-full bg-slate-900 flex flex-col p-4 relative z-0 justify-between select-none">
+          <div className="w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl overflow-hidden flex flex-col shadow-md mt-6 p-4 text-center items-center space-y-3">
+            <div className="w-12 h-12 rounded-full ring-2 ring-white/20 bg-zinc-800 flex items-center justify-center text-white text-xs font-bold shrink-0">
+              VIP
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-[10px] font-bold text-white">{config.displayName || "Premium Hub"}</span>
+              {config.showVerifiedBadge && <span className="text-[8px] text-sky-400">🔵</span>}
+            </div>
+            <div className="w-full space-y-2">
+              <div className="w-full py-2.5 px-4 rounded-xl bg-white/10 border border-white/10 text-[8px] text-white font-bold flex justify-between items-center">
+                <span>🔥 En Son Videom</span>
+                <span>↗</span>
+              </div>
+              <div className="w-full py-2.5 px-4 rounded-xl bg-white/10 border border-white/10 text-[8px] text-white font-bold flex justify-between items-center">
+                <span>📚 Şablon Mağazam</span>
+                <span>↗</span>
               </div>
             </div>
           </div>

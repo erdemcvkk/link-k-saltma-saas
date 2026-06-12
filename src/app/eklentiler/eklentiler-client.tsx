@@ -8,6 +8,7 @@ import AdvancedStorefrontView from "@/components/addons/advanced-storefront-view
 import MusicPlayerModule from "@/components/addons/MusicPlayerModule";
 import TravelStorefrontModule from "@/components/addons/TravelStorefrontModule";
 import EliteTravelModule from "@/components/addons/EliteTravelModule";
+import PremiumProfileModule from "@/components/addons/PremiumProfileModule";
 import { buyAddonAction } from "../actions";
 
 interface AddonTypeData {
@@ -79,6 +80,19 @@ export const ADDON_TYPES: AddonTypeData[] = [
     bio: "Lüks ve Seçkin Bento Gezi Rotaları",
     avatarUrl: "/placeholder.png",
     category: "Satış & Gelir",
+    mockProducts: []
+  },
+  { 
+    id: "PREMIUM_PROFILE", 
+    name: "Premium Profil & Link Vitrini", 
+    desc: "VIP görünüm, özel parlayan onaylı avatar, cam efekti (glassmorphic) butonlar ve özelleştirilebilir animasyonlu link merkezi.", 
+    color: "bg-violet-650",
+    theme: "classic",
+    price: "159",
+    username: "@vip.creative",
+    bio: "Premium Link Hub & Design Studio",
+    avatarUrl: "/placeholder.png",
+    category: "Profil & Kartvizit",
     mockProducts: []
   },
   { 
@@ -520,7 +534,9 @@ export default function EklentilerClient({ products, settings, userId = null, db
  <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
  
  <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">
- {addon.id === "ELITE_TRAVEL" ? (
+ {addon.id === "PREMIUM_PROFILE" ? (
+      <PremiumProfileModule config={{}} avatarUrl={addon.avatarUrl} username={addon.username} bio={addon.bio} />
+    ) : addon.id === "ELITE_TRAVEL" ? (
       <EliteTravelModule config={{}} avatarUrl={addon.avatarUrl} username={addon.username} bio={addon.bio} />
     ) : addon.id === "TRAVEL_STOREFRONT" ? (
       <TravelStorefrontModule config={{}} avatarUrl={addon.avatarUrl} username={addon.username} bio={addon.bio} />

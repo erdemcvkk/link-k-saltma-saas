@@ -5,6 +5,7 @@ import { Music, Play, Pause, Clock, MessageCircle, Image, Star, ArrowLeft, SkipB
 import MusicPlayerModule from "./MusicPlayerModule";
 import TravelStorefrontModule from "./TravelStorefrontModule";
 import EliteTravelModule from "./EliteTravelModule";
+import PremiumProfileModule from "./PremiumProfileModule";
 
 function getMediaEmbed(url: string, accentColor?: string, playing?: boolean, onClose?: () => void) {
   if (!url) return null;
@@ -1576,6 +1577,17 @@ export default function PlayableAddon({
     case "ELITE_TRAVEL": {
       return (
         <EliteTravelModule
+          avatarUrl={avatarUrl}
+          username={username}
+          bio={bio}
+          config={config}
+        />
+      );
+    }
+
+    case "PREMIUM_PROFILE": {
+      return (
+        <PremiumProfileModule
           avatarUrl={avatarUrl}
           username={username}
           bio={bio}
