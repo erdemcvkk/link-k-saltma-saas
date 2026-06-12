@@ -281,7 +281,7 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
       const displayDesc = parsedConfig.description || (type === "AUDIO_PLAYER" ? "100% yerel, çalışır ve animasyonlu premium müzik çalar modülü." : type === "RETRO_CASSETTE" ? "90'ların nostaljik dönen makaralı kaset tasarımı." : type === "SPOTIFY_CLASSIC" ? "Orijinal ve ikonik Spotify görünümü." : type === "VINYL_RETRO" ? "Nostaljik ruhu yaşatan, plak görünümlü oynatıcı." : type === "GLASS_AUDIO" ? "Albüm renklerine uyum sağlayan yarı saydam tasarım." : type === "NEON_CYBERPUNK" ? "Elektronik müzik ve synthwave tutkunları için." : type === "MUSIC_PODCAST" ? "Beat'lerinizi ve podcast'lerinizi doğrudan sayfanızda dinletin." : type === "PORTFOLIO_GALLERY" ? "Tasarımlarınızı ve fotoğraflarınızı şık bir ızgara (grid) yapısında sergileyin." : type === "COUNTDOWN_LAUNCH" ? "Yeni ürün veya içerikleriniz için heyecan yaratacak dinamik sayaç." : type === "PREMIUM_VIDEO" ? "Premium video derslerinizi ve içeriklerinizi sergileyin." : "");
 
       return (
-        <div className="w-full h-full bg-zinc-950 flex flex-col justify-between overflow-y-auto no-scrollbar">
+        <div className="w-full h-full bg-zinc-950 flex flex-col justify-between overflow-y-auto no-scrollbar relative overflow-hidden">
           <PlayableAddon
             type={type}
             avatarUrl={displayAvatar}

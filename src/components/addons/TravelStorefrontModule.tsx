@@ -188,7 +188,7 @@ export default function TravelStorefrontModule({
   };
 
   return (
-    <div className="w-full min-h-screen overflow-x-hidden flex flex-col font-sans relative pb-24 bg-slate-50 text-slate-800">
+    <div className="w-full min-h-full h-full overflow-x-hidden flex flex-col font-sans relative pb-24 bg-slate-50 text-slate-800">
       {/* ── 1. EXPLORE TAB ── */}
       {activeTab === "explore" && (
         <div className="flex-1 flex flex-col justify-start w-full">
@@ -495,7 +495,7 @@ export default function TravelStorefrontModule({
       )}
 
       {/* ── 4. GLASSMORPHIC BOTTOM NAV BAR ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 max-w-md mx-auto px-4 pb-4">
+      <div className="absolute bottom-0 left-0 right-0 z-30 max-w-md mx-auto px-4 pb-4">
         <div className="w-full h-16 rounded-3xl backdrop-blur-md bg-white/75 border border-zinc-200/50 flex items-center justify-around px-2 shadow-xl">
           <button 
             onClick={() => setActiveTab("explore")}
