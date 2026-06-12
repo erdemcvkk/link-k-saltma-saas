@@ -10,7 +10,7 @@ import {
 } from "@/app/actions";
 import { 
  ArrowLeft, Plus, Trash2, CheckCircle, X, 
- Store, Code, Layout, Edit2, Info, LayoutGrid, Check, Settings
+ Store, Code, Layout, Edit2, Info, LayoutGrid, Check, Settings, Gift
 } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import UniversalProfile from "@/components/universal-profile";
@@ -111,6 +111,21 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  showMsg(err.message || "Örnek şablonlar eklenirken hata oluştu.", "error");
  }
  });
+ };
+
+ const handleToggleFree = async (id: string, currentPrice: number) => {
+  const newPrice = currentPrice > 0 ? 0 : 149;
+  startTransition(async () => {
+   try {
+    await updateTemplate(adminUserId, id, { price: newPrice });
+    setTemplates(prev =>
+     prev.map(t => t.id === id ? { ...t, price: newPrice } : t)
+    );
+    showMsg(newPrice === 0 ? "Şablon ücretsiz yapıldı!" : "Şablon ücretli yapıldı!", "success");
+   } catch (err: any) {
+    showMsg(err.message || "Fiyat güncellenirken hata oluştu.", "error");
+   }
+  });
  };
 
  const handleEditClick = (template: Template) => {
@@ -352,6 +367,16 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  </div>
  </div>
  <div className="flex flex-col gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity pr-2">
+ <button 
+ onClick={(e) => { e.stopPropagation(); handleToggleFree(template.id, template.price); }} 
+ className={`px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg text-[10px] font-bold transition-colors cursor-pointer flex items-center justify-center gap-1 ${
+  template.price === 0
+   ? "bg-amber-500/20 hover:bg-amber-500/30 text-amber-400"
+   : "bg-zinc-800 hover:bg-amber-500/20 text-zinc-400 hover:text-amber-400"
+ }`}
+ >
+ <Gift className="h-3 w-3" /> {template.price === 0 ? "Ücretli Yap" : "Ücretsiz Yap"}
+ </button>
  <button 
  onClick={(e) => { e.stopPropagation(); handleEditClick(template); }} 
  className="px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-[10px] font-bold transition-colors cursor-pointer flex items-center justify-center gap-1"

@@ -4,7 +4,7 @@ import React, { useState, useTransition } from "react";
 import Link from "next/link";
 import { 
  ArrowLeft, Plus, Trash2, Edit2, Settings, LayoutGrid, CheckCircle, 
- X, Info, Store, SlidersHorizontal
+ X, Info, Store, SlidersHorizontal, Gift
 } from "lucide-react";
 import { saveAddonSetting } from "../../actions";
 import EklentilerClient, { ADDON_TYPES } from "../../eklentiler/eklentiler-client";
@@ -202,12 +202,33 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
             <div className="text-xs text-zinc-400 font-medium mt-1 truncate max-w-[200px]">
               {currentDesc}
             </div>
-            <div className="text-xs font-bold text-emerald-400 mt-1">
-              {currentPrice} ₺
+            <div className="text-xs font-bold mt-1">
+              {String(currentPrice) === "0" ? (
+                <span className="text-amber-400">Ücretsiz</span>
+              ) : (
+                <span className="text-emerald-400">{currentPrice} ₺</span>
+              )}
             </div>
           </div>
         </div>
         <div className="flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity pr-2">
+          <button 
+            type="button" 
+            onClick={(e) => {
+              e.stopPropagation();
+              const isFreeNow = String(currentPrice) === "0";
+              const newPrice = isFreeNow ? (addon.price || "149") : "0";
+              handleSettingChange(`theme_PRICE_${addon.id}`, String(newPrice));
+            }} 
+            className={`p-2.5 rounded-xl transition-colors ${
+              String(currentPrice) === "0"
+                ? "bg-amber-500/20 hover:bg-amber-500/30 text-amber-400"
+                : "bg-zinc-800 hover:bg-amber-500/20 text-zinc-400 hover:text-amber-400"
+            }`}
+            title={String(currentPrice) === "0" ? "Ücretli Yap" : "Ücretsiz Yap"}
+          >
+            <Gift className="h-4 w-4" />
+          </button>
           <button 
             type="button" 
             onClick={(e) => {
