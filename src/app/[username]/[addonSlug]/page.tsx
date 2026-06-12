@@ -519,16 +519,6 @@ export default async function AddonPage({
               config={parsedConfig}
             />
           </div>
-
-          {/* Direct Buy Section */}
-          <div className="w-full bg-zinc-900 p-6 border-t border-zinc-800 text-center flex flex-col gap-3">
-            <a
-              href={`/@${user.username}`}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-neon-blue to-light-blue text-white text-sm font-extrabold tracking-wide shadow-lg shadow-neon-blue/15 hover:opacity-95 transition-all text-center block"
-            >
-              Biyo Link Sayfama Git
-            </a>
-          </div>
         </div>
       </div>
     );
