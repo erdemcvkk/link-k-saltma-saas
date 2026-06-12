@@ -594,6 +594,7 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
     if (t === "PORTFOLIO_GALLERY") return "portfolio-gallery";
     if (t === "COUNTDOWN_LAUNCH") return "countdown";
     if (t === "TRAVEL_STOREFRONT") return "travel-store";
+    if (t === "ELITE_TRAVEL") return "elite-travel";
     if (t === "CORP_EXEC") return "corporate";
     return t.toLowerCase();
   };
@@ -766,6 +767,25 @@ function renderAddonBlockHelper(addon: any, cardBg: string, btnClass: string, is
               </div>
             </div>
             <div className="w-8 h-8 rounded-full bg-sky-600 flex items-center justify-center text-white shrink-0">
+              <span className="text-[10px] ml-0.5">▶</span>
+            </div>
+          </div>
+        </CardWrapper>
+      );
+    case "ELITE_TRAVEL":
+      return (
+        <CardWrapper key={addon.id} slug={getSlug(type, configData)}>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+                <Compass className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-800">{configData.heroTitle || "Elite Seyahat & Bento Rotalar"}</h4>
+                <p className="text-xs opacity-70 mt-0.5 truncate max-w-[200px]">{isDark ? "Exclusive Bento Travel Grid." : "Seçkin Bento kutusu seyahat vitrini."}</p>
+              </div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white shrink-0">
               <span className="text-[10px] ml-0.5">▶</span>
             </div>
           </div>
@@ -1387,6 +1407,41 @@ function renderAddonInnerContent(type: string, avatarUrl: string, username: stri
                   <h5 className="text-[8px] font-black text-slate-800 truncate">Karadeniz Yaylaları</h5>
                   <span className="text-[8px] font-black text-orange-600">12.500 TL</span>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    case "ELITE_TRAVEL":
+      return (
+        <div className="w-full h-full bg-[#f8fafc] flex flex-col p-4 relative z-0 justify-between select-none">
+          <div className="w-full bg-white rounded-3xl overflow-hidden border border-zinc-200/80 flex flex-col shadow-md mt-6 p-4">
+            <div className="flex items-center justify-between mb-4 border-b pb-2 border-slate-100">
+              <div className="flex items-center gap-1.5">
+                <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[8px]">⭐</div>
+                <span className="text-[9px] font-black text-slate-800 uppercase tracking-tight">{config.brandName || "Elite Travel"}</span>
+              </div>
+              <span className="text-[9px] text-slate-400">🔔</span>
+            </div>
+            <div className="text-left mb-4 space-y-1">
+              <h4 className="text-sm font-black text-slate-900 font-sans tracking-tight uppercase leading-none">{config.heroTitle || "Sınırları Aşın"}</h4>
+              <p className="text-[8px] text-slate-400">{config.heroSubtitle || "Size özel bento kutusu konseptli lüks seyahatler."}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-2.5">
+              <div className="col-span-2 relative aspect-[1.8] rounded-2xl overflow-hidden bg-slate-900 flex flex-col justify-end p-2.5">
+                <img src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=200&q=80" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <h5 className="text-[8px] font-black text-white relative z-10 leading-tight">Maldivler VIP</h5>
+                <span className="text-[8px] font-black text-emerald-400 relative z-10">95.000 TL</span>
+              </div>
+              <div className="col-span-1 relative aspect-[1.1] rounded-2xl overflow-hidden bg-slate-900 flex flex-col justify-end p-2">
+                <img src="https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=200&q=80" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <h5 className="text-[7px] font-black text-white relative z-10 leading-tight">Tokyo Turu</h5>
+                <span className="text-[7px] font-black text-emerald-400 relative z-10">64.000 TL</span>
+              </div>
+              <div className="col-span-1 relative aspect-[1.1] rounded-2xl overflow-hidden bg-slate-900 flex flex-col justify-end p-2">
+                <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=200&q=80" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <h5 className="text-[7px] font-black text-white relative z-10 leading-tight">Ege Yat Turu</h5>
+                <span className="text-[7px] font-black text-emerald-400 relative z-10">32.000 TL</span>
               </div>
             </div>
           </div>

@@ -7,6 +7,7 @@ import StorefrontPreview, { StoreThemeType, DummyProduct } from "@/components/st
 import AdvancedStorefrontView from "@/components/addons/advanced-storefront-view";
 import MusicPlayerModule from "@/components/addons/MusicPlayerModule";
 import TravelStorefrontModule from "@/components/addons/TravelStorefrontModule";
+import EliteTravelModule from "@/components/addons/EliteTravelModule";
 import { buyAddonAction } from "../actions";
 
 interface AddonTypeData {
@@ -63,6 +64,19 @@ export const ADDON_TYPES: AddonTypeData[] = [
     price: "149",
     username: "@gezgin.tur",
     bio: "Macera ve Doğa Turları Acentesi",
+    avatarUrl: "/placeholder.png",
+    category: "Satış & Gelir",
+    mockProducts: []
+  },
+  { 
+    id: "ELITE_TRAVEL", 
+    name: "Elite Seyahat (Bento Grid)", 
+    desc: "Asimetrik Bento Box ızgara tasarımı, marka kimliği başlığı ve özel favori rotalar navigasyonlu lüks seyahat vitrini.", 
+    color: "bg-emerald-600",
+    theme: "classic",
+    price: "169",
+    username: "@elite.escapes",
+    bio: "Lüks ve Seçkin Bento Gezi Rotaları",
     avatarUrl: "/placeholder.png",
     category: "Satış & Gelir",
     mockProducts: []
@@ -506,8 +520,10 @@ export default function EklentilerClient({ products, settings, userId = null, db
  <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
  
  <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">
- {addon.id === "TRAVEL_STOREFRONT" ? (
-     <TravelStorefrontModule config={{}} avatarUrl={addon.avatarUrl} username={addon.username} bio={addon.bio} />
+ {addon.id === "ELITE_TRAVEL" ? (
+      <EliteTravelModule config={{}} avatarUrl={addon.avatarUrl} username={addon.username} bio={addon.bio} />
+    ) : addon.id === "TRAVEL_STOREFRONT" ? (
+      <TravelStorefrontModule config={{}} avatarUrl={addon.avatarUrl} username={addon.username} bio={addon.bio} />
    ) : addon.id === "ADVANCED_STOREFRONT" ? (
     <AdvancedStorefrontView config={{}} lang="tr" />
   ) : addon.id === "PREMIUM_VIDEO" ? (

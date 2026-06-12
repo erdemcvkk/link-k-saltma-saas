@@ -2150,6 +2150,247 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
     );
   };
 
+  const renderEliteTravelBentoToursEditor = () => {
+    const items = configData.bentoTours || [];
+
+    const updateBentoTours = (newItems: any[]) => {
+      setConfigData({
+        ...configData,
+        bentoTours: newItems
+      });
+    };
+
+    return (
+      <div className="space-y-4">
+        <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+          {lang === "tr" ? "Bento Turlar" : "Bento Tours"}
+        </label>
+        <div className="space-y-4">
+          {items.map((item: any, idx: number) => (
+            <div key={item.id || idx} className="p-4 bg-zinc-50 border border-zinc-200 rounded-2xl relative space-y-3 shadow-sm">
+              <button
+                type="button"
+                onClick={() => {
+                  const newItems = [...items];
+                  newItems.splice(idx, 1);
+                  updateBentoTours(newItems);
+                }}
+                className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-red-100 hover:bg-red-200 text-red-650 flex items-center justify-center transition-colors shadow-md border border-red-200 z-10"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-550 block uppercase">{lang === "tr" ? "Tur Adı" : "Tour Title"}</label>
+                  <input
+                    type="text"
+                    placeholder="Maldivler Balayı"
+                    value={item.title || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], title: e.target.value };
+                      updateBentoTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-805 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-555 block uppercase">{lang === "tr" ? "Fiyat" : "Price"}</label>
+                  <input
+                    type="number"
+                    placeholder="95000"
+                    value={item.price || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], price: Number(e.target.value) || 0 };
+                      updateBentoTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-805 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-555 block uppercase">{lang === "tr" ? "Kart Boyutu" : "Card Size"}</label>
+                  <select
+                    value={item.isLarge ? "true" : "false"}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], isLarge: e.target.value === "true" };
+                      updateBentoTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-805 font-medium focus:border-indigo-550 outline-none"
+                  >
+                    <option value="false">{lang === "tr" ? "Küçük Kart (1 Kolon)" : "Small Card (1 Col)"}</option>
+                    <option value="true">{lang === "tr" ? "Büyük Kart (Tam Genişlik)" : "Large Card (Full Width)"}</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold text-slate-555 block uppercase">{lang === "tr" ? "Yönlendirme Linki" : "Buy Link"}</label>
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={item.buyLink || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], buyLink: e.target.value };
+                      updateBentoTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-805 font-medium focus:border-indigo-500 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-555 block uppercase">{lang === "tr" ? "Tur Görseli" : "Tour Image"}</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="https://..."
+                    value={item.image || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = { ...newItems[idx], image: e.target.value };
+                      updateBentoTours(newItems);
+                    }}
+                    className="w-full px-3 py-2 rounded-xl border border-zinc-200 bg-white text-xs text-slate-805 font-medium focus:border-indigo-500 outline-none"
+                  />
+                  <label className="flex items-center justify-center px-4 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-bold rounded-xl cursor-pointer border border-zinc-200 transition-colors whitespace-nowrap shadow-sm">
+                    {lang === "tr" ? "Dosya Seç" : "Select File"}
+                    <input 
+                      type="file" 
+                      className="hidden" 
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          try {
+                            const url = await handleFileUpload(file);
+                            const newItems = [...items];
+                            newItems[idx] = { ...newItems[idx], image: url };
+                            updateBentoTours(newItems);
+                          } catch (err: any) { showAlert(err.message); }
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            const newItems = [...items, { id: "bt_" + Math.random().toString(36).substr(2, 5), title: "", price: 0, image: "", isLarge: false, buyLink: "" }];
+            updateBentoTours(newItems);
+          }}
+          className="w-full py-2.5 rounded-xl border-2 border-dashed border-indigo-200 text-indigo-600 font-bold text-xs hover:bg-indigo-50 transition-colors flex items-center justify-center gap-1.5"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>{lang === "tr" ? "Yeni Tur Ekle" : "Add Tour"}</span>
+        </button>
+      </div>
+    );
+  };
+
+  const renderEliteTravelEditor = () => {
+    return (
+      <div className="space-y-6">
+        {/* Marka Ayarları */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            🏷️ {lang === "tr" ? "Marka Kimliği" : "Brand Identity"}
+          </h4>
+          {renderImageUpload("brandLogoUrl", lang === "tr" ? "Marka Logosu" : "Brand Logo")}
+          {renderInput("brandName", lang === "tr" ? "Marka Adı" : "Brand Name", "Elite Travel")}
+        </div>
+
+        {/* Tema Renkleri */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            🎨 {lang === "tr" ? "Tema Renkleri" : "Theme Colors"}
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+                {lang === "tr" ? "Arka Plan" : "Background"}
+              </label>
+              <div className="flex gap-2">
+                <input 
+                  type="color" 
+                  value={configData.bgColor || "#f8fafc"} 
+                  onChange={(e) => setConfigData({ ...configData, bgColor: e.target.value })}
+                  className="w-10 h-10 p-0 border border-zinc-250 rounded-xl cursor-pointer bg-transparent"
+                />
+                <input 
+                  type="text" 
+                  value={configData.bgColor || "#f8fafc"} 
+                  onChange={(e) => setConfigData({ ...configData, bgColor: e.target.value })}
+                  className="flex-1 min-w-0 px-2 py-2 rounded-xl border border-zinc-200 text-xs font-medium"
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+                {lang === "tr" ? "Kart Rengi" : "Card Color"}
+              </label>
+              <div className="flex gap-2">
+                <input 
+                  type="color" 
+                  value={configData.cardColor || "#ffffff"} 
+                  onChange={(e) => setConfigData({ ...configData, cardColor: e.target.value })}
+                  className="w-10 h-10 p-0 border border-zinc-250 rounded-xl cursor-pointer bg-transparent"
+                />
+                <input 
+                  type="text" 
+                  value={configData.cardColor || "#ffffff"} 
+                  onChange={(e) => setConfigData({ ...configData, cardColor: e.target.value })}
+                  className="flex-1 min-w-0 px-2 py-2 rounded-xl border border-zinc-200 text-xs font-medium"
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 block uppercase tracking-wide">
+                {lang === "tr" ? "Vurgu Rengi" : "Accent Color"}
+              </label>
+              <div className="flex gap-2">
+                <input 
+                  type="color" 
+                  value={configData.accentColor || "#10b981"} 
+                  onChange={(e) => setConfigData({ ...configData, accentColor: e.target.value })}
+                  className="w-10 h-10 p-0 border border-zinc-250 rounded-xl cursor-pointer bg-transparent"
+                />
+                <input 
+                  type="text" 
+                  value={configData.accentColor || "#10b981"} 
+                  onChange={(e) => setConfigData({ ...configData, accentColor: e.target.value })}
+                  className="flex-1 min-w-0 px-2 py-2 rounded-xl border border-zinc-200 text-xs font-medium"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Karşılama */}
+        <div className="space-y-4 pt-2 border-b border-zinc-200 pb-6 mb-6">
+          <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+            ✨ {lang === "tr" ? "Karşılama Alanı" : "Welcome Area"}
+          </h4>
+          {renderInput("heroTitle", lang === "tr" ? "Başlık" : "Hero Title", "Sınırları Aşın")}
+          {renderInput("heroSubtitle", lang === "tr" ? "Alt Başlık" : "Hero Subtitle", "Size özel bento kutusu konseptli seçkin seyahat deneyimleri.")}
+        </div>
+
+        {/* Bento Turlar */}
+        <div className="space-y-4 pt-2">
+          {renderEliteTravelBentoToursEditor()}
+        </div>
+      </div>
+    );
+  };
+
   const getAddonDetails = () => {
     switch (addon.addonType) {
       case "CORP_EXEC": return { icon: <Store className="h-5 w-5" />, title: lang === "tr" ? "Mağaza" : "Store" };
@@ -2169,6 +2410,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       case "PORTFOLIO_GALLERY": return { icon: <Image className="h-5 w-5" />, title: "Portfolyo & Galeri" };
       case "COUNTDOWN_LAUNCH": return { icon: <Clock className="h-5 w-5" />, title: "Geri Sayım & Lansman" };
       case "TRAVEL_STOREFRONT": return { icon: <Compass className="h-5 w-5" />, title: lang === "tr" ? "Seyahat & Tur Vitrini" : "Travel & Tour Storefront" };
+      case "ELITE_TRAVEL": return { icon: <Compass className="h-5 w-5" />, title: lang === "tr" ? "Elite Travel (Bento Box)" : "Elite Travel (Bento Box)" };
       default: return { icon: <Store className="h-5 w-5" />, title: "Add-on" };
     }
   };
@@ -2222,6 +2464,9 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
       break;
     case "TRAVEL_STOREFRONT":
       specificFields = renderTravelStorefrontEditor();
+      break;
+    case "ELITE_TRAVEL":
+      specificFields = renderEliteTravelEditor();
       break;
     case "MINI_STORE":
     case "NEO_BRUTAL":
@@ -3097,6 +3342,7 @@ export default function AddonConfigModal({ addon, products = [], onClose, lang, 
   case "PORTFOLIO_GALLERY":
   case "COUNTDOWN_LAUNCH":
   case "TRAVEL_STOREFRONT":
+  case "ELITE_TRAVEL":
 
       {
         const type = addon.addonType;
