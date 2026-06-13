@@ -13,6 +13,7 @@ import {
   Puzzle,
   Lock,
   ExternalLink,
+  Copy,
 } from "lucide-react";
 import { useDashboard } from "./dashboard-context";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
@@ -40,6 +41,18 @@ export default function DashboardLayoutClient({
     upgradeModalTitle,
     upgradeModalDesc,
   } = useDashboard();
+ 
+  const [copied, setCopied] = React.useState(false);
+
+  const handleCopyLink = () => {
+    if (!user.username) return;
+    const profileUrl = `${window.location.protocol}//${window.location.host}/${user.username}`;
+    navigator.clipboard.writeText(profileUrl);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
 
   const handleStateChange = (state: { lang: "tr" | "en"; theme: "dark" | "light" }) => {
     setLang(state.lang);
@@ -140,15 +153,31 @@ export default function DashboardLayoutClient({
           </Link>
 
           {user.username && (
-            <a
-              href={`/${user.username}`}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-full border text-xs font-semibold transition-all bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 shadow-sm"
-            >
-              <span>{t.liveSite}</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
+            <>
+              <button
+                onClick={handleCopyLink}
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-full border text-xs font-semibold transition-all bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 shadow-sm cursor-pointer"
+              >
+                {copied ? (
+                  <span>{lang === "tr" ? "Kopyalandı! ✅" : "Copied! ✅"}</span>
+                ) : (
+                  <>
+                    <Copy className="h-3 w-3 text-slate-500" />
+                    <span>{lang === "tr" ? "Linki Kopyala" : "Copy Link"}</span>
+                  </>
+                )}
+              </button>
+
+              <a
+                href={`/${user.username}`}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-full border text-xs font-semibold transition-all bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 shadow-sm"
+              >
+                <span>{t.liveSite}</span>
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </>
           )}
 
           {/* Logout Button */}
