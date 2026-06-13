@@ -11,7 +11,7 @@ export default async function CookiePolicyPage() {
 
  const content = setting?.value || `
 <h2>1. Çerezler Nedir?</h2>
-<p>Çerezler, web sitelerinin tarayıcınıza yerleştirdiği küçük metin dosyalarıdır. Creator.Hub, platformu daha iyi çalıştırmak, deneyiminizi kişiselleştirmek ve güvenliği sağlamak için çerezler kullanmaktadır.</p>
+<p>Çerezler, web sitelerinin tarayıcınıza yerleştirdiği küçük metin dosyalarıdır. Clinkor, platformu daha iyi çalıştırmak, deneyiminizi kişiselleştirmek ve güvenliği sağlamak için çerezler kullanmaktadır.</p>
 
 <h2>2. Kullandığımız Çerez Türleri</h2>
 
@@ -25,7 +25,7 @@ export default async function CookiePolicyPage() {
 <p>Dil tercihiniz, tema ayarınız (açık/koyu mod) ve diğer kişiselleştirme seçeneklerinizi hatırlamak için kullanılır.</p>
 
 <h3>🎯 Hedefleme / Pazarlama Çerezleri</h3>
-<p>Creator.Hub şu anda üçüncü taraf pazarlama çerezleri kullanmamaktadır. Bu politika değişirse, önceden bilgilendirileceksiniz.</p>
+<p>Clinkor şu anda üçüncü taraf pazarlama çerezleri kullanmamaktadır. Bu politika değişirse, önceden bilgilendirileceksiniz.</p>
 
 <h2>3. Kullandığımız Belirli Çerezler</h2>
 <table>
@@ -45,13 +45,13 @@ export default async function CookiePolicyPage() {
  <td>Zorunlu</td>
  </tr>
  <tr>
- <td><code>creator_hub_theme</code></td>
+ <td><code>clinkor_theme</code></td>
  <td>Kullanıcı tema tercihi</td>
  <td>1 yıl</td>
  <td>İşlevsel</td>
  </tr>
  <tr>
- <td><code>creator_hub_lang</code></td>
+ <td><code>clinkor_lang</code></td>
  <td>Dil tercihi</td>
  <td>1 yıl</td>
  <td>İşlevsel</td>
@@ -82,7 +82,7 @@ export default async function CookiePolicyPage() {
 <p>Çerez tercihlerinizi herhangi bir zamanda platform ayarlarından veya tarayıcınız aracılığıyla değiştirebilirsiniz. Değişiklikler hemen geçerli olacaktır.</p>
 
 <h2>7. İletişim</h2>
-<p>Çerez politikamız hakkında sorularınız için: <a href="mailto:privacy@creator.hub">privacy@creator.hub</a></p>
+<p>Çerez politikamız hakkında sorularınız için: <a href="mailto:privacy@clinkor.com">privacy@clinkor.com</a></p>
  `.trim();
 
  return (
@@ -108,7 +108,7 @@ export default async function CookiePolicyPage() {
  Çerez Politikası
  </h1>
  <p className="text-xs text-zinc-400 font-semibold mt-0.5">
- Son güncelleme: Mayıs 2026 &bull; Creator.Hub
+ Son güncelleme: Mayıs 2026 &bull; Clinkor
  </p>
  </div>
  </div>
@@ -127,7 +127,7 @@ export default async function CookiePolicyPage() {
  {/* Footer Note */}
  <div className="mt-8 text-center text-xs text-zinc-400 font-semibold space-y-2">
  <p>Kişisel veri işleme için: <Link href="/privacy" className="text-amber-500 hover:underline">Gizlilik Politikası</Link></p>
- <p>© 2026 Creator.Hub. Tüm hakları saklıdır.</p>
+ <p>© 2026 Clinkor. Tüm Hakları Saklıdır.</p>
  </div>
  </div>
  </div>

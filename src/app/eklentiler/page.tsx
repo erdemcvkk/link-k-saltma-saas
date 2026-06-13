@@ -4,8 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 
 export const metadata = {
-  title: "Premium Eklentiler | Link.SaaS",
-  description: "Link.SaaS profilinize ekstra özellikler katarak işinizi büyütün.",
+  title: "Premium Eklentiler | Clinkor",
+  description: "Clinkor profilinize ekstra özellikler katarak işinizi büyütün.",
 };
 
 export const dynamic = "force-dynamic";

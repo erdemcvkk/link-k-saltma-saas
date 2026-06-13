@@ -5,7 +5,7 @@ import AdsClient from "./ads-client";
 import { getSystemSettings } from "@/app/actions";
 
 export const metadata = {
-  title: "Reklam Yönetimi | Creator.hub",
+  title: "Reklam Yönetimi | Clinkor",
   description: "Platform genelinde reklam scriptleri ve özel banner yönetimi",
 };
 

@@ -4,7 +4,7 @@ import { CheckCircle2, ArrowRight, ShieldCheck, LayoutDashboard, Sparkles } from
 import { db } from "@/lib/db";
 
 export const metadata = {
-  title: "Ödeme Başarılı | Link.SaaS",
+  title: "Ödeme Başarılı | Clinkor",
   description: "Eklentiniz başarıyla tanımlandı.",
 };
 
@@ -107,7 +107,7 @@ export default async function CheckoutSuccessPage({ searchParams }: PageProps) {
       
       {/* Footer copyright */}
       <div className="relative z-10 mt-12 text-zinc-650 text-xs font-bold tracking-wider">
-        &copy; 2026 Link.SaaS. Tüm hakları saklıdır.
+        &copy; 2026 Clinkor. Tüm Hakları Saklıdır.
       </div>
     </div>
   );

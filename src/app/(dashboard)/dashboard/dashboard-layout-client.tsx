@@ -47,7 +47,7 @@ export default function DashboardLayoutClient({
   };
 
   const t = {
-    creatorStudioTitle: lang === "tr" ? "KREATÖR STÜDYOSU" : "CREATOR STUDIO",
+    creatorStudioTitle: lang === "tr" ? "CLINKOR STÜDYOSU" : "CLINKOR STUDIO",
     creatorStudioDesc: lang === "tr" ? "Dijital dünyanızı özelleştirin, analiz edin ve ürünlerinizi yönetin." : "Customize, analyze, and build your digital landing center.",
     adminStudio: lang === "tr" ? "Admin Paneli" : "Admin Studio",
     billingPlans: lang === "tr" ? "Planlar & Faturalar" : "Billing & Plans",

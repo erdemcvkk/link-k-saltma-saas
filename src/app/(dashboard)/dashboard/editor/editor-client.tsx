@@ -373,7 +373,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
       case "WHATSAPP":
         return "https://wa.me/" + whatsAppPhone.replace(/\s+/g, "") + "?text=" + encodeURIComponent(whatsAppMessage);
       case "VCARD":
-        return "BEGIN:VCARD\nVERSION:3.0\nN:" + vCardName + "\nORG:" + vCardOrg + "\nTITLE:" + vCardTitle + "\nTEL:" + vCardPhone + "\nEMAIL:" + vCardEmail + "\nURL=" + (vCardUrl || "https://creator.hub/" + username) + "\nEND:VCARD";
+        return "BEGIN:VCARD\nVERSION:3.0\nN:" + vCardName + "\nORG:" + vCardOrg + "\nTITLE:" + vCardTitle + "\nTEL:" + vCardPhone + "\nEMAIL:" + vCardEmail + "\nURL=" + (vCardUrl || "https://clinkor.com/" + username) + "\nEND:VCARD";
       default:
         return newUrl || "";
     }

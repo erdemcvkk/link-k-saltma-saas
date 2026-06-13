@@ -94,7 +94,7 @@ export default function SeoClient() {
                   value={seoTitle}
                   onChange={(e) => setSeoTitle(e.target.value)}
                   disabled={!isPremium}
-                  placeholder={`@${username} | CREATOR.HUB`}
+                  placeholder={`@${username} | Clinkor`}
                   className="w-full px-4 py-3 rounded-xl border focus:border-teal-500/50 outline-none text-xs disabled:opacity-50 disabled:cursor-not-allowed bg-zinc-100 border-zinc-200 text-zinc-900"
                 />
               </div>
@@ -196,7 +196,7 @@ export default function SeoClient() {
                   </div>
 
                   <p className="text-[10px] text-slate-500 leading-relaxed">
-                    {lang === "tr" ? "Özel alan adınızı profil sayfanıza yönlendirmek için DNS sağlayıcınızda (Cloudflare, GoDaddy, vb.) bir CNAME kaydı oluşturun:" : "To point your custom domain name to our creator grid, create a CNAME record with your DNS provider (Cloudflare, GoDaddy, etc.):"}
+                    {lang === "tr" ? "Özel alan adınızı profil sayfanıza yönlendirmek için DNS sağlayıcınızda (Cloudflare, GoDaddy, vb.) bir CNAME kaydı oluşturun:" : "To point your custom domain name to Clinkor, create a CNAME record with your DNS provider (Cloudflare, GoDaddy, etc.):"}
                   </p>
 
                   <div className="overflow-x-auto text-[10px] font-mono">
@@ -213,10 +213,10 @@ export default function SeoClient() {
                           <td className="py-2.5 md:py-2">CNAME</td>
                           <td className="py-2.5 md:py-2">links</td>
                           <td className="py-2.5 md:py-2 flex items-center gap-1.5 font-bold text-purple-650">
-                            cname.creator.hub
+                            cname.clinkor.com
                             <button
                               type="button"
-                              onClick={() => navigator.clipboard.writeText("cname.creator.hub")}
+                              onClick={() => navigator.clipboard.writeText("cname.clinkor.com")}
                               className="p-1 rounded bg-gray-50 hover:bg-zinc-700 text-slate-500 cursor-pointer"
                             >
                               <Copy className="h-3 w-3" />

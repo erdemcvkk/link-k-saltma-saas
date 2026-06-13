@@ -169,11 +169,11 @@ export default function BillingClient({ userId, currentPlan, planStartedAt, plan
  <div className="text-xl md:text-3xl font-black mb-4 text-zinc-900">0₺ <span className="text-xs font-normal text-zinc-400">/ forever</span></div>
  
  <ul className="space-y-3 text-xs text-zinc-600 border-t border-zinc-100 pt-4 mb-6">
- <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> 1 Adet Aktif Bio Link Sayfası (link.saas/kullaniciadi)</li>
+ <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> 1 Adet Aktif Bio Link Sayfası (clinkor.com/kullaniciadi)</li>
  <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Sınırlı Bağlantı Ekleme (Maksimum 5 Adet)</li>
  <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Standart Hazır Temalar (Temel renk/düzen)</li>
  <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Temel Analizler (Toplam sayfa görüntülenmesi)</li>
- <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Sistem Logosu ("Link.SaaS" ibaresi yer alır)</li>
+ <li className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-neon-blue" /> Sistem Logosu ("Clinkor" ibaresi yer alır)</li>
  </ul>
  </div>
 

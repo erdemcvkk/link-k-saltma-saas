@@ -11,7 +11,7 @@ export default async function PrivacyPolicyPage() {
 
  const content = setting?.value || `
 <h2>1. Giriş</h2>
-<p>Creator.Hub ("biz", "bizim" veya "platform") olarak, gizliliğinize saygı duyuyor ve kişisel verilerinizin korunmasına önem veriyoruz. Bu Gizlilik Politikası, platformumuzu kullandığınızda hangi verileri topladığımızı, nasıl kullandığımızı ve nasıl koruduğumuzu açıklamaktadır.</p>
+<p>Clinkor ("biz", "bizim" veya "platform") olarak, gizliliğinize saygı duyuyor ve kişisel verilerinizin korunmasına önem veriyoruz. Bu Gizlilik Politikası, platformumuzu kullandığınızda hangi verileri topladığımızı, nasıl kullandığımızı ve nasıl koruduğumuzu açıklamaktadır.</p>
 
 <h2>2. Topladığımız Veriler</h2>
 <p>Platformumuzu kullanırken aşağıdaki kişisel verileri toplayabiliriz:</p>
@@ -49,7 +49,7 @@ export default async function PrivacyPolicyPage() {
 </ul>
 
 <h2>7. İletişim</h2>
-<p>Gizlilik politikamız hakkında sorularınız veya talepleriniz için: <a href="mailto:privacy@creator.hub">privacy@creator.hub</a> adresine ulaşabilirsiniz.</p>
+<p>Gizlilik politikamız hakkında sorularınız veya talepleriniz için: <a href="mailto:privacy@clinkor.com">privacy@clinkor.com</a> adresine ulaşabilirsiniz.</p>
 
 <h2>8. Politika Güncellemeleri</h2>
 <p>Bu politikayı zaman zaman güncelleyebiliriz. Önemli değişiklikler olduğunda size e-posta veya platform bildirimi ile bilgi vereceğiz. Son güncelleme tarihi: Mayıs 2026.</p>
@@ -78,7 +78,7 @@ export default async function PrivacyPolicyPage() {
  Gizlilik Politikası
  </h1>
  <p className="text-xs text-zinc-400 font-semibold mt-0.5">
- Son güncelleme: Mayıs 2026 &bull; Creator.Hub
+ Son güncelleme: Mayıs 2026 &bull; Clinkor
  </p>
  </div>
  </div>
@@ -97,7 +97,7 @@ export default async function PrivacyPolicyPage() {
  {/* Footer Note */}
  <div className="mt-8 text-center text-xs text-zinc-400 font-semibold space-y-2">
  <p>Çerez politikamız için: <Link href="/cookies" className="text-rose-500 hover:underline">Çerez Politikası</Link></p>
- <p>© 2026 Creator.Hub. Tüm hakları saklıdır.</p>
+ <p>© 2026 Clinkor. Tüm Hakları Saklıdır.</p>
  </div>
  </div>
  </div>

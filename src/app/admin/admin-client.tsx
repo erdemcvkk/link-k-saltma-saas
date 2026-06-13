@@ -253,7 +253,7 @@ export default function AdminClient({
  const [pricePro, setPricePro] = useState(initialSettings["price_pro"] || "950");
 
  // Brand Asset Settings State
- const [siteTitle, setSiteTitle] = useState(initialSettings["site_title"] || "CREATOR.HUB");
+ const [siteTitle, setSiteTitle] = useState(initialSettings["site_title"] || "Clinkor");
  const [siteLogo, setSiteLogo] = useState(initialSettings["site_logo"] || "");
   const [loginBg, setLoginBg] = useState(initialSettings["login_bg"] || "");
   const [isUploadingLoginBg, setIsUploadingLoginBg] = useState(false);
@@ -279,7 +279,7 @@ export default function AdminClient({
       setIsUploadingLoginBg(false);
     }
   };
- const [siteFavicon, setSiteFavicon] = useState(initialSettings["site_favicon"] || "/favicon.ico");
+ const [siteFavicon, setSiteFavicon] = useState(initialSettings["site_favicon"] || "/clinkor-fav-icon.png");
  const [heroTitle, setHeroTitle] = useState(initialSettings["hero_title"] || "ONE LINK FOR YOUR DIGITAL EMPIRE");
  const [heroSubtitle, setHeroSubtitle] = useState(initialSettings["hero_subtitle"] || "Craft premium glassmorphic personal hubs, sell beats & presets, host sample packs, and leverage robust real-time analytics.");
  const [accentColor, setAccentColor] = useState(initialSettings["accent_color"] || "purple");
@@ -287,7 +287,7 @@ export default function AdminClient({
  // Advanced Visuals State
  const [lightModeBg, setLightModeBg] = useState(initialSettings["light_mode_bg"] || "#f4f4f5");
  const [darkModeBg, setDarkModeBg] = useState(initialSettings["dark_mode_bg"] || "#000000");
- const [footerCopyright, setFooterCopyright] = useState(initialSettings["footer_copyright"] || "© 2026 CREATOR.HUB. All rights reserved.");
+ const [footerCopyright, setFooterCopyright] = useState(initialSettings["footer_copyright"] || "© 2026 Clinkor. Tüm Hakları Saklıdır.");
  const [customCSS, setCustomCSS] = useState(initialSettings["custom_css"] || "");
 
  // Custom Backgrounds Admin State
@@ -351,11 +351,11 @@ export default function AdminClient({
  // Legal Pages State
  const [privacyContent, setPrivacyContent] = useState(
  initialSettings["page_privacy_policy"] ||
- `<h2>1. Giriş</h2>\n<p>Creator.Hub olarak gizliliğinize saygı duyuyor ve kişisel verilerinizin korunmasına önem veriyoruz.</p>\n\n<h2>2. Topladığımız Veriler</h2>\n<p>Hesap bilgileri, profil bilgileri ve kullanım verileri.</p>\n\n<h2>3. İletişim</h2>\n<p>Sorularınız için: <a href="mailto:privacy@creator.hub">privacy@creator.hub</a></p>`
+ `<h2>1. Giriş</h2>\n<p>Clinkor olarak gizliliğinize saygı duyuyor ve kişisel verilerinizin korunmasına önem veriyoruz.</p>\n\n<h2>2. Topladığımız Veriler</h2>\n<p>Hesap bilgileri, profil bilgileri ve kullanım verileri.</p>\n\n<h2>3. İletişim</h2>\n<p>Sorularınız için: <a href="mailto:privacy@clinkor.com">privacy@clinkor.com</a></p>`
  );
  const [cookieContent, setCookieContent] = useState(
  initialSettings["page_cookie_policy"] ||
- `<h2>1. Çerezler Nedir?</h2>\n<p>Çerezler, web sitelerinin tarayıcınıza yerleştirdiği küçük metin dosyalarıdır.</p>\n\n<h2>2. Kullandığımız Çerezler</h2>\n<p>Zorunlu çerezler ve analitik çerezler kullanıyoruz.</p>\n\n<h2>3. İletişim</h2>\n<p>Sorularınız için: <a href="mailto:privacy@creator.hub">privacy@creator.hub</a></p>`
+ `<h2>1. Çerezler Nedir?</h2>\n<p>Çerezler, web sitelerinin tarayıcınıza yerleştirdiği küçük metin dosyalarıdır.</p>\n\n<h2>2. Kullandığımız Çerezler</h2>\n<p>Zorunlu çerezler ve analitik çerezler kullanıyoruz.</p>\n\n<h2>3. İletişim</h2>\n<p>Sorularınız için: <a href="mailto:privacy@clinkor.com">privacy@clinkor.com</a></p>`
  );
 
  // Dynamic Settings Control Panel States

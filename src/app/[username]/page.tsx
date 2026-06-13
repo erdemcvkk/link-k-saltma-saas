@@ -20,13 +20,13 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
 
  if (!user || !user.profile) {
  return {
- title: `${username} - CREATOR.HUB`,
+ title: `${username} - Clinkor`,
  };
  }
 
  // Gated SEO: Only premium plans can override default metadata
  const hasPremiumSEO = user.plan !== "FREE";
- const title = hasPremiumSEO && user.profile.seoTitle ? user.profile.seoTitle : `@${user.username} | CREATOR.HUB`;
+ const title = hasPremiumSEO && user.profile.seoTitle ? user.profile.seoTitle : `@${user.username} | Clinkor`;
  const description = hasPremiumSEO && user.profile.seoDescription ? user.profile.seoDescription : user.profile.bio || "Welcome to my link page!";
  const keywords = hasPremiumSEO && user.profile.seoKeywords ? user.profile.seoKeywords : "creators, links, socials";
 
@@ -134,7 +134,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  The profile of @{cleanUsername} has been suspended by administration due to community guidelines violation.
  </p>
  <a href="/" className="inline-block text-xs font-bold text-zinc-400 hover:text-white underline transition-colors">
- Back to CREATOR.HUB
+ Back to Clinkor
  </a>
  </div>
  </div>

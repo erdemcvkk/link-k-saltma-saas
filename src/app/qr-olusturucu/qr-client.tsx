@@ -263,7 +263,7 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
       id: "standart",
       name: "Standart QR",
       defaultCta: "Bağlantıyı Tara",
-      defaultUrl: "https://link.saas",
+      defaultUrl: "https://clinkor.com",
       defaultTitle: "scan to visit",
       defaultBusinessName: "ŞİRKETİMİZ",
       primaryColor: "#09090b",
@@ -753,7 +753,7 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
                       <foreignObject width="200" height="200" x="0" y="0">
                         <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyItems: "center" }}>
                           <QRCodeSVG
-                            value={targetUrl || "https://link.saas"}
+                            value={targetUrl || "https://clinkor.com"}
                             size={200}
                             bgColor={cardBg}
                             fgColor={qrColor}
@@ -871,7 +871,7 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
                       <foreignObject width="200" height="200" x="0" y="0">
                         <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyItems: "center" }}>
                           <QRCodeSVG
-                            value={targetUrl || "https://link.saas"}
+                            value={targetUrl || "https://clinkor.com"}
                             size={200}
                             bgColor={cardBg}
                             fgColor={qrColor}

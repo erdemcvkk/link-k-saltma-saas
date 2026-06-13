@@ -67,13 +67,7 @@ export default function HomeClient({
  <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4">
  <div className="max-w-7xl mx-auto flex items-center justify-between">
  <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity">
- {siteLogo ? (
- <img src={siteLogo} alt={siteTitle} className="h-8 w-auto object-contain" />
- ) : (
- <span className="text-2xl font-extrabold tracking-tight text-slate-900">
- {siteTitle}
- </span>
- )}
+ <img src={siteLogo || "/clinkor-logo.png"} alt="Clinkor Logo" className="h-8 w-auto object-contain" />
  </Link>
 
  <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
@@ -139,7 +133,7 @@ export default function HomeClient({
 
  <form onSubmit={handleCreate} className="max-w-md flex flex-col sm:flex-row items-center p-2 bg-white rounded-full border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
  <div className="flex items-center flex-1 px-4 py-3 md:py-2 w-full">
- <span className="text-slate-400 font-medium whitespace-nowrap">link.saas/</span>
+ <span className="text-slate-400 font-medium whitespace-nowrap">clinkor.com/</span>
  <input 
  type="text" 
  placeholder="isminiz"
@@ -438,7 +432,7 @@ export default function HomeClient({
  <ul className="space-y-4 mb-8 flex-1">
  <li className="flex items-center gap-3 text-slate-600 text-sm">
  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
- <span>1 Adet Aktif Bio Link Sayfası (link.saas/kullaniciadi)</span>
+ <span>1 Adet Aktif Bio Link Sayfası (clinkor.com/kullaniciadi)</span>
  </li>
  <li className="flex items-center gap-3 text-slate-600 text-sm">
  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
@@ -454,7 +448,7 @@ export default function HomeClient({
  </li>
  <li className="flex items-center gap-3 text-slate-600 text-sm">
  <CheckCircle2 className="h-5 w-5 text-neon-blue flex-shrink-0" />
- <span>Sistem Logosu (Sayfa altında "Link.SaaS" ibaresi yer alır)</span>
+ <span>Sistem Logosu (Sayfa altında "Clinkor" ibaresi yer alır)</span>
  </li>
  </ul>
  <Link
@@ -594,7 +588,7 @@ export default function HomeClient({
  <footer className="py-12 px-6 border-t border-gray-100 text-center text-sm text-slate-500 bg-white">
  <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
  <div className="mb-4 md:mb-0">
- © {new Date().getFullYear()} {siteTitle}. Tüm hakları saklıdır.
+ © 2026 Clinkor. Tüm Hakları Saklıdır.
  </div>
  <div className="flex space-x-6">
  <a href="#" className="hover:text-slate-900 transition-colors">Gizlilik</a>

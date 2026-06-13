@@ -20,7 +20,7 @@ export default async function Home() {
  link: item.link || undefined,
  }));
 
- const siteTitle = serializedSettings["site_title"] || "CREATOR.HUB";
+ const siteTitle = serializedSettings["site_title"] || "Clinkor";
  const siteLogo = serializedSettings["site_logo"] || "";
  const heroTitle = serializedSettings["hero_title"] || "Your home";
  const heroHighlight = serializedSettings["hero_highlight"] || "on the web";

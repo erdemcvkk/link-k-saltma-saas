@@ -96,7 +96,7 @@ export default function QrClient({ initialQrCodes }: QrClientProps) {
   const [vCardUrl, setVCardUrl] = useState("");
 
   const computedQrValue = useMemo(() => {
-    if (!selectedTemplate) return "https://creator.hub/" + username;
+    if (!selectedTemplate) return "https://clinkor.com/" + username;
     
     switch (selectedTemplate) {
       case "WIFI":
@@ -104,9 +104,9 @@ export default function QrClient({ initialQrCodes }: QrClientProps) {
       case "WHATSAPP":
         return "https://wa.me/" + whatsAppPhone.replace(/\s+/g, "") + "?text=" + encodeURIComponent(whatsAppMessage);
       case "VCARD":
-        return "BEGIN:VCARD\nVERSION:3.0\nN:" + vCardName + "\nORG:" + vCardOrg + "\nTITLE:" + vCardTitle + "\nTEL:" + vCardPhone + "\nEMAIL:" + vCardEmail + "\nURL=" + (vCardUrl || "https://creator.hub/" + username) + "\nEND:VCARD";
+        return "BEGIN:VCARD\nVERSION:3.0\nN:" + vCardName + "\nORG:" + vCardOrg + "\nTITLE:" + vCardTitle + "\nTEL:" + vCardPhone + "\nEMAIL:" + vCardEmail + "\nURL=" + (vCardUrl || "https://clinkor.com/" + username) + "\nEND:VCARD";
       default:
-        return qrValueText || "https://creator.hub/" + username;
+        return qrValueText || "https://clinkor.com/" + username;
     }
   }, [selectedTemplate, wifiSsid, wifiPassword, wifiEncryption, whatsAppPhone, whatsAppMessage, vCardName, vCardOrg, vCardTitle, vCardPhone, vCardEmail, vCardUrl, qrValueText, username]);
 

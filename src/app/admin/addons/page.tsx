@@ -5,7 +5,7 @@ import AddonsClient from "./addons-client";
 import { getAddonSettings, getAddonDummyProducts } from "../../actions";
 
 export const metadata = {
- title: "Eklenti Yönetimi | Creator.hub",
+ title: "Eklenti Yönetimi | Clinkor",
  description: "Platform eklentileri ve mağaza vitrini konfigürasyonu",
 };
 

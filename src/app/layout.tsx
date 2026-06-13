@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
- description: "Modern, creator-focused bio-link platform",
+ description: "Clinkor - Lider Profil ve Link Yönetimi",
 };
 
 const DEFAULT_FONTS = [
@@ -79,8 +79,8 @@ export default async function RootLayout({
  children: React.ReactNode;
 }>) {
  // Fetch site settings for favicon and title dynamically
- let faviconUrl = "/favicon.ico";
- let siteTitle = "CREATOR.HUB | Creator Hub";
+ let faviconUrl = "/clinkor-fav-icon.png";
+ let siteTitle = "Clinkor - Lider Profil ve Link Yönetimi";
  let googleFontsUrl = "https://fonts.googleapis.com/css2?family=Inter:wght@400;750;900&display=swap";
 
  try {
@@ -94,7 +94,7 @@ export default async function RootLayout({
  faviconUrl = serializedSettings["site_favicon"];
  }
  if (serializedSettings["site_title"]) {
- siteTitle = `${serializedSettings["site_title"]} | Creator Hub`;
+ siteTitle = `${serializedSettings["site_title"]} | Clinkor`;
  }
 
  // Dynamic fonts loading & auto-seeding

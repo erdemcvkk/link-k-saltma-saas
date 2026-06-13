@@ -44,7 +44,7 @@ export default async function DiscoverPage() {
  return acc;
  }, {} as Record<string, string>);
 
- const siteTitle = serializedSettings["site_title"] || "CREATOR.HUB";
+ const siteTitle = serializedSettings["site_title"] || "Clinkor";
  const siteLogo = serializedSettings["site_logo"] || "";
 
  return <DiscoverClient initialCreators={creators} siteTitle={siteTitle} siteLogo={siteLogo} />;

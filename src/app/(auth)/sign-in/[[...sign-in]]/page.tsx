@@ -11,7 +11,7 @@ export default async function Page() {
   }, {} as Record<string, string>);
 
   const loginBg = serializedSettings["login_bg"] || "/login-bg.png";
-  const siteTitle = serializedSettings["site_title"] || "CREATOR.HUB";
+  const siteTitle = serializedSettings["site_title"] || "Clinkor";
 
   return (
     <div className="flex min-h-screen w-full bg-white text-slate-900">
@@ -41,12 +41,7 @@ export default async function Page() {
         {/* Top: Logo */}
         <div className="relative z-10">
           <Link href="/" className="flex items-center space-x-2.5 cursor-pointer group">
-            <div className="h-10 w-10 rounded-xl bg-slate-900 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
-              <Sparkles className="h-5 w-5 text-white" />
-            </div>
-            <span className="text-xl font-black tracking-tight text-slate-900">
-              {siteTitle}
-            </span>
+            <img src="/clinkor-logo.png" alt="Clinkor Logo" className="h-8 w-auto object-contain" />
           </Link>
         </div>
 

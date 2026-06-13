@@ -555,7 +555,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
       }`}
     >
       <span>{lang === "tr" ? "Kendi sayfanı oluştur:" : "Create your page:"}</span>
-      <span className="font-extrabold tracking-wider">CREATOR.HUB</span>
+      <span className="font-extrabold tracking-wider">CLINKOR</span>
     </Link>
   )}
  </div>
