@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 import AddonsClient from "./addons-client";
-import { getAddonSettings, getAddonDummyProducts } from "../../actions";
+import { getAddonSettings, getAddonDummyProducts, getPlugins } from "../../actions";
 
 export const metadata = {
  title: "Eklenti Yönetimi | Clinkor",
@@ -43,6 +43,14 @@ export default async function AdminAddonsPage() {
 
  const settings = await getAddonSettings();
  const products = await getAddonDummyProducts();
+ const plugins = await getPlugins();
 
- return <AddonsClient adminUserId={auth.id} initialSettings={settings} initialProducts={products} />;
+ return (
+   <AddonsClient 
+     adminUserId={auth.id} 
+     initialSettings={settings} 
+     initialProducts={products} 
+     initialPlugins={plugins.map(p => ({ addonType: p.addonType, isComingSoon: p.isComingSoon }))}
+   />
+ );
 }

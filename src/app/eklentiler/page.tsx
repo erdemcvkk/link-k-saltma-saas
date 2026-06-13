@@ -14,6 +14,7 @@ export default async function AddonsPage() {
   const { userId } = await auth();
   const settings = await getAddonSettings();
   const products = await getAddonDummyProducts();
+  const plugins = await db.plugin.findMany();
 
   let userAddonTypes: string[] = [];
   let dbUserId: string | null = null;
@@ -35,6 +36,7 @@ export default async function AddonsPage() {
       userId={userId}
       dbUserId={dbUserId}
       purchasedAddons={userAddonTypes}
+      plugins={plugins.map(p => ({ addonType: p.addonType, isComingSoon: p.isComingSoon }))}
     />
   );
 }

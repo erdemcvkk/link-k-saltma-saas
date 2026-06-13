@@ -1218,6 +1218,7 @@ export async function createTemplate(
     isCoded: boolean;
     customCss?: string;
     configJson?: string;
+    isComingSoon?: boolean;
   }
 ) {
   await ensureAdmin(adminUserId);
@@ -1239,6 +1240,7 @@ export async function createTemplate(
       isCoded: !!data.isCoded,
       customCss: data.customCss || null,
       configJson: data.configJson || null,
+      isComingSoon: !!data.isComingSoon,
     },
   });
 
@@ -1263,6 +1265,7 @@ export async function updateTemplate(
     isCoded?: boolean;
     customCss?: string;
     configJson?: string;
+    isComingSoon?: boolean;
   }
 ) {
   await ensureAdmin(adminUserId);
@@ -2412,4 +2415,25 @@ export async function removeUserAddonRelation(addonId: string) {
   } catch (error: any) {
     return { success: false, error: error.message || "Failed to remove addon" };
   }
+}
+
+export async function getPlugins() {
+  return await db.plugin.findMany();
+}
+
+export async function updatePluginComingSoon(
+  adminUserId: string,
+  addonType: string,
+  isComingSoon: boolean
+) {
+  await ensureAdmin(adminUserId);
+  const plugin = await db.plugin.upsert({
+    where: { addonType },
+    update: { isComingSoon },
+    create: { addonType, isComingSoon },
+  });
+
+  revalidatePath("/eklentiler");
+  revalidatePath("/admin/addons");
+  return plugin;
 }

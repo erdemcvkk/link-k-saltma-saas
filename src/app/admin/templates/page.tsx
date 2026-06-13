@@ -55,6 +55,7 @@ export default async function AdminTemplatesPage() {
  paymentLink: t.paymentLink,
  isActive: t.isActive,
  isCoded: t.isCoded,
+ isComingSoon: t.isComingSoon,
  customCss: t.customCss,
  configJson: t.configJson,
  createdAt: t.createdAt.toISOString(),

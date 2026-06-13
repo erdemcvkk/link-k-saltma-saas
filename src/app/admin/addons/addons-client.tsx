@@ -6,17 +6,19 @@ import {
  ArrowLeft, Plus, Trash2, Edit2, Settings, LayoutGrid, CheckCircle, 
  X, Info, Store, SlidersHorizontal, Gift
 } from "lucide-react";
-import { saveAddonSetting } from "../../actions";
+import { saveAddonSetting, updatePluginComingSoon } from "../../actions";
 import EklentilerClient, { ADDON_TYPES } from "../../eklentiler/eklentiler-client";
 
 interface AddonsClientProps {
  adminUserId: string;
  initialSettings: Record<string, string>;
  initialProducts: any[];
+ initialPlugins: { addonType: string; isComingSoon: boolean }[];
 }
 
-export default function AddonsClient({ adminUserId, initialSettings, initialProducts }: AddonsClientProps) {
+export default function AddonsClient({ adminUserId, initialSettings, initialProducts, initialPlugins }: AddonsClientProps) {
  const [settings, setSettings] = useState(initialSettings);
+ const [plugins, setPlugins] = useState<{ addonType: string; isComingSoon: boolean }[]>(initialPlugins);
  const [isPending, startTransition] = useTransition();
  const [msg, setMsg] = useState({ text: "", type: "" });
  const [activeTab, setActiveTab] = useState("themes"); 
@@ -26,7 +28,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
  const [isFormOpen, setIsFormOpen] = useState(false);
  const [editingId, setEditingId] = useState<string | null>(null);
  const [form, setForm] = useState({
- name: "", desc: "", price: "", paymentUrl: "", category: ""
+ name: "", desc: "", price: "", paymentUrl: "", category: "", isComingSoon: false
  });
 
  const showMsg = (text: string, type: "success" | "error") => {
@@ -47,64 +49,105 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
  });
  };
 
- const closeForm = () => {
- setIsFormOpen(false);
- setEditingId(null);
- };
-
- const handleEdit = (addon: any) => {
-    setEditingId(addon.id);
-    setSelectedAddonId(addon.id);
-    const nameKey = `theme_NAME_${addon.id}`;
-    const descKey = `theme_DESC_${addon.id}`;
-    const priceKey = `theme_PRICE_${addon.id}`;
-    const paymentKey = `theme_PAYMENT_${addon.id}`;
-    const categoryKey = `theme_CATEGORY_${addon.id}`;
-
-    setForm({
-      name: settings[nameKey] || addon.name,
-      desc: settings[descKey] || addon.desc,
-      price: settings[priceKey] || addon.price.toString(),
-      paymentUrl: settings[paymentKey] || "",
-      category: settings[categoryKey] || addon.category || "Premium Temalar"
-    });
-    setIsFormOpen(true);
-  };
-
-  const handleSaveTheme = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingId) return;
-
+ const handleToggleComingSoon = async (addonType: string, currentComingSoon: boolean) => {
     startTransition(async () => {
       try {
-        const nameKey = `theme_NAME_${editingId}`;
-        const descKey = `theme_DESC_${editingId}`;
-        const priceKey = `theme_PRICE_${editingId}`;
-        const paymentKey = `theme_PAYMENT_${editingId}`;
-        const categoryKey = `theme_CATEGORY_${editingId}`;
-
-        await saveAddonSetting(adminUserId, nameKey, form.name);
-        await saveAddonSetting(adminUserId, descKey, form.desc);
-        await saveAddonSetting(adminUserId, priceKey, form.price);
-        await saveAddonSetting(adminUserId, paymentKey, form.paymentUrl);
-        await saveAddonSetting(adminUserId, categoryKey, form.category);
-
-        setSettings({
-          ...settings,
-          [nameKey]: form.name,
-          [descKey]: form.desc,
-          [priceKey]: form.price,
-          [paymentKey]: form.paymentUrl,
-          [categoryKey]: form.category
+        const comingSoonKey = `theme_COMINGSOON_${addonType}`;
+        await saveAddonSetting(adminUserId, comingSoonKey, !currentComingSoon ? "true" : "false");
+        await updatePluginComingSoon(adminUserId, addonType, !currentComingSoon);
+        setPlugins(prev => {
+          const existing = prev.find(p => p.addonType === addonType);
+          if (existing) {
+            return prev.map(p => p.addonType === addonType ? { ...p, isComingSoon: !currentComingSoon } : p);
+          } else {
+            return [...prev, { addonType, isComingSoon: !currentComingSoon }];
+          }
         });
-
-        showMsg("Tema başarıyla güncellendi.", "success");
-        closeForm();
+        setSettings(prev => ({
+          ...prev,
+          [comingSoonKey]: !currentComingSoon ? "true" : "false"
+        }));
+        showMsg("Eklenti durumu başarıyla güncellendi.", "success");
       } catch (err: any) {
-        showMsg("Tema kaydedilirken bir hata oluştu.", "error");
+        showMsg("Durum güncellenirken bir hata oluştu.", "error");
       }
     });
   };
+
+  const closeForm = () => {
+  setIsFormOpen(false);
+  setEditingId(null);
+  setForm({ name: "", desc: "", price: "", paymentUrl: "", category: "", isComingSoon: false });
+  };
+
+  const handleEdit = (addon: any) => {
+     setEditingId(addon.id);
+     setSelectedAddonId(addon.id);
+     const nameKey = `theme_NAME_${addon.id}`;
+     const descKey = `theme_DESC_${addon.id}`;
+     const priceKey = `theme_PRICE_${addon.id}`;
+     const paymentKey = `theme_PAYMENT_${addon.id}`;
+     const categoryKey = `theme_CATEGORY_${addon.id}`;
+     const comingSoonKey = `theme_COMINGSOON_${addon.id}`;
+
+     setForm({
+       name: settings[nameKey] || addon.name,
+       desc: settings[descKey] || addon.desc,
+       price: settings[priceKey] || addon.price.toString(),
+       paymentUrl: settings[paymentKey] || "",
+       category: settings[categoryKey] || addon.category || "Premium Temalar",
+       isComingSoon: settings[comingSoonKey] === "true" || (plugins.find(p => p.addonType === addon.id)?.isComingSoon || false)
+     });
+     setIsFormOpen(true);
+   };
+
+   const handleSaveTheme = (e: React.FormEvent) => {
+     e.preventDefault();
+     if (!editingId) return;
+
+     startTransition(async () => {
+       try {
+         const nameKey = `theme_NAME_${editingId}`;
+         const descKey = `theme_DESC_${editingId}`;
+         const priceKey = `theme_PRICE_${editingId}`;
+         const paymentKey = `theme_PAYMENT_${editingId}`;
+         const categoryKey = `theme_CATEGORY_${editingId}`;
+         const comingSoonKey = `theme_COMINGSOON_${editingId}`;
+
+         await saveAddonSetting(adminUserId, nameKey, form.name);
+         await saveAddonSetting(adminUserId, descKey, form.desc);
+         await saveAddonSetting(adminUserId, priceKey, form.price);
+         await saveAddonSetting(adminUserId, paymentKey, form.paymentUrl);
+         await saveAddonSetting(adminUserId, categoryKey, form.category);
+         await saveAddonSetting(adminUserId, comingSoonKey, form.isComingSoon ? "true" : "false");
+         await updatePluginComingSoon(adminUserId, editingId, form.isComingSoon);
+
+         setPlugins(prev => {
+           const existing = prev.find(p => p.addonType === editingId);
+           if (existing) {
+             return prev.map(p => p.addonType === editingId ? { ...p, isComingSoon: form.isComingSoon } : p);
+           } else {
+             return [...prev, { addonType: editingId, isComingSoon: form.isComingSoon }];
+           }
+         });
+
+         setSettings({
+           ...settings,
+           [nameKey]: form.name,
+           [descKey]: form.desc,
+           [priceKey]: form.price,
+           [paymentKey]: form.paymentUrl,
+           [categoryKey]: form.category,
+           [comingSoonKey]: form.isComingSoon ? "true" : "false"
+         });
+
+         showMsg("Tema başarıyla güncellendi.", "success");
+         closeForm();
+       } catch (err: any) {
+         showMsg("Tema kaydedilirken bir hata oluştu.", "error");
+       }
+     });
+   };
 
  return (
  <div className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-black text-white font-sans overflow-hidden">
@@ -198,7 +241,14 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
             </div>
           </div>
           <div>
-            <div className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors">{currentName}</div>
+             <div className="text-sm font-bold text-white group-hover:text-rose-400 transition-colors flex items-center gap-2">
+               {currentName}
+               {(settings[`theme_COMINGSOON_${addon.id}`] === "true" || plugins.find(p => p.addonType === addon.id)?.isComingSoon) && (
+                 <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-500 text-[8px] font-extrabold uppercase tracking-widest">
+                   YAKINDA
+                 </span>
+               )}
+             </div>
             <div className="text-xs text-zinc-400 font-medium mt-1 truncate max-w-[200px]">
               {currentDesc}
             </div>
@@ -212,23 +262,39 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
           </div>
         </div>
         <div className="flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity pr-2">
-          <button 
-            type="button" 
-            onClick={(e) => {
-              e.stopPropagation();
-              const isFreeNow = String(currentPrice) === "0";
-              const newPrice = isFreeNow ? (addon.price || "149") : "0";
-              handleSettingChange(`theme_PRICE_${addon.id}`, String(newPrice));
-            }} 
-            className={`p-2.5 rounded-xl transition-colors ${
-              String(currentPrice) === "0"
-                ? "bg-amber-500/20 hover:bg-amber-500/30 text-amber-400"
-                : "bg-zinc-800 hover:bg-amber-500/20 text-zinc-400 hover:text-amber-400"
-            }`}
-            title={String(currentPrice) === "0" ? "Ücretli Yap" : "Ücretsiz Yap"}
-          >
-            <Gift className="h-4 w-4" />
-          </button>
+           <button 
+             type="button" 
+             onClick={(e) => {
+               e.stopPropagation();
+               const isComing = settings[`theme_COMINGSOON_${addon.id}`] === "true" || (plugins.find(p => p.addonType === addon.id)?.isComingSoon || false);
+               handleToggleComingSoon(addon.id, isComing);
+             }} 
+             className={`p-2.5 rounded-xl transition-colors ${
+               (settings[`theme_COMINGSOON_${addon.id}`] === "true" || plugins.find(p => p.addonType === addon.id)?.isComingSoon)
+                 ? "bg-amber-500/25 hover:bg-amber-500/35 text-amber-400"
+                 : "bg-zinc-800 hover:bg-amber-500/20 text-zinc-400 hover:text-amber-400"
+             }`}
+             title="Çok Yakında Modu"
+           >
+             <Settings className="h-4 w-4" />
+           </button>
+           <button 
+             type="button" 
+             onClick={(e) => {
+               e.stopPropagation();
+               const isFreeNow = String(currentPrice) === "0";
+               const finalPrice = isFreeNow ? (addon.price || "149") : "0";
+               handleSettingChange(`theme_PRICE_${addon.id}`, String(finalPrice));
+             }} 
+             className={`p-2.5 rounded-xl transition-colors ${
+               String(currentPrice) === "0"
+                 ? "bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400"
+                 : "bg-zinc-800 hover:bg-emerald-500/20 text-zinc-400 hover:text-emerald-400"
+             }`}
+             title={String(currentPrice) === "0" ? "Ücretli Yap" : "Ücretsiz Yap"}
+           >
+             <Gift className="h-4 w-4" />
+           </button>
           <button 
             type="button" 
             onClick={(e) => {
@@ -336,6 +402,20 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
  <p className="text-[10px] text-zinc-500 mt-1">Stripe, Iyzico veya Shopier ödeme linki ekleyebilirsiniz. Boş bırakırsanız sistem simülasyonu çalışır.</p>
  </div>
 
+  <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900 border border-zinc-800">
+    <div className="space-y-0.5">
+      <label className="text-xs font-bold text-zinc-350 uppercase tracking-wider block">Çok Yakında Modu</label>
+      <span className="text-[10px] text-zinc-500">Bu eklentiyi "Çok Yakında" olarak işaretleyip kilitleyin.</span>
+    </div>
+    <button 
+      type="button" 
+      onClick={() => setForm({...form, isComingSoon: !form.isComingSoon})}
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${form.isComingSoon ? 'bg-rose-600' : 'bg-zinc-800'}`}
+    >
+      <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${form.isComingSoon ? 'translate-x-5' : 'translate-x-0'}`} />
+    </button>
+  </div>
+
  <div className="pt-6 border-t border-white/5 flex gap-3">
  <button type="submit" disabled={isPending} className="flex-1 py-3.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-bold transition-colors shadow-lg shadow-rose-500/20 disabled:opacity-50">
  {isPending ? "Kaydediliyor..." : "Değişiklikleri Kaydet"}
@@ -362,7 +442,7 @@ export default function AddonsClient({ adminUserId, initialSettings, initialProd
  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full md:w-[800px] h-[400px] bg-rose-500/10 blur-[120px] rounded-full pointer-events-none" />
  
  <div className={selectedAddonId ? "w-full max-w-sm flex justify-center" : "w-full md:w-[1600px] transform scale-[0.6] lg:scale-[0.8] 2xl:scale-[0.9] origin-center transition-transform duration-500"}>
- <EklentilerClient products={initialProducts.filter(p => p.isActive)} settings={settings} singleAddonId={selectedAddonId} />
+ <EklentilerClient products={initialProducts.filter(p => p.isActive)} settings={settings} singleAddonId={selectedAddonId} plugins={plugins} />
  </div>
  </div>
  </div>

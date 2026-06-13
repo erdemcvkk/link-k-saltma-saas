@@ -212,8 +212,9 @@ model Template {
   fontStyle   String
   buttonStyle String
   paymentLink String?
-  isActive    Boolean  @default(true)
-  isCoded     Boolean  @default(false)
+  isActive     Boolean  @default(true)
+  isCoded      Boolean  @default(false)
+  isComingSoon Boolean  @default(false)
   customCss   String?
   configJson  String?
   createdAt   DateTime @default(now())
@@ -310,4 +311,12 @@ model UserPurchasedModule {
   createdAt DateTime @default(now())
 
   @@unique([userId, moduleId])
+}
+
+model Plugin {
+  id           String   @id @default(uuid())
+  addonType    String   @unique
+  isComingSoon Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

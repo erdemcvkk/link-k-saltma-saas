@@ -327,9 +327,10 @@ interface EklentilerClientProps {
   dbUserId?: string | null;
   purchasedAddons?: string[];
   singleAddonId?: string | null;
+  plugins?: { addonType: string; isComingSoon: boolean }[];
 }
 
-export default function EklentilerClient({ products, settings, userId = null, dbUserId = null, purchasedAddons = [], singleAddonId = null }: EklentilerClientProps = {}) {
+export default function EklentilerClient({ products, settings, userId = null, dbUserId = null, purchasedAddons = [], singleAddonId = null, plugins = [] }: EklentilerClientProps = {}) {
   const lang = "tr";
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const [purchased, setPurchased] = useState<string[]>(purchasedAddons);
@@ -502,19 +503,18 @@ export default function EklentilerClient({ products, settings, userId = null, db
                   })
                   .slice(0, visibleCount)
             ).map((addon) => {
- const isPurchased = purchased.includes(addon.id);
- const isProcessing = purchasing === addon.id;
- 
- // Eğer veritabanından gelen products varsa ve bu MINI_STORE ise (veya hepsi için), ürünleri ez:
- const displayProducts = (products && products.length > 0 && addon.id === "MINI_STORE") 
- ? products 
- : addon.mockProducts;
- 
- // Eğer admin panelinden fiyat güncellendiyse (override) onu kullan
- const displayPrice = settings?.[`theme_PRICE_${addon.id}`] || addon.price;
- const displayName = settings?.[`theme_NAME_${addon.id}`] || addon.name;
- const displayDesc = settings?.[`theme_DESC_${addon.id}`] || addon.desc;
- const paymentUrl = settings?.[`theme_PAYMENT_${addon.id}`];
+  const isPurchased = purchased.includes(addon.id);
+  const isProcessing = purchasing === addon.id;
+  
+  const displayProducts = (products && products.length > 0 && addon.id === "MINI_STORE") 
+    ? products 
+    : addon.mockProducts;
+
+  const displayPrice = settings?.[`theme_PRICE_${addon.id}`] || addon.price;
+  const displayName = settings?.[`theme_NAME_${addon.id}`] || addon.name;
+  const displayDesc = settings?.[`theme_DESC_${addon.id}`] || addon.desc;
+  const paymentUrl = settings?.[`theme_PAYMENT_${addon.id}`];
+  const isComingSoon = settings?.[`theme_COMINGSOON_${addon.id}`] === "true" || (plugins.find(p => p.addonType === addon.id)?.isComingSoon || false);
  
  return (
  <div key={addon.id} className="flex flex-col items-center">
@@ -532,6 +532,14 @@ export default function EklentilerClient({ products, settings, userId = null, db
  {/* Phone Mockup Frame */}
  <div className="relative w-full aspect-[1/2] max-w-full max-w-sm lg:w-[340px] mx-auto bg-zinc-900 rounded-[3rem] p-3 shadow-2xl border-4 border-zinc-800 overflow-hidden shrink-0 group mb-6">
  <div className="absolute top-0 inset-x-0 h-6 bg-zinc-900 z-20 rounded-b-3xl w-[40%] mx-auto shadow-sm" />
+ 
+ {isComingSoon && (
+    <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] z-30 flex flex-col items-center justify-center rounded-[2.8rem] m-1 pointer-events-none">
+      <span className="bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-black tracking-widest px-4 py-2 rounded-full shadow-lg border border-white/10 uppercase animate-pulse">
+        Çok Yakında
+      </span>
+    </div>
+  )}
  
  <div className="relative w-full h-full bg-[#f8f9fa] rounded-[2rem] overflow-hidden">
  {addon.id === "PREMIUM_PROFILE" ? (
@@ -954,7 +962,14 @@ export default function EklentilerClient({ products, settings, userId = null, db
     <div className="text-2xl font-black text-white">
       {displayPrice === "0" ? (lang === "tr" ? "Ücretsiz" : "Free") : `₺${displayPrice}`}
     </div>
-    {isPurchased ? (
+    {isComingSoon ? (
+      <button 
+        disabled={true}
+        className="w-full py-3 rounded-xl bg-zinc-800 text-zinc-500 border border-zinc-700 font-bold flex items-center justify-center gap-2 opacity-50 cursor-not-allowed pointer-events-none"
+      >
+        Çok Yakında
+      </button>
+    ) : isPurchased ? (
       <button disabled className="w-full py-3 rounded-xl bg-green-500/20 text-green-500 font-bold flex items-center justify-center gap-2">
         <ShoppingBag className="h-4 w-4" /> Satın Alındı
       </button>

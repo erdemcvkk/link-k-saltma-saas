@@ -27,6 +27,7 @@ interface Template {
  paymentLink?: string | null;
  isActive: boolean;
  isCoded: boolean;
+ isComingSoon: boolean;
  customCss?: string | null;
  configJson?: string | null;
  createdAt: string;
@@ -61,6 +62,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  paymentLink: "",
  customCss: "",
  configJson: "",
+ isComingSoon: false,
  });
 
  const showMsg = (text: string, type: "success" | "error") => {
@@ -81,6 +83,20 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  }
  });
  };
+
+  const handleToggleComingSoon = async (id: string, currentComingSoon: boolean) => {
+    startTransition(async () => {
+      try {
+        await updateTemplate(adminUserId, id, { isComingSoon: !currentComingSoon });
+        setTemplates(prev => 
+          prev.map(t => t.id === id ? { ...t, isComingSoon: !currentComingSoon } : t)
+        );
+        showMsg("Şablon 'Çok Yakında' durumu güncellendi!", "success");
+      } catch (err: any) {
+        showMsg(err.message || "Durum güncellenirken hata oluştu.", "error");
+      }
+    });
+  };
 
  const handleDelete = async (id: string) => {
  if (!confirm("Bu şablonu silmek istediğinize emin misiniz?")) return;
@@ -128,22 +144,23 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
   });
  };
 
- const handleEditClick = (template: Template) => {
-  setEditingTemplateId(template.id);
-  setFormMode(template.isCoded ? "code" : "no-code");
-  setFormData({
-    name: template.name,
-    price: template.price.toString(),
-    category: template.category,
-    bgColor: template.bgColor || "#09090b",
-    fontStyle: template.fontStyle || "Inter",
-    buttonStyle: template.buttonStyle || "",
-    paymentLink: template.paymentLink || "",
-    customCss: template.customCss || "",
-    configJson: template.configJson || "",
-  });
-  setIsAddModalOpen(true);
- };
+  const handleEditClick = (template: Template) => {
+   setEditingTemplateId(template.id);
+   setFormMode(template.isCoded ? "code" : "no-code");
+   setFormData({
+     name: template.name,
+     price: template.price.toString(),
+     category: template.category,
+     bgColor: template.bgColor || "#09090b",
+     fontStyle: template.fontStyle || "Inter",
+     buttonStyle: template.buttonStyle || "",
+     paymentLink: template.paymentLink || "",
+     customCss: template.customCss || "",
+     configJson: template.configJson || "",
+     isComingSoon: template.isComingSoon || false,
+   });
+   setIsAddModalOpen(true);
+  };
 
  const handleAddTemplate = async (e: React.FormEvent) => {
  e.preventDefault();
@@ -167,6 +184,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     isCoded: formMode === "code",
     customCss: formMode === "code" ? formData.customCss : undefined,
     configJson: formMode === "code" ? formData.configJson : undefined,
+    isComingSoon: formData.isComingSoon,
   });
 
   const updatedT: Template = {
@@ -181,6 +199,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     paymentLink: result.paymentLink,
     isActive: result.isActive,
     isCoded: result.isCoded,
+    isComingSoon: result.isComingSoon,
     customCss: result.customCss,
     configJson: result.configJson,
     createdAt: result.createdAt.toISOString(),
@@ -194,7 +213,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
   setFormData({
     name: "", price: "", category: "Genel", bgColor: "#09090b",
     fontStyle: "Inter", buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
-    paymentLink: "", customCss: "", configJson: "",
+    paymentLink: "", customCss: "", configJson: "", isComingSoon: false,
   });
  } else {
   const result = await createTemplate(adminUserId, {
@@ -210,6 +229,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     isCoded: formMode === "code",
     customCss: formMode === "code" ? formData.customCss : undefined,
     configJson: formMode === "code" ? formData.configJson : undefined,
+    isComingSoon: formData.isComingSoon,
   });
 
   const newT: Template = {
@@ -224,6 +244,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     paymentLink: result.paymentLink,
     isActive: result.isActive,
     isCoded: result.isCoded,
+    isComingSoon: result.isComingSoon,
     customCss: result.customCss,
     configJson: result.configJson,
     createdAt: result.createdAt.toISOString(),
@@ -236,7 +257,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
   setFormData({
     name: "", price: "", category: "Genel", bgColor: "#09090b",
     fontStyle: "Inter", buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
-    paymentLink: "", customCss: "", configJson: "",
+    paymentLink: "", customCss: "", configJson: "", isComingSoon: false,
   });
  }
  } catch (err: any) {
@@ -293,7 +314,7 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     setFormData({
       name: "", price: "", category: "Genel", bgColor: "#09090b",
       fontStyle: "Inter", buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
-      paymentLink: "", customCss: "", configJson: "",
+      paymentLink: "", customCss: "", configJson: "", isComingSoon: false,
     });
     setIsAddModalOpen(true);
   }}
@@ -352,6 +373,9 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  <div>
  <div className="flex items-center gap-2">
  <div className="text-sm font-bold text-white group-hover:text-neon-blue transition-colors">{template.name}</div>
+ {template.isComingSoon && (
+   <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-amber-500/20 text-amber-500 border border-amber-500/30">YAKINDA</span>
+ )}
  {template.isCoded ? (
  <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">KODLU</span>
  ) : (
@@ -382,6 +406,12 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  className="px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-[10px] font-bold transition-colors cursor-pointer flex items-center justify-center gap-1"
  >
  <Edit2 className="h-3 w-3" /> Düzenle
+ </button>
+ <button 
+ onClick={(e) => { e.stopPropagation(); handleToggleComingSoon(template.id, template.isComingSoon); }} 
+ className={`px-3 py-3 md:py-2.5 md:py-1.5 rounded-lg text-[10px] font-bold transition-colors cursor-pointer ${template.isComingSoon ? 'bg-amber-500/25 text-amber-400 border border-amber-500/30' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-750'}`}
+ >
+ {template.isComingSoon ? "Çok Yakında: Aktif" : "Çok Yakında Yap"}
  </button>
  <button 
  onClick={(e) => { e.stopPropagation(); handleToggleActive(template.id, template.isActive); }} 
@@ -524,6 +554,20 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-neon-blue focus:ring-1 focus:ring-neon-blue outline-none transition-all text-emerald-400"
  />
  </div>
+
+  <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900 border border-zinc-800">
+    <div className="space-y-0.5">
+      <label className="text-xs font-bold text-zinc-350 uppercase tracking-wider block">Çok Yakında Modu</label>
+      <span className="text-[10px] text-zinc-500">Bu şablonu "Çok Yakında" olarak işaretleyip kilitleyin.</span>
+    </div>
+    <button 
+      type="button" 
+      onClick={() => setFormData(prev => ({ ...prev, isComingSoon: !prev.isComingSoon }))}
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.isComingSoon ? 'bg-rose-600' : 'bg-zinc-800'}`}
+    >
+      <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${formData.isComingSoon ? 'translate-x-5' : 'translate-x-0'}`} />
+    </button>
+  </div>
 
  {formMode === "code" && (
  <>

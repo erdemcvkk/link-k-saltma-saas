@@ -19,6 +19,7 @@ interface Template {
  paymentLink?: string | null;
  isActive: boolean;
  isCoded: boolean;
+ isComingSoon: boolean;
  customCss?: string | null;
  configJson?: string | null;
  createdAt: string;
@@ -334,6 +335,14 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  />
  </div>
 
+ {template.isComingSoon && (
+    <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] z-30 flex flex-col items-center justify-center rounded-[2.8rem] m-1 pointer-events-none">
+      <span className="bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-black tracking-widest px-4 py-2 rounded-full shadow-lg border border-white/10 uppercase animate-pulse">
+        Çok Yakında
+      </span>
+    </div>
+ )}
+
  {template.isCoded && (
  <div className="absolute top-6 right-3 bg-purple-500/90 px-2 py-0.5 rounded-full text-[9px] font-bold text-white z-30 pointer-events-none">
  KODLANMIŞ
@@ -343,7 +352,14 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
 
  <div className="w-full bg-zinc-900 rounded-2xl p-4 border border-zinc-800 text-center flex flex-col gap-3">
  <div className="text-2xl font-black text-white">{template.price === 0 ? "Ücretsiz" : `₺${template.price}`}</div>
- {isPurchased ? (
+ {template.isComingSoon ? (
+    <button 
+      disabled={true} 
+      className="w-full py-3 rounded-xl bg-zinc-800 text-zinc-500 font-bold border border-zinc-700 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed pointer-events-none"
+    >
+      Çok Yakında
+    </button>
+  ) : isPurchased ? (
  <button disabled className="w-full py-3 rounded-xl bg-green-500/20 text-green-500 font-bold flex items-center justify-center gap-2">
  <Check className="h-4 w-4" /> Tanımlı
  </button>
