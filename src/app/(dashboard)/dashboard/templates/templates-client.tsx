@@ -1226,7 +1226,7 @@ export default function TemplatesClient({
  {lang === "tr" ? "Özel Şablon Linki" : "Custom Template Link"}
  </span>
  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 overflow-hidden w-full">
- <span className="text-xs font-bold text-zinc-400 whitespace-nowrap">link-saas.vercel.app/</span>
+ <span className="text-xs font-bold text-zinc-400 whitespace-nowrap">clinkor.com/</span>
  <input
  type="text"
  className="w-full min-w-0 bg-transparent border-b border-zinc-200 outline-none focus:border-teal-500 py-2 text-sm font-semibold"

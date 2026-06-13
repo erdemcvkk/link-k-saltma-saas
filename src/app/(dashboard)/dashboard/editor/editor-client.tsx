@@ -2368,7 +2368,7 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
           <div className="space-y-2">
             <label className="text-xs font-semibold uppercase tracking-wider block text-slate-500">{t.usernameLabel}</label>
             <div className="flex items-center rounded-xl border focus-within:border-teal-500/50 overflow-hidden px-3 bg-zinc-100 border-zinc-200">
-              <span className="text-slate-500 text-[11px] sm:text-sm shrink-0">link-saas.vercel.app/</span>
+              <span className="text-slate-500 text-[11px] sm:text-sm shrink-0">clinkor.com/</span>
               <input
                 type="text"
                 value={username}
