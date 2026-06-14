@@ -669,9 +669,9 @@ export default function CustomDesignClient({ userId, siteTitle, siteLogo }: Cust
             © {new Date().getFullYear()} {siteTitle}. Tüm hakları saklıdır.
           </div>
           <div className="flex space-x-6">
-            <a href="#" className="hover:text-slate-900 transition-colors">Gizlilik</a>
-            <a href="#" className="hover:text-slate-900 transition-colors">Şartlar</a>
-            <a href="#" className="hover:text-slate-900 transition-colors">Yardım</a>
+            <Link href="/gizlilik" className="hover:text-slate-900 transition-colors">Gizlilik</Link>
+            <Link href="/sartlar" className="hover:text-slate-900 transition-colors">Şartlar</Link>
+            <Link href="/yardim" className="hover:text-slate-900 transition-colors">Yardım</Link>
           </div>
         </div>
       </footer>
