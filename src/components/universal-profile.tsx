@@ -553,7 +553,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
   {shouldShowBranding && (
     <Link 
       href="https://clinkor.com" 
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-full font-semibold shadow-2xl hover:scale-105 transition-transform duration-200"
+      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-full font-semibold shadow-2xl hover:scale-105 transition-transform duration-200 whitespace-nowrap"
     >
       <img src="/buton-icon.png" alt="Clinkor Icon" className="w-5 h-5 object-contain" />
       <span>{lang === "tr" ? "Clinkor'da Kendi Sayfanı Oluştur" : "Create Your Own Page on Clinkor"}</span>
