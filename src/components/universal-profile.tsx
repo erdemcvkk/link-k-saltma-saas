@@ -7,6 +7,7 @@ import VideoPlayer from "@/components/blocks/video-player";
 import BeforeAfterSlider from "@/components/blocks/before-after-slider";
 import AudioPlayer from "@/components/blocks/audio-player";
 import Link from "next/link";
+import { parseTailwindBgToCss } from "@/lib/utils";
 
 // Safelist for Tailwind background gradient classes so that they are compiled by Tailwind and available on the public profile page
 const TAILWIND_BACKGROUNDS_SAFELIST = [
@@ -168,9 +169,10 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  const customImgUrl = isCustomImg ? (background!.startsWith("custom-img::") ? background!.replace("custom-img::", "") : background) : null;
  const customVideoUrl = isCustomVideo ? background!.replace("custom-video::", "") : null;
  const isTailwindBg = background?.includes("bg-") || background?.includes("from-") || background?.includes("to-");
+ const parsedTailwindBg = isTailwindBg ? parseTailwindBgToCss(background || "") : null;
  const isCssBg = background && !isCustomImg && !isCustomVideo && !isTailwindBg;
 
- const bgClassName = (background && isTailwindBg && !isCustomImg && !isCustomVideo) 
+ const bgClassName = (background && isTailwindBg && !isCustomImg && !isCustomVideo && !parsedTailwindBg) 
  ? background 
  : (!background && !isCustomImg && !isCustomVideo ? currentStyles.bg : "");
 
@@ -381,6 +383,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  style={{
  fontFamily: fontStyle,
  ...(isCssBg ? { background: background } : {}),
+ ...(parsedTailwindBg ? { background: parsedTailwindBg } : {}),
  ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {})
  }}
  >
@@ -549,13 +552,11 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 
   {shouldShowBranding && (
     <Link 
-      href="/" 
-      className={`flex items-center justify-center gap-2 mt-12 pb-6 text-[11px] transition-opacity duration-200 relative z-10 hover:opacity-100 ${
-        isDark ? "text-white/50 hover:text-white" : "text-zinc-500 hover:text-zinc-800"
-      }`}
+      href="https://clinkor.com" 
+      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-full font-semibold shadow-2xl hover:scale-105 transition-transform duration-200"
     >
-      <span>{lang === "tr" ? "Kendi sayfanı oluştur:" : "Create your page:"}</span>
-      <span className="font-extrabold tracking-wider">CLINKOR</span>
+      <img src="/buton-icon.png" alt="Clinkor Icon" className="w-5 h-5 object-contain" />
+      <span>{lang === "tr" ? "Clinkor'da Kendi Sayfanı Oluştur" : "Create Your Own Page on Clinkor"}</span>
     </Link>
   )}
  </div>

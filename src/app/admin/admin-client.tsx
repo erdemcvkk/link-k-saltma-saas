@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
+import { parseTailwindBgToCss } from "@/lib/utils";
 
 type UserItem = {
  id: string;
@@ -1478,7 +1479,15 @@ export default function AdminClient({
  {freeBgs.map((b) => (
  <div key={b.id} className="p-3 bg-zinc-50/50 rounded-2xl border border-zinc-150 flex items-center justify-between gap-3">
  <div className="flex items-center gap-3 overflow-hidden">
- <div className={`w-8.5 h-8.5 rounded-xl border shrink-0 ${b.css}`} />
+ {(() => {
+  const parsedBg = parseTailwindBgToCss(b.css);
+  return (
+    <div 
+      className={`w-8.5 h-8.5 rounded-xl border shrink-0 ${!parsedBg ? b.css : ""}`} 
+      style={parsedBg ? { background: parsedBg } : undefined}
+    />
+  );
+})()}
  <div className="truncate">
  <div className="font-extrabold text-xs text-zinc-700">{b.name}</div>
  <div className="text-[9px] text-zinc-400 font-mono truncate">{b.css}</div>
@@ -1505,7 +1514,15 @@ export default function AdminClient({
  {starterBgs.map((b) => (
  <div key={b.id} className="p-3 bg-zinc-50/50 rounded-2xl border border-zinc-150 flex items-center justify-between gap-3">
  <div className="flex items-center gap-3 overflow-hidden">
- <div className={`w-8.5 h-8.5 rounded-xl border shrink-0 ${b.css}`} />
+ {(() => {
+  const parsedBg = parseTailwindBgToCss(b.css);
+  return (
+    <div 
+      className={`w-8.5 h-8.5 rounded-xl border shrink-0 ${!parsedBg ? b.css : ""}`} 
+      style={parsedBg ? { background: parsedBg } : undefined}
+    />
+  );
+})()}
  <div className="truncate">
  <div className="font-extrabold text-xs text-zinc-700">{b.name}</div>
  <div className="text-[9px] text-zinc-400 font-mono truncate">{b.css}</div>
@@ -1532,7 +1549,15 @@ export default function AdminClient({
  {creatorBgs.map((b) => (
  <div key={b.id} className="p-3 bg-zinc-50/50 rounded-2xl border border-zinc-150 flex items-center justify-between gap-3">
  <div className="flex items-center gap-3 overflow-hidden">
- <div className={`w-8.5 h-8.5 rounded-xl border shrink-0 ${b.css}`} />
+ {(() => {
+  const parsedBg = parseTailwindBgToCss(b.css);
+  return (
+    <div 
+      className={`w-8.5 h-8.5 rounded-xl border shrink-0 ${!parsedBg ? b.css : ""}`} 
+      style={parsedBg ? { background: parsedBg } : undefined}
+    />
+  );
+})()}
  <div className="truncate">
  <div className="font-extrabold text-xs text-zinc-700">{b.name}</div>
  <div className="text-[9px] text-zinc-400 font-mono truncate">{b.css}</div>

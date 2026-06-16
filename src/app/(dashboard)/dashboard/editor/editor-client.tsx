@@ -66,6 +66,7 @@ import { YoutubeIcon, TwitterIcon, LinkedinIcon, TiktokIcon, PinterestIcon, Inst
 import PhonePreview from "@/components/dashboard/phone-preview";
 import { useDashboard } from "../dashboard-context";
 import { parseButtonStyle } from "@/lib/parse-button-style";
+import { parseTailwindBgToCss } from "@/lib/utils";
 
 type LinkClickItem = {
   id: string;
@@ -2227,10 +2228,20 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  {simulatedPlan === "FREE" && (
  <div className="space-y-4">
  <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Ücretsiz Arka Planlar" : "Free Backgrounds"} <span className="text-slate-400 font-normal text-xs">(5)</span></label>
- <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{FREE_BACKGROUNDS.map((bg: any) => (
- <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
- <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
- ))}</div>
+   <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{FREE_BACKGROUNDS.map((bg: any) => {
+    const parsed = parseTailwindBgToCss(bg.css);
+    return (
+      <button 
+        key={bg.id} 
+        type="button" 
+        onClick={() => setBackground(bg.css)} 
+        style={parsed ? { background: parsed } : undefined}
+        className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${!parsed ? bg.css : ""}`}
+      >
+        <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span>
+      </button>
+    );
+  })}</div>
  <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
  <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-600"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}<span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-[8px] text-amber-600 uppercase tracking-wide font-black"><Lock className="h-2 w-2" /> PREMIUM</span></div></div>
  <button type="button" onClick={() => triggerUpgradeModal(lang === "tr" ? "Özel Arka Plan Kilidi 🔒" : "Custom Background Locked 🔒", lang === "tr" ? "Kendi özel resimlerinizi veya videolarınızı arka plan olarak kullanmak Premium pakete özeldir." : "Custom backgrounds are exclusive to Premium plans.")} className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs transition-all cursor-pointer"><Lock className="h-3.5 w-3.5" />{lang === "tr" ? "Yükselt" : "Upgrade"}</button>
@@ -2241,10 +2252,20 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  {simulatedPlan === "STARTER" && (
  <div className="space-y-4">
  <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Starter Arka Planları" : "Starter Backgrounds"} <span className="text-slate-400 font-normal text-xs">(10)</span></label>
- <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{STARTER_BACKGROUNDS.map((bg: any) => (
- <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
- <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
- ))}</div>
+   <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{STARTER_BACKGROUNDS.map((bg: any) => {
+    const parsed = parseTailwindBgToCss(bg.css);
+    return (
+      <button 
+        key={bg.id} 
+        type="button" 
+        onClick={() => setBackground(bg.css)} 
+        style={parsed ? { background: parsed } : undefined}
+        className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${!parsed ? bg.css : ""}`}
+      >
+        <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span>
+      </button>
+    );
+  })}</div>
  <div className="p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center gap-4">
  <div className="flex-1 space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-slate-700"><Image className="h-3.5 w-3.5 text-indigo-500" />{lang === "tr" ? "Özel Fotoğraf Yükle" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG veya JPEG — Maks. 1 MB" : "PNG or JPEG — Max 1 MB"}</p>{customBgError && (<p className="text-[10px] text-red-500 font-bold mt-1">{customBgError}</p>)}</div>
  <label className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 cursor-pointer font-bold text-xs transition-all"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Fotoğraf Seç" : "Choose Photo"}
@@ -2257,10 +2278,20 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  {(simulatedPlan === "CREATOR" || simulatedPlan === "PRO_BUSINESS") && (
  <div className="space-y-4">
  <label className="text-sm font-semibold text-slate-800 block">{lang === "tr" ? "Creator Arka Planları" : "Creator Backgrounds"} <span className="text-slate-400 font-normal text-xs">(20)</span></label>
- <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{[...STARTER_BACKGROUNDS, ...CREATOR_BACKGROUNDS].map((bg) => (
- <button key={bg.id} type="button" onClick={() => setBackground(bg.css)} className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${bg.css}`}>
- <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span></button>
- ))}</div>
+   <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">{[...STARTER_BACKGROUNDS, ...CREATOR_BACKGROUNDS].map((bg) => {
+    const parsed = parseTailwindBgToCss(bg.css);
+    return (
+      <button 
+        key={bg.id} 
+        type="button" 
+        onClick={() => setBackground(bg.css)} 
+        style={parsed ? { background: parsed } : undefined}
+        className={`h-20 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-end p-2.5 relative overflow-hidden group hover:scale-[1.03] hover:shadow-md ${background === bg.css ? "border-slate-900 ring-2 ring-slate-900/10 shadow-md" : "border-gray-100 hover:border-gray-300"} ${!parsed ? bg.css : ""}`}
+      >
+        <span className="text-[9px] font-bold text-white z-10 block drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{bg.name}</span>
+      </button>
+    );
+  })}</div>
  <div className="grid sm:grid-cols-2 gap-3">
  <div className="p-4 rounded-2xl border border-dashed border-purple-200 bg-purple-50/30 flex flex-col gap-3">
  <div className="space-y-1"><div className="flex items-center gap-1.5 text-xs font-bold text-purple-700"><Image className="h-3.5 w-3.5" />{lang === "tr" ? "Özel Fotoğraf" : "Custom Photo"}</div><p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "PNG / JPEG / WebP — Maks. 1 MB" : "Max 1 MB"}</p>{customBgError && customBgError.includes("foto") && (<p className="text-[10px] text-red-500 font-bold">{customBgError}</p>)}</div>
