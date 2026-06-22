@@ -1,7 +1,4 @@
 import type { NextConfig } from "next";
-import "./src/lib/env-validator";
-
-
 const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
