@@ -100,15 +100,56 @@ export default async function AdminPage() {
  link: item.link || undefined,
  }));
 
- return (
- <AdminClient
- adminUserId={auth.id}
- adminRole={auth.role}
- initialUsers={serializedUsers}
- initialSettings={serializedSettings}
- stats={stats}
- initialFonts={serializedFonts}
- initialSliderItems={serializedSliderItems}
- />
- );
+  const dbBlogs = await db.blog.findMany({ orderBy: { publishedAt: "desc" } });
+  const serializedBlogs = dbBlogs.map((b) => ({
+    id: b.id,
+    title: b.title,
+    slug: b.slug,
+    content: b.content,
+    imageUrl: b.imageUrl || null,
+    publishedAt: b.publishedAt.toISOString(),
+    createdAt: b.createdAt.toISOString(),
+  }));
+
+  const dbFaqs = await db.faq.findMany({ orderBy: { createdAt: "desc" } });
+  const serializedFaqs = dbFaqs.map((f) => ({
+    id: f.id,
+    question: f.question,
+    answer: f.answer,
+  }));
+
+  const dbFooterSections = await db.footerSection.findMany({
+    include: { links: true },
+    orderBy: { order: "asc" },
+  });
+
+  const serializedFooterSections = dbFooterSections.map((sec) => ({
+    id: sec.id,
+    title: sec.title,
+    order: sec.order,
+    links: sec.links
+      .sort((a, b) => a.order - b.order)
+      .map((link) => ({
+        id: link.id,
+        label: link.label,
+        url: link.url,
+        order: link.order,
+        sectionId: link.sectionId,
+      })),
+  }));
+
+  return (
+    <AdminClient
+      adminUserId={auth.id}
+      adminRole={auth.role}
+      initialUsers={serializedUsers}
+      initialSettings={serializedSettings}
+      stats={stats}
+      initialFonts={serializedFonts}
+      initialSliderItems={serializedSliderItems}
+      initialBlogs={serializedBlogs}
+      initialFaqs={serializedFaqs}
+      initialFooterSections={serializedFooterSections}
+    />
+  );
 }

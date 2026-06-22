@@ -353,70 +353,41 @@ export default function EklentilerClient({ products, settings, userId = null, db
   };
 
   return (
-    <div className={singleAddonId ? "w-full bg-transparent font-sans" : "min-h-screen bg-black font-sans"}>
-      {!singleAddonId && (
-        <nav className="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-all">
-            <ArrowLeft className="h-5 w-5 text-zinc-400" />
-            <span className="text-xl font-black tracking-tight text-white">Ana Sayfa</span>
-          </Link>
-          <div className="flex items-center space-x-4">
-            {userId ? (
-              <Link
-                href="/dashboard"
-                className="px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-bold text-xs md:text-sm transition-all"
-              >
-                Yönetim Paneli
-              </Link>
-            ) : (
-              <Link
-                href="/sign-up"
-                className="px-4 py-2 rounded-full bg-gradient-to-r from-neon-blue to-light-blue text-white font-bold text-xs md:text-sm transition-all"
-              >
-                Hemen Üye Ol
-              </Link>
-            )}
+    <div className={singleAddonId ? "w-full bg-transparent font-sans" : "min-h-screen font-sans"} style={singleAddonId ? undefined : { backgroundColor: "#0f1110", color: "#e0e0e0" }}>
+      <main className={singleAddonId ? "w-full flex justify-center p-2" : "max-w-full md:w-[1800px] mx-auto px-6 py-16"}>
+        {!singleAddonId && (
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-gradient-to-r from-neon-blue/20 to-light-blue/20 text-white border border-neon-blue/30 shadow-[0_0_15px_rgba(60,60,250,0.15)] font-bold text-sm mb-6">
+              <Zap className="h-4 w-4 text-neon-blue" />
+              <span>26 Premium Eklenti Vitrini</span>
+            </div>
+            <h1 className="text-2xl md:text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
+              Profilinize <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-light-blue">Güç Katın</span>
+            </h1>
+            <p className="text-lg font-medium" style={{ color: "#e0e0e0" }}>
+              İhtiyacınıza uygun modülü seçin, tek seferlik ödemeyle ömür boyu kullanın. 26 farklı premium eklenti ve tema arasından seçim yapın.
+            </p>
           </div>
-        </div>
-      </nav>
-      )}
-
- <main className={singleAddonId ? "w-full flex justify-center p-2" : "max-w-full md:w-[1800px] mx-auto px-6 py-16"}>
- {!singleAddonId && (
-      <div className="text-center max-w-2xl mx-auto mb-16">
- <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-neon-blue/10 text-neon-blue font-bold text-sm mb-6">
- <Zap className="h-4 w-4" />
- <span>26 Premium Eklenti Vitrini</span>
- </div>
- <h1 className="text-2xl md:text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
- Profilinize <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-light-blue">Güç Katın</span>
- </h1>
- <p className="text-lg text-zinc-400 font-medium">
- İhtiyacınıza uygun modülü seçin, tek seferlik ödemeyle ömür boyu kullanın. 26 farklı premium eklenti ve tema arasından seçim yapın.
- </p>
- </div>
-    )}
-
- {/* Search + Sort bar */}
- {!singleAddonId && (
-          <div className="flex flex-col gap-4 bg-zinc-900/40 p-4 rounded-3xl border border-zinc-800 backdrop-blur-sm max-w-4xl mx-auto mb-12">
- <div className="flex flex-col sm:flex-row gap-3 items-center">
- <div className="relative flex-1 w-full">
- <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
- <Search className="h-4 w-4" />
- </span>
- <input
- type="text"
- placeholder="Eklenti ara..."
- value={searchQuery}
- onChange={(e) => {
- setSearchQuery(e.target.value);
- setVisibleCount(26);
- }}
- className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-neon-blue text-white placeholder-zinc-500 transition-colors"
- />
- </div>
+        )}
+        {!singleAddonId && (
+          <div className="flex flex-col gap-4 p-4 rounded-3xl backdrop-blur-sm max-w-4xl mx-auto mb-12" style={{ backgroundColor: "rgba(255, 255, 255, 0.02)", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+            <div className="flex flex-col sm:flex-row gap-3 items-center">
+              <div className="relative flex-1 w-full">
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+                  <Search className="h-4 w-4" />
+                </span>
+                <input
+                  type="text"
+                  placeholder="Eklenti ara..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setVisibleCount(26);
+                  }}
+                  className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-full text-sm font-semibold focus:outline-none focus:border-neon-blue text-white placeholder-zinc-500 transition-colors"
+                  style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }}
+                />
+              </div>
 
  <div className="relative w-full sm:w-56">
  <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
@@ -426,7 +397,8 @@ export default function EklentilerClient({ products, settings, userId = null, db
  setSortOption(e.target.value);
  setVisibleCount(26);
  }}
- className="w-full pl-10 pr-8 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-neon-blue text-white appearance-none cursor-pointer transition-colors"
+ className="w-full pl-10 pr-8 py-3 md:py-2.5 rounded-full text-sm font-semibold focus:outline-none focus:border-neon-blue text-white appearance-none cursor-pointer transition-colors"
+ style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }}
  >
  <option value="default">Varsayılan Sıralama</option>
  <option value="name-asc">A → Z (İsim)</option>
@@ -438,7 +410,7 @@ export default function EklentilerClient({ products, settings, userId = null, db
  </div>
  </div>
   {/* Category Pills */}
-  <div className="flex flex-wrap gap-2 justify-center pt-2 border-t border-zinc-800/60 mt-1">
+  <div className="flex flex-wrap gap-2 justify-center pt-2 border-t border-zinc-850 mt-1">
     {["Tümü", "Müzik & Audio", "Satış & Gelir", "Etkileşim & Araçlar", "Premium Temalar"].map((cat) => (
       <button
         key={cat}
@@ -450,8 +422,9 @@ export default function EklentilerClient({ products, settings, userId = null, db
         className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
           selectedCategory === cat
             ? "bg-gradient-to-r from-neon-blue to-light-blue text-white shadow-md shadow-neon-blue/10"
-            : "bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-900"
+            : "text-zinc-400 hover:text-white hover:bg-white/5 border transition-all"
         }`}
+        style={selectedCategory === cat ? undefined : { backgroundColor: "rgba(255, 255, 255, 0.02)", borderColor: "rgba(255, 255, 255, 0.1)" }}
       >
         {cat}
       </button>
@@ -517,7 +490,11 @@ export default function EklentilerClient({ products, settings, userId = null, db
   const isComingSoon = settings?.[`theme_COMINGSOON_${addon.id}`] === "true" || (plugins.find(p => p.addonType === addon.id)?.isComingSoon || false);
  
  return (
- <div key={addon.id} className="flex flex-col items-center">
+ <div 
+   key={addon.id} 
+   className="flex flex-col items-center p-6 rounded-[2.5rem] backdrop-blur-md transition-all hover:scale-[1.02] duration-300 h-full" 
+   style={{ backgroundColor: "#ffffff05", border: "1px solid rgba(255, 255, 255, 0.1)", boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.2)" }}
+ >
  
  {!singleAddonId && (
                     <div className="text-center mb-6 px-4">
@@ -958,14 +935,14 @@ export default function EklentilerClient({ products, settings, userId = null, db
 
   {/* Buy Section */}
   {!singleAddonId && (
-                    <div className="w-full bg-zinc-900 rounded-2xl p-4 border border-zinc-800 text-center flex flex-col gap-3">
-    <div className="text-2xl font-black text-white">
+    <div className="w-full text-center flex flex-col gap-3 mt-auto pt-4 border-t border-white/5">
+    <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
       {displayPrice === "0" ? (lang === "tr" ? "Ücretsiz" : "Free") : `₺${displayPrice}`}
     </div>
     {isComingSoon ? (
       <button 
         disabled={true}
-        className="w-full py-3 rounded-xl bg-zinc-800 text-zinc-500 border border-zinc-700 font-bold flex items-center justify-center gap-2 opacity-50 cursor-not-allowed pointer-events-none"
+        className="w-full py-3 rounded-xl bg-zinc-850 text-zinc-500 border border-zinc-800 font-bold flex items-center justify-center gap-2 opacity-50 cursor-not-allowed pointer-events-none"
       >
         Çok Yakında
       </button>
@@ -1017,7 +994,8 @@ export default function EklentilerClient({ products, settings, userId = null, db
  <div className="flex justify-center pt-4 pb-8">
  <button
  onClick={() => setVisibleCount(prev => prev + 4)}
- className="px-4 md:px-8 py-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800 text-white font-bold transition-all flex items-center gap-2"
+ className="px-4 md:px-8 py-3 rounded-full text-white font-bold transition-all flex items-center gap-2 border hover:bg-white/5 cursor-pointer"
+ style={{ backgroundColor: "rgba(255, 255, 255, 0.02)", borderColor: "rgba(255, 255, 255, 0.1)" }}
  >
  Devamını Gör
  </button>

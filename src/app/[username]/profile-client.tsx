@@ -38,6 +38,7 @@ type ProductItem = {
 
 interface ProfileClientProps {
  username: string;
+ displayName?: string | null;
  bio: string;
  theme: string;
  links: LinkItem[];
@@ -65,10 +66,25 @@ interface ProfileClientProps {
  purchasedModules?: any[];
  isActiveTemplatePremium?: boolean;
  hasActivePremiumModule?: boolean;
+ isCoded?: boolean;
+ customHtml?: string | null;
+ masterLayoutHtml?: string | null;
+ avatarHtml?: string | null;
+ headerHtml?: string | null;
+ socialHtml?: string | null;
+ linksHtml?: string | null;
+ backgroundHtml?: string | null;
+ containerClasses?: string | null;
+ jsonConfig?: string | null;
+ socialLinks?: any;
+ socials?: any[];
+ isPremiumTemplateActive?: boolean;
+ templateSettings?: any;
 }
 
 export default function ProfileClient({ 
   username, 
+  displayName,
   bio, 
   theme, 
   links, 
@@ -90,7 +106,21 @@ export default function ProfileClient({
   purchasedTemplates = [],
   purchasedModules = [],
   isActiveTemplatePremium = false,
-  hasActivePremiumModule = false
+  hasActivePremiumModule = false,
+  isCoded = false,
+  customHtml = null,
+  masterLayoutHtml = null,
+  avatarHtml = null,
+  headerHtml = null,
+  socialHtml = null,
+  linksHtml = null,
+  backgroundHtml = null,
+  containerClasses = null,
+  jsonConfig = null,
+  socialLinks = null,
+  socials = null,
+  isPremiumTemplateActive = false,
+  templateSettings = null
 }: ProfileClientProps) {
  const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
  const [cardNumber, setCardNumber] = useState("");
@@ -154,6 +184,7 @@ export default function ProfileClient({
 
  const profileData: UniversalProfileData = {
  username,
+ displayName,
  bio,
  theme,
  links,
@@ -175,7 +206,21 @@ export default function ProfileClient({
  purchasedTemplates,
  purchasedModules,
  isActiveTemplatePremium,
- hasActivePremiumModule
+ hasActivePremiumModule,
+ isCoded,
+ customHtml,
+ masterLayoutHtml,
+ avatarHtml,
+ headerHtml,
+ socialHtml,
+ linksHtml,
+ backgroundHtml,
+ containerClasses,
+ jsonConfig,
+ socialLinks,
+ socials,
+ isPremiumTemplateActive,
+ templateSettings
  };
 
  return (

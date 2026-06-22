@@ -198,6 +198,16 @@ type TemplateItem = {
   isCoded: boolean;
   customCss: string | null;
   configJson: string | null;
+  customHtml?: string | null;
+  masterLayoutHtml?: string | null;
+  avatarHtml?: string | null;
+  headerHtml?: string | null;
+  socialHtml?: string | null;
+  linksHtml?: string | null;
+  backgroundHtml?: string | null;
+  containerClasses?: string | null;
+  jsonConfig?: string | null;
+  customSchema?: string | null;
 };
 
 interface EditorClientProps {
@@ -214,6 +224,8 @@ interface EditorClientProps {
 export default function EditorClient({ initialLinks, initialOwnedTemplates, systemSettings }: EditorClientProps) {
   const {
     user,
+    updateUserProfile,
+    updateUserCore,
     globalSettings,
     lang,
     simulatedPlan,
@@ -248,6 +260,22 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
   const [theme, setTheme] = useState(user.profile?.theme ?? "dark");
   const [fontStyle, setFontStyle] = useState(user.profile?.fontStyle ?? "Inter");
   const [bioColor, setBioColor] = useState(user.profile?.bioColor ?? "#888888");
+
+  const initialSocialLinks = useMemo(() => {
+    const dbLinks = user.profile?.socialLinks;
+    if (Array.isArray(dbLinks)) {
+      const obj: any = {};
+      dbLinks.forEach(item => {
+        if (item.socialPlatform && item.socialUrl) {
+          obj[item.socialPlatform] = item.socialUrl;
+        }
+      });
+      return obj;
+    }
+    return dbLinks || {};
+  }, [user.profile?.socialLinks]);
+
+  const [socialLinks, setSocialLinks] = useState<any>(initialSocialLinks);
   const [usernameColor, setUsernameColor] = useState(user.profile?.usernameColor ?? "#ffffff");
   const [username, setUsername] = useState(user.username ?? "");
 
@@ -629,10 +657,33 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  return;
  }
 
- startTransition(async () => {
- try {
- await updateProfile(initialUser.id, bio, theme, username, avatarUrl, background, fontStyle, bioColor, usernameColor, activeTemplateCss, buttonClass, avatarShape);
- await updateAllLinksCustomStyle(
+  const mappedSocialLinks = Object.entries(socialLinks || {})
+    .filter(([key, val]) => val && (val as string).trim() !== "")
+    .map(([key, val]) => ({
+      socialPlatform: key,
+      socialUrl: val
+    }));
+
+  startTransition(async () => {
+  try {
+  await updateProfile(initialUser.id, bio, theme, username, avatarUrl, background, fontStyle, bioColor, usernameColor, activeTemplateCss, buttonClass, avatarShape, undefined, mappedSocialLinks);
+  // Sync the shared context so other dashboard tabs (e.g. templates simulator)
+  // immediately reflect the new profile data without a full page reload.
+  updateUserProfile({
+    displayName: username || null,
+    bio: bio || null,
+    avatarUrl: avatarUrl || null,
+    background: background || null,
+    fontStyle: fontStyle || null,
+    bioColor: bioColor || null,
+    usernameColor: usernameColor || null,
+    customCss: activeTemplateCss || null,
+    buttonClass: buttonClass || null,
+    avatarShape: avatarShape || null,
+    socialLinks: mappedSocialLinks,
+  });
+  updateUserCore({ username });
+  await updateAllLinksCustomStyle(
  initialUser.id,
  btnBgColor || null,
  btnTextColor || null,
@@ -893,6 +944,35 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
     };
   });
 
+  const formattedSocialLinks = Object.entries(socialLinks || {})
+    .filter(([key, val]) => val && (val as string).trim() !== "")
+    .map(([key, val]) => ({
+      socialPlatform: key,
+      socialUrl: val
+    }));
+
+  const userMapped = {
+    ...user,
+    instagram: socialLinks?.instagram || "",
+    twitter: socialLinks?.twitter || "",
+    youtube: socialLinks?.youtube || "",
+    tiktok: socialLinks?.tiktok || "",
+    whatsapp: socialLinks?.whatsapp || "",
+    facebook: socialLinks?.facebook || "",
+    linkedin: socialLinks?.linkedin || "",
+    pinterest: socialLinks?.pinterest || "",
+  };
+
+  const mappedSocials: Array<{ socialPlatform: string; socialUrl: string }> = [];
+  if (userMapped.instagram) mappedSocials.push({ socialPlatform: 'instagram', socialUrl: userMapped.instagram });
+  if (userMapped.twitter) mappedSocials.push({ socialPlatform: 'twitter', socialUrl: userMapped.twitter });
+  if (userMapped.youtube) mappedSocials.push({ socialPlatform: 'youtube', socialUrl: userMapped.youtube });
+  if (userMapped.tiktok) mappedSocials.push({ socialPlatform: 'tiktok', socialUrl: userMapped.tiktok });
+  if (userMapped.whatsapp) mappedSocials.push({ socialPlatform: 'whatsapp', socialUrl: userMapped.whatsapp });
+  if (userMapped.facebook) mappedSocials.push({ socialPlatform: 'facebook', socialUrl: userMapped.facebook });
+  if (userMapped.linkedin) mappedSocials.push({ socialPlatform: 'linkedin', socialUrl: userMapped.linkedin });
+  if (userMapped.pinterest) mappedSocials.push({ socialPlatform: 'pinterest', socialUrl: userMapped.pinterest });
+
   const previewData = {
     username: username || "username",
     bio: bio || "Enter profile bio details...",
@@ -908,6 +988,19 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
     systemSettings: systemSettings,
     plan: simulatedPlan,
     avatarShape: avatarShape,
+    isCoded: activeTemplate ? activeTemplate.isCoded : false,
+    customHtml: activeTemplate ? activeTemplate.customHtml : null,
+    masterLayoutHtml: activeTemplate ? activeTemplate.masterLayoutHtml : null,
+    avatarHtml: activeTemplate ? activeTemplate.avatarHtml : null,
+    headerHtml: activeTemplate ? activeTemplate.headerHtml : null,
+    socialHtml: activeTemplate ? activeTemplate.socialHtml : null,
+    linksHtml: activeTemplate ? activeTemplate.linksHtml : null,
+    backgroundHtml: activeTemplate ? activeTemplate.backgroundHtml : null,
+    containerClasses: activeTemplate ? activeTemplate.containerClasses : null,
+    jsonConfig: activeTemplate ? (activeTemplate.jsonConfig || activeTemplate.configJson) : null,
+    socialLinks: formattedSocialLinks,
+    socials: mappedSocials,
+    isPremiumTemplateActive: activeTemplate ? true : (user.profile?.isPremiumTemplateActive ?? false),
   };
 
   return (
@@ -917,45 +1010,35 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
         {(() => {return (
  <div className="w-full max-w-full space-y-5 md:space-y-8 animate-in fade-in slide-in-from-bottom-3 duration-350 overflow-hidden">
  
- {/* SUB-TABS NAVIGATION WITH TEMPLATE PREVIEW LINK */}
- <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between w-full max-w-full">
-   <div className="flex gap-1.5 sm:gap-2 p-1 sm:p-1.5 bg-zinc-100 rounded-2xl border border-zinc-200 overflow-hidden shrink-0">
-     <button
-       type="button"
-       onClick={() => setActiveSubTab("appearance")}
-       className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-4 py-2.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-         activeSubTab === "appearance"
-           ? "bg-white text-zinc-950 shadow-sm"
-           : "text-zinc-650 hover:text-zinc-950"
-       }`}
-     >
-       <Palette className="h-3.5 w-3.5 text-teal-500" />
-       {lang === "tr" ? "Görünüm" : "Look"}
-     </button>
-     <button
-       type="button"
-       onClick={() => setActiveSubTab("profile")}
-       className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 px-4 py-2.5 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-         activeSubTab === "profile"
-           ? "bg-white text-zinc-950 shadow-sm"
-           : "text-zinc-650 hover:text-zinc-950"
-       }`}
-     >
-       <User className="h-3.5 w-3.5 text-teal-500" />
-       {lang === "tr" ? "Profil" : "Profile"}
-     </button>
-   </div>
-
-   <a
-     href={`/${username}?previewTemplate=${activeTemplate ? activeTemplate.id : effectiveTheme}`}
-     target="_blank"
-     rel="noreferrer"
-     className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 text-xs font-bold shadow-sm transition-all cursor-pointer whitespace-nowrap active:scale-95 hover:border-zinc-300"
-   >
-     <ExternalLink className="h-3.5 w-3.5 text-teal-500 animate-pulse" />
-     <span>{lang === "tr" ? "Şablon Önizleme Linki" : "Template Preview Link"}</span>
-   </a>
- </div>
+ {/* SUB-TABS NAVIGATION */}
+  <div className="flex w-full max-w-full mb-1">
+    <div className="flex flex-1 sm:flex-none gap-2 p-1.5 bg-zinc-100/80 rounded-2xl border border-zinc-200/80 overflow-hidden backdrop-blur-md shadow-sm">
+      <button
+        type="button"
+        onClick={() => setActiveSubTab("appearance")}
+        className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+          activeSubTab === "appearance"
+            ? "bg-white text-zinc-950 shadow-sm border border-zinc-200/50"
+            : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/50 border border-transparent"
+        }`}
+      >
+        <Palette className="h-4 w-4 text-teal-500" />
+        {lang === "tr" ? "Görünüm" : "Look"}
+      </button>
+      <button
+        type="button"
+        onClick={() => setActiveSubTab("profile")}
+        className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+          activeSubTab === "profile"
+            ? "bg-white text-zinc-950 shadow-sm border border-zinc-200/50"
+            : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/50 border border-transparent"
+        }`}
+      >
+        <User className="h-4 w-4 text-teal-500" />
+        {lang === "tr" ? "Profil" : "Profile"}
+      </button>
+    </div>
+  </div>
 
  {/* SUB-TAB CONTENT: APPEARANCE */}
   {activeSubTab === "appearance" && (
@@ -1632,6 +1715,39 @@ export default function EditorClient({ initialLinks, initialOwnedTemplates, syst
  </div>
  );
  })()}
+
+ {/* Social Links Form */}
+ <div className="space-y-4 pt-6 pb-2 border-t border-zinc-100">
+ <div>
+ <h3 className="font-extrabold text-slate-900 tracking-tight text-sm">{lang === "tr" ? "Sosyal Medya Linkleri" : "Social Media Links"}</h3>
+ <p className="text-[10px] text-slate-500 font-medium">{lang === "tr" ? "Bu bağlantılar sadece 'Premium' V8 şablonlarında ve uyumlu temalarda gösterilir." : "These links are shown in Premium V8 templates and compatible themes."}</p>
+ </div>
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+ {['instagram', 'twitter', 'tiktok', 'youtube', 'linkedin', 'facebook', 'pinterest'].map(social => (
+ <div key={social}>
+ <label className="text-[10px] text-slate-500 uppercase tracking-wider font-extrabold block mb-1 capitalize">
+ {social}
+ </label>
+ <input
+ type="text"
+ value={socialLinks[social] || ""}
+ onChange={(e) => setSocialLinks({ ...socialLinks, [social]: e.target.value })}
+ className="w-full px-4 py-2 rounded-xl border focus:border-emerald-500/50 outline-none text-xs bg-zinc-50 border-zinc-200 text-zinc-900"
+ placeholder={`https://${social}.com/username`}
+ />
+ </div>
+ ))}
+ </div>
+ <button
+ type="button"
+ onClick={handleSaveProfile}
+ disabled={isPending}
+ className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-[11px] hover:bg-slate-800 transition-all disabled:opacity-50 cursor-pointer shadow-sm mt-2"
+ >
+ {isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
+ {t.saveChanges}
+ </button>
+ </div>
 
  {/* Active Links Manager */}
  <div className="space-y-4">

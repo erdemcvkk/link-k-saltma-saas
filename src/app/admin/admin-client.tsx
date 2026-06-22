@@ -2,7 +2,15 @@
 
 import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { adminToggleBanUser, adminChangeUserPlan, adminToggleUserRole, saveGlobalSetting, adminClearCache, adminDeleteGlobalSetting, adminAddFont, adminDeleteFont, adminUpdateFont, addSliderItem, deleteSliderItem } from "@/app/actions";
+import { adminToggleBanUser, adminChangeUserPlan, adminToggleUserRole, saveGlobalSetting, adminClearCache, adminDeleteGlobalSetting, adminAddFont, adminDeleteFont, adminUpdateFont, addSliderItem, deleteSliderItem, adminAddBlog, adminDeleteBlog, adminAddFAQ, adminDeleteFAQ } from "@/app/actions";
+import {
+  adminAddFooterSection,
+  adminUpdateFooterSection,
+  adminDeleteFooterSection,
+  adminAddFooterLink,
+  adminUpdateFooterLink,
+  adminDeleteFooterLink,
+} from "@/app/actions";
 import {
  ShieldAlert,
  Users,
@@ -33,7 +41,8 @@ import {
  Code,
  Layout,
  ShoppingBag,
- Megaphone
+ Megaphone,
+ Columns
 } from "lucide-react";
 import Link from "next/link";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
@@ -51,6 +60,21 @@ type UserItem = {
  createdAt: Date;
 };
 
+type FooterLinkItem = {
+  id: string;
+  label: string;
+  url: string;
+  order: number;
+  sectionId: string;
+};
+
+type FooterSectionItem = {
+  id: string;
+  title: string;
+  order: number;
+  links: FooterLinkItem[];
+};
+
 interface AdminClientProps {
  adminUserId: string;
  adminRole: string;
@@ -64,6 +88,9 @@ interface AdminClientProps {
  };
  initialFonts: { id: string; name: string; value: string; tier: string; giftLabel?: string | null; createdAt: string }[];
  initialSliderItems?: { id: string; title: string; imageUrl: string; link?: string }[];
+ initialBlogs?: { id: string; title: string; slug: string; content: string; imageUrl: string | null; publishedAt: string; createdAt: string }[];
+ initialFaqs?: { id: string; question: string; answer: string }[];
+ initialFooterSections?: FooterSectionItem[];
 }
 
 const DEFAULT_FREE_BGS = [
@@ -183,6 +210,9 @@ export default function AdminClient({
  stats, 
  initialFonts,
  initialSliderItems = [],
+ initialBlogs = [],
+ initialFaqs = [],
+ initialFooterSections = [],
 }: AdminClientProps) {
  const isSuperAdmin = adminRole === "SUPER_ADMIN";
  const router = useRouter();
@@ -194,7 +224,258 @@ export default function AdminClient({
 
  const [lang, setLang] = useState<"tr" | "en">("en");
  const [activeTheme, setActiveTheme] = useState<"dark" | "light">("light");
- const [sidebarTab, setSidebarTab] = useState<"directory" | "stats" | "backgrounds" | "homepage" | "settings" | "legal" | "code" | "fonts" | "animations">("directory");
+ const [sidebarTab, setSidebarTab] = useState<"directory" | "stats" | "backgrounds" | "homepage" | "settings" | "legal" | "code" | "fonts" | "animations" | "blogs" | "faqs" | "footer">("directory");
+
+  // Footer states
+  const [footerSections, setFooterSections] = useState<FooterSectionItem[]>(initialFooterSections);
+  const [newSectionTitle, setNewSectionTitle] = useState("");
+  const [newSectionOrder, setNewSectionOrder] = useState<number>(0);
+
+  const [newLinkLabel, setNewLinkLabel] = useState<Record<string, string>>({});
+  const [newLinkUrl, setNewLinkUrl] = useState<Record<string, string>>({});
+  const [newLinkOrder, setNewLinkOrder] = useState<Record<string, number>>({});
+
+  const [footerVisibility, setFooterVisibility] = useState(initialSettings["footer_visibility_mode"] || "ALL_PAGES");
+  const [appStore, setAppStore] = useState(initialSettings["app_store_url"] || "");
+  const [playStore, setPlayStore] = useState(initialSettings["play_store_url"] || "");
+  const [footerInstagram, setFooterInstagram] = useState(initialSettings["footer_instagram_url"] || "");
+  const [footerTwitter, setFooterTwitter] = useState(initialSettings["footer_twitter_url"] || "");
+  const [footerYoutube, setFooterYoutube] = useState(initialSettings["footer_youtube_url"] || "");
+
+ // Blog states
+ const [blogs, setBlogs] = useState(initialBlogs);
+ const [newBlogTitle, setNewBlogTitle] = useState("");
+ const [newBlogContent, setNewBlogContent] = useState("");
+ const [newBlogImageUrl, setNewBlogImageUrl] = useState("");
+
+ // FAQ states
+ const [faqs, setFaqs] = useState(initialFaqs);
+ const [newFaqQuestion, setNewFaqQuestion] = useState("");
+ const [newFaqAnswer, setNewFaqAnswer] = useState("");
+
+ const handleAddBlog = async (e: React.FormEvent) => {
+   e.preventDefault();
+   if (!newBlogTitle || !newBlogContent) return;
+   setErrorMsg("");
+   setSuccessMsg("");
+
+   startTransition(async () => {
+     try {
+       const blog = await adminAddBlog(adminUserId, newBlogTitle, newBlogContent, newBlogImageUrl);
+       setBlogs([
+         {
+           id: blog.id,
+           title: blog.title,
+           slug: blog.slug,
+           content: blog.content,
+           imageUrl: blog.imageUrl,
+           publishedAt: blog.publishedAt.toISOString(),
+           createdAt: blog.createdAt.toISOString()
+         },
+         ...blogs
+       ]);
+       setNewBlogTitle("");
+       setNewBlogContent("");
+       setNewBlogImageUrl("");
+       setSuccessMsg(lang === "tr" ? "Blog yazısı başarıyla eklendi ve yayına alındı!" : "Blog post added and published successfully!");
+     } catch (err: any) {
+       setErrorMsg(err.message || "Failed to add blog");
+     }
+   });
+ };
+
+ const handleDeleteBlog = async (id: string) => {
+   if (!confirm(lang === "tr" ? "Bu blog yazısını silmek istediğinize emin misiniz?" : "Are you sure you want to delete this blog post?")) return;
+   setErrorMsg("");
+   setSuccessMsg("");
+
+   startTransition(async () => {
+     try {
+       await adminDeleteBlog(adminUserId, id);
+       setBlogs(blogs.filter(b => b.id !== id));
+       setSuccessMsg(lang === "tr" ? "Blog yazısı başarıyla silindi." : "Blog post deleted successfully.");
+     } catch (err: any) {
+       setErrorMsg(err.message || "Failed to delete blog");
+     }
+   });
+ };
+
+ const handleAddFAQ = async (e: React.FormEvent) => {
+   e.preventDefault();
+   if (!newFaqQuestion || !newFaqAnswer) return;
+   setErrorMsg("");
+   setSuccessMsg("");
+
+   startTransition(async () => {
+     try {
+       const faq = await adminAddFAQ(adminUserId, newFaqQuestion, newFaqAnswer);
+       setFaqs([
+         {
+           id: faq.id,
+           question: faq.question,
+           answer: faq.answer
+         },
+         ...faqs
+       ]);
+       setNewFaqQuestion("");
+       setNewFaqAnswer("");
+       setSuccessMsg(lang === "tr" ? "Soru ve cevap başarıyla SSS listesine eklendi!" : "FAQ item added successfully!");
+     } catch (err: any) {
+       setErrorMsg(err.message || "Failed to add FAQ");
+     }
+   });
+ };
+
+  const handleDeleteFAQ = async (id: string) => {
+    if (!confirm(lang === "tr" ? "Bu soruyu silmek istediğinize emin misiniz?" : "Are you sure you want to delete this question?")) return;
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    startTransition(async () => {
+      try {
+        await adminDeleteFAQ(adminUserId, id);
+        setFaqs(faqs.filter(f => f.id !== id));
+        setSuccessMsg(lang === "tr" ? "Soru başarıyla SSS listesinden silindi." : "FAQ item deleted successfully.");
+      } catch (err: any) {
+        setErrorMsg(err.message || "Failed to delete FAQ");
+      }
+    });
+  };
+
+  const handleSaveFooterSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    startTransition(async () => {
+      try {
+        await saveGlobalSetting(adminUserId, "footer_visibility_mode", footerVisibility);
+        await saveGlobalSetting(adminUserId, "app_store_url", appStore);
+        await saveGlobalSetting(adminUserId, "play_store_url", playStore);
+        await saveGlobalSetting(adminUserId, "footer_instagram_url", footerInstagram);
+        await saveGlobalSetting(adminUserId, "footer_twitter_url", footerTwitter);
+        await saveGlobalSetting(adminUserId, "footer_youtube_url", footerYoutube);
+
+        setSuccessMsg(
+          lang === "tr"
+            ? "Footer genel ayarları başarıyla kaydedildi!"
+            : "Footer global settings successfully updated!"
+        );
+      } catch (err: any) {
+        setErrorMsg(err.message || "Ayarlar kaydedilirken hata oluştu.");
+      }
+    });
+  };
+
+  const handleAddSection = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSectionTitle) return;
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    startTransition(async () => {
+      try {
+        const sec = await adminAddFooterSection(adminUserId, newSectionTitle, newSectionOrder);
+        setFooterSections((prev) => [
+          ...prev,
+          {
+            id: sec.id,
+            title: sec.title,
+            order: sec.order,
+            links: [],
+          },
+        ].sort((a, b) => a.order - b.order));
+        setNewSectionTitle("");
+        setNewSectionOrder(0);
+        setSuccessMsg(lang === "tr" ? "Sütun başarıyla eklendi!" : "Section successfully added!");
+      } catch (err: any) {
+        setErrorMsg(err.message || "Sütun eklenirken hata oluştu.");
+      }
+    });
+  };
+
+  const handleDeleteSection = async (id: string) => {
+    if (!confirm(lang === "tr" ? "Bu sütunu ve altındaki tüm linkleri silmek istediğinize emin misiniz?" : "Are you sure you want to delete this section and all its links?")) return;
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    startTransition(async () => {
+      try {
+        await adminDeleteFooterSection(adminUserId, id);
+        setFooterSections((prev) => prev.filter((sec) => sec.id !== id));
+        setSuccessMsg(lang === "tr" ? "Sütun başarıyla silindi." : "Section successfully deleted.");
+      } catch (err: any) {
+        setErrorMsg(err.message || "Sütun silinirken hata oluştu.");
+      }
+    });
+  };
+
+  const handleAddLink = async (sectionId: string) => {
+    const label = newLinkLabel[sectionId] || "";
+    const url = newLinkUrl[sectionId] || "";
+    const order = newLinkOrder[sectionId] || 0;
+
+    if (!label || !url) return;
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    startTransition(async () => {
+      try {
+        const link = await adminAddFooterLink(adminUserId, label, url, sectionId, order);
+        setFooterSections((prev) =>
+          prev.map((sec) => {
+            if (sec.id === sectionId) {
+              return {
+                ...sec,
+                links: [...sec.links, {
+                  id: link.id,
+                  label: link.label,
+                  url: link.url,
+                  order: link.order,
+                  sectionId: link.sectionId,
+                }].sort((a, b) => a.order - b.order),
+              };
+            }
+            return sec;
+          })
+        );
+
+        setNewLinkLabel((prev) => ({ ...prev, [sectionId]: "" }));
+        setNewLinkUrl((prev) => ({ ...prev, [sectionId]: "" }));
+        setNewLinkOrder((prev) => ({ ...prev, [sectionId]: 0 }));
+
+        setSuccessMsg(lang === "tr" ? "Link başarıyla sütuna eklendi!" : "Link successfully added to section!");
+      } catch (err: any) {
+        setErrorMsg(err.message || "Link eklenirken hata oluştu.");
+      }
+    });
+  };
+
+  const handleDeleteLink = async (linkId: string, sectionId: string) => {
+    if (!confirm(lang === "tr" ? "Bu linki silmek istediğinize emin misiniz?" : "Are you sure you want to delete this link?")) return;
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    startTransition(async () => {
+      try {
+        await adminDeleteFooterLink(adminUserId, linkId);
+        setFooterSections((prev) =>
+          prev.map((sec) => {
+            if (sec.id === sectionId) {
+              return {
+                ...sec,
+                links: sec.links.filter((l) => l.id !== linkId),
+              };
+            }
+            return sec;
+          })
+        );
+        setSuccessMsg(lang === "tr" ? "Link başarıyla silindi." : "Link successfully deleted.");
+      } catch (err: any) {
+        setErrorMsg(err.message || "Link silinirken hata oluştu.");
+      }
+    });
+  };
 
  // Dynamic Fonts state
  const [fonts, setFonts] = useState(initialFonts);
@@ -252,6 +533,9 @@ export default function AdminClient({
  const [priceStarter, setPriceStarter] = useState(initialSettings["price_starter"] || "150");
  const [priceCreator, setPriceCreator] = useState(initialSettings["price_creator"] || "450");
  const [pricePro, setPricePro] = useState(initialSettings["price_pro"] || "950");
+ const [isComingSoonStarter, setIsComingSoonStarter] = useState(initialSettings["is_coming_soon_starter"] === "true");
+ const [isComingSoonCreator, setIsComingSoonCreator] = useState(initialSettings["is_coming_soon_creator"] === "true");
+ const [isComingSoonPro, setIsComingSoonPro] = useState(initialSettings["is_coming_soon_pro"] === "true");
 
  // Brand Asset Settings State
  const [siteTitle, setSiteTitle] = useState(initialSettings["site_title"] || "Clinkor");
@@ -280,6 +564,7 @@ export default function AdminClient({
       setIsUploadingLoginBg(false);
     }
   };
+
  const [siteFavicon, setSiteFavicon] = useState(initialSettings["site_favicon"] || "/clinkor-fav-icon.png");
  const [heroTitle, setHeroTitle] = useState(initialSettings["hero_title"] || "ONE LINK FOR YOUR DIGITAL EMPIRE");
  const [heroSubtitle, setHeroSubtitle] = useState(initialSettings["hero_subtitle"] || "Craft premium glassmorphic personal hubs, sell beats & presets, host sample packs, and leverage robust real-time analytics.");
@@ -650,6 +935,9 @@ export default function AdminClient({
  await saveGlobalSetting(adminUserId, "price_starter", priceStarter);
  await saveGlobalSetting(adminUserId, "price_creator", priceCreator);
  await saveGlobalSetting(adminUserId, "price_pro", pricePro);
+ await saveGlobalSetting(adminUserId, "is_coming_soon_starter", isComingSoonStarter ? "true" : "false");
+ await saveGlobalSetting(adminUserId, "is_coming_soon_creator", isComingSoonCreator ? "true" : "false");
+ await saveGlobalSetting(adminUserId, "is_coming_soon_pro", isComingSoonPro ? "true" : "false");
  setSuccessMsg(lang === "tr" ? "Global ayarlar ve fiyatlar başarıyla kaydedildi!" : "Global settings and prices updated successfully!");
  } catch (err: any) {
  setErrorMsg(err.message || "Failed to save settings");
@@ -666,6 +954,7 @@ export default function AdminClient({
  try {
  await saveGlobalSetting(adminUserId, "site_title", siteTitle);
  await saveGlobalSetting(adminUserId, "site_logo", siteLogo);
+      await saveGlobalSetting(adminUserId, "login_bg", loginBg);
       await saveGlobalSetting(adminUserId, "login_bg", loginBg);
  await saveGlobalSetting(adminUserId, "site_favicon", siteFavicon);
  await saveGlobalSetting(adminUserId, "hero_title", heroTitle);
@@ -958,6 +1247,42 @@ export default function AdminClient({
  >
  <Grid className="h-4 w-4" />
  {lang === "tr" ? "Animasyon Tasarımcısı" : "Animation Designer"}
+ </button>
+
+ <button
+ onClick={() => setSidebarTab("blogs")}
+ className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
+ sidebarTab === "blogs"
+ ? "bg-rose-50 border-l-4 border-rose-500 text-rose-600"
+ : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/50"
+ }`}
+ >
+ <FileText className="h-4 w-4" />
+ {lang === "tr" ? "Blog Yönetimi" : "Blog Management"}
+ </button>
+
+ <button
+ onClick={() => setSidebarTab("faqs")}
+ className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
+ sidebarTab === "faqs"
+ ? "bg-rose-50 border-l-4 border-rose-500 text-rose-600"
+ : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/50"
+ }`}
+ >
+ <Settings className="h-4 w-4" />
+ {lang === "tr" ? "Sıkça Sorulan Sorular" : "FAQ (SSS) Management"}
+ </button>
+
+ <button
+ onClick={() => setSidebarTab("footer")}
+ className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
+ sidebarTab === "footer"
+ ? "bg-rose-50 border-l-4 border-rose-500 text-rose-600"
+ : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/50"
+ }`}
+ >
+ <Columns className="h-4 w-4" />
+ {lang === "tr" ? "Footer Yönetimi" : "Footer Management"}
  </button>
 
  <Link
@@ -1879,11 +2204,54 @@ export default function AdminClient({
  className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
  />
  </div>
- <div className="flex justify-end">
+
+ <div className="pt-6 border-t border-zinc-150 grid md:grid-cols-3 gap-6 col-span-3">
+ <div className="flex items-center justify-between p-4 bg-zinc-50 border border-zinc-200 rounded-xl">
+ <div>
+ <span className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Starter Çok Yakında" : "Starter Coming Soon"}</span>
+ <span className="text-[9px] text-zinc-400 font-semibold">{lang === "tr" ? "Planı satışa kapatır." : "Locks starter plan."}</span>
+ </div>
+ <button
+ type="button"
+ onClick={() => setIsComingSoonStarter(!isComingSoonStarter)}
+ className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isComingSoonStarter ? "bg-rose-500" : "bg-zinc-300"}`}
+ >
+ <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isComingSoonStarter ? "translate-x-5" : "translate-x-0"}`} />
+ </button>
+ </div>
+ <div className="flex items-center justify-between p-4 bg-zinc-50 border border-zinc-200 rounded-xl">
+ <div>
+ <span className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Creator Çok Yakında" : "Creator Coming Soon"}</span>
+ <span className="text-[9px] text-zinc-400 font-semibold">{lang === "tr" ? "Planı satışa kapatır." : "Locks creator plan."}</span>
+ </div>
+ <button
+ type="button"
+ onClick={() => setIsComingSoonCreator(!isComingSoonCreator)}
+ className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isComingSoonCreator ? "bg-rose-500" : "bg-zinc-300"}`}
+ >
+ <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isComingSoonCreator ? "translate-x-5" : "translate-x-0"}`} />
+ </button>
+ </div>
+ <div className="flex items-center justify-between p-4 bg-zinc-50 border border-zinc-200 rounded-xl">
+ <div>
+ <span className="text-[10px] font-black uppercase text-zinc-400 block">{lang === "tr" ? "Pro Çok Yakında" : "Pro Coming Soon"}</span>
+ <span className="text-[9px] text-zinc-400 font-semibold">{lang === "tr" ? "Planı satışa kapatır." : "Locks pro plan."}</span>
+ </div>
+ <button
+ type="button"
+ onClick={() => setIsComingSoonPro(!isComingSoonPro)}
+ className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isComingSoonPro ? "bg-rose-500" : "bg-zinc-300"}`}
+ >
+ <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isComingSoonPro ? "translate-x-5" : "translate-x-0"}`} />
+ </button>
+ </div>
+ </div>
+
+ <div className="flex justify-end col-span-3 pt-4">
  <button
  type="submit"
  disabled={isPending}
- className="w-full px-5 py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs rounded-xl shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+ className="px-5 py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs rounded-xl shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
  >
  {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : (lang === "tr" ? "Ayarları ve Fiyatları Kaydet" : "Save Settings & Prices")}
  </button>
@@ -1941,6 +2309,44 @@ export default function AdminClient({
  : "PNG format with transparent background is highly recommended. Ideal size: 40px height, max 240px width. File size must be under 2MB."}
  </p>
  </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase text-zinc-400 block flex items-center justify-between">
+                <span>{lang === "tr" ? "Giriş Sayfası Görseli (login_bg)" : "Login Page Image (login_bg)"}</span>
+                <span className="text-[9px] text-rose-500 font-extrabold uppercase select-none">
+                  {lang === "tr" ? "Maks: 5MB" : "Max: 5MB"}
+                </span>
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={loginBg}
+                  onChange={(e) => setLoginBg(e.target.value)}
+                  placeholder={lang === "tr" ? "Örn: https://site.com/bg.png" : "e.g., https://site.com/bg.png"}
+                  className="flex-1 px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs focus:ring-2 focus:ring-rose-500/10 transition-all text-zinc-750"
+                />
+                <button
+                  type="button"
+                  onClick={() => loginBgInputRef.current?.click()}
+                  disabled={isUploadingLoginBg}
+                  className="px-4 py-3 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl font-bold text-xs cursor-pointer flex items-center gap-1.5 transition-colors disabled:opacity-50 whitespace-nowrap"
+                >
+                  {isUploadingLoginBg && <Loader2 className="h-3 w-3 animate-spin" />}
+                  {lang === "tr" ? "Görsel Seç" : "Select Image"}
+                </button>
+                <input
+                  type="file"
+                  ref={loginBgInputRef}
+                  className="hidden"
+                  onChange={handleLoginBgUpload}
+                  accept="image/*"
+                />
+              </div>
+              <p className="text-[9px] text-zinc-400 font-bold leading-normal">
+                {lang === "tr" 
+                  ? "Giriş sayfalarının sol tarafında yer alacak arka plan görselidir. Görsel seç butonunu kullanarak doğrudan yükleme yapabilirsiniz." 
+                  : "The background image displayed on the left side of sign-in/up pages. You can upload directly via the select button."}
+              </p>
+            </div>
             <div className="space-y-1.5">
               <label className="text-[10px] font-black uppercase text-zinc-400 block flex items-center justify-between">
                 <span>{lang === "tr" ? "Giriş Sayfası Görseli (login_bg)" : "Login Page Image (login_bg)"}</span>
@@ -3016,6 +3422,543 @@ export default function AdminClient({
  </div>
  </div>
  </div>
+ )}
+
+ {sidebarTab === "blogs" && (
+   <div className="space-y-6 overflow-y-auto max-h-[620px] pr-2 scrollbar-thin">
+     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+       <div>
+         <h2 className="text-2xl font-black text-zinc-850 tracking-tight">
+           {lang === "tr" ? "Blog Yazıları Yönetimi" : "Blog Post Management"}
+         </h2>
+         <p className="text-xs text-zinc-400 font-bold mt-1">
+           {lang === "tr" 
+             ? "Blog içeriklerini yönetin. Yeni eklenen yazılar anında yayına girer." 
+             : "Manage blog content. Newly created posts publish immediately."}
+         </p>
+       </div>
+     </div>
+
+     <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+       {/* Add Blog Form */}
+       <div className="lg:col-span-1 p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6 self-start">
+         <div>
+           <h3 className="font-extrabold text-sm text-zinc-800">
+             {lang === "tr" ? "Yeni Blog Yazısı Ekle" : "Add New Blog Post"}
+           </h3>
+           <p className="text-[10px] text-zinc-400 font-bold mt-0.5">
+             {lang === "tr" 
+               ? "Başlık, kapak resmi ve içerik girerek yayına alın." 
+               : "Fill title, cover image, and body content to publish."}
+           </p>
+         </div>
+
+         <form onSubmit={handleAddBlog} className="space-y-4">
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               {lang === "tr" ? "Başlık" : "Post Title"}
+             </label>
+             <input
+               type="text"
+               required
+               value={newBlogTitle}
+               onChange={(e) => setNewBlogTitle(e.target.value)}
+               placeholder={lang === "tr" ? "Örn: En İyi Link Biyografi Araçları" : "e.g. Best Link-in-Bio Tools"}
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-bold"
+             />
+           </div>
+
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               {lang === "tr" ? "Kapak Görseli URL (İsteğe Bağlı)" : "Cover Image URL (Optional)"}
+             </label>
+             <input
+               type="text"
+               value={newBlogImageUrl}
+               onChange={(e) => setNewBlogImageUrl(e.target.value)}
+               placeholder="https://images.unsplash.com/..."
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-mono"
+             />
+           </div>
+
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               {lang === "tr" ? "İçerik (Markdown veya Düz Metin)" : "Content Body (Markdown/HTML)"}
+             </label>
+             <textarea
+               required
+               rows={10}
+               value={newBlogContent}
+               onChange={(e) => setNewBlogContent(e.target.value)}
+               placeholder={lang === "tr" ? "Blog içeriğini buraya girin..." : "Write your blog post body here..."}
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-700 focus:bg-white focus:border-rose-450 focus:ring-2 focus:ring-rose-500/10 transition-all font-sans resize-y"
+             />
+             <span className="text-[9px] font-semibold text-zinc-400 block leading-tight">
+               {lang === "tr" 
+                 ? "Bilgi: Bu alanda paragraf düzenleri için düz metin veya Markdown kullanabilirsiniz." 
+                 : "Tip: You can use plain text or standard Markdown formatting."}
+             </span>
+           </div>
+
+           <button
+             type="submit"
+             disabled={isPending}
+             className="w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs rounded-xl shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
+           >
+             {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+             {lang === "tr" ? "Hemen Yayınla" : "Publish Now"}
+           </button>
+         </form>
+       </div>
+
+       {/* Blogs Catalog */}
+       <div className="lg:col-span-2 p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6">
+         <div>
+           <h3 className="font-extrabold text-sm text-zinc-800">
+             {lang === "tr" ? "Yayınlanan Yazılar" : "Published Articles"}
+           </h3>
+           <p className="text-[10px] text-zinc-400 font-bold mt-0.5">
+             {lang === "tr" ? "Sistemdeki tüm aktif blog gönderilerini görüntüleyin." : "View all active blog posts."}
+           </p>
+         </div>
+
+         <div className="overflow-x-auto">
+           <table className="w-full text-left border-collapse">
+             <thead>
+               <tr className="border-b border-zinc-100 text-[10px] font-black uppercase text-zinc-400 tracking-wider">
+                 <th className="py-3 px-2">{lang === "tr" ? "Görsel" : "Cover"}</th>
+                 <th className="py-3 px-2 w-[220px]">{lang === "tr" ? "Yazı Başlığı" : "Title"}</th>
+                 <th className="py-3 px-2">{lang === "tr" ? "Slug (URL)" : "Slug Link"}</th>
+                 <th className="py-3 px-2">{lang === "tr" ? "Tarih" : "Published"}</th>
+                 <th className="py-3 px-2 w-[80px] text-right">{lang === "tr" ? "İşlem" : "Action"}</th>
+               </tr>
+             </thead>
+             <tbody className="divide-y divide-zinc-50">
+               {blogs.length === 0 ? (
+                 <tr>
+                   <td colSpan={5} className="py-12 text-center text-zinc-450 italic text-xs">
+                     {lang === "tr" ? "Henüz yayınlanmış bir blog yazısı bulunmuyor." : "No blog posts published yet."}
+                   </td>
+                 </tr>
+               ) : (
+                 blogs.map((b) => (
+                   <tr key={b.id} className="hover:bg-zinc-50/40 transition-colors">
+                     <td className="py-3.5 px-2 align-middle">
+                       {b.imageUrl ? (
+                         <img src={b.imageUrl} className="w-10 h-10 rounded-lg object-cover border" alt="" />
+                       ) : (
+                         <div className="w-10 h-10 rounded-lg bg-zinc-100 border flex items-center justify-center text-[10px] text-zinc-400 font-black">
+                           Yok
+                         </div>
+                       )}
+                     </td>
+                     <td className="py-3.5 px-2 align-middle font-extrabold text-xs text-zinc-800">
+                       {b.title}
+                     </td>
+                     <td className="py-3.5 px-2 align-middle font-mono text-[10px] text-zinc-500">
+                       <a href={`/blog/${b.slug}`} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-rose-500">
+                         /{b.slug}
+                       </a>
+                     </td>
+                     <td className="py-3.5 px-2 align-middle text-zinc-450 text-[10px] font-semibold">
+                       {new Date(b.publishedAt).toLocaleDateString("tr-TR")}
+                     </td>
+                     <td className="py-3.5 px-2 align-middle text-right">
+                       <button
+                         onClick={() => handleDeleteBlog(b.id)}
+                         disabled={isPending}
+                         className="p-2 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white rounded-xl border border-red-100 transition-colors cursor-pointer disabled:opacity-50 inline-block"
+                       >
+                         <Trash2 className="h-3.5 w-3.5" />
+                       </button>
+                     </td>
+                   </tr>
+                 ))
+               )}
+             </tbody>
+           </table>
+         </div>
+       </div>
+     </div>
+   </div>
+ )}
+
+ {sidebarTab === "faqs" && (
+   <div className="space-y-6 overflow-y-auto max-h-[620px] pr-2 scrollbar-thin">
+     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+       <div>
+         <h2 className="text-2xl font-black text-zinc-850 tracking-tight">
+           {lang === "tr" ? "Sıkça Sorulan Sorular (SSS) Yönetimi" : "FAQ & Q&A Management"}
+         </h2>
+         <p className="text-xs text-zinc-400 font-bold mt-1">
+           {lang === "tr" 
+             ? "Yardım sayfasında görünen SSS listesini yönetin. Eklenen sorular Schema.org FAQPage olarak otomatik etiketlenir." 
+             : "Manage public FAQ list. Questions automatically mapped to Schema.org FAQPage structured data."}
+         </p>
+       </div>
+     </div>
+
+     <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+       {/* Add FAQ Form */}
+       <div className="lg:col-span-1 p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6 self-start">
+         <div>
+           <h3 className="font-extrabold text-sm text-zinc-800">
+             {lang === "tr" ? "Yeni Soru Ekle" : "Add FAQ Question"}
+           </h3>
+           <p className="text-[10px] text-zinc-400 font-bold mt-0.5">
+             {lang === "tr" ? "Yeni bir soru ve buna karşılık gelen cevabı tanımlayın." : "Declare a new question and corresponding answer."}
+           </p>
+         </div>
+
+         <form onSubmit={handleAddFAQ} className="space-y-4">
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               {lang === "tr" ? "Soru" : "Question"}
+             </label>
+             <input
+               type="text"
+               required
+               value={newFaqQuestion}
+               onChange={(e) => setNewFaqQuestion(e.target.value)}
+               placeholder={lang === "tr" ? "Örn: Kendi alan adımı bağlayabilir miyim?" : "e.g. Can I map custom domains?"}
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-bold"
+             />
+           </div>
+
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               {lang === "tr" ? "Cevap" : "Answer"}
+             </label>
+             <textarea
+               required
+               rows={6}
+               value={newFaqAnswer}
+               onChange={(e) => setNewFaqAnswer(e.target.value)}
+               placeholder={lang === "tr" ? "Sorunun açıklayıcı cevabını buraya yazın..." : "Write the answer details here..."}
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-700 focus:bg-white focus:border-rose-450 focus:ring-2 focus:ring-rose-500/10 transition-all font-sans resize-y"
+             />
+           </div>
+
+           <button
+             type="submit"
+             disabled={isPending}
+             className="w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs rounded-xl shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
+           >
+             {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+             {lang === "tr" ? "Soruyu Yayınla" : "Add FAQ Item"}
+           </button>
+         </form>
+       </div>
+
+       {/* FAQs Catalog */}
+       <div className="lg:col-span-2 p-3 md:p-6 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6">
+         <div>
+           <h3 className="font-extrabold text-sm text-zinc-800">
+             {lang === "tr" ? "Sistemdeki Sorular" : "Active Questions"}
+           </h3>
+           <p className="text-[10px] text-zinc-400 font-bold mt-0.5">
+             {lang === "tr" ? "Mevcut soru ve cevapları görüntüleyin." : "Review registered FAQ items."}
+           </p>
+         </div>
+
+         <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
+           {faqs.length === 0 ? (
+             <div className="py-12 text-center text-zinc-450 italic text-xs bg-zinc-50 rounded-2xl border border-dashed">
+               {lang === "tr" ? "Henüz eklenmiş bir soru bulunmuyor." : "No FAQ items registered yet."}
+             </div>
+           ) : (
+             faqs.map((f) => (
+               <div key={f.id} className="p-4 bg-zinc-50 border rounded-2xl flex justify-between items-start gap-4">
+                 <div className="space-y-1">
+                   <h4 className="font-extrabold text-xs text-zinc-850">Q: {f.question}</h4>
+                   <p className="text-zinc-500 text-[11px] font-semibold leading-relaxed">A: {f.answer}</p>
+                 </div>
+                 <button
+                   onClick={() => handleDeleteFAQ(f.id)}
+                   disabled={isPending}
+                   className="p-2 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white rounded-xl border border-red-100 transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+                 >
+                   <Trash2 className="h-3.5 w-3.5" />
+                 </button>
+               </div>
+             ))
+           )}
+         </div>
+       </div>
+     </div>
+   </div>
+ )}
+
+ {sidebarTab === "footer" && (
+   <div className="space-y-6 overflow-y-auto max-h-[620px] pr-2 scrollbar-thin font-corporate">
+     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+       <div>
+         <h2 className="text-2xl font-black text-zinc-850 tracking-tight">
+           {lang === "tr" ? "Footer Yönetimi" : "Footer Management"}
+         </h2>
+         <p className="text-xs text-zinc-400 font-bold mt-1">
+           {lang === "tr"
+             ? "Platformun en alt kısmında yer alan linkleri, sosyal hesapları ve mağaza bağlantılarını yönetin."
+             : "Manage public footer columns, links, social accounts, and app store badges."}
+         </p>
+       </div>
+     </div>
+
+     <div className="grid lg:grid-cols-3 gap-6">
+       {/* Global Settings & Social accounts */}
+       <div className="lg:col-span-1 p-5 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-6 self-start">
+         <div>
+           <h3 className="font-extrabold text-sm text-zinc-800">
+             {lang === "tr" ? "Genel Footer Ayarları" : "Global Footer Settings"}
+           </h3>
+           <p className="text-[10px] text-zinc-400 font-bold mt-0.5">
+             {lang === "tr"
+               ? "Görünürlük, uygulama ve sosyal medya linklerini düzenleyin."
+               : "Modify visibility, mobile app links, and social channel handles."}
+           </p>
+         </div>
+
+         <form onSubmit={handleSaveFooterSettings} className="space-y-4">
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               {lang === "tr" ? "Footer Görünürlüğü" : "Footer Visibility"}
+             </label>
+             <select
+               value={footerVisibility}
+               onChange={(e) => setFooterVisibility(e.target.value)}
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-bold"
+             >
+               <option value="ALL_PAGES">{lang === "tr" ? "Tüm Sayfalarda Göster" : "Show on All Public Pages"}</option>
+               <option value="HOMEPAGE_ONLY">{lang === "tr" ? "Sadece Anasayfada Göster" : "Show on Homepage Only"}</option>
+             </select>
+           </div>
+
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               App Store URL
+             </label>
+             <input
+               type="text"
+               value={appStore}
+               onChange={(e) => setAppStore(e.target.value)}
+               placeholder="https://apps.apple.com/..."
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-semibold"
+             />
+           </div>
+
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               Google Play Store URL
+             </label>
+             <input
+               type="text"
+               value={playStore}
+               onChange={(e) => setPlayStore(e.target.value)}
+               placeholder="https://play.google.com/store/..."
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-semibold"
+             />
+           </div>
+
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               Instagram URL
+             </label>
+             <input
+               type="text"
+               value={footerInstagram}
+               onChange={(e) => setFooterInstagram(e.target.value)}
+               placeholder="https://instagram.com/..."
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-semibold"
+             />
+           </div>
+
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               Twitter / X URL
+             </label>
+             <input
+               type="text"
+               value={footerTwitter}
+               onChange={(e) => setFooterTwitter(e.target.value)}
+               placeholder="https://twitter.com/..."
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-semibold"
+             />
+           </div>
+
+           <div className="space-y-1.5">
+             <label className="text-[10px] font-black uppercase text-zinc-400 block">
+               YouTube URL
+             </label>
+             <input
+               type="text"
+               value={footerYoutube}
+               onChange={(e) => setFooterYoutube(e.target.value)}
+               placeholder="https://youtube.com/..."
+               className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-semibold"
+             />
+           </div>
+
+           <button
+             type="submit"
+             disabled={isPending}
+             className="w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs rounded-xl shadow-md shadow-rose-500/10 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
+           >
+             {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
+             {lang === "tr" ? "Ayarları Kaydet" : "Save Settings"}
+           </button>
+         </form>
+       </div>
+
+       {/* Sections and links editor */}
+       <div className="lg:col-span-2 space-y-6">
+         {/* Add Column Section */}
+         <div className="p-5 bg-white border border-zinc-150 rounded-[24px] shadow-sm">
+           <h3 className="font-extrabold text-sm text-zinc-800 mb-4">
+             {lang === "tr" ? "Yeni Sütun Ekle" : "Add New Column"}
+           </h3>
+           <form onSubmit={handleAddSection} className="flex flex-col sm:flex-row gap-3 items-end">
+             <div className="flex-1 space-y-1.5 w-full">
+               <label className="text-[10px] font-black uppercase text-zinc-400">
+                 {lang === "tr" ? "Sütun Başlığı" : "Column Title"}
+               </label>
+               <input
+                 type="text"
+                 required
+                 value={newSectionTitle}
+                 onChange={(e) => setNewSectionTitle(e.target.value)}
+                 placeholder={lang === "tr" ? "Örn: Kurumsal" : "e.g. Company"}
+                 className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-semibold"
+               />
+             </div>
+             <div className="w-24 space-y-1.5">
+               <label className="text-[10px] font-black uppercase text-zinc-400">
+                 {lang === "tr" ? "Sıra" : "Sort Order"}
+               </label>
+               <input
+                 type="number"
+                 value={newSectionOrder}
+                 onChange={(e) => setNewSectionOrder(Number(e.target.value))}
+                 className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl outline-none text-xs text-zinc-750 font-semibold"
+               />
+             </div>
+             <button
+               type="submit"
+               disabled={isPending}
+               className="py-3 px-5 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-xs rounded-xl shadow-sm whitespace-nowrap cursor-pointer disabled:opacity-50"
+             >
+               {lang === "tr" ? "Sütun Ekle" : "Add Column"}
+             </button>
+           </form>
+         </div>
+
+         {/* List existing columns */}
+         {footerSections.length === 0 ? (
+           <div className="py-12 text-center text-zinc-450 italic text-xs bg-zinc-50 rounded-2xl border border-dashed">
+             {lang === "tr" ? "Henüz bir footer sütunu tanımlanmamış." : "No footer columns defined yet."}
+           </div>
+         ) : (
+           <div className="space-y-4">
+             {footerSections.map((sec) => (
+               <div key={sec.id} className="p-5 bg-white border border-zinc-150 rounded-[24px] shadow-sm space-y-4">
+                 <div className="flex justify-between items-center pb-2 border-b border-zinc-100">
+                   <div className="flex items-center gap-2">
+                     <span className="text-[10px] font-bold px-2 py-0.5 bg-zinc-100 rounded-md text-zinc-500">
+                       {lang === "tr" ? `Sıra: ${sec.order}` : `Order: ${sec.order}`}
+                     </span>
+                     <h4 className="font-extrabold text-sm text-zinc-850">{sec.title}</h4>
+                   </div>
+                   <button
+                     onClick={() => handleDeleteSection(sec.id)}
+                     disabled={isPending}
+                     className="p-1.5 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white rounded-lg border border-red-100 transition-all cursor-pointer shrink-0 disabled:opacity-50"
+                     title={lang === "tr" ? "Sütunu Sil" : "Delete Column"}
+                   >
+                     <Trash2 className="h-3.5 w-3.5" />
+                   </button>
+                 </div>
+
+                 {/* List links inside section */}
+                 {sec.links.length === 0 ? (
+                   <p className="text-zinc-400 italic text-[11px] font-semibold">
+                     {lang === "tr" ? "Bu sütunda henüz link bulunmuyor." : "No links added under this column yet."}
+                   </p>
+                 ) : (
+                   <div className="space-y-2">
+                     {sec.links.map((link) => (
+                       <div key={link.id} className="flex justify-between items-center bg-zinc-50 p-2.5 rounded-xl border border-zinc-100 text-xs">
+                         <div className="flex items-center gap-3">
+                           <span className="text-[10px] font-black text-zinc-400">
+                             [{link.order}]
+                           </span>
+                           <div className="flex flex-col">
+                             <span className="font-bold text-zinc-800">{link.label}</span>
+                             <span className="text-[10px] text-zinc-400 font-medium font-mono">{link.url}</span>
+                           </div>
+                         </div>
+                         <button
+                           onClick={() => handleDeleteLink(link.id, sec.id)}
+                           disabled={isPending}
+                           className="p-1.5 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white rounded-lg border border-red-100 transition-all cursor-pointer shrink-0 disabled:opacity-50"
+                         >
+                           <Trash2 className="h-3 w-3" />
+                         </button>
+                       </div>
+                     ))}
+                   </div>
+                 )}
+
+                 {/* Add link form inline */}
+                 <div className="bg-zinc-50/50 p-4 rounded-2xl border border-zinc-100 space-y-3">
+                   <span className="text-[10px] font-black uppercase text-zinc-500 block">
+                     {lang === "tr" ? "Yeni Link Ekle" : "Add Link"}
+                   </span>
+                   <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-end">
+                     <div className="sm:col-span-5 space-y-1">
+                       <input
+                         type="text"
+                         placeholder={lang === "tr" ? "Link Etiketi (Örn: Hakkımızda)" : "Link Label (e.g. About Us)"}
+                         value={newLinkLabel[sec.id] || ""}
+                         onChange={(e) => setNewLinkLabel((prev) => ({ ...prev, [sec.id]: e.target.value }))}
+                         className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg outline-none text-[11px] text-zinc-750 font-semibold"
+                       />
+                     </div>
+                     <div className="sm:col-span-5 space-y-1">
+                       <input
+                         type="text"
+                         placeholder="URL (Örn: /hakkimizda veya https://...)"
+                         value={newLinkUrl[sec.id] || ""}
+                         onChange={(e) => setNewLinkUrl((prev) => ({ ...prev, [sec.id]: e.target.value }))}
+                         className="w-full px-3 py-2 bg-white border border-zinc-200 rounded-lg outline-none text-[11px] text-zinc-750 font-semibold font-mono"
+                       />
+                     </div>
+                     <div className="sm:col-span-1 space-y-1">
+                       <input
+                         type="number"
+                         placeholder="Sıra"
+                         value={newLinkOrder[sec.id] || 0}
+                         onChange={(e) => setNewLinkOrder((prev) => ({ ...prev, [sec.id]: Number(e.target.value) }))}
+                         className="w-full px-2 py-2 bg-white border border-zinc-200 rounded-lg outline-none text-[11px] text-zinc-750 font-semibold text-center"
+                       />
+                     </div>
+                     <div className="sm:col-span-1">
+                       <button
+                         type="button"
+                         onClick={() => handleAddLink(sec.id)}
+                         disabled={isPending || !(newLinkLabel[sec.id] && newLinkUrl[sec.id])}
+                         className="w-full py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-extrabold text-[10px] rounded-lg text-center cursor-pointer disabled:opacity-50"
+                       >
+                         <Plus className="h-3 w-3 mx-auto" />
+                       </button>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             ))}
+           </div>
+         )}
+       </div>
+     </div>
+   </div>
  )}
  </div>
  </main>

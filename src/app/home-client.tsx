@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import SchemaMarkup from "@/components/SchemaMarkup";
 import FeatureZigzag from "@/components/feature-zigzag";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import { ArrowRight, CheckCircle2, BarChart3, TrendingUp, Users } from "lucide-react";
@@ -21,6 +23,8 @@ interface HomeClientProps {
  paymentLinkPro?: string;
  priceStarter?: string;
  priceCreator?: string;
+ isComingSoonStarter?: boolean;
+ isComingSoonCreator?: boolean;
 }
 
 export default function HomeClient({
@@ -37,6 +41,8 @@ export default function HomeClient({
  paymentLinkPro = "",
  priceStarter = "150",
  priceCreator = "450",
+ isComingSoonStarter = false,
+ isComingSoonCreator = false,
 }: HomeClientProps) {
  const [usernameInput, setUsernameInput] = useState("");
  const [currentSlide, setCurrentSlide] = useState(0);
@@ -61,64 +67,11 @@ export default function HomeClient({
 
  return (
  <div className="relative min-h-screen overflow-hidden bg-white text-slate-900 selection:bg-neon-blue/15 selection:text-neon-blue font-corporate">
+ <SchemaMarkup type="software" />
  <GlobalOverlayManager />
 
- {/* Header */}
- <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4">
- <div className="max-w-7xl mx-auto flex items-center justify-between">
- <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity">
- <img src={siteLogo || "/clinkor-logo.png"} alt="Clinkor Logo" className="h-8 w-auto object-contain" />
- </Link>
-
- <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
- <a href="#analytics" className="hover:text-slate-900 transition-colors">Analizler</a>
- <a href="#pricing" className="hover:text-slate-900 transition-colors">Fiyatlandırma</a>
- <Link href="/sablonlar" className="hover:text-slate-900 transition-colors">Şablonlar</Link>
- <Link href="/eklentiler" className="hover:text-slate-900 transition-colors flex items-center gap-1">
- Eklentiler
- <span className="px-1.5 py-0.5 rounded-md bg-rose-100 text-rose-600 text-[9px] font-black uppercase tracking-wider">Yeni</span>
- </Link>
- <Link href="/qr-olusturucu" className="hover:text-slate-900 transition-colors flex items-center gap-1">
- QR Oluşturucu
- <span className="px-1.5 py-0.5 rounded-md bg-neon-blue/10 text-neon-blue text-[9px] font-black uppercase tracking-wider">Ücretsiz</span>
- </Link>
- <Link href="/ozel-tasarlat" className="hover:text-slate-900 transition-colors flex items-center gap-1">
- Özel Tasarlat
- <span className="px-1.5 py-0.5 rounded-md bg-violet-100 text-violet-600 text-[9px] font-black uppercase tracking-wider">Tasarım</span>
- </Link>
- </nav>
-
- <div className="flex items-center space-x-4">
- {userId ? (
- <Link
- href="/dashboard"
- className="flex items-center space-x-2 px-5 py-3 md:py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
- >
- <span>Yönetim Paneli</span>
- <ArrowRight className="h-4 w-4" />
- </Link>
- ) : (
- <>
- <Link
- href="/sign-in"
- className="text-sm font-bold text-slate-900 hover:text-light-blue transition-colors hidden sm:block"
- >
- Giriş Yap
- </Link>
- <Link
- href="/sign-in"
- className="px-5 py-3 md:py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
- >
- Hemen Başla
- </Link>
- </>
- )}
- </div>
- </div>
- </header>
-
  {/* Hero Section */}
- <section className="relative pt-40 pb-20 px-6 max-w-7xl mx-auto">
+ <section className="relative pt-16 pb-20 px-6 max-w-7xl mx-auto">
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 items-center">
  {/* Hero Content */}
  <div className="text-left">
@@ -160,8 +113,15 @@ export default function HomeClient({
  
  <div className="relative w-full h-full bg-gray-50 rounded-[2rem] overflow-hidden flex flex-col items-center pt-16 px-4">
  {/* Profile Header Animation */}
- <div className="w-20 h-20 rounded-full bg-slate-200 overflow-hidden border-2 border-white shadow-sm mb-3 animate-pulse-slow">
- <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&fit=crop" className="w-full h-full object-cover" />
+ <div className="w-20 h-20 rounded-full bg-slate-200 overflow-hidden border-2 border-white shadow-sm mb-3 animate-pulse-slow relative">
+ <Image 
+   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&fit=crop" 
+   alt="Clinkor Biyografi Örnek Profil Fotoğrafı" 
+   fill
+   sizes="80px"
+   priority
+   className="object-cover" 
+ />
  </div>
  <div className="h-4 w-32 bg-slate-200 rounded-full mb-2 animate-pulse-slow"></div>
  <div className="h-3 w-24 bg-slate-200 rounded-full mb-8 animate-pulse-slow"></div>
@@ -186,12 +146,16 @@ export default function HomeClient({
  {sliderItems.length > 0 && (
  <div className="absolute inset-0 z-10 pointer-events-none opacity-20">
  {sliderItems.map((item, idx) => (
- <img 
- key={item.id}
- src={item.imageUrl}
- alt={item.title}
- className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+ <div key={item.id} className={`absolute inset-0 transition-opacity duration-1000 ${idx === currentSlide ? 'opacity-100' : 'opacity-0'}`}>
+ <Image 
+   src={item.imageUrl}
+   alt={item.title}
+   fill
+   sizes="(max-width: 768px) 100vw, 300px"
+   priority={idx === 0}
+   className="object-cover"
  />
+ </div>
  ))}
  </div>
  )}
@@ -502,12 +466,21 @@ export default function HomeClient({
  <span>Buton Animasyonları (Hareket Efektleri)</span>
  </li>
  </ul>
- <a
- href={paymentLinkStarter || "#"}
- className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue text-white font-bold text-center hover:opacity-90 transition-opacity"
- >
- Başlangıç Planına Geç
- </a>
+  {isComingSoonStarter ? (
+    <button
+      disabled
+      className="w-full py-3 px-4 rounded-xl bg-zinc-800 text-zinc-500 font-bold text-center border border-zinc-700 pointer-events-none opacity-50 cursor-not-allowed"
+    >
+      Çok Yakında
+    </button>
+  ) : (
+    <a
+      href={paymentLinkStarter || "#"}
+      className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue text-white font-bold text-center hover:opacity-90 transition-opacity"
+    >
+      Başlangıç Planına Geç
+    </a>
+  )}
  </div>
 
  {/* CREATOR TIER */}
@@ -554,12 +527,21 @@ export default function HomeClient({
  <span>Öncelikli Destek</span>
  </li>
  </ul>
- <a
- href={paymentLinkCreator || "#"}
- className="w-full py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-900 font-bold text-center hover:border-slate-900 transition-colors"
- >
- Üretici Planına Geç
- </a>
+  {isComingSoonCreator ? (
+    <button
+      disabled
+      className="w-full py-3 px-4 rounded-xl bg-zinc-800 text-zinc-500 font-bold text-center border border-zinc-700 pointer-events-none opacity-50 cursor-not-allowed"
+    >
+      Çok Yakında
+    </button>
+  ) : (
+    <a
+      href={paymentLinkCreator || "#"}
+      className="w-full py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-900 font-bold text-center hover:border-slate-900 transition-colors"
+    >
+      Üretici Planına Geç
+    </a>
+  )}
  </div>
  </div>
  </div>
@@ -583,20 +565,6 @@ export default function HomeClient({
  </Link>
  </div>
  </section>
-
- {/* True Footer */}
- <footer className="py-12 px-6 border-t border-gray-100 text-center text-sm text-slate-500 bg-white">
- <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
- <div className="mb-4 md:mb-0">
- © 2026 Clinkor. Tüm Hakları Saklıdır.
- </div>
- <div className="flex space-x-6">
- <Link href="/gizlilik" className="hover:text-slate-900 transition-colors">Gizlilik</Link>
- <Link href="/sartlar" className="hover:text-slate-900 transition-colors">Şartlar</Link>
- <Link href="/yardim" className="hover:text-slate-900 transition-colors">Yardım</Link>
- </div>
- </div>
- </footer>
  </div>
  );
 }

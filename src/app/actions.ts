@@ -151,8 +151,8 @@ export async function addLink(
       const template = await db.template.findFirst({
         where: {
           OR: [
-            { category: { equals: profile.theme, mode: 'insensitive' } },
-            { name: { equals: profile.theme, mode: 'insensitive' } }
+            { category: { equals: profile.theme } },
+            { name: { equals: profile.theme } }
           ]
         }
       });
@@ -311,7 +311,9 @@ export async function updateProfile(
   usernameColor?: string,
   customCss?: string | null,
   buttonClass?: string | null,
-  avatarShape?: string
+  avatarShape?: string,
+  displayName?: string,
+  socialLinks?: any
 ) {
   // Get user plan
   const user = await db.user.findUnique({
@@ -410,7 +412,20 @@ export async function updateProfile(
   // Update or create profile
   await db.profile.upsert({
     where: { userId },
-    update: { bio, theme, avatarUrl, background, fontStyle, bioColor, usernameColor, customCss, buttonClass, avatarShape },
+    update: { 
+      bio, 
+      theme, 
+      avatarUrl, 
+      background, 
+      fontStyle, 
+      bioColor, 
+      usernameColor, 
+      customCss, 
+      buttonClass, 
+      avatarShape, 
+      displayName, 
+      socialLinks: socialLinks !== undefined ? (socialLinks || {}) : undefined 
+    },
     create: { 
       userId, 
       bio, 
@@ -422,12 +437,15 @@ export async function updateProfile(
       usernameColor: usernameColor || null,
       customCss: customCss || null,
       buttonClass: buttonClass || null,
-      avatarShape: avatarShape || "circle"
+      avatarShape: avatarShape || "circle",
+      displayName,
+      socialLinks: socialLinks || {}
     },
   });
 
   revalidatePath("/dashboard");
   revalidatePath("/[username]", "page");
+  revalidatePath("/" + cleanUsername);
 }
 
 // Mock Payment & Plan Upgrade action
@@ -532,6 +550,111 @@ export async function saveCustomDomain(userId: string, domain: string) {
   revalidatePath("/[username]", "page");
 }
 
+// Save custom template variable values (jsonConfig) from user dashboard and update user profile simultaneously
+export async function saveTemplateJsonConfig(
+  userId: string,
+  templateId: string,
+  jsonConfig: string | null,
+  displayName?: string,
+  bio?: string,
+  avatarUrl?: string
+) {
+  if (!userId || !templateId) {
+    throw new Error("Missing parameters");
+  }
+
+  // Verify user owns this template and get username for revalidation
+  const ownership = await db.userTemplate.findUnique({
+    where: {
+      userId_templateId: {
+        userId,
+        templateId
+      }
+    },
+    include: {
+      user: { select: { username: true } }
+    }
+  });
+
+  if (!ownership) {
+    throw new Error("Template not owned by user");
+  }
+
+  // Update template custom configuration
+  await db.template.update({
+    where: { id: templateId },
+    data: { jsonConfig: jsonConfig || null }
+  });
+
+  // Update profile with primary information (displayName, bio, avatarUrl)
+  await db.profile.upsert({
+    where: { userId },
+    update: {
+      displayName: displayName !== undefined ? displayName : undefined,
+      bio: bio !== undefined ? bio : undefined,
+      avatarUrl: avatarUrl !== undefined ? avatarUrl : undefined,
+    },
+    create: {
+      userId,
+      displayName: displayName || "",
+      bio: bio || "",
+      avatarUrl: avatarUrl || "",
+    }
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/[username]", "page");
+  if (ownership.user?.username) {
+    revalidatePath("/" + ownership.user.username);
+  }
+  return { success: true };
+}
+
+export async function saveTemplateSettings(
+  userId: string,
+  settings: Record<string, any> | null,
+  displayName?: string,
+  bio?: string,
+  avatarUrl?: string
+) {
+  if (!userId) {
+    throw new Error("Missing parameters");
+  }
+
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { username: true }
+  });
+
+  const socialLinks = settings?.socialLinks || settings?.sociallinks || undefined;
+
+  await db.profile.upsert({
+    where: { userId },
+    update: {
+      templateSettings: (settings || null) as any,
+      socialLinks: socialLinks !== undefined ? socialLinks : undefined,
+      displayName: displayName !== undefined ? displayName : undefined,
+      bio: bio !== undefined ? bio : undefined,
+      avatarUrl: avatarUrl !== undefined ? avatarUrl : undefined,
+    },
+    create: {
+      userId,
+      templateSettings: (settings || null) as any,
+      socialLinks: socialLinks || {},
+      displayName: displayName || "",
+      bio: bio || "",
+      avatarUrl: avatarUrl || "",
+    }
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/[username]", "page");
+  if (user?.username) {
+    revalidatePath("/" + user.username);
+  }
+  return { success: true };
+}
+
 export async function toggleUserTemplateActive(userId: string, templateId: string, isActive: boolean) {
   if (!userId || !templateId) {
     throw new Error("Missing parameters");
@@ -561,15 +684,12 @@ export async function toggleUserTemplateActive(userId: string, templateId: strin
   if (isActive && updated.template) {
     await applyTemplateToProfile(userId, templateId);
   } else if (!isActive) {
-    // If deactivating, revert profile to a default theme state
+    // If deactivating, revert only the premium flag and theme
     await db.profile.update({
       where: { userId },
       data: {
-        background: null,
-        fontStyle: "Inter",
         theme: "dark",
-        customCss: null,
-        buttonClass: null
+        isPremiumTemplateActive: false
       }
     });
   }
@@ -1214,16 +1334,40 @@ export async function createTemplate(
     fontStyle: string;
     buttonStyle: string;
     paymentLink?: string;
+    paymentUrl?: string;
     isActive: boolean;
     isCoded: boolean;
     customCss?: string;
     configJson?: string;
+    customHtml?: string;
+    masterLayoutHtml?: string;
+    avatarHtml?: string;
+    headerHtml?: string;
+    socialHtml?: string;
+    linksHtml?: string;
+    backgroundHtml?: string;
+    containerClasses?: string;
+    jsonConfig?: string;
+    customSchema?: string;
     isComingSoon?: boolean;
   }
 ) {
   await ensureAdmin(adminUserId);
   if (!data.name || data.price === undefined || !data.category) {
     throw new Error("Missing required fields for template creation.");
+  }
+
+  let parsedSchema: any = null;
+  if (data.customSchema !== undefined && data.customSchema !== null) {
+    if (typeof data.customSchema === 'string') {
+      try {
+        parsedSchema = data.customSchema.trim() ? JSON.parse(data.customSchema) : [];
+      } catch (e) {
+        throw new Error("Invalid customSchema JSON format");
+      }
+    } else {
+      parsedSchema = data.customSchema;
+    }
   }
 
   const template = await db.template.create({
@@ -1236,10 +1380,21 @@ export async function createTemplate(
       fontStyle: data.fontStyle || "Inter",
       buttonStyle: data.buttonStyle || "rounded-xl",
       paymentLink: data.paymentLink || null,
+      paymentUrl: data.paymentUrl || null,
       isActive: data.isActive !== false,
       isCoded: !!data.isCoded,
       customCss: data.customCss || null,
       configJson: data.configJson || null,
+      customHtml: data.customHtml || null,
+      masterLayoutHtml: data.masterLayoutHtml || null,
+      avatarHtml: data.avatarHtml || null,
+      headerHtml: data.headerHtml || null,
+      socialHtml: data.socialHtml || null,
+      linksHtml: data.linksHtml || null,
+      backgroundHtml: data.backgroundHtml || null,
+      containerClasses: data.containerClasses || null,
+      jsonConfig: data.jsonConfig || null,
+      customSchema: parsedSchema,
       isComingSoon: !!data.isComingSoon,
     },
   });
@@ -1261,10 +1416,21 @@ export async function updateTemplate(
     fontStyle?: string;
     buttonStyle?: string;
     paymentLink?: string;
+    paymentUrl?: string;
     isActive?: boolean;
     isCoded?: boolean;
     customCss?: string;
     configJson?: string;
+    customHtml?: string;
+    masterLayoutHtml?: string;
+    avatarHtml?: string;
+    headerHtml?: string;
+    socialHtml?: string;
+    linksHtml?: string;
+    backgroundHtml?: string;
+    containerClasses?: string;
+    jsonConfig?: string;
+    customSchema?: string | null;
     isComingSoon?: boolean;
   }
 ) {
@@ -1272,6 +1438,18 @@ export async function updateTemplate(
   const updateData: any = { ...data };
   if (data.price !== undefined) {
     updateData.price = Number(data.price);
+  }
+
+  if (data.customSchema !== undefined) {
+    if (typeof data.customSchema === 'string') {
+      try {
+        updateData.customSchema = data.customSchema.trim() ? JSON.parse(data.customSchema) : [];
+      } catch (e) {
+        throw new Error("Invalid customSchema JSON format");
+      }
+    } else {
+      updateData.customSchema = data.customSchema;
+    }
   }
 
   const template = await db.template.update({
@@ -1351,20 +1529,35 @@ export async function applyTemplateToProfile(userId: string, templateId: string)
     }
   }
 
+  // Deactivate all other templates for this user
+  await db.userTemplate.updateMany({
+    where: { userId, templateId: { not: templateId } },
+    data: { isActive: false }
+  });
+
+  // Activate the target template
+  await db.userTemplate.updateMany({
+    where: { userId, templateId },
+    data: { isActive: true }
+  });
+
   // Apply properties to the user's Profile
-  await db.profile.update({
+  const updatedProfile = await db.profile.update({
     where: { userId },
     data: {
-      background: template.bgColor,
-      fontStyle: template.fontStyle,
       theme: template.name,
-      buttonClass: template.buttonStyle,
-      customCss: template.isCoded ? template.customCss : null
+      isPremiumTemplateActive: true
+    },
+    include: {
+      user: true
     }
   });
 
   revalidatePath("/dashboard");
   revalidatePath("/[username]", "page");
+  if (updatedProfile.user?.username) {
+    revalidatePath("/" + updatedProfile.user.username);
+  }
   return { success: true };
 }
 
@@ -2436,4 +2629,214 @@ export async function updatePluginComingSoon(
   revalidatePath("/eklentiler");
   revalidatePath("/admin/addons");
   return plugin;
+}
+
+function slugify(text: string): string {
+  const turkishMap: Record<string, string> = {
+    'ç': 'c', 'ğ': 'g', 'ı': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u',
+    'Ç': 'c', 'Ğ': 'g', 'İ': 'i', 'Ö': 'o', 'Ş': 's', 'Ü': 'u'
+  };
+  let str = text;
+  Object.keys(turkishMap).forEach(char => {
+    str = str.replace(new RegExp(char, 'g'), turkishMap[char]);
+  });
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export async function adminAddBlog(
+  adminUserId: string,
+  title: string,
+  content: string,
+  imageUrl?: string
+) {
+  await ensureAdmin(adminUserId);
+  if (!title || !content) {
+    throw new Error("Title and content are required");
+  }
+
+  let slug = slugify(title);
+  
+  let slugExists = await db.blog.findUnique({ where: { slug } });
+  let counter = 1;
+  let baseSlug = slug;
+  while (slugExists) {
+    slug = `${baseSlug}-${counter}`;
+    slugExists = await db.blog.findUnique({ where: { slug } });
+    counter++;
+  }
+
+  const blog = await db.blog.create({
+    data: {
+      title,
+      slug,
+      content,
+      imageUrl: imageUrl || null,
+      publishedAt: new Date(),
+    },
+  });
+
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${slug}`);
+  return blog;
+}
+
+export async function adminDeleteBlog(adminUserId: string, id: string) {
+  await ensureAdmin(adminUserId);
+  const blog = await db.blog.findUnique({ where: { id } });
+  if (!blog) {
+    throw new Error("Blog post not found");
+  }
+
+  await db.blog.delete({ where: { id } });
+  
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${blog.slug}`);
+  return { success: true };
+}
+
+export async function adminAddFAQ(
+  adminUserId: string,
+  question: string,
+  answer: string
+) {
+  await ensureAdmin(adminUserId);
+  if (!question || !answer) {
+    throw new Error("Question and answer are required");
+  }
+
+  const faq = await db.faq.create({
+    data: {
+      question,
+      answer,
+    },
+  });
+
+  revalidatePath("/yardim");
+  return faq;
+}
+
+export async function adminDeleteFAQ(adminUserId: string, id: string) {
+  await ensureAdmin(adminUserId);
+  await db.faq.delete({ where: { id } });
+  revalidatePath("/yardim");
+  return { success: true };
+}
+
+export async function adminAddFooterSection(
+  adminUserId: string,
+  title: string,
+  order: number
+) {
+  await ensureAdmin(adminUserId);
+  if (!title) {
+    throw new Error("Sütun başlığı zorunludur");
+  }
+
+  const section = await db.footerSection.create({
+    data: {
+      title,
+      order: order || 0,
+    },
+  });
+
+  revalidatePath("/", "layout");
+  return section;
+}
+
+export async function adminUpdateFooterSection(
+  adminUserId: string,
+  id: string,
+  title: string,
+  order: number
+) {
+  await ensureAdmin(adminUserId);
+  if (!title) {
+    throw new Error("Sütun başlığı zorunludur");
+  }
+
+  const section = await db.footerSection.update({
+    where: { id },
+    data: {
+      title,
+      order: order || 0,
+    },
+  });
+
+  revalidatePath("/", "layout");
+  return section;
+}
+
+export async function adminDeleteFooterSection(adminUserId: string, id: string) {
+  await ensureAdmin(adminUserId);
+  await db.footerSection.delete({
+    where: { id },
+  });
+
+  revalidatePath("/", "layout");
+  return { success: true };
+}
+
+export async function adminAddFooterLink(
+  adminUserId: string,
+  label: string,
+  url: string,
+  sectionId: string,
+  order: number
+) {
+  await ensureAdmin(adminUserId);
+  if (!label || !url || !sectionId) {
+    throw new Error("Tüm alanlar zorunludur");
+  }
+
+  const link = await db.footerLink.create({
+    data: {
+      label,
+      url,
+      sectionId,
+      order: order || 0,
+    },
+  });
+
+  revalidatePath("/", "layout");
+  return link;
+}
+
+export async function adminUpdateFooterLink(
+  adminUserId: string,
+  id: string,
+  label: string,
+  url: string,
+  order: number
+) {
+  await ensureAdmin(adminUserId);
+  if (!label || !url) {
+    throw new Error("Tüm alanlar zorunludur");
+  }
+
+  const link = await db.footerLink.update({
+    where: { id },
+    data: {
+      label,
+      url,
+      order: order || 0,
+    },
+  });
+
+  revalidatePath("/", "layout");
+  return link;
+}
+
+export async function adminDeleteFooterLink(adminUserId: string, id: string) {
+  await ensureAdmin(adminUserId);
+  await db.footerLink.delete({
+    where: { id },
+  });
+
+  revalidatePath("/", "layout");
+  return { success: true };
 }

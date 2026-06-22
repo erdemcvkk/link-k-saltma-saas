@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -37,6 +37,7 @@ model Profile {
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   theme          String    @default("dark") // default to dark
+  displayName    String?
   bio            String?
   avatarUrl      String?
   avatarShape    String    @default("circle")
@@ -59,6 +60,9 @@ model Profile {
   // Advanced Customization
   customCss      String?
   buttonClass    String?
+  socialLinks    String?
+  templateSettings String?
+  isPremiumTemplateActive Boolean @default(false)
 
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -212,11 +216,22 @@ model Template {
   fontStyle   String
   buttonStyle String
   paymentLink String?
+  paymentUrl  String?
   isActive     Boolean  @default(true)
   isCoded      Boolean  @default(false)
   isComingSoon Boolean  @default(false)
   customCss   String?
   configJson  String?
+  customHtml       String?
+  masterLayoutHtml String?
+  avatarHtml       String?
+  headerHtml       String?
+  socialHtml       String?
+  linksHtml        String?
+  backgroundHtml   String?
+  containerClasses String?
+  jsonConfig       String?
+  customSchema     String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   users       UserTemplate[]
@@ -241,7 +256,7 @@ model UserAddon {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   addonType String   // e.g. "MINI_STORE", "BOOKING", "NEWSLETTER", "QA", "DONATION"
   isActive  Boolean  @default(true)
-  settings  Json?    // JSON configuration for the addon (e.g. theme, colors, contents)
+  settings  String?    // JSON configuration for the addon (e.g. theme, colors, contents)
   createdAt DateTime @default(now())
   
   @@unique([userId, addonType])
@@ -319,4 +334,43 @@ model Plugin {
   isComingSoon Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model Blog {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  content     String
+  imageUrl    String?
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Faq {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FooterSection {
+  id        String       @id @default(uuid())
+  title     String
+  order     Int          @default(0)
+  links     FooterLink[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model FooterLink {
+  id        String        @id @default(uuid())
+  label     String
+  url       String
+  order     Int           @default(0)
+  sectionId String
+  section   FooterSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 }

@@ -1,51 +1,41 @@
 import { db } from "@/lib/db";
+import { checkAndSyncUser } from "@/lib/user-sync";
+import { serializeTemplate } from "@/lib/template-utils";
 import DiscoverClient from "./discover-client";
 
-export const revalidate = 0; // Load live creators every time
+export const revalidate = 0; // Load live templates every time
 
 export default async function DiscoverPage() {
- // Query all creators with username and active profile
- const users = await db.user.findMany({
- where: {
- username: { not: null },
- isBanned: false,
- },
- include: {
- profile: true,
- products: {
- where: { isActive: true },
- },
- },
- orderBy: {
- createdAt: "desc",
- },
- });
+  const user = await checkAndSyncUser();
+  const userId = user ? user.id : null;
 
- // Map to matching client list items
- const creators = users.map((u) => ({
- id: u.id,
- username: u.username!,
- bio: u.profile?.bio || "Welcome to my space!",
- theme: u.profile?.theme || "dark",
- productCount: u.products.length,
- plan: u.plan,
- featuredProducts: u.products.slice(0, 2).map((p) => ({
- id: p.id,
- title: p.title,
- price: p.price,
- type: p.type,
- })),
- }));
+  // Fetch all active templates
+  const templates = await db.template.findMany({
+    where: {
+      isActive: true,
+      category: { not: "Özel" }
+    },
+    orderBy: { createdAt: "desc" },
+  });
 
- // Fetch global settings
- const settings = await db.globalSetting.findMany();
- const serializedSettings = settings.reduce((acc, curr) => {
- acc[curr.key] = curr.value;
- return acc;
- }, {} as Record<string, string>);
+  const serializedTemplates = templates.map((t) => serializeTemplate(t)).filter((t): t is any => t !== null);
 
- const siteTitle = serializedSettings["site_title"] || "Clinkor";
- const siteLogo = serializedSettings["site_logo"] || "";
+  // Fetch global settings
+  const settings = await db.globalSetting.findMany();
+  const serializedSettings = settings.reduce((acc, curr) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {} as Record<string, string>);
 
- return <DiscoverClient initialCreators={creators} siteTitle={siteTitle} siteLogo={siteLogo} />;
+  const siteTitle = serializedSettings["site_title"] || "Clinkor";
+  const siteLogo = serializedSettings["site_logo"] || "";
+
+  return (
+    <DiscoverClient
+      initialTemplates={serializedTemplates}
+      userId={userId}
+      siteTitle={siteTitle}
+      siteLogo={siteLogo}
+    />
+  );
 }

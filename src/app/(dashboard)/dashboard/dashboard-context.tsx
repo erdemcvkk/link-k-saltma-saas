@@ -1,9 +1,10 @@
 "use client";
 
-import React, { createContext, useContext, useState, useTransition } from "react";
+import React, { createContext, useContext, useState, useTransition, useCallback } from "react";
 
 export type UserProfile = {
   theme: string;
+  displayName?: string | null;
   bio: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
@@ -17,6 +18,9 @@ export type UserProfile = {
   customCss?: string | null;
   buttonClass?: string | null;
   avatarShape?: string | null;
+  socialLinks?: any;
+  templateSettings?: any;
+  isPremiumTemplateActive?: boolean;
 };
 
 export type UserData = {
@@ -24,6 +28,8 @@ export type UserData = {
   username: string | null;
   plan: string;
   role: string;
+  planStartedAt?: string | null;
+  planExpiresAt?: string | null;
   profile: UserProfile | null;
 };
 
@@ -49,10 +55,23 @@ export type ActiveTemplateType = {
   isCoded: boolean;
   customCss?: string | null;
   configJson?: string | null;
+  customHtml?: string | null;
+  masterLayoutHtml?: string | null;
+  avatarHtml?: string | null;
+  headerHtml?: string | null;
+  socialHtml?: string | null;
+  linksHtml?: string | null;
+  backgroundHtml?: string | null;
+  containerClasses?: string | null;
+  jsonConfig?: string | null;
 } | null;
 
 interface DashboardContextType {
   user: UserData;
+  // Updates the in-memory user profile so all dashboard pages see the latest data
+  // without a full page reload. Call this after any successful profile save.
+  updateUserProfile: (partial: Partial<UserProfile>) => void;
+  updateUserCore: (partial: Partial<UserData>) => void;
   globalSettings: Record<string, string>;
   lang: "tr" | "en";
   setLang: (lang: "tr" | "en") => void;
@@ -109,6 +128,28 @@ export function DashboardProvider({
   const [upgradeModalTitle, setUpgradeModalTitle] = useState("");
   const [upgradeModalDesc, setUpgradeModalDesc] = useState("");
 
+  // Hold user in state so profile changes propagate across dashboard tabs
+  const [user, setUser] = useState<UserData>(initialUser);
+
+  // Merges a partial profile update into the in-memory user object.
+  // This keeps the simulator on every dashboard page in sync with the latest
+  // saved values without requiring a full server round-trip / page reload.
+  const updateUserProfile = useCallback((partial: Partial<UserProfile>) => {
+    setUser((prev) => ({
+      ...prev,
+      profile: prev.profile
+        ? { ...prev.profile, ...partial }
+        : ({ ...partial } as UserProfile),
+    }));
+  }, []);
+
+  const updateUserCore = useCallback((partial: Partial<UserData>) => {
+    setUser((prev) => ({
+      ...prev,
+      ...partial,
+    }));
+  }, []);
+
   const triggerUpgradeModal = (title: string, desc: string) => {
     setUpgradeModalTitle(title);
     setUpgradeModalDesc(desc);
@@ -116,7 +157,7 @@ export function DashboardProvider({
   };
 
   const hasFeature = (key: string, defaultIfMissing: boolean = false) => {
-    if (initialUser.role === "ADMIN") return true;
+    if (user.role === "ADMIN") return true;
     if (!initialFeatures || initialFeatures.length === 0) return defaultIfMissing;
     const feature = initialFeatures.find(f => f.key === key);
     if (!feature) return defaultIfMissing;
@@ -129,7 +170,9 @@ export function DashboardProvider({
   return (
     <DashboardContext.Provider
       value={{
-        user: initialUser,
+        user,
+        updateUserProfile,
+        updateUserCore,
         globalSettings,
         lang,
         setLang,

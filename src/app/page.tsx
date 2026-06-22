@@ -1,6 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
+import { Metadata } from "next";
 import HomeClient from "./home-client";
+
+export const metadata: Metadata = {
+  title: "Clinkor | Profesyonel Linklerinizi Yönetin",
+  description: "Clinkor ile tüm sosyal medya hesaplarınızı, bağlantılarınızı, eklentilerinizi ve mağazanızı tek bir şık biyografi sayfasında birleştirin. Tıklamalarınızı gerçek zamanlı analiz edin.",
+};
 
 export default async function Home() {
  const { userId } = await auth();
@@ -92,6 +98,8 @@ export default async function Home() {
  paymentLinkPro={serializedSettings["payment_link_pro"] || ""}
  priceStarter={serializedSettings["price_starter"] || "150"}
  priceCreator={serializedSettings["price_creator"] || "450"}
+ isComingSoonStarter={serializedSettings["is_coming_soon_starter"] === "true"}
+ isComingSoonCreator={serializedSettings["is_coming_soon_creator"] === "true"}
  />
  );
 }

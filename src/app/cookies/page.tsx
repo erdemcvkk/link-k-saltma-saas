@@ -1,8 +1,14 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { Cookie, ArrowLeft } from "lucide-react";
+import { Metadata } from "next";
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Clinkor | Çerez Politikası",
+  description: "Platformumuzda kullanılan çerez türleri, kullanım amaçları ve çerez yönetimi hakkında bilgiler.",
+};
 
 export default async function CookiePolicyPage() {
  const setting = await db.globalSetting.findUnique({

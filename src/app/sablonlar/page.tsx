@@ -1,8 +1,15 @@
 import React from "react";
+import { Metadata } from "next";
 import { db } from "@/lib/db";
 import { seedTemplates } from "@/app/actions";
 import { checkAndSyncUser } from "@/lib/user-sync";
+import { serializeTemplate } from "@/lib/template-utils";
 import SablonlarClient from "./sablonlar-client";
+
+export const metadata: Metadata = {
+  title: "Clinkor | Şablonlar",
+  description: "Profil sayfanız için profesyonel tasarımları ve temaları inceleyin.",
+};
 
 export const dynamic = "force-dynamic";
 
@@ -30,23 +37,7 @@ export default async function SablonlarPage() {
  ownedTemplateIds = owned.map(o => o.templateId);
  }
 
- const serializedTemplates = templates.map((t) => ({
- id: t.id,
- name: t.name,
- price: t.price,
- category: t.category,
- coverUrl: t.coverUrl,
- bgColor: t.bgColor,
- fontStyle: t.fontStyle,
- buttonStyle: t.buttonStyle,
- paymentLink: t.paymentLink,
- isActive: t.isActive,
- isCoded: t.isCoded,
- isComingSoon: t.isComingSoon,
- customCss: t.customCss,
- configJson: t.configJson,
- createdAt: t.createdAt.toISOString(),
- }));
+ const serializedTemplates = templates.map((t) => serializeTemplate(t)).filter((t): t is any => t !== null);
 
  return (
  <SablonlarClient

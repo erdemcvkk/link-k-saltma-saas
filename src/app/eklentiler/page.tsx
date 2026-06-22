@@ -2,9 +2,10 @@ import EklentilerClient from "./eklentiler-client";
 import { getAddonSettings, getAddonDummyProducts } from "../actions";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
+import { Metadata } from "next";
 
-export const metadata = {
-  title: "Premium Eklentiler | Clinkor",
+export const metadata: Metadata = {
+  title: "Clinkor | Premium Eklentiler",
   description: "Clinkor profilinize ekstra özellikler katarak işinizi büyütün.",
 };
 

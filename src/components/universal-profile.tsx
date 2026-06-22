@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useId } from "react";
+import React, { useId, useMemo } from "react";
 import { User, Globe, MessageCircle, ArrowUpRight, Play, Image, Utensils, Smartphone, Percent, Wifi, Music, ShoppingBag, FileText, List, Briefcase, Zap, Calendar, FileQuestion, Mail, Heart, Clock, HelpCircle, MapPin, Store, Laptop, Volume2, ListMusic, Compass } from "lucide-react";
 import { YoutubeIcon, TwitterIcon, LinkedinIcon, TiktokIcon, PinterestIcon, InstagramIcon } from "@/components/brand-icons";
 import VideoPlayer from "@/components/blocks/video-player";
@@ -8,6 +8,7 @@ import BeforeAfterSlider from "@/components/blocks/before-after-slider";
 import AudioPlayer from "@/components/blocks/audio-player";
 import Link from "next/link";
 import { parseTailwindBgToCss } from "@/lib/utils";
+import { renderTemplate } from "@/lib/template-engine";
 
 // Safelist for Tailwind background gradient classes so that they are compiled by Tailwind and available on the public profile page
 const TAILWIND_BACKGROUNDS_SAFELIST = [
@@ -43,6 +44,7 @@ const TAILWIND_BACKGROUNDS_SAFELIST = [
 
 export interface UniversalProfileData {
  username: string;
+ displayName?: string | null;
  bio?: string | null;
  avatarUrl?: string | null;
  theme?: string;
@@ -70,6 +72,21 @@ export interface UniversalProfileData {
   purchasedModules?: any[];
   isActiveTemplatePremium?: boolean;
   hasActivePremiumModule?: boolean;
+  isCoded?: boolean;
+  customHtml?: string | null;
+  masterLayoutHtml?: string | null;
+  avatarHtml?: string | null;
+  headerHtml?: string | null;
+  socialHtml?: string | null;
+  linksHtml?: string | null;
+  backgroundHtml?: string | null;
+  containerClasses?: string | null;
+  jsonConfig?: string | null;
+  isPremiumTemplateActive?: boolean;
+  templateSettings?: Record<string, any> | null;
+  socialLinks?: any;
+  socials?: any[];
+  templateId?: string | null;
 }
 
 interface UniversalProfileProps {
@@ -78,6 +95,7 @@ interface UniversalProfileProps {
  isDarkContext?: boolean; // For default fallback logic
  lang?: "tr" | "en";
  isDashboardPreview?: boolean;
+ forcePremiumRender?: boolean;
 }
 
 const getAvatarShapeClass = (shape: string | undefined | null) => {
@@ -96,22 +114,82 @@ const getAvatarShapeClass = (shape: string | undefined | null) => {
   }
 };
 
-export default function UniversalProfile({ data, isCompactMode = false, isDarkContext = true, lang = "tr", isDashboardPreview = false }: UniversalProfileProps) {
+const scopeCssWithClass = (css: string, className: string): string => {
+  let scoped = css || "";
+  if (!scoped) return "";
+
+  // 1. Clean comments first to prevent parsing issues
+  let cleanCss = scoped.replace(/\/\*[\s\S]*?\*\//g, "");
+
+  // 2. Match blocks of CSS: selector { rules }
+  let result = cleanCss.replace(/([^{}]+)\s*({[^{}]*})/g, (match, selectorStr, ruleStr) => {
+    const trimmedSelector = selectorStr.trim();
+    
+    if (trimmedSelector.startsWith("@")) {
+      return match;
+    }
+
+    const scopedSelectors = selectorStr.split(",").map((selector: string) => {
+      let sel = selector.trim();
+      if (!sel) return "";
+
+      const trimmedSel = sel.toLowerCase();
+      if (trimmedSel === "from" || trimmedSel === "to" || /^\d+%\s*$/.test(trimmedSel)) {
+        return sel;
+      }
+
+      if (trimmedSel === "body" || trimmedSel === "html" || trimmedSel === ":root" || trimmedSel === "[data-template-root]") {
+        return `.${className}`;
+      }
+
+      if (trimmedSel === "*") {
+        return `.${className} *`;
+      }
+
+      if (sel.startsWith("body ") || sel.startsWith("html ") || sel.startsWith(":root ") || sel.startsWith("[data-template-root] ")) {
+        return sel.replace(/^(body|html|:root|\[data-template-root\])\s+/, `.${className} `);
+      }
+
+      return `.${className} ${sel}`;
+    });
+
+    return scopedSelectors.filter(Boolean).join(", ") + " " + ruleStr;
+  });
+
+  return result;
+};
+
+export default function UniversalProfile({ data, isCompactMode = false, isDarkContext = true, lang = "tr", isDashboardPreview = false, forcePremiumRender = false }: UniversalProfileProps) {
  // Generate a unique ID to safely scope CSS per instance
  const rawId = useId();
  const wrapperId = `univ-profile-${rawId.replace(/:/g, "")}`;
 
   const {
-  username, bio, avatarUrl, theme = "dark", customCss, background, fontStyle = "Inter",
+  username, displayName, bio, avatarUrl, theme = "dark", customCss, background, fontStyle = "Inter",
   bioColor, usernameColor, plan, links = [], products = [], addons = [], buttonClass, avatarShape = "circle",
+  socialLinks, socials,
   purchasedTemplates = [], purchasedModules = [],
   isActiveTemplatePremium = false,
-  hasActivePremiumModule = false
-  } = data;
+  hasActivePremiumModule = false,
+  isCoded = false,
+  customHtml = null,
+  masterLayoutHtml = null,
+  avatarHtml = null,
+  headerHtml = null,
+  socialHtml = null,
+  linksHtml = null,
+  backgroundHtml = null,
+  containerClasses = null,
+  jsonConfig = null,
+  isPremiumTemplateActive = false,
+  templateSettings = null,
+  templateId = null
+  } = data || {} as any;
 
   const isDark = isDarkContext;
-
-  const shouldShowBranding = plan === "FREE" && !isActiveTemplatePremium && !hasActivePremiumModule && !isDashboardPreview && !isCompactMode;
+  const isWhiteLabelUser = plan === "PREMIUM" || (templateId && purchasedTemplates.includes(templateId));
+  const shouldShowBranding = !isWhiteLabelUser && !isDashboardPreview && !isCompactMode;
+  const prefixId = isDashboardPreview ? "clinkor-phone-preview" : wrapperId;
 
  // Fallback styling for backward compatibility when customCss is empty or "Start from Scratch"
  const getFallbackStyles = (themeId: string) => {
@@ -176,67 +254,437 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  ? background 
  : (!background && !isCustomImg && !isCustomVideo ? currentStyles.bg : "");
 
- // Auto-Scope CSS to prevent bleeding into /sablonlar or dashboard
- let scopedCss = customCss || "";
- if (scopedCss) {
- // 1. Replace body with wrapperId
- scopedCss = scopedCss.replace(/body/gi, `#${wrapperId}`);
- 
- // 2. Prevent fixed positioning which escapes the mockup frame
- scopedCss = scopedCss.replace(/position\s*:\s*fixed/gi, 'position: absolute');
- 
- // 3. Prevent viewport units from breaking the mockup width/height
- if (isCompactMode) {
- scopedCss = scopedCss.replace(/100vw/gi, '100%').replace(/100vh/gi, '100%');
- scopedCss = scopedCss.replace(/height\s*:\s*100vh/gi, 'min-height: 100%');
- }
+  // Dinamik sablon HTML'ini merkezi motor uzerinden isle
+  const renderedCodedTemplate = useMemo(() => {
+    if (!isCoded || (!customHtml && !masterLayoutHtml)) return null;
 
- // 4. Force scope for all known generic tags and classes to prevent global CSS leaks
- const tagsToScope = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'span', '\\*', 'div', 'img', 'svg'];
- const classesToScope = ['profile-card', 'profile-name', 'profile-avatar', 'profile-title', 'profile-bio', 'social-icon', 'btn-link', 'link-item', 'ambient-glow'];
- 
- const allSelectors = [...tagsToScope, ...classesToScope.map(c => `\\.${c}`)];
- 
- allSelectors.forEach(selector => {
- // Regex explanation: Match start of string, }, or , followed by spaces, then the selector
- const regex = new RegExp(`(^|\\}|,)\\s*(${selector})(?=[\\s{,:]|$)`, 'gi');
- scopedCss = scopedCss.replace(regex, (match, prefix, sel) => {
- return `${prefix} #${wrapperId} ${sel}`;
- });
- });
+    const templateParts = {
+      customHtml,
+      masterLayoutHtml,
+      avatarHtml,
+      headerHtml,
+      socialHtml,
+      linksHtml,
+      backgroundHtml,
+      customCss
+    };
 
- // Quick fix for the Obsidian Luxe global transition bug:
- scopedCss = scopedCss.replace(/^\s*\*\s*\{/gm, `#${wrapperId} * {`);
- }
+    return renderTemplate(
+      templateParts,
+      { username, displayName: displayName || username, bio, avatarUrl },
+      links || [],
+      jsonConfig,
+      socials || socialLinks || null,
+      templateSettings || null
+    );
+  }, [isPremiumTemplateActive, forcePremiumRender, isCoded, customHtml, masterLayoutHtml, avatarHtml, headerHtml, socialHtml, linksHtml, backgroundHtml, customCss, jsonConfig, username, displayName, bio, avatarUrl, links, socialLinks, socials, templateSettings]);
 
- if (scopedCss && isCompactMode) {
- // Disable custom scrollbars in compact mode to prevent "gri buçuklar"
- scopedCss = scopedCss.replace(/::-webkit-scrollbar/g, '.disabled-scrollbar-in-mockup');
- 
- // BRUTE FORCE HIDE SCROLLBARS (Track, Thumb, Corner)
- scopedCss += `
- #${wrapperId}::-webkit-scrollbar, 
- #${wrapperId} *::-webkit-scrollbar { 
- display: none !important; 
- width: 0 !important; 
- height: 0 !important; 
- }
- #${wrapperId}::-webkit-scrollbar-track,
- #${wrapperId} *::-webkit-scrollbar-track,
- #${wrapperId}::-webkit-scrollbar-thumb,
- #${wrapperId} *::-webkit-scrollbar-thumb {
- display: none !important;
- background: transparent !important;
- }
- #${wrapperId} { 
- -ms-overflow-style: none !important; 
- scrollbar-width: none !important; 
- }
- `;
+  const isCodedRender = !!((isPremiumTemplateActive || forcePremiumRender) && (customHtml || masterLayoutHtml));
 
- // Force h1 font-size to be normal in mockup and prevent gigantic text
- scopedCss += `\n#${wrapperId} h1, #${wrapperId} .profile-card h1, #${wrapperId} .profile-name { font-size: 1.25rem !important; line-height: 1.2 !important; word-break: break-word !important; }`;
- }
+  const resolvedCssBg = useMemo(() => {
+    if (customImgUrl) return null;
+    if (isCodedRender) {
+      const codedBg = (() => {
+        switch (theme) {
+          case "TTT": return templateSettings?.bgColor || "#ffde4d";
+          case "EEE": return templateSettings?.baseColor || "#0f1014";
+          case "RRR": return templateSettings?.bgColor || "#030712";
+          case "WWW": return `linear-gradient(180deg, ${templateSettings?.bgColor || '#12141c'} 0%, ${templateSettings?.bgColor2 || '#0b0c0e'} 100%)`;
+          case "YYY": return templateSettings?.bgColor || "#ffffff";
+          case "UUU": return templateSettings?.bgColor || "#23262b";
+          default: return null;
+        }
+      })();
+      if (codedBg) return codedBg;
+    }
+    if (isCssBg && background) return background;
+    if (parsedTailwindBg) return parsedTailwindBg;
+    if (bgClassName) {
+      return parseTailwindBgToCss(bgClassName);
+    }
+    return null;
+  }, [isCodedRender, theme, templateSettings, customImgUrl, isCssBg, background, parsedTailwindBg, bgClassName]);
+
+  const globalStyleInjection = useMemo(() => {
+    if (isCompactMode || isDashboardPreview) return null;
+
+    let bgRule = '';
+    if (customImgUrl) {
+      bgRule = `background-image: url(${customImgUrl}) !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; background-attachment: fixed !important;`;
+    } else if (isCodedRender && theme === "TTT") {
+      const baseColor = templateSettings?.bgColor || "#ffde4d";
+      const dotColor = baseColor === "#ffde4d" ? "#f4ce14" : "rgba(0,0,0,0.06)";
+      bgRule = `background-color: ${baseColor} !important; background-image: radial-gradient(${dotColor} 20%, transparent 20%) !important; background-size: 16px 16px !important;`;
+    } else if (resolvedCssBg) {
+      bgRule = `background: ${resolvedCssBg} !important; background-color: ${resolvedCssBg} !important;`;
+    }
+
+    const overflowRule = isCodedRender
+      ? `
+        height: 100% !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        background-color: transparent !important;
+      `
+      : '';
+
+    if (!bgRule && !overflowRule) return null;
+
+    return (
+      <style dangerouslySetInnerHTML={{ __html: `
+        html, body {
+          ${bgRule}
+          ${overflowRule}
+        }
+      `}} />
+    );
+  }, [isCompactMode, isDashboardPreview, customImgUrl, isCodedRender, theme, templateSettings, resolvedCssBg]);
+
+  // Render V8 Template Engine if isPremiumTemplateActive is TRUE or forcePremiumRender is TRUE
+  if ((isPremiumTemplateActive || forcePremiumRender) && (customHtml || masterLayoutHtml)) {
+    // Son katman: KESIN COZUM PARSER'I
+    let finalParsedHtml = renderedCodedTemplate?.html || "";
+
+    // Social Loop Parser
+    finalParsedHtml = finalParsedHtml.replace(/\[SOCIAL_LOOP\]([\s\S]*?)\[\/SOCIAL_LOOP\]/g, (match, inner) => {
+      let socialsToUse = socials || socialLinks;
+      if (!socialsToUse && templateSettings?.socialLinks) {
+        socialsToUse = templateSettings.socialLinks;
+      }
+      
+      let entries: { socialPlatform: string; socialUrl: string }[] = [];
+      if (Array.isArray(socialsToUse)) {
+        entries = socialsToUse
+          .filter((s: any) => s && (s.socialPlatform || s.platform) && (s.socialUrl || s.url) && String(s.socialUrl || s.url).trim() !== "")
+          .map((s: any) => ({ socialPlatform: s.socialPlatform || s.platform, socialUrl: s.socialUrl || s.url }));
+      } else if (socialsToUse && typeof socialsToUse === 'object') {
+        entries = Object.entries(socialsToUse)
+          .filter(([platform, url]) => url && String(url).trim() !== "")
+          .map(([platform, url]) => ({ socialPlatform: platform, socialUrl: url as string }));
+      }
+
+      if (!entries || entries.length === 0) return '';
+      return entries.map(s => 
+        inner.replace(/{{socialPlatform}}/g, s.socialPlatform || '')
+             .replace(/{{socialUrl}}/g, s.socialUrl || '')
+      ).join('');
+    });
+
+    // Link Loop Parser
+    finalParsedHtml = finalParsedHtml.replace(/\[LINK_LOOP\]([\s\S]*?)\[\/LINK_LOOP\]/g, (match, inner) => {
+      if (!links || links.length === 0) return '';
+      return links.map((l: any) => 
+        inner.replace(/{{linkTitle}}/g, l.title || '')
+             .replace(/{{linkUrl}}/g, l.url || '')
+      ).join('');
+    });
+
+    // Standart verileri de ekle
+    finalParsedHtml = finalParsedHtml.replace(/{{displayName}}/g, displayName || username || '')
+                           .replace(/{{bio}}/g, bio || '')
+                           .replace(/{{avatarUrl}}/g, avatarUrl || '');
+
+    // Statik reklam alanlarını temizle
+    let cleanedHtml = finalParsedHtml;
+    cleanedHtml = cleanedHtml.replace(/<(div|footer)\s+class="[^"]*(branding|footer)[^"]*">\s*<a\s+href="\/register"[^>]*>[\s\S]*?<\/a>\s*<\/\1>/gi, "");
+    cleanedHtml = cleanedHtml.replace(/<a\s+href="\/register"[^>]*>[\s\S]*?<\/a>/gi, "");
+
+    // Dinamik branding enjeksiyonu (Eğer white-label değilse)
+    if (!isWhiteLabelUser) {
+      const dynamicBrandingHtml = `
+        <a href="/register" class="clinkor-global-branding" style="position: absolute !important; bottom: 24px !important; left: 50% !important; transform: translateX(-50%) !important; z-index: 9999 !important; background: rgba(255, 255, 255, 0.95) !important; color: #000 !important; padding: 8px 24px !important; border-radius: 50px !important; font-size: 11px !important; font-weight: 700 !important; text-decoration: none !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important; white-space: nowrap !important; font-family: sans-serif !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; cursor: pointer !important;">
+          ${lang === "tr" ? "Clinkor'da Kendi Sayfanı Oluştur" : "Create Your Own Page on Clinkor"}
+        </a>
+      `;
+      const lastDivIndex = cleanedHtml.lastIndexOf("</div>");
+      if (lastDivIndex !== -1) {
+        cleanedHtml = cleanedHtml.substring(0, lastDivIndex) + dynamicBrandingHtml + cleanedHtml.substring(lastDivIndex);
+      } else {
+        cleanedHtml = cleanedHtml + dynamicBrandingHtml;
+      }
+    }
+
+    const cleanTemplateId = templateId 
+      ? String(templateId).replace(/[^a-zA-Z0-9-]/g, "") 
+      : theme.replace(/[^a-zA-Z0-9-]/g, "").replace(/\s+/g, "-");
+    const templateClass = `template-id-${cleanTemplateId}`;
+    const scopedHtml = `<div class="clinkor-template-isolated ${templateClass}">${cleanedHtml}</div>`;
+    const scopedCodedCss = renderedCodedTemplate?.css 
+      ? scopeCssWithClass(renderedCodedTemplate.css, templateClass) 
+      : "";
+
+    if (isDashboardPreview || isCompactMode) {
+      const iframeSrcDoc = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+          <style>
+            html, body {
+              height: 100% !important;
+              min-height: 100vh !important;
+              min-height: 100dvh !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              overflow: hidden !important;
+              background-color: transparent !important;
+              font-family: '${fontStyle}', sans-serif;
+            }
+            * { box-sizing: border-box; }
+            
+            .renderer-wrapper { 
+                position: absolute !important; 
+                inset: 0 !important; 
+                width: 100% !important; 
+                height: 100% !important; 
+                overflow: hidden !important; 
+                border-radius: inherit !important; 
+                display: flex !important; 
+                flex-direction: column !important; 
+            }
+            .renderer-scroll-area { 
+                flex: 1 !important; 
+                overflow-y: auto !important; 
+                overflow-x: hidden !important; 
+                scrollbar-width: none !important; 
+            }
+            .renderer-scroll-area::-webkit-scrollbar { display: none !important; }
+            .renderer-scroll-area { padding-bottom: 60px !important; }
+            .injected-background {
+                position: fixed !important; 
+                z-index: -1 !important; 
+                width: 100vw !important; 
+                height: 100dvh !important; 
+                ${theme === "TTT" && isCodedRender
+                  ? `background-color: ${resolvedCssBg || "#ffde4d"} !important; background-image: radial-gradient(${resolvedCssBg === "#ffde4d" ? "#f4ce14" : "rgba(0,0,0,0.06)"} 20%, transparent 20%) !important; background-size: 16px 16px !important;`
+                  : `background: ${resolvedCssBg || "#09090b"} !important;`
+                }
+                background-size: cover !important; 
+                background-position: center !important;
+                top: 0 !important;
+                left: 0 !important;
+            }
+            .clinkor-template-isolated { width: 100% !important; min-height: 100% !important; display: flex !important; flex-direction: column !important; position: relative !important; }
+            ${scopedCodedCss}
+            .renderer-scroll-area { background: transparent !important; }
+          </style>
+        </head>
+        <body>
+          <div class="renderer-wrapper">
+              <div class="injected-background"></div>
+              <div class="renderer-scroll-area">
+                  ${scopedHtml}
+              </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      return (
+        <iframe
+          id={prefixId}
+          srcDoc={iframeSrcDoc}
+          style={{ 
+            width: "100%", 
+            height: "100%", 
+            border: "none", 
+            display: "block",
+            ...(!isCompactMode ? { minHeight: "100vh" } : {})
+          }}
+          sandbox="allow-scripts allow-same-origin allow-popups"
+        />
+      );
+    }
+
+    return (
+      <div className={`w-full flex justify-center relative overflow-hidden ${isCompactMode ? "h-full" : "min-h-screen"} ${bgClassName}`} style={{
+        ...(isCssBg && !isTailwindBg ? { background: background } : {}),
+        ...(parsedTailwindBg ? { background: parsedTailwindBg } : {}),
+        ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", ...(!isCompactMode ? { backgroundAttachment: "fixed" } : {}) } : {})
+      }}>
+        {globalStyleInjection}
+        {theme === "terminal" && <div className="crt-scanlines absolute inset-0 pointer-events-none" />}
+        {customVideoUrl && (
+          <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0" src={customVideoUrl} />
+        )}
+        <style dangerouslySetInnerHTML={{ __html: `
+            #${prefixId} .renderer-wrapper { 
+                position: absolute !important; 
+                inset: 0 !important; 
+                width: 100% !important; 
+                height: 100% !important; 
+                overflow: hidden !important; 
+                border-radius: inherit !important; 
+                display: flex !important; 
+                flex-direction: column !important; 
+            }
+            #${prefixId} .renderer-scroll-area { 
+                flex: 1 !important; 
+                overflow-y: auto !important; 
+                overflow-x: hidden !important; 
+                scrollbar-width: none !important; 
+            }
+            #${prefixId} .renderer-scroll-area::-webkit-scrollbar { display: none !important; }
+            #${prefixId} .renderer-scroll-area { padding-bottom: 60px !important; }
+            #${prefixId} .injected-background {
+                position: ${isCompactMode ? "absolute" : "fixed"} !important; 
+                z-index: -1 !important; 
+                width: ${isCompactMode ? "100%" : "100vw"} !important; 
+                height: ${isCompactMode ? "100%" : "100dvh"} !important; 
+                background-size: cover !important; 
+                background-position: center !important;
+                top: 0 !important;
+                left: 0 !important;
+            }
+            .clinkor-template-isolated { width: 100% !important; min-height: 100% !important; display: flex !important; flex-direction: column !important; position: relative !important; }
+            ${scopedCodedCss}
+            #${prefixId} .renderer-scroll-area { background: transparent !important; }
+        `}} />
+        <div 
+          id={prefixId}
+          data-template-root="true"
+          className={`w-full ${isCompactMode ? "max-w-[420px] shadow-[0_0_50px_rgba(0,0,0,0.8)]" : ""} min-h-screen relative overflow-hidden`}
+          style={{ fontFamily: fontStyle, position: 'relative' }}
+        >
+          <div className="renderer-wrapper">
+              <div 
+                className={`injected-background ${bgClassName}`}
+                style={{
+                  ...(isCssBg ? { background: background } : {}),
+                  ...(parsedTailwindBg ? { background: parsedTailwindBg } : {}),
+                  ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {})
+                }}
+              ></div>
+              <div
+                className="renderer-scroll-area"
+                dangerouslySetInnerHTML={{ __html: scopedHtml }}
+              />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Auto-Scope CSS to prevent bleeding into /sablonlar or dashboard
+  let scopedCss = customCss || "";
+  if (scopedCss) {
+  // 1. Replace body with prefixId
+  scopedCss = scopedCss.replace(/body/gi, `#${prefixId}`);
+  
+  // 2. Prevent fixed positioning which escapes the mockup frame
+  scopedCss = scopedCss.replace(/position\s*:\s*fixed/gi, 'position: absolute');
+  
+  // 3. Prevent viewport units from breaking the mockup width/height
+  if (isCompactMode) {
+  scopedCss = scopedCss.replace(/100vw/gi, '100%').replace(/100vh/gi, '100%');
+  scopedCss = scopedCss.replace(/height\s*:\s*100vh/gi, 'min-height: 100%');
+  }
+
+  // 4. Force scope for all known generic tags and classes to prevent global CSS leaks
+  const tagsToScope = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'span', '\\*', 'div', 'img', 'svg'];
+  const classesToScope = ['profile-card', 'profile-name', 'profile-avatar', 'profile-title', 'profile-bio', 'social-icon', 'btn-link', 'link-item', 'ambient-glow'];
+  
+  const allSelectors = [...tagsToScope, ...classesToScope.map(c => `\\.${c}`)];
+  
+  allSelectors.forEach(selector => {
+  // Regex explanation: Match start of string, }, or , followed by spaces, then the selector
+  const regex = new RegExp(`(^|\\}|,)\\s*(${selector})(?=[\\s{,:]|$)`, 'gi');
+  scopedCss = scopedCss.replace(regex, (match, prefix, sel) => {
+  return `${prefix} #${prefixId} ${sel}`;
+  });
+  });
+
+  // Quick fix for the Obsidian Luxe global transition bug:
+  scopedCss = scopedCss.replace(/^\s*\*\s*\{/gm, `#${prefixId} * {`);
+  }
+
+  // Disable custom scrollbars in compact mode to prevent "gri buçuklar"
+  scopedCss = scopedCss.replace(/::-webkit-scrollbar/g, '.disabled-scrollbar-in-mockup');
+  
+  // BRUTE FORCE HIDE SCROLLBARS (Track, Thumb, Corner) and apply master wrapper constraints
+  scopedCss += `
+  #${prefixId}::-webkit-scrollbar, 
+  #${prefixId} *::-webkit-scrollbar { 
+    display: none !important; 
+    width: 0 !important; 
+    height: 0 !important; 
+  }
+  #${prefixId}::-webkit-scrollbar-track,
+  #${prefixId} *::-webkit-scrollbar-track,
+  #${prefixId}::-webkit-scrollbar-thumb,
+  #${prefixId} *::-webkit-scrollbar-thumb {
+    display: none !important;
+    background: transparent !important;
+  }
+  #${prefixId} { 
+    -ms-overflow-style: none !important; 
+    scrollbar-width: none !important; 
+  }
+
+  /* Master Wrapper Constraints */
+  #${prefixId} {
+    width: 100% !important;
+    min-height: 100% !important;
+    border-radius: inherit !important;
+    position: relative !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-bottom: ${isCompactMode ? '0' : '60px'} !important;
+  }
+  
+  #${prefixId} .clinkor-branding-footer {
+     position: absolute !important;
+     bottom: 24px !important;
+     left: 50% !important;
+     transform: translateX(-50%) !important;
+     z-index: 9999 !important;
+     background: rgba(255, 255, 255, 0.95) !important;
+     color: #000 !important;
+     padding: 8px 24px !important;
+     border-radius: 50px !important;
+     box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+     white-space: nowrap !important;
+     font-size: 11px !important;
+     font-weight: 700 !important;
+     text-decoration: none !important;
+     border: 1px solid rgba(0,0,0,0.05) !important;
+     font-family: sans-serif !important;
+  }
+  #${prefixId} .branding-link { text-decoration: none !important; color: #000 !important; }
+  
+  /* Auto-enforce absolute positioning for background layers */
+  #${prefixId} > .bg-layer,
+  #${prefixId} > .background-layer,
+  #${prefixId} > .template-bg {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+  }
+  
+  /* Ensure content stays above the auto-background */
+  #${prefixId} > *:not(.bg-layer):not(.background-layer):not(.template-bg) {
+    position: relative;
+    z-index: 10;
+  }
+  `;
+
+  if (isCompactMode) {
+    // Force h1 font-size to be normal in mockup and prevent gigantic text
+    scopedCss += `\n#${prefixId} h1, #${prefixId} .profile-card h1, #${prefixId} .profile-name { font-size: 1.25rem !important; line-height: 1.2 !important; word-break: break-word !important; }`;
+  }
 
  const getLinkIcon = (type?: string, url?: string) => {
  switch (type) {
@@ -378,15 +826,17 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 
  return (
  <div 
- id={wrapperId}
- className={`transition-all duration-500 ${bgClassName} ${isCompactMode ? 'h-full w-full relative flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide' : 'flex-1 min-h-screen min-h-full w-full relative flex flex-col overflow-x-hidden'}`}
- style={{
- fontFamily: fontStyle,
- ...(isCssBg ? { background: background } : {}),
- ...(parsedTailwindBg ? { background: parsedTailwindBg } : {}),
- ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {})
- }}
+   id={prefixId}
+   className={`transition-all duration-500 ${bgClassName} ${isCompactMode ? 'min-h-full w-full relative flex flex-col overflow-y-auto overflow-x-hidden scrollbar-hide' : 'flex-1 min-h-screen min-h-full w-full relative flex flex-col overflow-x-hidden'}`}
+   style={{
+     fontFamily: fontStyle,
+     position: 'relative',
+     ...(isCssBg ? { background: background } : {}),
+     ...(parsedTailwindBg ? { background: parsedTailwindBg } : {}),
+     ...(customImgUrl ? { backgroundImage: `url(${customImgUrl})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" } : {})
+   }}
  >
+ {globalStyleInjection}
  {scopedCss && (
  <style dangerouslySetInnerHTML={{ __html: scopedCss }} />
  )}
@@ -551,14 +1001,31 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  </main>
 
   {shouldShowBranding && (
-    <Link 
-      href="https://clinkor.com" 
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-full font-semibold shadow-2xl hover:scale-105 transition-transform duration-200 whitespace-nowrap"
-    >
-      <img src="/buton-icon.png" alt="Clinkor Icon" className="w-5 h-5 object-contain" />
-      <span>{lang === "tr" ? "Clinkor'da Kendi Sayfanı Oluştur" : "Create Your Own Page on Clinkor"}</span>
-    </Link>
-  )}
+     <div 
+       className="clinkor-branding-footer"
+       style={{
+         position: "absolute",
+         bottom: "24px",
+         left: "50%",
+         transform: "translateX(-50%)",
+         zIndex: 9999,
+         background: "rgba(255, 255, 255, 0.95)",
+         color: "#000",
+         padding: "8px 24px",
+         borderRadius: "50px",
+         fontSize: "11px",
+         fontWeight: 700,
+         textDecoration: "none",
+         boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+         whiteSpace: "nowrap",
+         fontFamily: "sans-serif"
+       }}
+     >
+         <Link href="/register" className="branding-link" style={{ color: "#000", textDecoration: "none" }}>
+             {lang === "tr" ? "Clinkor'da Kendi Sayfanı Oluştur" : "Create Your Own Page on Clinkor"}
+         </Link>
+     </div>
+   )}
  </div>
  );
 }

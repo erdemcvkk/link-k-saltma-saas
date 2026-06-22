@@ -414,17 +414,17 @@ export default function PhonePreview({ mode, data, label, activeAddonId }: Phone
 
   return (
     <div className="hidden lg:block w-full max-w-sm lg:w-[360px] shrink-0 sticky top-32 self-start">
-      <div className="text-center mb-4">
-        <span className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border text-[10px] font-bold uppercase tracking-wider bg-white border-zinc-200 text-zinc-700 shadow-sm">
-          <Laptop className="h-3 w-3" />
+      <div className="mb-4 flex items-center justify-start pl-2">
+        <span className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-zinc-400">
+          <Laptop className="h-3.5 w-3.5" />
           {label || (mode === "editor" ? "Canlı Telefon Önizlemesi" : mode === "template" ? "Şablon Önizlemesi" : "Eklenti Önizlemesi")}
         </span>
       </div>
 
       <div className="relative mx-auto rounded-[3rem] p-4 border-4 shadow-[0_0_50px_rgba(0,0,0,0.15)] overflow-hidden bg-white border-zinc-200">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-50 rounded-b-xl z-20" />
-        <div id="sandbox-preview" className="relative rounded-[2.5rem] aspect-[9/18] overflow-y-auto overflow-x-hidden bg-zinc-950 flex flex-col justify-between transition-all duration-300 w-full h-full pointer-events-auto p-0 border-0 scrollbar-none">
-          <div className="pointer-events-none w-full flex-1 flex flex-col">
+        <div id="clinkor-phone-preview" className="relative rounded-[2.5rem] aspect-[9/18] overflow-y-auto overflow-x-hidden bg-zinc-950 flex flex-col justify-between transition-all duration-300 w-full h-full pointer-events-auto p-0 border-0 scrollbar-none" style={{ position: "relative" }}>
+          <div className="pointer-events-none w-full flex-1 flex flex-col min-h-full">
             {mode === "plugin" ? renderPluginPreview() : (
               <UniversalProfile 
                 data={data} 

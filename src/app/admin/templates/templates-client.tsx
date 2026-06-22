@@ -1,19 +1,20 @@
 "use client";
 
-import React, { useState, useTransition, useEffect } from "react";
+import React, { useState, useTransition, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { 
- createTemplate, 
  updateTemplate, 
  deleteTemplate, 
  seedTemplates 
 } from "@/app/actions";
+import { createTemplateAction } from "@/actions/template";
 import { 
  ArrowLeft, Plus, Trash2, CheckCircle, X, 
  Store, Code, Layout, Edit2, Info, LayoutGrid, Check, Settings, Gift
 } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
 import UniversalProfile from "@/components/universal-profile";
+// import removed
 
 interface Template {
  id: string;
@@ -25,11 +26,22 @@ interface Template {
  fontStyle: string;
  buttonStyle: string;
  paymentLink?: string | null;
+ paymentUrl?: string | null;
  isActive: boolean;
  isCoded: boolean;
  isComingSoon: boolean;
  customCss?: string | null;
  configJson?: string | null;
+ customHtml?: string | null;
+ masterLayoutHtml?: string | null;
+ avatarHtml?: string | null;
+ headerHtml?: string | null;
+ socialHtml?: string | null;
+ linksHtml?: string | null;
+ backgroundHtml?: string | null;
+ containerClasses?: string | null;
+ jsonConfig?: string | null;
+ customSchema?: any;
  createdAt: string;
 }
 
@@ -60,10 +72,25 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  fontStyle: "Inter",
  buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
  paymentLink: "",
+ paymentUrl: "",
  customCss: "",
  configJson: "",
+ containerClasses: "",
+ templateHtml: "",
+ masterLayoutHtml: "",
+ avatarHtml: "",
+ headerHtml: "",
+ socialHtml: "",
+ linksHtml: "",
+ backgroundHtml: "",
  isComingSoon: false,
+ customSchema: "",
  });
+
+ const debouncedFormData = formData;
+ const parsedJsonConfig = useMemo(() => {
+    try { return JSON.parse(formData.configJson || "{}"); } catch { return {}; }
+ }, [formData.configJson]);
 
  const showMsg = (text: string, type: "success" | "error") => {
  setMsg({ text, type });
@@ -155,9 +182,19 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
      fontStyle: template.fontStyle || "Inter",
      buttonStyle: template.buttonStyle || "",
      paymentLink: template.paymentLink || "",
+     paymentUrl: template.paymentUrl || "",
      customCss: template.customCss || "",
      configJson: template.configJson || "",
+     containerClasses: template.containerClasses || "",
+     templateHtml: template.customHtml || "",
+     masterLayoutHtml: template.masterLayoutHtml || "",
+     avatarHtml: template.avatarHtml || "",
+     headerHtml: template.headerHtml || "",
+     socialHtml: template.socialHtml || "",
+     linksHtml: template.linksHtml || "",
+     backgroundHtml: template.backgroundHtml || "",
      isComingSoon: template.isComingSoon || false,
+     customSchema: template.customSchema ? JSON.stringify(template.customSchema, null, 2) : "",
    });
    setIsAddModalOpen(true);
   };
@@ -170,6 +207,8 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  return;
  }
 
+ const finalConfigJson = formData.configJson;
+
  startTransition(async () => {
  try {
  if (editingTemplateId) {
@@ -181,10 +220,21 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     fontStyle: formData.fontStyle,
     buttonStyle: formData.buttonStyle,
     paymentLink: formData.paymentLink || undefined,
+    paymentUrl: formData.paymentUrl || undefined,
     isCoded: formMode === "code",
     customCss: formMode === "code" ? formData.customCss : undefined,
-    configJson: formMode === "code" ? formData.configJson : undefined,
+    configJson: formMode === "code" ? finalConfigJson : undefined,
+    customHtml: formMode === "code" ? formData.templateHtml : undefined,
+    masterLayoutHtml: formMode === "code" ? formData.masterLayoutHtml : undefined,
+    avatarHtml: formMode === "code" ? formData.avatarHtml : undefined,
+    headerHtml: formMode === "code" ? formData.headerHtml : undefined,
+    socialHtml: formMode === "code" ? formData.socialHtml : undefined,
+    linksHtml: formMode === "code" ? formData.linksHtml : undefined,
+    backgroundHtml: formMode === "code" ? formData.backgroundHtml : undefined,
+    containerClasses: formMode === "code" ? formData.containerClasses : undefined,
+    jsonConfig: formMode === "code" ? formData.configJson : undefined,
     isComingSoon: formData.isComingSoon,
+    customSchema: formData.customSchema ? JSON.parse(formData.customSchema) : null,
   });
 
   const updatedT: Template = {
@@ -197,11 +247,22 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     fontStyle: result.fontStyle,
     buttonStyle: result.buttonStyle,
     paymentLink: result.paymentLink,
+    paymentUrl: result.paymentUrl,
     isActive: result.isActive,
     isCoded: result.isCoded,
     isComingSoon: result.isComingSoon,
     customCss: result.customCss,
     configJson: result.configJson,
+    customHtml: result.customHtml,
+    masterLayoutHtml: result.masterLayoutHtml,
+    avatarHtml: result.avatarHtml,
+    headerHtml: result.headerHtml,
+    socialHtml: result.socialHtml,
+    linksHtml: result.linksHtml,
+    backgroundHtml: result.backgroundHtml,
+    containerClasses: result.containerClasses,
+    jsonConfig: result.jsonConfig,
+    customSchema: result.customSchema,
     createdAt: result.createdAt.toISOString(),
   };
 
@@ -213,23 +274,36 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
   setFormData({
     name: "", price: "", category: "Genel", bgColor: "#09090b",
     fontStyle: "Inter", buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
-    paymentLink: "", customCss: "", configJson: "", isComingSoon: false,
+    paymentLink: "", paymentUrl: "", customCss: "", configJson: "", containerClasses: "", templateHtml: "",
+    masterLayoutHtml: "", avatarHtml: "", headerHtml: "", socialHtml: "", linksHtml: "", backgroundHtml: "",
+    isComingSoon: false, customSchema: "",
   });
  } else {
-  const result = await createTemplate(adminUserId, {
-    name: formData.name,
-    price: Number(formData.price),
-    category: formData.category,
+   const result = await createTemplateAction(adminUserId, {
+     name: formData.name,
+     price: Number(formData.price),
+     category: formData.category,
     coverUrl: "",
     bgColor: formData.bgColor,
     fontStyle: formData.fontStyle,
     buttonStyle: formData.buttonStyle,
     paymentLink: formData.paymentLink || undefined,
+    paymentUrl: formData.paymentUrl || undefined,
     isActive: true,
     isCoded: formMode === "code",
     customCss: formMode === "code" ? formData.customCss : undefined,
-    configJson: formMode === "code" ? formData.configJson : undefined,
+    configJson: formMode === "code" ? finalConfigJson : undefined,
+    customHtml: formMode === "code" ? formData.templateHtml : undefined,
+    masterLayoutHtml: formMode === "code" ? formData.masterLayoutHtml : undefined,
+    avatarHtml: formMode === "code" ? formData.avatarHtml : undefined,
+    headerHtml: formMode === "code" ? formData.headerHtml : undefined,
+    socialHtml: formMode === "code" ? formData.socialHtml : undefined,
+    linksHtml: formMode === "code" ? formData.linksHtml : undefined,
+    backgroundHtml: formMode === "code" ? formData.backgroundHtml : undefined,
+    containerClasses: formMode === "code" ? formData.containerClasses : undefined,
+    jsonConfig: formMode === "code" ? formData.configJson : undefined,
     isComingSoon: formData.isComingSoon,
+    customSchema: formData.customSchema ? JSON.parse(formData.customSchema) : undefined,
   });
 
   const newT: Template = {
@@ -242,11 +316,22 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     fontStyle: result.fontStyle,
     buttonStyle: result.buttonStyle,
     paymentLink: result.paymentLink,
+    paymentUrl: result.paymentUrl,
     isActive: result.isActive,
     isCoded: result.isCoded,
     isComingSoon: result.isComingSoon,
     customCss: result.customCss,
     configJson: result.configJson,
+    customHtml: result.customHtml,
+    masterLayoutHtml: result.masterLayoutHtml,
+    avatarHtml: result.avatarHtml,
+    headerHtml: result.headerHtml,
+    socialHtml: result.socialHtml,
+    linksHtml: result.linksHtml,
+    backgroundHtml: result.backgroundHtml,
+    containerClasses: result.containerClasses,
+    jsonConfig: result.jsonConfig,
+    customSchema: result.customSchema,
     createdAt: result.createdAt.toISOString(),
   };
 
@@ -257,7 +342,9 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
   setFormData({
     name: "", price: "", category: "Genel", bgColor: "#09090b",
     fontStyle: "Inter", buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
-    paymentLink: "", customCss: "", configJson: "", isComingSoon: false,
+    paymentLink: "", paymentUrl: "", customCss: "", configJson: "", containerClasses: "", templateHtml: "",
+    masterLayoutHtml: "", avatarHtml: "", headerHtml: "", socialHtml: "", linksHtml: "", backgroundHtml: "",
+    isComingSoon: false, customSchema: "",
   });
  }
  } catch (err: any) {
@@ -266,18 +353,72 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  });
  };
 
+ const errorBoundaryResetKey = useMemo(() => {
+    return `${debouncedFormData.templateHtml}-${debouncedFormData.masterLayoutHtml}-${debouncedFormData.customCss}-${debouncedFormData.configJson}-${debouncedFormData.containerClasses}`;
+  }, [debouncedFormData.templateHtml, debouncedFormData.masterLayoutHtml, debouncedFormData.customCss, debouncedFormData.configJson, debouncedFormData.containerClasses]);
+
  const currentPreviewData = isAddModalOpen ? {
  theme: formData.name || "Yeni Şablon",
  customCss: formMode === "code" ? formData.customCss : null,
  background: formData.bgColor,
  buttonClass: formData.buttonStyle,
  fontStyle: formData.fontStyle,
+ isCoded: formMode === "code",
+ customHtml: formMode === "code" ? formData.templateHtml : null,
+ masterLayoutHtml: formMode === "code" ? formData.masterLayoutHtml : null,
+ avatarHtml: formMode === "code" ? formData.avatarHtml : null,
+ headerHtml: formMode === "code" ? formData.headerHtml : null,
+ socialHtml: formMode === "code" ? formData.socialHtml : null,
+ linksHtml: formMode === "code" ? formData.linksHtml : null,
+ backgroundHtml: formMode === "code" ? formData.backgroundHtml : null,
+ containerClasses: formMode === "code" ? formData.containerClasses : null,
+ jsonConfig: formMode === "code" ? formData.configJson : null,
+ templateSettings: (() => {
+  try {
+    const schema = JSON.parse(formData.customSchema || "[]");
+    if (Array.isArray(schema)) {
+      const settings: Record<string, any> = {};
+      schema.forEach((item: any) => {
+        if (item.name) {
+          settings[item.name] = item.defaultValue !== undefined ? item.defaultValue : (item.type === 'color' ? '#ffffff' : '');
+        }
+      });
+      return settings;
+    }
+  } catch (e) {}
+  return null;
+})()
  } : previewTemplate ? {
  theme: previewTemplate.name,
  customCss: previewTemplate.customCss,
  background: previewTemplate.bgColor,
  buttonClass: previewTemplate.buttonStyle,
  fontStyle: previewTemplate.fontStyle,
+ isCoded: previewTemplate.isCoded,
+ customHtml: previewTemplate.customHtml,
+ masterLayoutHtml: previewTemplate.masterLayoutHtml,
+ avatarHtml: previewTemplate.avatarHtml,
+ headerHtml: previewTemplate.headerHtml,
+ socialHtml: previewTemplate.socialHtml,
+ linksHtml: previewTemplate.linksHtml,
+ backgroundHtml: previewTemplate.backgroundHtml,
+ containerClasses: previewTemplate.containerClasses,
+ jsonConfig: previewTemplate.jsonConfig,
+ templateSettings: (() => {
+  try {
+    const schema = typeof previewTemplate.customSchema === 'string' ? JSON.parse(previewTemplate.customSchema) : previewTemplate.customSchema;
+    if (Array.isArray(schema)) {
+      const settings: Record<string, any> = {};
+      schema.forEach((item: any) => {
+        if (item.name) {
+          settings[item.name] = item.defaultValue !== undefined ? item.defaultValue : (item.type === 'color' ? '#ffffff' : '');
+        }
+      });
+      return settings;
+    }
+  } catch (e) {}
+  return null;
+})()
  } : null;
 
  return (
@@ -314,7 +455,9 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     setFormData({
       name: "", price: "", category: "Genel", bgColor: "#09090b",
       fontStyle: "Inter", buttonStyle: "bg-white hover:bg-slate-100 text-slate-900 rounded-xl",
-      paymentLink: "", customCss: "", configJson: "", isComingSoon: false,
+      paymentLink: "", paymentUrl: "", customCss: "", configJson: "", containerClasses: "", templateHtml: "",
+      masterLayoutHtml: "", avatarHtml: "", headerHtml: "", socialHtml: "", linksHtml: "", backgroundHtml: "",
+      isComingSoon: false, customSchema: "",
     });
     setIsAddModalOpen(true);
   }}
@@ -546,14 +689,23 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  />
  </div>
 
- <div className="space-y-1.5">
- <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Ödeme Linki (İsteğe Bağlı)</label>
- <input
- type="url" value={formData.paymentLink} onChange={(e) => setFormData(prev => ({ ...prev, paymentLink: e.target.value }))}
- placeholder="https://buy.stripe.com/..."
- className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-neon-blue focus:ring-1 focus:ring-neon-blue outline-none transition-all text-emerald-400"
- />
- </div>
+  <div className="space-y-1.5">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Ödeme Linki (Legacy - paymentLink)</label>
+  <input
+  type="url" value={formData.paymentLink} onChange={(e) => setFormData(prev => ({ ...prev, paymentLink: e.target.value }))}
+  placeholder="https://buy.stripe.com/..."
+  className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-neon-blue focus:ring-1 focus:ring-neon-blue outline-none transition-all text-emerald-400"
+  />
+  </div>
+
+  <div className="space-y-1.5">
+  <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Ödeme Linki (İsteğe Bağlı)</label>
+  <input
+  type="url" value={formData.paymentUrl} onChange={(e) => setFormData(prev => ({ ...prev, paymentUrl: e.target.value }))}
+  placeholder="https://buy.stripe.com/..."
+  className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-sm focus:border-neon-blue focus:ring-1 focus:ring-neon-blue outline-none transition-all text-emerald-400"
+  />
+  </div>
 
   <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-900 border border-zinc-800">
     <div className="space-y-0.5">
@@ -569,24 +721,116 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
     </button>
   </div>
 
+  <div className="space-y-1.5">
+    <label className="text-xs font-bold text-teal-400 uppercase tracking-wider block">Şablon Şeması (customSchema - JSON)</label>
+    <p className="text-[10px] text-zinc-500 -mt-1">{"Dinamik form alanları için şema tanımı (Örn: [{\"name\":\"primaryColor\",\"type\":\"color\",\"label\":\"Ana Renk\"}])."}</p>
+    <textarea
+      value={formData.customSchema}
+      onChange={(e) => setFormData(prev => ({ ...prev, customSchema: e.target.value }))}
+      rows={4}
+      placeholder='[{"name": "primaryColor", "type": "color", "label": "Ana Renk"}]'
+      className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-xs font-mono focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none transition-all text-teal-250"
+    />
+  </div>
+
  {formMode === "code" && (
  <>
- <div className="space-y-1.5">
- <label className="text-xs font-bold text-purple-400 uppercase tracking-wider">Özel CSS</label>
- <textarea
- value={formData.customCss} onChange={(e) => setFormData(prev => ({ ...prev, customCss: e.target.value }))}
- rows={3}
- className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-xs font-mono focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
- />
- </div>
- <div className="space-y-1.5">
- <label className="text-xs font-bold text-purple-400 uppercase tracking-wider">JSON Config</label>
- <textarea
- value={formData.configJson} onChange={(e) => setFormData(prev => ({ ...prev, configJson: e.target.value }))}
- rows={2}
- className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-xs font-mono focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
- />
- </div>
+   <div className="p-4 border border-indigo-500/30 bg-indigo-500/5 rounded-xl space-y-4">
+    <div className="flex items-center gap-2 mb-2">
+      <LayoutGrid className="h-4 w-4 text-indigo-400" />
+      <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Slot Tabanlı Yeni Mimari</h3>
+    </div>
+    
+    <div className="space-y-1">
+      <label className="text-[10px] font-black text-indigo-300 uppercase">1. Master Layout</label>
+      <textarea
+        name="masterLayoutHtml"
+        value={formData.masterLayoutHtml}
+        onChange={(e) => setFormData(prev => ({ ...prev, masterLayoutHtml: e.target.value }))}
+        rows={8}
+        placeholder="[BACKGROUND_SECTION]\n[AVATAR_SECTION]"
+        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-[11px] font-mono text-indigo-200 outline-none focus:border-indigo-500"
+      />
+    </div>
+    
+    <div className="space-y-1">
+      <label className="text-[10px] font-black text-indigo-300 uppercase">2. Arka Plan Katmanı</label>
+      <textarea
+        name="backgroundHtml"
+        value={formData.backgroundHtml}
+        onChange={(e) => setFormData(prev => ({ ...prev, backgroundHtml: e.target.value }))}
+        rows={4}
+        placeholder="<div class='absolute inset-0...'>"
+        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-[11px] font-mono text-indigo-200 outline-none focus:border-indigo-500"
+      />
+    </div>
+
+    <div className="space-y-1">
+      <label className="text-[10px] font-black text-indigo-300 uppercase">3. Avatar Bölümü</label>
+      <textarea
+        name="avatarHtml"
+        value={formData.avatarHtml}
+        onChange={(e) => setFormData(prev => ({ ...prev, avatarHtml: e.target.value }))}
+        rows={4}
+        placeholder="<img src='{{avatarUrl}}' />"
+        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-[11px] font-mono text-indigo-200 outline-none focus:border-indigo-500"
+      />
+    </div>
+
+    <div className="space-y-1">
+      <label className="text-[10px] font-black text-indigo-300 uppercase">4. Başlık ve Bio</label>
+      <textarea
+        name="headerHtml"
+        value={formData.headerHtml}
+        onChange={(e) => setFormData(prev => ({ ...prev, headerHtml: e.target.value }))}
+        rows={4}
+        placeholder="<h1>{{displayName}}</h1>"
+        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-[11px] font-mono text-indigo-200 outline-none focus:border-indigo-500"
+      />
+    </div>
+
+    <div className="space-y-1">
+      <label className="text-[10px] font-black text-indigo-300 uppercase">5. Sosyal Medya İkonları</label>
+      <textarea
+        name="socialHtml"
+        value={formData.socialHtml}
+        onChange={(e) => setFormData(prev => ({ ...prev, socialHtml: e.target.value }))}
+        rows={4}
+        placeholder="[SOCIAL_LOOP] <a href='{{socialUrl}}'>{{socialPlatform}}</a> [/SOCIAL_LOOP]"
+        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-[11px] font-mono text-indigo-200 outline-none focus:border-indigo-500"
+      />
+    </div>
+
+    <div className="space-y-1">
+      <label className="text-[10px] font-black text-indigo-300 uppercase">6. Link Butonları</label>
+      <textarea
+        name="linksHtml"
+        value={formData.linksHtml}
+        onChange={(e) => setFormData(prev => ({ ...prev, linksHtml: e.target.value }))}
+        rows={6}
+        placeholder="[LINK_LOOP] <a href='{{linkUrl}}'>{{linkTitle}}</a> [/LINK_LOOP]"
+        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-[11px] font-mono text-indigo-200 outline-none focus:border-indigo-500"
+      />
+    </div>
+   </div>
+   <div className="space-y-1.5">
+    <label className="text-[10px] font-black text-rose-400 uppercase tracking-wider">Özel CSS (Scoped Custom CSS)</label>
+    <p className="text-[10px] text-zinc-600 -mt-1">Sadece simülatör ve profilde çalışacak özel stil kuralları.</p>
+    <textarea
+     value={formData.customCss} onChange={(e) => setFormData(prev => ({ ...prev, customCss: e.target.value }))}
+     rows={4}
+     placeholder=".profile-card { animation: glow 3s infinite; }"
+     className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-xs font-mono focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none transition-all"
+    />
+   </div>
+   <div className="space-y-1.5">
+    <label className="text-xs font-bold text-purple-400 uppercase tracking-wider">JSON Config</label>
+    <textarea
+     value={formData.configJson} onChange={(e) => setFormData(prev => ({ ...prev, configJson: e.target.value }))}
+     rows={2}
+     className="w-full px-4 py-3 rounded-xl bg-black border border-zinc-800 text-xs font-mono focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all"
+    />
+   </div>
  </>
  )}
 
@@ -630,9 +874,30 @@ export default function TemplatesClient({ adminUserId, adminRole, initialTemplat
  { id: "2", title: "Sosyal Medya Hesaplarım", url: "#", isActive: true, type: "link", animation: "pulse" },
  { id: "3", title: "Bana Kahve Ismarla", url: "#", isActive: true, type: "link", animation: "bounce" },
  ],
+ isCoded: currentPreviewData.isCoded,
+ customHtml: currentPreviewData.customHtml,
+ masterLayoutHtml: currentPreviewData.masterLayoutHtml,
+ avatarHtml: currentPreviewData.avatarHtml,
+ headerHtml: currentPreviewData.headerHtml,
+ socialHtml: currentPreviewData.socialHtml,
+ linksHtml: currentPreviewData.linksHtml,
+ backgroundHtml: currentPreviewData.backgroundHtml,
+ containerClasses: currentPreviewData.containerClasses,
+ jsonConfig: currentPreviewData.jsonConfig,
+ templateSettings: (currentPreviewData as any).templateSettings,
+ socialLinks: [
+   { socialPlatform: "instagram", socialUrl: "https://instagram.com/clinkor" },
+   { socialPlatform: "twitter", socialUrl: "https://twitter.com/clinkor" }
+ ],
+ socials: [
+   { socialPlatform: "instagram", socialUrl: "https://instagram.com/clinkor" },
+   { socialPlatform: "twitter", socialUrl: "https://twitter.com/clinkor" }
+ ],
+ isPremiumTemplateActive: false
  }}
  isCompactMode={true}
  isDarkContext={true}
+ forcePremiumRender={true}
  />
  ) : (
  <div className="w-full h-full flex flex-col items-center justify-center p-3 md:p-6 text-center text-zinc-500">

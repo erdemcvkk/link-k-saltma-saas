@@ -2,336 +2,342 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Music, ShoppingBag, User, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles, BookOpen, Compass, Layers, BarChart3, Eye } from "lucide-react";
 import GlobalOverlayManager from "@/components/global-overlay-manager";
+import UniversalProfile, { UniversalProfileData } from "@/components/universal-profile";
 
-type FeaturedProduct = {
- id: string;
- title: string;
- price: number;
- type: string;
-};
-
-type CreatorItem = {
- id: string;
- username: string;
- bio: string;
- theme: string;
- productCount: number;
- plan: string;
- featuredProducts: FeaturedProduct[];
-};
-
-interface DiscoverClientProps {
- initialCreators: CreatorItem[];
- siteTitle: string;
- siteLogo: string;
+interface Template {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  coverUrl: string;
+  bgColor: string;
+  fontStyle: string;
+  buttonStyle: string;
+  paymentLink?: string | null;
+  paymentUrl?: string | null;
+  isActive: boolean;
+  isCoded: boolean;
+  isComingSoon: boolean;
+  customCss?: string | null;
+  configJson?: string | null;
+  customHtml?: string | null;
+  containerClasses?: string | null;
+  jsonConfig?: string | null;
+  masterLayoutHtml?: string | null;
+  avatarHtml?: string | null;
+  headerHtml?: string | null;
+  socialHtml?: string | null;
+  linksHtml?: string | null;
+  backgroundHtml?: string | null;
+  customSchema?: any;
+  createdAt: string;
 }
 
-export default function DiscoverClient({ initialCreators, siteTitle, siteLogo }: DiscoverClientProps) {
- const [searchQuery, setSearchQuery] = useState("");
- const [selectedFilter, setSelectedFilter] = useState<"all" | "beats" | "premium" | "kits">("all");
- const [lang, setLang] = useState<"tr" | "en">("en");
- const [theme, setTheme] = useState<"dark" | "light">("dark");
+interface DiscoverClientProps {
+  initialTemplates: Template[];
+  userId: string | null;
+  siteTitle: string;
+  siteLogo: string;
+}
 
- const handleStateChange = (state: { lang: "tr" | "en"; theme: "dark" | "light" }) => {
- setLang(state.lang);
- setTheme(state.theme);
- };
+const isLightColor = (color: string) => {
+  if (!color) return false;
+  const hex = color.replace('#', '');
+  if (hex.length === 3 || hex.length === 6) {
+    const r = parseInt(hex.length === 3 ? hex[0]+hex[0] : hex.substring(0,2), 16);
+    const g = parseInt(hex.length === 3 ? hex[1]+hex[1] : hex.substring(2,4), 16);
+    const b = parseInt(hex.length === 3 ? hex[2]+hex[2] : hex.substring(4,6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 128;
+  }
+  return color.toLowerCase().includes('white') || color.toLowerCase().includes('yellow') || color.toLowerCase().includes('#fff') || color.toLowerCase().includes('#fdf') || color.toLowerCase() === '#f3f4f6';
+};
 
- const isDark = theme === "dark";
+const getDummyData = (template: Template): UniversalProfileData => {
+  const dummyLinks = [
+    { id: "1", title: "Instagram Hesabım", url: "#", type: "INSTAGRAM", blockType: "TEXT_LINK" },
+    { id: "2", title: "Yeni Albümüm", url: "#", type: "MUSIC", blockType: "TEXT_LINK" },
+    { id: "3", title: "Mağaza Vitrinim", url: "#", type: "STORE", blockType: "TEXT_LINK" }
+  ];
 
- // Dynamic Filtering logic
- const filteredCreators = initialCreators.filter((c) => {
- const matchesSearch =
- c.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
- c.bio.toLowerCase().includes(searchQuery.toLowerCase());
+  const isLight = isLightColor(template.bgColor) || [
+    "Minimalist Light", "Pastel Dream", "Abstract Fluid", 
+    "Vintage Paper", "Vintage Journal", "Holographic Glass", "Aura Hologram", "Sandstone Zen", "Swiss Minimalist", "Neo-Brutalist Grid"
+  ].includes(template.name);
 
- if (!matchesSearch) return false;
+  return {
+    templateId: template.id,
+    username: "kullaniciadi",
+    bio: "Dijital varlığınızı Clinkor ile özelleştirin.",
+    avatarUrl: null,
+    theme: template.name,
+    background: template.bgColor,
+    fontStyle: template.fontStyle,
+    buttonClass: template.buttonStyle || null,
+    customCss: template.customCss || null,
+    usernameColor: isLight ? "#000000" : "#ffffff",
+    bioColor: isLight ? "#4b5563" : "#9ca3af",
+    links: dummyLinks,
+    isCoded: template.isCoded,
+    customHtml: template.customHtml,
+    masterLayoutHtml: template.masterLayoutHtml,
+    avatarHtml: template.avatarHtml,
+    headerHtml: template.headerHtml,
+    socialHtml: template.socialHtml,
+    linksHtml: template.linksHtml,
+    backgroundHtml: template.backgroundHtml,
+    containerClasses: template.containerClasses,
+    jsonConfig: template.jsonConfig || template.configJson,
+    socialLinks: [
+      { socialPlatform: "instagram", socialUrl: "#" },
+      { socialPlatform: "twitter", socialUrl: "#" }
+    ],
+    socials: [
+      { socialPlatform: "instagram", socialUrl: "#" },
+      { socialPlatform: "twitter", socialUrl: "#" }
+    ],
+    isPremiumTemplateActive: false
+  };
+};
 
- if (selectedFilter === "beats") {
- return c.featuredProducts.some((p) => p.type === "BEAT");
- }
- if (selectedFilter === "kits") {
- return c.featuredProducts.some((p) => p.type === "SAMPLE_PACK" || p.type === "PRESET");
- }
- if (selectedFilter === "premium") {
- return c.plan === "CREATOR" || c.plan === "PRO_BUSINESS";
- }
+export default function DiscoverClient({ initialTemplates, userId, siteTitle, siteLogo }: DiscoverClientProps) {
+  const [lang, setLang] = useState<"tr" | "en">("tr");
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
 
- return true;
- });
+  const handleStateChange = (state: { lang: "tr" | "en"; theme: "dark" | "light" }) => {
+    setLang(state.lang);
+    setTheme(state.theme);
+  };
 
- const getThemeBadgeColor = (themeId: string) => {
- switch (themeId) {
- case "neon-purple":
- return isDark ? "bg-purple-950/30 border-purple-500/30 text-purple-400" : "bg-purple-50 border-purple-200 text-purple-600";
- case "glow-green":
- return isDark ? "bg-emerald-950/30 border-emerald-500/30 text-emerald-400" : "bg-emerald-50 border-emerald-200 text-emerald-600";
- case "pink-retro":
- return isDark ? "bg-pink-950/30 border-pink-500/30 text-pink-400" : "bg-pink-50 border-pink-200 text-pink-600";
- default:
- return isDark ? "bg-zinc-900 border-zinc-800 text-zinc-400" : "bg-zinc-100 border-zinc-200 text-zinc-600";
- }
- };
+  const isDark = theme === "dark";
 
- const getCardHoverStyle = (themeId: string) => {
- switch (themeId) {
- case "neon-purple":
- return isDark 
- ? "hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.1)]"
- : "hover:border-purple-300 hover:shadow-md";
- case "glow-green":
- return isDark 
- ? "hover:border-emerald-500/40 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)]"
- : "hover:border-emerald-300 hover:shadow-md";
- case "pink-retro":
- return isDark 
- ? "hover:border-pink-500/40 hover:shadow-[0_0_30px_rgba(244,63,94,0.1)]"
- : "hover:border-pink-300 hover:shadow-md";
- default:
- return "hover:border-zinc-400 hover:shadow-md";
- }
- };
+  // Find targeted templates safely
+  const swissTemplate = initialTemplates.find(t => t.name === "Swiss Noir") || initialTemplates[0];
+  const auraTemplate = initialTemplates.find(t => t.name === "Aura Clay") || initialTemplates[1];
 
- // Translations
- const t = {
- searchPlaceholder: lang === "tr" 
- ? "Üreticileri kullanıcı adı, biyografi anahtar kelimeleri veya beat adına göre arayın..."
- : "Search creators by username, bio keywords, trap beats...",
- allSpaces: lang === "tr" ? "Tüm Alanlar" : "All Spaces",
- beats: lang === "tr" ? "🎹 Beat / Döngüler" : "🎹 Beats / Loops",
- kits: lang === "tr" ? "📦 Paketler / Presetler" : "📦 Packs / Presets",
- premium: lang === "tr" ? "⭐ VIP Kreatörler" : "⭐ VIP Creators",
- noMatch: lang === "tr"
- ? "Filtre kriterlerinize uyan üretici bulunamadı. Aramanızı genişletmeyi deneyin!"
- : "No dynamic creators matched your custom filter parameters. Try expanding your search queries!",
- featuredListings: lang === "tr" ? "Öne Çıkan Dükkan Ürünleri" : "Featured Listings",
- enterHub: lang === "tr" ? "Stüdyoya Giriş Yap" : "Enter Creator Hub",
- };
+  return (
+    <div className={`min-h-screen transition-colors duration-500 relative overflow-hidden pb-32 ${
+      isDark ? "bg-black text-white" : "bg-slate-50 text-slate-900"
+    }`}>
+      <GlobalOverlayManager onStateChange={handleStateChange} />
 
- return (
- <div className={`min-h-screen transition-colors duration-500 relative overflow-hidden ${
- isDark ? "bg-black text-white" : "bg-zinc-50 text-zinc-900"
- }`}>
- <GlobalOverlayManager onStateChange={handleStateChange} />
+      {/* Decorative Blur Backgrounds */}
+      <div className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] pointer-events-none transition-opacity duration-500 ${
+        isDark ? "bg-indigo-500/5 opacity-100" : "bg-indigo-300/5 opacity-70"
+      }`} />
+      <div className={`absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] pointer-events-none transition-opacity duration-500 ${
+        isDark ? "bg-sky-500/5 opacity-100" : "bg-sky-300/5 opacity-70"
+      }`} />
 
- {/* Mesh glow effects */}
- <div className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] pointer-events-none transition-opacity duration-500 ${
- isDark ? "bg-purple-500/10 opacity-100" : "bg-purple-300/10 opacity-70"
- }`} />
- <div className={`absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] pointer-events-none transition-opacity duration-500 ${
- isDark ? "bg-emerald-500/5 opacity-100" : "bg-emerald-300/5 opacity-70"
- }`} />
- <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808005_1px,transparent_1px),linear-gradient(to_bottom,#80808005_1px,transparent_1px)] bg-[size:24px_36px] pointer-events-none" />
 
- <div className="max-w-6xl mx-auto px-6 py-16 relative z-10 space-y-12">
- {/* Navigation / Header */}
- <div className={`flex justify-between items-center border-b pb-6 ${
- isDark ? "border-zinc-900" : "border-zinc-200"
- }`}>
- <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-90 transition-opacity">
- {siteLogo ? (
- <img src={siteLogo} alt={siteTitle} className="h-7 w-auto object-contain" />
- ) : (
- <span className={`text-sm font-black tracking-widest transition-colors ${
- isDark ? "text-zinc-400 hover:text-white" : "text-zinc-500 hover:text-black"
- }`}>
- {siteTitle}
- </span>
- )}
- </Link>
- <div className="flex gap-4">
- <Link href="/dashboard" className={`px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all border ${
- isDark ? "bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-300" : "bg-white hover:bg-zinc-100 border-zinc-200 text-zinc-700 shadow-sm"
- }`}>
- {lang === "tr" ? "Yaratıcı Stüdyosu" : "Creator Studio"}
- </Link>
- </div>
- </div>
 
- {/* Hero Section */}
- <div className="text-center max-w-2xl mx-auto space-y-4">
- <div className={`inline-flex items-center gap-1.5 px-3 py-3 md:py-2.5 md:py-1 rounded-full border text-[10px] font-extrabold uppercase tracking-widest ${
- isDark ? "bg-purple-950/20 border-purple-500/30 text-purple-400" : "bg-purple-50 border-purple-200 text-purple-600"
- }`}>
- <Sparkles className="h-3.5 w-3.5" />
- {lang === "tr" ? "Kreatör Keşif Gridi" : "Discover Community Grid"}
- </div>
- <h1 className={`text-2xl md:text-4xl md:text-5xl font-black tracking-tight leading-tight bg-clip-text text-transparent bg-gradient-to-r ${
- isDark ? "from-zinc-100 via-zinc-300 to-zinc-500" : "from-zinc-900 via-zinc-700 to-zinc-500"
- }`}>
- {lang === "tr" ? "PREMIUM KREATÖRLERLE BAĞLANTI KURUN" : "CONNECT WITH MODERN CREATORS"}
- </h1>
- <p className={`text-sm leading-relaxed max-w-lg mx-auto ${
- isDark ? "text-zinc-500" : "text-zinc-600"
- }`}>
- {lang === "tr"
- ? "Dünyanın dört bir yanından premium yaratıcıları keşfedin, müzik beat'leri, synthesizer presetleri ve dijital mağaza vitrinlerini inceleyin."
- : "Explore premium profiles, list shop beats, presets, custom themes, and trade digital file nodes globally."}
- </p>
- </div>
+      {/* Main Container */}
+      <div className="max-w-4xl mx-auto px-6 pt-16 space-y-20 relative z-10">
+        
+        {/* Section 1: Hero & Introduction */}
+        <section className="space-y-8 text-center md:text-left">
+          <div className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-[10px] font-extrabold uppercase tracking-widest mx-auto md:mx-0 ${
+            isDark ? "bg-indigo-950/20 border-indigo-500/30 text-indigo-400" : "bg-indigo-50 border-indigo-200 text-indigo-600"
+          }`}>
+            <BookOpen className="h-3.5 w-3.5" />
+            Clinkor Kullanım Rehberi
+          </div>
+          <h1 className={`text-3xl md:text-5xl font-black tracking-tight leading-[1.1] ${
+            isDark ? "text-white" : "text-slate-900"
+          }`}>
+            Clinkor Yetenekleri: Dijital Kimliğinizi Özgürleştirin
+          </h1>
+          
+          {/* 200 Word Capacity Intro Text */}
+          <div className={`text-lg leading-[1.8] font-sans font-medium space-y-6 ${
+            isDark ? "text-zinc-300" : "text-slate-700"
+          }`}>
+            <p>
+              Clinkor, dijital dünyada kendinizi ifade etmenin en estetik ve en etkili yolunu sunmak üzere tasarlandı. Günümüzün hızla değişen sosyal medya ekosisteminde, tek bir bağlantı üzerinden tüm dijital varlığınızı kontrol etmek ve ziyaretçilerinize premium bir deneyim sunmak her zamankinden daha kritik bir hale geldi. Platformumuz, sosyal medya entegrasyonu, tasarım esnekliği ve güçlü veri analitiği gibi temel yetenekleri tek bir çatı altında birleştirir. Clinkor ile karmaşık kod yapılarıyla uğraşmadan, saniyeler içinde sosyal medya hesaplarınızı, dijital ürünlerinizi, bültenlerinizi veya portfolyolarınızı bir araya getirebilirsiniz. Gelişmiş tasarım esnekliğimiz sayesinde markanızın kurumsal kimliğine ve ruhuna en uygun temayı seçip özelleştirebilirsiniz. Ayrıca, entegre veri analitiği panelimiz ile sayfanızı ziyaret edenlerin hangi bağlantılara tıkladığını, hangi cihazlardan eriştiğini ve etkileşim oranlarınızı anlık olarak takip edebilirsiniz. Clinkor, dijital kimliğinizi sadece bir bağlantı listesi olarak değil, ziyaretçilerinizle etkileşim kuran ve kapıları açan dijital bir sanat eseri olarak kurgulamanıza yardımcı olur.
+            </p>
+          </div>
+        </section>
 
- {/* Controls Bar */}
- <div className="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
- {/* Search Input */}
- <div className={`flex items-center rounded-2xl border px-4 py-3 flex-1 ${
- isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-zinc-200 shadow-sm"
- }`}>
- <Search className="h-4.5 w-4.5 text-zinc-500 mr-3" />
- <input
- type="text"
- placeholder={t.searchPlaceholder}
- value={searchQuery}
- onChange={(e) => setSearchQuery(e.target.value)}
- className={`bg-transparent border-none outline-none text-xs w-full placeholder-zinc-500 ${
- isDark ? "text-white" : "text-zinc-800"
- }`}
- />
- </div>
+        {/* Section 2: Curated Showcase (Side-by-Side Templates) */}
+        <section className="space-y-10 border-t border-slate-100 dark:border-zinc-900 pt-16">
+          <div className="space-y-2">
+            <span className="text-[10px] text-indigo-500 uppercase tracking-widest font-extrabold block">Tasarım Vitrini</span>
+            <h2 className={`text-2xl md:text-3xl font-black tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}>
+              Seçkin Şablon Modelleri
+            </h2>
+          </div>
 
- {/* Filters */}
- <div className="flex gap-2 overflow-x-auto pb-1 md:pb-0 shrink-0">
- <button
- onClick={() => setSelectedFilter("all")}
- className={`px-4 py-3 md:py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
- selectedFilter === "all"
- ? "bg-purple-600 border-purple-500 text-white shadow-md shadow-purple-500/25"
- : isDark ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white" : "bg-zinc-100 border-zinc-200 text-zinc-600 hover:text-black"
- }`}
- >
- {t.allSpaces}
- </button>
- <button
- onClick={() => setSelectedFilter("beats")}
- className={`px-4 py-3 md:py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
- selectedFilter === "beats"
- ? "bg-purple-600 border-purple-500 text-white shadow-md shadow-purple-500/25"
- : isDark ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white" : "bg-zinc-100 border-zinc-200 text-zinc-600 hover:text-black"
- }`}
- >
- {t.beats}
- </button>
- <button
- onClick={() => setSelectedFilter("kits")}
- className={`px-4 py-3 md:py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
- selectedFilter === "kits"
- ? "bg-purple-600 border-purple-500 text-white shadow-md shadow-purple-500/25"
- : isDark ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white" : "bg-zinc-100 border-zinc-200 text-zinc-600 hover:text-black"
- }`}
- >
- {t.kits}
- </button>
- <button
- onClick={() => setSelectedFilter("premium")}
- className={`px-4 py-3 md:py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
- selectedFilter === "premium"
- ? "bg-purple-600 border-purple-500 text-white shadow-md shadow-purple-500/25"
- : isDark ? "bg-zinc-950 border-zinc-900 text-zinc-400 hover:text-white" : "bg-zinc-100 border-zinc-200 text-zinc-600 hover:text-black"
- }`}
- >
- {t.premium}
- </button>
- </div>
- </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
+            {/* Template 1: Swiss Noir */}
+            {swissTemplate && (
+              <div className={`rounded-3xl border p-6 flex flex-col justify-between space-y-6 ${
+                isDark ? "bg-zinc-950/40 border-zinc-900" : "bg-white border-slate-200/80 shadow-sm"
+              }`}>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className={`text-xl font-black uppercase ${isDark ? "text-white" : "text-slate-900"}`}>
+                      {swissTemplate.name}
+                    </h3>
+                    <span className="text-[9px] font-black uppercase bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 px-2 py-0.5 rounded">
+                      Minimalist
+                    </span>
+                  </div>
+                  
+                  {/* 3 Sentence Description */}
+                  <p className={`text-sm leading-[1.8] font-sans ${isDark ? "text-zinc-400" : "text-slate-600"}`}>
+                    Swiss Noir, keskin köşeleri ve güçlü monokrom renk paletiyle İsviçre minimalist tasarım ekolünün en belirgin temsilcisidir. Görsel hiyerarşiyi ön planda tutan bu şablon, gereksiz tüm süslemelerden arınarak içeriğinizin doğrudan ve etkileyici bir şekilde öne çıkmasını sağlar. Özellikle portfolyolarını, profesyonel yazılarını veya kurumsal bağlantılarını sergilemek isteyen vizyoner yaratıcılar için ideal bir tercihtir.
+                  </p>
+                </div>
 
- {/* Grid List */}
- <div className="grid md:grid-cols-3 gap-4 md:gap-6">
- {filteredCreators.length === 0 ? (
- <div className={`md:col-span-3 text-center py-20 text-xs italic border rounded-3xl border-dashed ${
- isDark ? "text-zinc-500 bg-zinc-950/20 border-zinc-900" : "text-zinc-600 bg-zinc-100/30 border-zinc-300"
- }`}>
- {t.noMatch}
- </div>
- ) : (
- filteredCreators.map((creator) => (
- <div
- key={creator.id}
- className={`p-3 md:p-6 rounded-[2rem] border backdrop-blur-md flex flex-col justify-between gap-4 md:gap-6 transition-all duration-300 relative overflow-hidden group ${
- isDark ? "bg-zinc-950 border-zinc-900/60" : "bg-white border-zinc-200 shadow-sm"
- } ${getCardHoverStyle(creator.theme)}`}
- >
- {/* VIP Sparkles badge */}
- {(creator.plan === "CREATOR" || creator.plan === "PRO_BUSINESS") && (
- <span className="absolute top-4 right-4 text-[9px] font-extrabold text-purple-500 flex items-center gap-1">
- <Sparkles className="h-3 w-3 text-purple-500 animate-pulse" />
- VIP
- </span>
- )}
+                {/* Mockup Frame */}
+                <div className="relative w-full aspect-[9/16] max-w-[260px] mx-auto bg-zinc-950 rounded-[2rem] p-1.5 shadow-inner border border-zinc-800 overflow-hidden">
+                  <div className="absolute top-0 inset-x-0 h-3 bg-zinc-900 z-20 rounded-b-xl w-[30%] mx-auto" />
+                  <div className="relative w-full h-full bg-zinc-950 rounded-[1.6rem] overflow-hidden">
+                    <UniversalProfile 
+                      data={getDummyData(swissTemplate)} 
+                      isCompactMode={true} 
+                      isDarkContext={!isLightColor(swissTemplate.bgColor)} 
+                      forcePremiumRender={true}
+                    />
+                  </div>
+                </div>
 
- <div className="space-y-4">
- {/* Identity Header */}
- <div className="flex items-center gap-3">
- <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-colors ${
- isDark ? "bg-zinc-900 border-zinc-800 text-zinc-400 group-hover:text-purple-400" : "bg-zinc-50 border-zinc-200 text-zinc-600 group-hover:text-purple-600"
- }`}>
- <User className="h-5 w-5" />
- </div>
- <div>
- <h3 className={`text-sm font-black transition-colors ${
- isDark ? "text-white group-hover:text-purple-300" : "text-zinc-800 group-hover:text-purple-600"
- }`}>
- @{creator.username}
- </h3>
- <span
- className={`inline-block px-2 py-0.5 rounded-full border text-[7.5px] font-bold uppercase tracking-widest mt-0.5 ${getThemeBadgeColor(
- creator.theme
- )}`}
- >
- {creator.theme.replace("-", " ")}
- </span>
- </div>
- </div>
+                <div className="pt-2">
+                  <Link
+                    href={`/sablonlar?intent=purchase_${swissTemplate.id}`}
+                    className="w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-black font-extrabold text-xs transition-all hover:opacity-90 flex items-center justify-center gap-1.5"
+                  >
+                    Şablonu Seç
+                  </Link>
+                </div>
+              </div>
+            )}
 
- {/* Bio text */}
- <p className={`text-xs leading-relaxed line-clamp-3 ${
- isDark ? "text-zinc-500" : "text-zinc-600"
- }`}>
- {creator.bio}
- </p>
+            {/* Template 2: Aura Minimalist (Aura Clay) */}
+            {auraTemplate && (
+              <div className={`rounded-3xl border p-6 flex flex-col justify-between space-y-6 ${
+                isDark ? "bg-zinc-950/40 border-zinc-900" : "bg-white border-slate-200/80 shadow-sm"
+              }`}>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className={`text-xl font-black uppercase ${isDark ? "text-white" : "text-slate-900"}`}>
+                      Aura Minimalist
+                    </h3>
+                    <span className="text-[9px] font-black uppercase bg-purple-100 dark:bg-purple-950/30 text-purple-650 dark:text-purple-400 px-2 py-0.5 rounded">
+                      Premium
+                    </span>
+                  </div>
 
- {/* Featured Digital Products list inside card */}
- {creator.featuredProducts.length > 0 && (
- <div className={`space-y-2 pt-2 border-t ${isDark ? "border-zinc-900/60" : "border-zinc-100"}`}>
- <div className="text-[9px] text-zinc-500 uppercase font-black tracking-wider flex items-center gap-1">
- <ShoppingBag className="h-3 w-3" />
- {t.featuredListings} ({creator.productCount})
- </div>
- <div className="space-y-1.5">
- {creator.featuredProducts.map((p) => (
- <div
- key={p.id}
- className={`flex justify-between items-center px-2.5 py-3 md:py-2.5 md:py-1.5 rounded-lg border text-[10px] ${
- isDark ? "bg-zinc-900/60 border-zinc-800" : "bg-zinc-50 border-zinc-200 text-zinc-700"
- }`}
- >
- <span className="font-bold truncate pr-3">{p.title}</span>
- <span className="text-purple-500 font-black font-mono shrink-0">{p.price}₺</span>
- </div>
- ))}
- </div>
- </div>
- )}
- </div>
+                  {/* 3 Sentence Description */}
+                  <p className={`text-sm leading-[1.8] font-sans ${isDark ? "text-zinc-400" : "text-slate-600"}`}>
+                    Aura Minimalist, yumuşak gölgeleri ve pastel tonlardaki geçişleri ile ekranlarda sakinleştirici ve davetkar bir atmosfer yaratır. Dokunsal derinlik hissi veren soft yapısı, ziyaretçilerinizde güven ve samimiyet duygusu uyandırmayı hedefler. Kişisel markasını daha samimi, modern ve estetik açıdan ferah bir dille anlatmak isteyen içerik üreticileri için mükemmel bir seçenektir.
+                  </p>
+                </div>
 
- {/* Action Outbound click link */}
- <Link
- href={`/${creator.username}`}
- className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border font-extrabold text-xs transition-all cursor-pointer ${
- isDark 
- ? "bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-300 group-hover:bg-purple-600 group-hover:border-purple-500 group-hover:text-white" 
- : "bg-zinc-100 border-zinc-200 hover:bg-zinc-200 text-zinc-700 group-hover:bg-purple-600 group-hover:border-purple-500 group-hover:text-white group-hover:shadow-md"
- }`}
- >
- {t.enterHub}
- <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
- </Link>
- </div>
- ))
- )}
- </div>
+                {/* Mockup Frame */}
+                <div className="relative w-full aspect-[9/16] max-w-[260px] mx-auto bg-zinc-950 rounded-[2rem] p-1.5 shadow-inner border border-zinc-800 overflow-hidden">
+                  <div className="absolute top-0 inset-x-0 h-3 bg-zinc-900 z-20 rounded-b-xl w-[30%] mx-auto" />
+                  <div className="relative w-full h-full bg-zinc-950 rounded-[1.6rem] overflow-hidden">
+                    <UniversalProfile 
+                      data={getDummyData(auraTemplate)} 
+                      isCompactMode={true} 
+                      isDarkContext={!isLightColor(auraTemplate.bgColor)} 
+                      forcePremiumRender={true}
+                    />
+                  </div>
+                </div>
 
- </div>
- </div>
- );
+                <div className="pt-2">
+                  <Link
+                    href={`/sablonlar?intent=purchase_${auraTemplate.id}`}
+                    className="w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-black font-extrabold text-xs transition-all hover:opacity-90 flex items-center justify-center gap-1.5"
+                  >
+                    Şablonu Seç
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Section 3: Plugin Guide */}
+        <section className="space-y-8 border-t border-slate-100 dark:border-zinc-900 pt-16">
+          <div className="space-y-2">
+            <span className="text-[10px] text-indigo-500 uppercase tracking-widest font-extrabold block">Gelişmiş Entegrasyonlar</span>
+            <h2 className={`text-2xl md:text-3xl font-black tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}>
+              Premium Eklentiler
+            </h2>
+          </div>
+
+          <div className="space-y-10">
+            {/* Plugin 1 */}
+            <div className={`p-6 md:p-8 rounded-3xl border flex flex-col md:flex-row gap-6 items-center ${
+              isDark ? "bg-zinc-950/20 border-zinc-900" : "bg-white border-slate-200/80 shadow-sm"
+            }`}>
+              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-500 shrink-0">
+                <Layers className="h-6 w-6" />
+              </div>
+              <div className="space-y-3 flex-1 text-left">
+                <h3 className={`text-lg font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+                  Dinamik Sosyal Akış
+                </h3>
+                <p className={`text-sm leading-[1.8] font-sans ${isDark ? "text-zinc-400" : "text-slate-600"}`}>
+                  Nasıl Kullanılır: Bu eklentiyi profilinize dahil ettiğinizde, Instagram veya YouTube gibi sosyal ağlardaki en son içerikleriniz sayfanızda otomatik olarak listelenir. Ziyaretçileriniz Clinkor sayfanızdan ayrılmadan en güncel paylaşımlarınızı görebilir ve etkileşime geçebilir. Tek yapmanız gereken, eklenti ayarlarından sosyal medya hesaplarınızı bağlamak ve görünüm tarzını seçmektir; gerisini sistem sizin için halleder.
+                </p>
+              </div>
+            </div>
+
+            {/* Plugin 2 */}
+            <div className={`p-6 md:p-8 rounded-3xl border flex flex-col md:flex-row gap-6 items-center ${
+              isDark ? "bg-zinc-950/20 border-zinc-900" : "bg-white border-slate-200/80 shadow-sm"
+            }`}>
+              <div className="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-500 shrink-0">
+                <BarChart3 className="h-6 w-6" />
+              </div>
+              <div className="space-y-3 flex-1 text-left">
+                <h3 className={`text-lg font-bold ${isDark ? "text-white" : "text-slate-900"}`}>
+                  İstatistik Paneli
+                </h3>
+                <p className={`text-sm leading-[1.8] font-sans ${isDark ? "text-zinc-400" : "text-slate-600"}`}>
+                  Nasıl Kullanılır: Bu eklenti sayesinde sayfa trafiğinizi ve ziyaretçi davranışlarını anlık grafiklerle takip edebilirsiniz. Hangi linkin daha çok tıklandığını, hangi günlerde yoğunluk yaşandığını ve ziyaretçilerin coğrafi dağılımlarını tek bir ekrandan inceleyebilirsiniz. Paneldeki verileri düzenli analiz ederek link yerleşimlerinizi optimize edebilir ve dijital stratejinizi büyütebilirsiniz.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 4: Call To Action (CTA) */}
+        <section className={`p-8 md:p-12 rounded-[2.5rem] border text-center relative overflow-hidden shadow-sm transition-all ${
+          isDark ? "bg-zinc-950/40 border-zinc-900" : "bg-white border-slate-200"
+        }`}>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 bg-neon-blue/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="max-w-xl mx-auto space-y-6 relative z-10">
+            <h2 className={`text-2xl md:text-3xl font-black tracking-tight ${isDark ? "text-white" : "text-slate-900"}`}>
+              Kendi Hikayeni Başlat
+            </h2>
+            <p className={`text-xs md:text-sm leading-relaxed ${isDark ? "text-zinc-500" : "text-slate-500"}`}>
+              Dijital dünyadaki premium duruşunuzu Clinkor'un esnek şablonları ve analiz altyapısı ile anında hayata geçirin.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-3">
+              <Link
+                href="/sign-up"
+                className="px-6 py-3 rounded-full bg-gradient-to-r from-neon-blue to-light-blue text-white font-black text-xs shadow-lg hover:opacity-90 transition-all border-0 text-center"
+              >
+                Hemen Ücretsiz Başla
+              </Link>
+              <Link
+                href="/sablonlar"
+                className="px-6 py-3 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-black font-black text-xs hover:opacity-90 transition-all text-center"
+              >
+                Şablonları Keşfet
+              </Link>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  );
 }

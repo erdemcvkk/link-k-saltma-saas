@@ -1,8 +1,14 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { Shield, ArrowLeft } from "lucide-react";
+import { Metadata } from "next";
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Clinkor | Gizlilik Politikası",
+  description: "Kişisel verilerinizin korunması, KVKK aydınlatma metni ve gizlilik politikası detayları.",
+};
 
 export default async function GizlilikPage() {
   const setting = await db.globalSetting.findUnique({

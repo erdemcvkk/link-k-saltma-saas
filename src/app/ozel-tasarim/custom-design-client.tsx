@@ -213,67 +213,8 @@ export default function CustomDesignClient({ userId, siteTitle, siteLogo }: Cust
     <div className="relative min-h-screen overflow-x-hidden bg-white text-slate-900 font-sans selection:bg-neon-blue/15 selection:text-neon-blue">
       <GlobalOverlayManager />
 
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity">
-            {siteLogo ? (
-              <img src={siteLogo} alt={siteTitle} className="h-8 w-auto object-contain" />
-            ) : (
-              <span className="text-2xl font-extrabold tracking-tight text-slate-900">
-                {siteTitle}
-              </span>
-            )}
-          </Link>
-
-          <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
-            <Link href="/" className="hover:text-slate-900 transition-colors">Ana Sayfa</Link>
-            <Link href="/sablonlar" className="hover:text-slate-900 transition-colors">Şablonlar</Link>
-            <Link href="/eklentiler" className="hover:text-slate-900 transition-colors flex items-center gap-1">
-              Eklentiler
-              <span className="px-1.5 py-0.5 rounded-md bg-rose-100 text-rose-600 text-[9px] font-black uppercase tracking-wider">Yeni</span>
-            </Link>
-            <Link href="/qr-olusturucu" className="hover:text-slate-900 transition-colors flex items-center gap-1">
-              QR Oluşturucu
-              <span className="px-1.5 py-0.5 rounded-md bg-neon-blue/10 text-neon-blue text-[9px] font-black uppercase tracking-wider">Ücretsiz</span>
-            </Link>
-            <Link href="/ozel-tasarlat" className="hover:text-slate-900 transition-colors flex items-center gap-1 text-slate-900">
-              Özel Tasarlat
-              <span className="px-1.5 py-0.5 rounded-md bg-violet-100 text-violet-600 text-[9px] font-black uppercase tracking-wider">Tasarım</span>
-            </Link>
-          </nav>
-
-          <div className="flex items-center space-x-4">
-            {userId ? (
-              <Link
-                href="/dashboard"
-                className="flex items-center space-x-2 px-5 py-3 md:py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
-              >
-                <span>Yönetim Paneli</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            ) : (
-              <>
-                <Link
-                  href="/sign-in"
-                  className="text-sm font-bold text-slate-900 hover:text-light-blue transition-colors hidden sm:block"
-                >
-                  Giriş Yap
-                </Link>
-                <Link
-                  href="/sign-in"
-                  className="px-5 py-3 md:py-2.5 rounded-full bg-slate-900 text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-sm"
-                >
-                  Hemen Başla
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
-
       {/* Hero Section */}
-      <section className="relative pt-36 md:pt-44 pb-20 px-6 max-w-7xl mx-auto">
+      <section className="relative pt-10 md:pt-12 pb-20 px-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left: Headline & Information */}
@@ -661,20 +602,6 @@ export default function CustomDesignClient({ userId, siteTitle, siteLogo }: Cust
           )}
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="py-12 px-6 border-t border-gray-100 text-center text-sm text-slate-500 bg-white">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            © {new Date().getFullYear()} {siteTitle}. Tüm hakları saklıdır.
-          </div>
-          <div className="flex space-x-6">
-            <Link href="/gizlilik" className="hover:text-slate-900 transition-colors">Gizlilik</Link>
-            <Link href="/sartlar" className="hover:text-slate-900 transition-colors">Şartlar</Link>
-            <Link href="/yardim" className="hover:text-slate-900 transition-colors">Yardım</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

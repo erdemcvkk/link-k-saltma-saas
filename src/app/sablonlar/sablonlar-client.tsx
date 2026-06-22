@@ -17,11 +17,22 @@ interface Template {
  fontStyle: string;
  buttonStyle: string;
  paymentLink?: string | null;
+ paymentUrl?: string | null;
  isActive: boolean;
  isCoded: boolean;
  isComingSoon: boolean;
  customCss?: string | null;
  configJson?: string | null;
+ customHtml?: string | null;
+ containerClasses?: string | null;
+ jsonConfig?: string | null;
+ masterLayoutHtml?: string | null;
+ avatarHtml?: string | null;
+ headerHtml?: string | null;
+ socialHtml?: string | null;
+ linksHtml?: string | null;
+ backgroundHtml?: string | null;
+ customSchema?: any;
  createdAt: string;
 }
 
@@ -46,9 +57,9 @@ const isLightColor = (color: string) => {
 
 const getDummyData = (template: Template): UniversalProfileData => {
  const dummyLinks = [
- { id: "1", title: "📸 Instagram Hesabım", url: "#", type: "INSTAGRAM", blockType: "TEXT_LINK" },
- { id: "2", title: "🎧 Yeni Spotify Albümüm", url: "#", type: "MUSIC", blockType: "TEXT_LINK" },
- { id: "3", title: "🛍️ Mağaza Vitrinim", url: "#", type: "STORE", blockType: "TEXT_LINK" }
+ { id: "1", title: "Instagram Hesabim", url: "#", type: "INSTAGRAM", blockType: "TEXT_LINK" },
+ { id: "2", title: "Yeni Spotify Albumum", url: "#", type: "MUSIC", blockType: "TEXT_LINK" },
+ { id: "3", title: "Magaza Vitrinim", url: "#", type: "STORE", blockType: "TEXT_LINK" }
  ];
 
  const isLight = isLightColor(template.bgColor) || [
@@ -57,6 +68,7 @@ const getDummyData = (template: Template): UniversalProfileData => {
  ].includes(template.name);
 
  return {
+ templateId: template.id,
  username: "kullaniciadi",
  bio: "Bu harika şablonun canlı önizlemesidir. Kendi sayfanızda uygulamak için hemen sahip olun!",
  avatarUrl: null,
@@ -68,6 +80,25 @@ const getDummyData = (template: Template): UniversalProfileData => {
  usernameColor: isLight ? "#000000" : "#ffffff",
  bioColor: isLight ? "#4b5563" : "#9ca3af",
  links: dummyLinks,
+ isCoded: template.isCoded,
+ customHtml: template.customHtml,
+ masterLayoutHtml: template.masterLayoutHtml,
+ avatarHtml: template.avatarHtml,
+ headerHtml: template.headerHtml,
+ socialHtml: template.socialHtml,
+ linksHtml: template.linksHtml,
+ backgroundHtml: template.backgroundHtml,
+ containerClasses: template.containerClasses,
+ jsonConfig: template.jsonConfig || template.configJson,
+ socialLinks: [
+  { socialPlatform: "instagram", socialUrl: "https://instagram.com/clinkor" },
+  { socialPlatform: "twitter", socialUrl: "https://twitter.com/clinkor" }
+ ],
+ socials: [
+  { socialPlatform: "instagram", socialUrl: "https://instagram.com/clinkor" },
+  { socialPlatform: "twitter", socialUrl: "https://twitter.com/clinkor" }
+ ],
+ isPremiumTemplateActive: false
  };
 };
 
@@ -128,14 +159,18 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  }
  });
 
- const handlePurchase = (template: Template) => {
- if (!userId) {
- alert("Şablon satın almak veya kullanmak için lütfen giriş yapın.");
- window.location.href = `/sign-in?redirect_url=/sablonlar?intent=purchase_${template.id}`;
- return;
- }
+  const handlePurchase = (template: Template) => {
+  if (template.paymentUrl) {
+    window.open(template.paymentUrl, "_blank");
+    return;
+  }
+  if (!userId) {
+  alert("Şablon satın almak veya kullanmak için lütfen giriş yapın.");
+  window.location.href = `/sign-in?redirect_url=/sablonlar?intent=purchase_${template.id}`;
+  return;
+  }
 
- if (template.price > 0) {
+  if (template.price > 0) {
  setCheckoutTemplate(template);
  return;
  }
@@ -189,120 +224,97 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  };
 
  return (
- <div className="min-h-screen bg-black text-white font-sans relative overflow-hidden pb-16">
- <GlobalOverlayManager />
+  <div className="min-h-screen text-white font-sans relative overflow-hidden pb-16" style={{ backgroundColor: "#0f1110" }}>
+  <GlobalOverlayManager />
+  
+  <div className="absolute top-0 left-1/4 w-full md:w-96 h-96 bg-neon-blue/5 rounded-full blur-3xl pointer-events-none" />
+  <div className="absolute bottom-10 right-1/4 w-full md:w-96 h-96 bg-light-blue/5 rounded-full blur-3xl pointer-events-none" />
  
- <div className="absolute top-0 left-1/4 w-full md:w-96 h-96 bg-neon-blue/5 rounded-full blur-3xl pointer-events-none" />
- <div className="absolute bottom-10 right-1/4 w-full md:w-96 h-96 bg-light-blue/5 rounded-full blur-3xl pointer-events-none" />
-
-  <nav className="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
-    <div className="max-w-7xl mx-auto flex items-center justify-between">
-      <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-all">
-        <ArrowLeft className="h-5 w-5 text-zinc-400" />
-        <span className="text-xl font-black tracking-tight text-white">Ana Sayfa</span>
-      </Link>
-      <div className="flex items-center space-x-4">
-        {userId ? (
-          <Link
-            href="/dashboard"
-            className="px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-bold text-xs md:text-sm transition-all"
-          >
-            Yönetim Paneli
-          </Link>
-        ) : (
-          <Link
-            href="/sign-up"
-            className="px-4 py-2 rounded-full bg-gradient-to-r from-neon-blue to-light-blue text-white font-bold text-xs md:text-sm transition-all"
-          >
-            Hemen Üye Ol
-          </Link>
-        )}
-      </div>
-    </div>
-  </nav>
-
- <div className="max-w-full md:w-[1800px] mx-auto px-6 pt-16 pb-6">
- <div className="text-center max-w-2xl mx-auto mb-12">
- <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-neon-blue/10 text-neon-blue font-bold text-sm mb-6">
- <Sparkles className="h-4 w-4" />
- <span>Premium Şablon Vitrini</span>
- </div>
- <h1 className="text-2xl md:text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
- Sayfanıza <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-light-blue">Güç Katın</span>
- </h1>
- <p className="text-lg text-zinc-400 font-medium">
- Kreatörler, müzisyenler ve gamerlar için tasarlanmış şık şablonları inceleyin, anında profilinizde uygulayın.
- </p>
- </div>
- </div>
-
- <div className="max-w-full md:w-[1800px] mx-auto px-6 py-6 space-y-12">
- <div className="flex flex-col gap-4 bg-zinc-900/40 p-4 rounded-3xl border border-zinc-800 backdrop-blur-sm max-w-5xl mx-auto">
- {/* Category tabs */}
- <div className="flex flex-wrap gap-2 justify-center">
- {categories.map((cat) => (
- <button
- key={cat}
- onClick={() => {
- setSelectedCategory(cat);
- setVisibleCount(12);
- }}
- className={`px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
- selectedCategory === cat
- ? "bg-gradient-to-r from-neon-blue to-light-blue text-white shadow-md shadow-neon-blue/20"
- : "bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white"
- }`}
- >
- {cat}
- </button>
- ))}
- </div>
-
- {/* Search + Sort row */}
- <div className="flex flex-col sm:flex-row gap-3 items-center">
- <div className="relative flex-1 w-full">
- <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
- <Search className="h-4 w-4" />
- </span>
- <input
- type="text"
- placeholder="Şablon ara..."
- value={searchQuery}
- onChange={(e) => {
- setSearchQuery(e.target.value);
- setVisibleCount(12);
- }}
- className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-neon-blue text-white placeholder-zinc-500 transition-colors"
- />
- </div>
-
- <div className="relative w-full sm:w-56">
- <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
- <select
- value={sortOption}
- onChange={(e) => {
- setSortOption(e.target.value);
- setVisibleCount(12);
- }}
- className="w-full pl-10 pr-8 py-3 md:py-2.5 rounded-full bg-zinc-950 border border-zinc-800 text-sm font-semibold focus:outline-none focus:border-neon-blue text-white appearance-none cursor-pointer transition-colors"
- >
- <option value="default">Varsayılan Sıralama</option>
- <option value="name-asc">A → Z (İsim)</option>
- <option value="name-desc">Z → A (İsim)</option>
- <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
- <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
- <option value="newest">En Yeniler Önce</option>
- <option value="oldest">En Eskiler Önce</option>
- </select>
- <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
- </div>
- </div>
-
- {/* Result count */}
- <div className="text-center">
- <span className="text-xs font-bold text-zinc-500">{filteredTemplates.length} şablon bulundu</span>
- </div>
- </div>
+  <div className="max-w-full md:w-[1800px] mx-auto px-6 pt-16 pb-6">
+  <div className="text-center max-w-2xl mx-auto mb-12">
+   <div className="inline-flex items-center gap-2 px-4 py-3 md:py-2 rounded-full bg-gradient-to-r from-neon-blue/20 to-light-blue/20 text-white border border-neon-blue/30 shadow-[0_0_15px_rgba(60,60,250,0.15)] font-bold text-sm mb-6">
+   <Sparkles className="h-4 w-4 text-neon-blue" />
+   <span>Premium Şablon Vitrini</span>
+   </div>
+  <h1 className="text-2xl md:text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
+  Sayfanıza <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-light-blue">Güç Katın</span>
+  </h1>
+  <p className="text-lg text-zinc-400 font-medium" style={{ color: "#e0e0e0" }}>
+  Kreatörler, müzisyenler ve gamerlar için tasarlanmış şık şablonları inceleyin, anında profilinizde uygulayın.
+  </p>
+  </div>
+  </div>
+ 
+  <div className="max-w-full md:w-[1800px] mx-auto px-6 py-6 space-y-12">
+  <div className="flex flex-col gap-4 p-4 rounded-3xl backdrop-blur-sm max-w-5xl mx-auto" style={{ backgroundColor: "rgba(255, 255, 255, 0.02)", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+  {/* Category tabs */}
+  <div className="flex flex-wrap gap-2 justify-center">
+  {categories.map((cat) => (
+  <button
+  key={cat}
+  onClick={() => {
+  setSelectedCategory(cat);
+  setVisibleCount(12);
+  }}
+  className={`px-4 py-3 md:py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+  selectedCategory === cat
+  ? "bg-gradient-to-r from-neon-blue to-light-blue text-white shadow-md shadow-neon-blue/20"
+  : "text-zinc-400 hover:text-white hover:bg-white/5 transition-colors border"
+  }`}
+  style={selectedCategory === cat ? undefined : { backgroundColor: "rgba(255, 255, 255, 0.02)", borderColor: "rgba(255, 255, 255, 0.1)" }}
+  >
+  {cat}
+  </button>
+  ))}
+  </div>
+ 
+  {/* Search + Sort row */}
+  <div className="flex flex-col sm:flex-row gap-3 items-center">
+  <div className="relative flex-1 w-full">
+  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+  <Search className="h-4 w-4" />
+  </span>
+  <input
+  type="text"
+  placeholder="Şablon ara..."
+  value={searchQuery}
+  onChange={(e) => {
+  setSearchQuery(e.target.value);
+  setVisibleCount(12);
+  }}
+  className="w-full pl-10 pr-4 py-3 md:py-2.5 rounded-full text-sm font-semibold focus:outline-none focus:border-neon-blue text-white placeholder-zinc-500 transition-colors"
+  style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }}
+  />
+  </div>
+ 
+  <div className="relative w-full sm:w-56">
+  <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
+  <select
+  value={sortOption}
+  onChange={(e) => {
+  setSortOption(e.target.value);
+  setVisibleCount(12);
+  }}
+  className="w-full pl-10 pr-8 py-3 md:py-2.5 rounded-full text-sm font-semibold focus:outline-none focus:border-neon-blue text-white appearance-none cursor-pointer transition-colors"
+  style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }}
+  >
+  <option value="default">Varsayılan Sıralama</option>
+  <option value="name-asc">A → Z (İsim)</option>
+  <option value="name-desc">Z → A (İsim)</option>
+  <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
+  <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
+  <option value="newest">En Yeniler Önce</option>
+  <option value="oldest">En Eskiler Önce</option>
+  </select>
+  <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500 pointer-events-none" />
+  </div>
+  </div>
+ 
+  {/* Result count */}
+  <div className="text-center">
+  <span className="text-xs font-bold text-zinc-500">{filteredTemplates.length} şablon bulundu</span>
+  </div>
+  </div>
 
  {filteredTemplates.length === 0 ? (
  <div className="text-center py-20 bg-zinc-900/20 border border-dashed border-zinc-800 rounded-3xl max-w-5xl mx-auto">
@@ -314,7 +326,11 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  {filteredTemplates.slice(0, visibleCount).map((template) => {
  const isPurchased = ownedTemplateIds.includes(template.id);
  return (
- <div key={template.id} className="flex flex-col items-center">
+  <div 
+    key={template.id} 
+    className="flex flex-col items-center p-6 rounded-[2.5rem] backdrop-blur-md transition-all hover:scale-[1.02] duration-300 h-full" 
+    style={{ backgroundColor: "#ffffff05", border: "1px solid rgba(255, 255, 255, 0.1)", boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.2)" }}
+  >
  <div className="text-center mb-6 px-4">
  <div className={`w-3 h-3 rounded-full mb-3 mx-auto ${template.category === 'Premium' ? 'bg-light-blue' : 'bg-neon-blue'} animate-pulse`} />
  <h3 className="text-xl font-bold text-white mb-2">{template.name}</h3>
@@ -332,6 +348,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  data={getDummyData(template)} 
  isCompactMode={true} 
  isDarkContext={!isLightColor(template.bgColor) && !["Sandstone Zen", "Swiss Minimalist", "Neo-Brutalist Grid"].includes(template.name)} 
+ forcePremiumRender={true}
  />
  </div>
 
@@ -344,36 +361,52 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  )}
 
  {template.isCoded && (
- <div className="absolute top-6 right-3 bg-purple-500/90 px-2 py-0.5 rounded-full text-[9px] font-bold text-white z-30 pointer-events-none">
- KODLANMIŞ
- </div>
+  <div className="absolute top-6 right-3 bg-purple-650/90 px-2 py-0.5 rounded-full text-[9px] font-bold text-white z-30 pointer-events-none border border-purple-500/35 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
+  KODLANMIŞ
+  </div>
  )}
  </div>
 
- <div className="w-full bg-zinc-900 rounded-2xl p-4 border border-zinc-800 text-center flex flex-col gap-3">
- <div className="text-2xl font-black text-white">{template.price === 0 ? "Ücretsiz" : `₺${template.price}`}</div>
- {template.isComingSoon ? (
-    <button 
-      disabled={true} 
-      className="w-full py-3 rounded-xl bg-zinc-800 text-zinc-500 font-bold border border-zinc-700 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed pointer-events-none"
-    >
-      Çok Yakında
-    </button>
-  ) : isPurchased ? (
- <button disabled className="w-full py-3 rounded-xl bg-green-500/20 text-green-500 font-bold flex items-center justify-center gap-2">
- <Check className="h-4 w-4" /> Tanımlı
- </button>
- ) : (
- <button 
- onClick={() => handlePurchase(template)}
- disabled={isPending}
- className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue hover:opacity-90 text-white font-bold flex items-center justify-center gap-2 transition-all border-0 shadow-lg shadow-neon-blue/10 disabled:opacity-50 cursor-pointer"
- >
- {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Hemen Satın Al"}
- </button>
- )}
- <p className="text-xs text-zinc-500 font-medium">Tek Seferlik Ödeme</p>
- </div>
+  <div className="w-full text-center flex flex-col gap-3 mt-auto pt-4 border-t border-white/5">
+  <div className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">{template.price === 0 ? "Ücretsiz" : `₺${template.price}`}</div>
+  {template.isComingSoon ? (
+     <button 
+       disabled={true} 
+       className="w-full py-3 rounded-xl bg-zinc-850 text-zinc-500 font-bold border border-zinc-800 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed pointer-events-none"
+     >
+       Çok Yakında
+     </button>
+   ) : isPurchased ? (
+  <button disabled className="w-full py-3 rounded-xl bg-green-500/20 text-green-500 font-bold flex items-center justify-center gap-2">
+  <Check className="h-4 w-4" /> Tanımlı
+  </button>
+  ) : template.paymentUrl ? (
+  <a 
+  href={template.paymentUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue hover:opacity-90 text-white font-bold flex items-center justify-center gap-2 transition-all border-0 shadow-lg shadow-neon-blue/10 cursor-pointer block text-center"
+  >
+  Hemen Satın Al
+  </a>
+  ) : template.price > 0 ? (
+  <button 
+  disabled={true} 
+  className="w-full py-3 rounded-xl bg-zinc-850 text-zinc-500 font-bold border border-zinc-800 flex items-center justify-center gap-2 opacity-50 cursor-not-allowed pointer-events-none"
+  >
+  Yakında
+  </button>
+  ) : (
+  <button 
+  onClick={() => handlePurchase(template)}
+  disabled={isPending}
+  className="w-full py-3 rounded-xl bg-gradient-to-r from-neon-blue to-light-blue hover:opacity-90 text-white font-bold flex items-center justify-center gap-2 transition-all border-0 shadow-lg shadow-neon-blue/10 disabled:opacity-50 cursor-pointer"
+  >
+  {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ücretsiz"}
+  </button>
+  )}
+  <p className="text-xs text-zinc-500 font-medium">Tek Seferlik Ödeme</p>
+  </div>
  </div>
  );
  })}
@@ -383,7 +416,8 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  <div className="flex justify-center pt-8">
  <button
  onClick={() => setVisibleCount(prev => prev + 4)}
- className="px-4 md:px-8 py-3 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800 text-white font-bold transition-all flex items-center gap-2"
+ className="px-4 md:px-8 py-3 rounded-full text-white font-bold transition-all flex items-center gap-2 border hover:bg-white/5 cursor-pointer"
+ style={{ backgroundColor: "rgba(255, 255, 255, 0.02)", borderColor: "rgba(255, 255, 255, 0.1)" }}
  >
  Devamını Gör
  </button>
@@ -398,8 +432,8 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  {/* 💳 Simulated Checkout Modal */}
  {checkoutTemplate && (
  <div className="fixed inset-0 z-55 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
- <div className="w-full max-w-sm rounded-[2rem] bg-zinc-950 border border-zinc-900 shadow-2xl relative overflow-hidden p-3 md:p-6 space-y-6">
- <button onClick={() => setCheckoutTemplate(null)} className="absolute top-4 right-4 p-2 rounded-full bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white cursor-pointer transition-colors">
+ <div className="w-full max-w-sm rounded-[2rem] shadow-2xl relative overflow-hidden p-3 md:p-6 space-y-6" style={{ backgroundColor: "#0f1110", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+ <button onClick={() => setCheckoutTemplate(null)} className="absolute top-4 right-4 p-2 rounded-full text-zinc-400 hover:text-white cursor-pointer transition-colors border hover:bg-white/5" style={{ backgroundColor: "rgba(255, 255, 255, 0.02)", borderColor: "rgba(255, 255, 255, 0.1)" }}>
  <X className="h-4 w-4" />
  </button>
  {!paymentSuccess ? (
@@ -417,18 +451,18 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  <div className="space-y-1.5">
  <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Kredi Kartı Numarası</label>
  <div className="relative">
- <input type="text" placeholder="4242 4242 4242 4242" maxLength={19} value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} className="w-full pl-10 pr-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue/50 outline-none text-white text-xs font-mono" required />
+ <input type="text" placeholder="4242 4242 4242 4242" maxLength={19} value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} className="w-full pl-10 pr-4 py-3 rounded-xl outline-none text-white text-xs font-mono focus:border-neon-blue/50" style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }} required />
  <CreditCard className="absolute left-3.5 top-3.5 h-4 w-4 text-zinc-500" />
  </div>
  </div>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  <div className="space-y-1.5">
  <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">Son Kullanma Tarihi</label>
- <input type="text" placeholder="MM/YY" maxLength={5} value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue/50 outline-none text-white text-xs font-mono" required />
+ <input type="text" placeholder="MM/YY" maxLength={5} value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} className="w-full px-4 py-3 rounded-xl outline-none text-white text-xs font-mono focus:border-neon-blue/50" style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }} required />
  </div>
  <div className="space-y-1.5">
  <label className="text-[10px] text-zinc-500 uppercase tracking-wider font-bold block">CVC</label>
- <input type="password" placeholder="***" maxLength={3} value={cardCvc} onChange={(e) => setCardCvc(e.target.value)} className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue/50 outline-none text-white text-xs font-mono" required />
+ <input type="password" placeholder="***" maxLength={3} value={cardCvc} onChange={(e) => setCardCvc(e.target.value)} className="w-full px-4 py-3 rounded-xl outline-none text-white text-xs font-mono focus:border-neon-blue/50" style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }} required />
  </div>
  </div>
  <div className="flex items-center gap-2 text-[10px] text-zinc-500 border-t border-zinc-900 pt-4">

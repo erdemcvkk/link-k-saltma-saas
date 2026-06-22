@@ -625,3 +625,10 @@
 /* Scrollbar hiding utility */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Hide empty social media containers */
+.z-bento-socials:empty, .z-aurora-socials:empty {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}

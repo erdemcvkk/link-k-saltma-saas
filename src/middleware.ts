@@ -1,22 +1,15 @@
-// src/middleware.ts
-import { NextResponse } from 'next/server';
 import { clerkMiddleware } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
 export default clerkMiddleware(async (auth, request) => {
   const url = request.nextUrl;
   const pathname = url.pathname;
 
-  // Admin login ve super-admin sayfaları herkese açık olsun (giriş yapamazsınız aksi halde)
-  if (
-    pathname === '/admin-login' ||
-    pathname === '/super-admin' ||
-    pathname.startsWith('/api/admin-auth')
-  ) {
-    return NextResponse.next();
-  }
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', pathname);
 
-  // Admin panel ve medya API'leri için cookie kontrolü
-  if (pathname.startsWith('/admin') || pathname.startsWith('/api/media')) {
+  // Admin panel ve medya API'leri için cookie kontrolü (admin-login sayfası hariç)
+  if ((pathname.startsWith('/admin') && pathname !== '/admin-login') || pathname.startsWith('/api/media')) {
     const superAdminSession = request.cookies.get('super-admin-session')?.value;
     const adminSession = request.cookies.get('admin-session')?.value;
     const superAdminToken = process.env.SUPER_ADMIN_TOKEN;
@@ -34,7 +27,11 @@ export default clerkMiddleware(async (auth, request) => {
     }
   }
 
-  return NextResponse.next();
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 });
 
 export const config = {

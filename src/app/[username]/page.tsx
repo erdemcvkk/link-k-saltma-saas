@@ -6,48 +6,47 @@ import { trackPageView } from "@/app/actions";
 import { Metadata } from "next";
 import { checkAndEnforcePlanExpiration } from "@/lib/user-sync";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 0; // Disable caching to fetch live links
 
 // Dynamic SEO Metadata Generator
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
  const { username } = await params;
  const cleanUsername = username.replace("%40", "").replace(/^@/, "");
- 
+  
  const user = await db.user.findFirst({
- where: { username: cleanUsername.toLowerCase() },
- include: { profile: true },
+   where: { username: cleanUsername.toLowerCase() },
+   include: { profile: true },
  });
 
  if (!user || !user.profile) {
- return {
- title: `${username} - Clinkor`,
- };
+   return {
+     title: `${cleanUsername} | Clinkor`,
+   };
  }
 
- // Gated SEO: Only premium plans can override default metadata
- const hasPremiumSEO = user.plan !== "FREE";
- const title = hasPremiumSEO && user.profile.seoTitle ? user.profile.seoTitle : `@${user.username} | Clinkor`;
- const description = hasPremiumSEO && user.profile.seoDescription ? user.profile.seoDescription : user.profile.bio || "Welcome to my link page!";
- const keywords = hasPremiumSEO && user.profile.seoKeywords ? user.profile.seoKeywords : "creators, links, socials";
+ const displayName = user.profile.displayName || user.username;
+ const title = `${displayName} | Clinkor`;
+ const description = user.profile.bio || "";
 
  return {
- title,
- description,
- keywords,
- openGraph: {
- title,
- description,
- type: "website",
- },
- twitter: {
- card: "summary_large_image",
- title,
- description,
- },
+   title,
+   description,
+   openGraph: {
+     title,
+     description,
+     type: "website",
+   },
+   twitter: {
+     card: "summary_large_image",
+     title,
+     description,
+   },
  };
 }
 
 import ProfileClient from "./profile-client";
+import SchemaMarkup from "@/components/SchemaMarkup";
 
 export default async function PublicProfilePage({ params, searchParams }: { params: Promise<{ username: string }>, searchParams?: Promise<{ previewTemplate?: string, previewAddons?: string }> }) {
  const { username } = await params;
@@ -59,7 +58,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  let forcedTemplateId: string | null = null;
 
  // Search for the user
- let user = await db.user.findFirst({
+ let dbUser = await db.user.findFirst({
  where: {
  username: {
  equals: cleanUsername.toLowerCase(),
@@ -82,7 +81,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  });
 
  // If not found by username, check if it's a custom template URL
- if (!user) {
+ if (!dbUser) {
  const userTemplate = await db.userTemplate.findFirst({
  where: { customUrl: cleanUsername.toLowerCase() },
  include: {
@@ -106,17 +105,17 @@ export default async function PublicProfilePage({ params, searchParams }: { para
  });
 
  if (userTemplate && userTemplate.user) {
- user = userTemplate.user as any;
+ dbUser = userTemplate.user as any;
  forcedTemplateId = userTemplate.templateId;
  }
  }
 
- if (!user) {
+ if (!dbUser) {
  notFound();
  }
 
  // Check if subscription has expired
- const checkedUser = await checkAndEnforcePlanExpiration(user);
+ const checkedUser = await checkAndEnforcePlanExpiration(dbUser);
  if (!checkedUser) {
  notFound();
  }
@@ -182,7 +181,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
   const bio = activeUser.profile?.bio ?? "";
 
   // Priority 1: Preview Template (If ?previewTemplate=... is passed)
-  let activeTemplate = null;
+  let activeTemplate: any = null;
   if (previewTemplateId || forcedTemplateId) {
     const targetId = forcedTemplateId || previewTemplateId;
     
@@ -199,6 +198,12 @@ export default async function PublicProfilePage({ params, searchParams }: { para
       activeTemplate = dbTemplate;
     } else {
       theme = targetId || theme;
+    }
+  } else {
+    // If not previewing, check if user has an active purchased template
+    const activeUT = activeUser.purchasedTemplates?.find((pt: any) => pt.isActive);
+    if (activeUT && activeUT.template) {
+      activeTemplate = activeUT.template;
     }
   }
 
@@ -293,31 +298,113 @@ export default async function PublicProfilePage({ params, searchParams }: { para
     serializedPurchasedModules.some((pm: any) => pm.moduleId === addon.addonType)
   );
 
- return (
- <ProfileClient
- username={activeUser.username!}
- bio={bio}
- theme={activeTemplate ? activeTemplate.name : theme}
- links={serializedLinks}
- products={serializedProducts}
- addons={serializedAddons}
- avatarUrl={activeUser.profile?.avatarUrl ?? null}
- avatarShape={activeUser.profile?.avatarShape ?? "circle"}
- background={activeTemplate ? activeTemplate.bgColor : (activeUser.profile?.background ?? null)}
- fontStyle={activeTemplate && activeTemplate.fontStyle ? activeTemplate.fontStyle : (activeUser.profile?.fontStyle ?? "Inter")}
- bioColor={activeUser.profile?.bioColor ?? null}
- usernameColor={activeUser.profile?.usernameColor ?? null}
- plan={activeUser.plan}
- storeTitle={activeUser.profile?.storeTitle ?? null}
- storeCoverUrl={activeUser.profile?.storeCoverUrl ?? null}
- storeLayout={activeUser.profile?.storeLayout ?? "GRID"}
- customCss={customCss}
- buttonClass={activeTemplate ? activeTemplate.buttonStyle : (activeUser.profile?.buttonClass ?? null)}
- systemSettings={serializedSystemSettings}
- purchasedTemplates={serializedPurchasedTemplates}
- purchasedModules={serializedPurchasedModules}
- isActiveTemplatePremium={isActiveTemplatePremium}
- hasActivePremiumModule={hasActivePremiumModule}
- />
- );
+  const rawSocialLinks = activeUser.profile?.socialLinks;
+  let instagram = "";
+  let twitter = "";
+  let youtube = "";
+  let tiktok = "";
+  let whatsapp = "";
+  let facebook = "";
+  let linkedin = "";
+  let pinterest = "";
+
+  if (Array.isArray(rawSocialLinks)) {
+    rawSocialLinks.forEach((item: any) => {
+      const platform = item.socialPlatform || item.platform;
+      const url = item.socialUrl || item.url;
+      if (platform === "instagram") instagram = url;
+      if (platform === "twitter") twitter = url;
+      if (platform === "youtube") youtube = url;
+      if (platform === "tiktok") tiktok = url;
+      if (platform === "whatsapp") whatsapp = url;
+      if (platform === "facebook") facebook = url;
+      if (platform === "linkedin") linkedin = url;
+      if (platform === "pinterest") pinterest = url;
+    });
+  } else if (rawSocialLinks && typeof rawSocialLinks === "object") {
+    instagram = (rawSocialLinks as any).instagram || "";
+    twitter = (rawSocialLinks as any).twitter || "";
+    youtube = (rawSocialLinks as any).youtube || "";
+    tiktok = (rawSocialLinks as any).tiktok || "";
+    whatsapp = (rawSocialLinks as any).whatsapp || "";
+    facebook = (rawSocialLinks as any).facebook || "";
+    linkedin = (rawSocialLinks as any).linkedin || "";
+    pinterest = (rawSocialLinks as any).pinterest || "";
+  }
+
+  const user = {
+    ...activeUser,
+    instagram,
+    twitter,
+    youtube,
+    tiktok,
+    whatsapp,
+    facebook,
+    linkedin,
+    pinterest
+  };
+
+  const mappedSocials: Array<{ socialPlatform: string; socialUrl: string }> = [];
+  if (user.instagram) mappedSocials.push({ socialPlatform: 'instagram', socialUrl: user.instagram });
+  if (user.twitter) mappedSocials.push({ socialPlatform: 'twitter', socialUrl: user.twitter });
+  if (user.youtube) mappedSocials.push({ socialPlatform: 'youtube', socialUrl: user.youtube });
+  if (user.tiktok) mappedSocials.push({ socialPlatform: 'tiktok', socialUrl: user.tiktok });
+  if (user.whatsapp) mappedSocials.push({ socialPlatform: 'whatsapp', socialUrl: user.whatsapp });
+  if (user.facebook) mappedSocials.push({ socialPlatform: 'facebook', socialUrl: user.facebook });
+  if (user.linkedin) mappedSocials.push({ socialPlatform: 'linkedin', socialUrl: user.linkedin });
+  if (user.pinterest) mappedSocials.push({ socialPlatform: 'pinterest', socialUrl: user.pinterest });
+
+  return (
+    <>
+      <SchemaMarkup
+        type="person"
+        data={{
+          username: activeUser.username ?? undefined,
+          displayName: activeUser.profile?.displayName ?? undefined,
+          bio: bio ?? undefined,
+          avatarUrl: activeUser.profile?.avatarUrl ?? undefined,
+        }}
+      />
+      <ProfileClient
+        username={activeUser.username!}
+        displayName={activeUser.profile?.displayName ?? null}
+        bio={bio}
+        theme={activeTemplate ? activeTemplate.name : theme}
+        links={serializedLinks}
+        products={serializedProducts}
+        addons={serializedAddons}
+        avatarUrl={activeUser.profile?.avatarUrl ?? null}
+        avatarShape={activeUser.profile?.avatarShape ?? "circle"}
+        background={activeTemplate ? activeTemplate.bgColor : (activeUser.profile?.background ?? null)}
+        fontStyle={activeTemplate && activeTemplate.fontStyle ? activeTemplate.fontStyle : (activeUser.profile?.fontStyle ?? "Inter")}
+        bioColor={activeUser.profile?.bioColor ?? null}
+        usernameColor={activeUser.profile?.usernameColor ?? null}
+        plan={activeUser.plan}
+        storeTitle={activeUser.profile?.storeTitle ?? null}
+        storeCoverUrl={activeUser.profile?.storeCoverUrl ?? null}
+        storeLayout={activeUser.profile?.storeLayout ?? "GRID"}
+        customCss={customCss}
+        buttonClass={activeTemplate ? activeTemplate.buttonStyle : (activeUser.profile?.buttonClass ?? null)}
+        systemSettings={serializedSystemSettings}
+        purchasedTemplates={serializedPurchasedTemplates}
+        purchasedModules={serializedPurchasedModules}
+        isActiveTemplatePremium={isActiveTemplatePremium}
+        hasActivePremiumModule={hasActivePremiumModule}
+        isCoded={activeTemplate ? activeTemplate.isCoded : false}
+        customHtml={activeTemplate ? activeTemplate.customHtml : null}
+        masterLayoutHtml={activeTemplate ? activeTemplate.masterLayoutHtml : null}
+        avatarHtml={activeTemplate ? activeTemplate.avatarHtml : null}
+        headerHtml={activeTemplate ? activeTemplate.headerHtml : null}
+        socialHtml={activeTemplate ? activeTemplate.socialHtml : null}
+        linksHtml={activeTemplate ? activeTemplate.linksHtml : null}
+        backgroundHtml={activeTemplate ? activeTemplate.backgroundHtml : null}
+        containerClasses={activeTemplate ? activeTemplate.containerClasses : null}
+        jsonConfig={activeTemplate ? activeTemplate.jsonConfig : null}
+        socialLinks={activeUser.profile?.socialLinks ?? null}
+        socials={mappedSocials}
+        templateSettings={activeUser.profile?.templateSettings ?? null}
+        isPremiumTemplateActive={activeUser.profile?.isPremiumTemplateActive ?? false}
+      />
+    </>
+  );
 }

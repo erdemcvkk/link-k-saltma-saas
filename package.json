@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "dev:init": "node scripts/setup-local.js",
+    "prod:reset": "node scripts/setup-local.js --reset"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

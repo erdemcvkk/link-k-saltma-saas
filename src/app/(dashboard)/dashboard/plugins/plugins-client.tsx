@@ -526,6 +526,10 @@ export default function PluginsClient({
           products: initialProducts,
           systemSettings: systemSettings,
           plan: simulatedPlan,
+          isCoded: activeTemplate ? activeTemplate.isCoded : false,
+          customHtml: activeTemplate ? activeTemplate.customHtml : null,
+          containerClasses: activeTemplate ? activeTemplate.containerClasses : null,
+          jsonConfig: activeTemplate ? (activeTemplate.jsonConfig || activeTemplate.configJson) : null,
         };
 
         return <PhonePreview mode="plugin" data={previewData} activeAddonId={activeAddonId} label={lang === "tr" ? "Eklenti Sandbox Önizleme" : "Add-on Sandbox Preview"} />;

@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { checkAndSyncUser } from "@/lib/user-sync";
 import { db } from "@/lib/db";
@@ -5,6 +6,11 @@ import { DashboardProvider } from "./dashboard-context";
 import DashboardLayoutClient from "./dashboard-layout-client";
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Clinkor | Yönetim Paneli",
+  description: "Clinkor profilinizi düzenleyin, bağlantılarınızı ekleyin, analizlerinizi takip edin ve görünümünüzü özelleştirin.",
+};
 
 export default async function DashboardLayout({
   children,
@@ -53,6 +59,7 @@ export default async function DashboardLayout({
     planExpiresAt: user.planExpiresAt ? user.planExpiresAt.toISOString() : null,
     profile: user.profile ? {
       theme: user.profile.theme,
+      displayName: user.profile.displayName,
       bio: user.profile.bio,
       avatarUrl: user.profile.avatarUrl,
       background: user.profile.background,
@@ -65,6 +72,9 @@ export default async function DashboardLayout({
       usernameColor: user.profile.usernameColor,
       customCss: user.profile.customCss,
       buttonClass: user.profile.buttonClass,
+      socialLinks: user.profile.socialLinks,
+      templateSettings: user.profile.templateSettings,
+      isPremiumTemplateActive: user.profile.isPremiumTemplateActive,
     } : null,
   };
 
@@ -120,7 +130,10 @@ export default async function DashboardLayout({
     buttonStyle: activeUserTemplate.template.buttonStyle,
     isCoded: activeUserTemplate.template.isCoded,
     customCss: activeUserTemplate.template.customCss,
-    configJson: activeUserTemplate.template.configJson
+    configJson: activeUserTemplate.template.configJson,
+    customHtml: activeUserTemplate.template.customHtml,
+    containerClasses: activeUserTemplate.template.containerClasses,
+    jsonConfig: activeUserTemplate.template.jsonConfig,
   } : null;
 
   return (

@@ -1,0 +1,31 @@
+export function serializeTemplate(t: any) {
+  if (!t) return null;
+  return {
+    id: t.id,
+    name: t.name,
+    price: t.price,
+    category: t.category,
+    coverUrl: t.coverUrl,
+    bgColor: t.bgColor,
+    fontStyle: t.fontStyle,
+    buttonStyle: t.buttonStyle,
+    paymentLink: t.paymentLink,
+    paymentUrl: t.paymentUrl,
+    isActive: t.isActive,
+    isCoded: t.isCoded,
+    isComingSoon: t.isComingSoon,
+    customCss: t.customCss,
+    configJson: t.configJson,
+    customHtml: t.customHtml,
+    masterLayoutHtml: t.masterLayoutHtml,
+    avatarHtml: t.avatarHtml,
+    headerHtml: t.headerHtml,
+    socialHtml: t.socialHtml,
+    linksHtml: t.linksHtml,
+    backgroundHtml: t.backgroundHtml,
+    containerClasses: t.containerClasses,
+    jsonConfig: t.jsonConfig,
+    customSchema: t.customSchema || null,
+    createdAt: t.createdAt ? (typeof t.createdAt.toISOString === 'function' ? t.createdAt.toISOString() : t.createdAt) : null,
+  };
+}

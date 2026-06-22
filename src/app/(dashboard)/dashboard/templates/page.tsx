@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { checkAndSyncUser } from "@/lib/user-sync";
 import { db } from "@/lib/db";
+import { serializeTemplate } from "@/lib/template-utils";
 import TemplatesClient from "./templates-client";
 
 export const revalidate = 0;
@@ -24,18 +25,7 @@ export default async function TemplatesPage() {
     userTemplateId: ot.id,
     isActive: ot.isActive,
     customUrl: ot.customUrl,
-    id: ot.template.id,
-    name: ot.template.name,
-    price: ot.template.price,
-    category: ot.template.category,
-    coverUrl: ot.template.coverUrl,
-    bgColor: ot.template.bgColor,
-    fontStyle: ot.template.fontStyle,
-    buttonStyle: ot.template.buttonStyle,
-    isCoded: ot.template.isCoded,
-    customCss: ot.template.customCss,
-    configJson: ot.template.configJson,
-    createdAt: ot.createdAt.toISOString(),
+    ...(serializeTemplate(ot.template) as any)
   }));
 
   // Fetch user's links for preview

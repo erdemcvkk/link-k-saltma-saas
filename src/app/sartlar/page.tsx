@@ -1,5 +1,11 @@
 import Link from "next/link";
 import { FileText, ArrowLeft } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Clinkor | Kullanım Şartları",
+  description: "Clinkor kullanıcı sözleşmesi ve kullanım koşullarını inceleyin.",
+};
 
 export default function SartlarPage() {
   return (

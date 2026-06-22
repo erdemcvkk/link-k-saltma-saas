@@ -422,35 +422,8 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
   };
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden">
+    <div className="min-h-screen text-white font-sans overflow-x-hidden" style={{ backgroundColor: "#0f1110" }}>
       <GlobalOverlayManager />
-
-      {/* Main navigation header matching home page layout */}
-      <header className="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-900 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-all">
-            <ArrowLeft className="h-5 w-5 text-zinc-400" />
-            <span className="text-xl font-black tracking-tight text-white">Ana Sayfa</span>
-          </Link>
-          <div className="flex items-center space-x-4">
-            {userId ? (
-              <Link
-                href="/dashboard"
-                className="px-4 py-2 rounded-full bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white font-bold text-xs md:text-sm transition-all"
-              >
-                Yönetim Paneli
-              </Link>
-            ) : (
-              <Link
-                href="/sign-up"
-                className="px-4 py-2 rounded-full bg-gradient-to-r from-neon-blue to-light-blue text-white font-bold text-xs md:text-sm transition-all"
-              >
-                Hemen Üye Ol
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
 
       <div className="w-full max-w-[1650px] mx-auto px-4 md:px-6 py-12 flex flex-col xl:flex-row gap-8 items-start justify-center">
         {/* Sol Reklam Alanı (Left Ad) */}
@@ -463,7 +436,7 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
         {/* Grid container with modern dark aesthetics */}
         <main className="flex-1 max-w-7xl w-full px-2 md:px-4">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="px-3 py-1.5 rounded-full bg-neon-blue/10 text-neon-blue font-bold text-xs tracking-wider uppercase">
+          <span className="px-3 py-1.5 rounded-full bg-gradient-to-r from-neon-blue/20 to-light-blue/20 text-white border border-neon-blue/30 shadow-[0_0_15px_rgba(60,60,250,0.15)] font-bold text-xs tracking-wider uppercase">
             Ücretsiz Akıllı Araç
           </span>
           <h1 className="text-3xl md:text-5xl font-black text-white mt-4 tracking-tight leading-tight">
@@ -482,9 +455,10 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
               onClick={() => handlePresetSelect(preset)}
               className={`px-4 py-3 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 selectedPreset.id === preset.id
-                  ? "bg-gradient-to-r from-neon-blue to-light-blue text-white shadow-lg shadow-neon-blue/15"
-                  : "bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white"
+                  ? "bg-white text-black font-extrabold shadow-lg"
+                  : "text-zinc-400 hover:text-white hover:bg-white/5 border transition-all"
               }`}
+              style={selectedPreset.id === preset.id ? undefined : { backgroundColor: "rgba(255, 255, 255, 0.02)", borderColor: "rgba(255, 255, 255, 0.1)" }}
             >
               {preset.id === "google" && <Chrome className="h-3.5 w-3.5" />}
               {preset.id === "spotify" && <Music className="h-3.5 w-3.5" />}
@@ -501,7 +475,7 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
         {/* Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Controls Panel */}
-          <div className="lg:col-span-6 bg-zinc-950 p-6 md:p-8 rounded-[2.5rem] border border-zinc-900 space-y-6">
+          <div className="lg:col-span-6 p-6 md:p-8 rounded-[2.5rem] space-y-6 backdrop-blur-md shadow-2xl" style={{ backgroundColor: "rgba(255, 255, 255, 0.02)", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
             <h2 className="text-xl font-bold flex items-center gap-2 border-b border-zinc-900 pb-4">
               <Sliders className="h-5 w-5 text-neon-blue" />
               Tasarım Ayarları
@@ -515,7 +489,8 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
                 value={targetUrl}
                 onChange={(e) => setTargetUrl(e.target.value)}
                 placeholder="Örn: https://youtube.com/@kanaliniz"
-                className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue focus:ring-1 focus:ring-neon-blue outline-none text-sm text-white transition-all"
+                className="w-full px-4 py-3 rounded-xl outline-none text-sm text-white transition-all focus:border-neon-blue focus:ring-1 focus:ring-neon-blue"
+                style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }}
               />
             </div>
 
@@ -529,7 +504,8 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
                   value={ctaText}
                   onChange={(e) => setCtaText(e.target.value)}
                   placeholder="Örn: YouTube'da Abone Ol"
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue focus:ring-1 focus:ring-neon-blue outline-none text-sm text-white transition-all"
+                  className="w-full px-4 py-3 rounded-xl outline-none text-sm text-white transition-all focus:border-neon-blue focus:ring-1 focus:ring-neon-blue"
+                  style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }}
                 />
               </div>
 
@@ -541,7 +517,8 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
                   value={titleText}
                   onChange={(e) => setTitleText(e.target.value)}
                   placeholder="Örn: subscribe on YouTube"
-                  className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue focus:ring-1 focus:ring-neon-blue outline-none text-sm text-white transition-all"
+                  className="w-full px-4 py-3 rounded-xl outline-none text-sm text-white transition-all focus:border-neon-blue focus:ring-1 focus:ring-neon-blue"
+                  style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }}
                 />
               </div>
             </div>
@@ -554,18 +531,19 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
                 placeholder="Örn: BUSINESS NAME"
-                className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-neon-blue focus:ring-1 focus:ring-neon-blue outline-none text-sm text-white transition-all"
+                className="w-full px-4 py-3 rounded-xl outline-none text-sm text-white transition-all focus:border-neon-blue focus:ring-1 focus:ring-neon-blue"
+                style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }}
               />
             </div>
 
             {/* Layout direction toggle */}
             <div className="space-y-2">
               <label className="text-xs font-extrabold uppercase text-zinc-400 tracking-wider">Kart Yönü</label>
-              <div className="flex bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+              <div className="flex p-1 rounded-xl" style={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
                 <button
                   onClick={() => setOrientation("vertical")}
                   className={`flex-1 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                    orientation === "vertical" ? "bg-zinc-800 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"
+                    orientation === "vertical" ? "bg-white text-black shadow-sm" : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
                   <Smartphone className="h-4 w-4" /> Dikey (Vertical)
@@ -573,7 +551,7 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
                 <button
                   onClick={() => setOrientation("horizontal")}
                   className={`flex-1 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                    orientation === "horizontal" ? "bg-zinc-800 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"
+                    orientation === "horizontal" ? "bg-white text-black shadow-sm" : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
                   <Laptop className="h-4 w-4" /> Yatay (Horizontal)
@@ -664,7 +642,8 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
                   />
                   <label
                     htmlFor="logo-upload"
-                    className="px-4 py-3 rounded-xl border border-dashed border-zinc-800 hover:border-zinc-700 bg-zinc-900/50 hover:bg-zinc-900 text-xs font-bold flex items-center gap-2 cursor-pointer transition-all"
+                    className="px-4 py-3 rounded-xl border border-dashed hover:text-white text-xs font-bold flex items-center gap-2 cursor-pointer transition-all"
+                    style={{ backgroundColor: "rgba(255, 255, 255, 0.02)", borderColor: "rgba(255, 255, 255, 0.1)" }}
                   >
                     <ImageIcon className="h-4 w-4 text-zinc-400" />
                     Resim Seç
@@ -684,15 +663,35 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
               </div>
             </div>
           </div>
-
+ 
           {/* Right Panel: Live Preview & Downloads */}
           <div className="lg:col-span-6 flex flex-col items-center gap-8">
             {/* Real SVG Card Node */}
-            <div className="bg-zinc-950 p-6 md:p-8 rounded-[2.5rem] border border-zinc-900 w-full flex items-center justify-center relative overflow-hidden">
+            <div 
+              className="rounded-[2.5rem] w-full relative overflow-hidden"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "16px",
+                overflow: "hidden",
+                backgroundColor: "rgba(255, 255, 255, 0.02)",
+                border: "1px solid rgba(255, 255, 255, 0.1)"
+              }}
+            >
               <div className="absolute inset-0 bg-radial-gradient from-neon-blue/5 via-transparent to-transparent opacity-50" />
               
               {/* Actual render element */}
-              <div className="relative z-10 shadow-2xl rounded-3xl overflow-hidden bg-white max-w-full">
+              <div 
+                className={`relative z-10 shadow-2xl rounded-3xl overflow-hidden bg-white max-w-full ${
+                  orientation === "horizontal" ? "horizontal-preview-card" : ""
+                }`}
+                style={orientation === "horizontal" ? {
+                  width: "100%",
+                  maxWidth: "100%",
+                  boxSizing: "border-box",
+                } : undefined}
+              >
                 {orientation === "vertical" ? (
                   <svg
                     id="qr-card-svg"
@@ -801,79 +800,141 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
                     xmlns="http://www.w3.org/2000/svg"
                     style={{ background: cardBg, transition: "background-color 0.3s" }}
                   >
+                    <style>
+                      {`
+                        .horizontal-preview-card {
+                          width: 100% !important;
+                          max-width: 100% !important;
+                          box-sizing: border-box !important;
+                        }
+                        .horizontal-preview-card svg {
+                          width: 100% !important;
+                          height: auto !important;
+                          max-width: 100% !important;
+                          display: block !important;
+                        }
+                        .horizontal-grid-wrapper {
+                          display: flex !important;
+                          flex-direction: row !important;
+                          justify-content: space-between !important;
+                          align-items: center !important;
+                          gap: 16px !important;
+                          width: 100% !important;
+                          max-width: 100% !important;
+                          box-sizing: border-box !important;
+                        }
+                        .horizontal-text-column {
+                          flex: 1 1 0% !important;
+                          min-width: 0 !important;
+                          word-break: break-word !important;
+                        }
+                        .horizontal-qr-column {
+                          flex-shrink: 0 !important;
+                          width: 120px !important;
+                          height: auto !important;
+                          display: flex !important;
+                          justify-content: center !important;
+                          align-items: center !important;
+                        }
+                        .horizontal-qr-column svg {
+                          width: 100% !important;
+                          height: auto !important;
+                          max-width: 120px !important;
+                          display: block !important;
+                        }
+                      `}
+                    </style>
                     <rect width="640" height="400" rx="30" fill={cardBg} />
-
-                    {/* Left details grid */}
-                    <g transform="translate(60, 0)">
-                      {/* Logo Top */}
-                      <g transform="translate(50, 110)">
-                        {customLogo ? (
-                          <image href={customLogo} x="-40" y="-40" width="80" height="80" preserveAspectRatio="xMidYMid meet" />
-                        ) : (
-                          selectedPreset.topLogoRenderer(selectedPreset.primaryColor)
-                        )}
-                      </g>
-
-                      {/* Title */}
-                      <text
-                        x="0"
-                        y="200"
-                        textAnchor="start"
-                        fill={textColor}
+                    <foreignObject width="640" height="400" x="0" y="0">
+                      <div
+                        className="w-full h-full p-10 bg-transparent horizontal-grid-wrapper !flex !flex-row !justify-between !items-center !gap-4 !w-full !max-w-full !box-border"
                         style={{
-                          fontFamily: "'Outfit', 'Inter', sans-serif",
-                          fontWeight: 900,
-                          fontSize: "20px",
-                          letterSpacing: "-0.02em",
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          gap: "16px",
+                          width: "100%",
+                          maxWidth: "100%",
+                          boxSizing: "border-box",
                         }}
                       >
-                        {titleText}
-                      </text>
+                        {/* METİN ALANI (Sol Taraf) */}
+                        <div
+                          className="flex flex-col justify-between h-full py-4 text-left horizontal-text-column"
+                          style={{
+                            flex: "1 1 0%",
+                            minWidth: "0",
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          {/* Logo Top */}
+                          <div className="h-20 w-20 flex items-center justify-start shrink-0">
+                            {customLogo ? (
+                              <img src={customLogo} alt="Logo" className="max-h-full max-w-full object-contain" />
+                            ) : (
+                              <svg viewBox="-40 -40 80 80" className="h-20 w-20">
+                                {selectedPreset.topLogoRenderer(selectedPreset.primaryColor)}
+                              </svg>
+                            )}
+                          </div>
 
-                      {/* Call to action */}
-                      <text
-                        x="0"
-                        y="245"
-                        textAnchor="start"
-                        fill={textColor}
-                        opacity="0.8"
-                        style={{
-                          fontFamily: "'Inter', sans-serif",
-                          fontWeight: 700,
-                          fontSize: "30px",
-                          letterSpacing: "-0.03em",
-                        }}
-                      >
-                        {ctaText}
-                      </text>
+                          {/* Title */}
+                          <div
+                            style={{
+                              color: textColor,
+                              fontFamily: "'Outfit', 'Inter', sans-serif",
+                              fontWeight: 900,
+                              fontSize: "20px",
+                              letterSpacing: "-0.02em",
+                            }}
+                          >
+                            {titleText}
+                          </div>
 
-                      {/* Business Name Footer */}
-                      <text
-                        x="0"
-                        y="330"
-                        textAnchor="start"
-                        fill={textColor}
-                        opacity="0.6"
-                        style={{
-                          fontFamily: "'Inter', sans-serif",
-                          fontWeight: 800,
-                          fontSize: "14px",
-                          letterSpacing: "0.1em",
-                        }}
-                      >
-                        {businessName}
-                      </text>
-                    </g>
+                          {/* Call to action */}
+                          <div
+                            style={{
+                              color: textColor,
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 700,
+                              fontSize: "30px",
+                              letterSpacing: "-0.03em",
+                            }}
+                          >
+                            {ctaText}
+                          </div>
 
-                    {/* Right Embedded QR Code */}
-                    <g transform="translate(370, 100)">
-                      <rect width="200" height="200" rx="20" fill={cardBg} opacity="0.9" />
-                      <foreignObject width="200" height="200" x="0" y="0">
-                        <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyItems: "center" }}>
+                          {/* Business Name Footer */}
+                          <div
+                            style={{
+                              color: textColor,
+                              opacity: 0.6,
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 800,
+                              fontSize: "14px",
+                              letterSpacing: "0.1em",
+                            }}
+                          >
+                            {businessName}
+                          </div>
+                        </div>
+
+                        {/* QR KOD ALANI (Sağ Taraf) */}
+                        <div
+                          className="p-3 rounded-2xl bg-white/90 horizontal-qr-column"
+                          style={{
+                            flexShrink: 0,
+                            width: "120px",
+                            height: "auto",
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        >
                           <QRCodeSVG
                             value={targetUrl || "https://clinkor.com"}
-                            size={200}
-                            bgColor={cardBg}
+                            size={120}
+                            bgColor="transparent"
                             fgColor={qrColor}
                             level="H"
                             imageSettings={
@@ -882,16 +943,22 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
                                     src: customLogo || getSvgLogoUrl(selectedPreset.centerLogoSvg),
                                     x: undefined,
                                     y: undefined,
-                                    height: 44,
-                                    width: 44,
+                                    height: 30,
+                                    width: 30,
                                     excavate: true,
                                   }
                                 : undefined
                             }
+                            style={{
+                              width: "100%",
+                              height: "auto",
+                              maxWidth: "120px",
+                              display: "block",
+                            }}
                           />
                         </div>
-                      </foreignObject>
-                    </g>
+                      </div>
+                    </foreignObject>
                   </svg>
                 )}
               </div>
@@ -906,21 +973,23 @@ export default function QrClient({ userId, siteTitle, siteLogo, systemSettings }
               <div className="grid grid-cols-3 gap-4">
                 <button
                   onClick={() => handleDownload("png")}
-                  className="px-6 py-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-extrabold tracking-wider transition-all cursor-pointer flex flex-col items-center gap-1"
+                  className="px-6 py-4 rounded-2xl text-xs font-extrabold tracking-wider transition-all cursor-pointer flex flex-col items-center gap-1 bg-gradient-to-r from-neon-blue to-light-blue text-white shadow-lg shadow-neon-blue/15 hover:opacity-90 border-0"
                 >
-                  <Download className="h-4.5 w-4.5 text-neon-blue" />
+                  <Download className="h-4.5 w-4.5 text-white" />
                   PNG İNDİR
                 </button>
                 <button
                   onClick={() => handleDownload("jpeg")}
-                  className="px-6 py-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-extrabold tracking-wider transition-all cursor-pointer flex flex-col items-center gap-1"
+                  className="px-6 py-4 rounded-2xl text-xs font-extrabold tracking-wider transition-all cursor-pointer flex flex-col items-center gap-1 border hover:bg-white/5"
+                  style={{ backgroundColor: "rgba(255, 255, 255, 0.02)", borderColor: "rgba(255, 255, 255, 0.1)" }}
                 >
                   <Download className="h-4.5 w-4.5 text-neon-blue" />
                   JPEG İNDİR
                 </button>
                 <button
                   onClick={() => handleDownload("svg")}
-                  className="px-6 py-4 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-extrabold tracking-wider transition-all cursor-pointer flex flex-col items-center gap-1"
+                  className="px-6 py-4 rounded-2xl text-xs font-extrabold tracking-wider transition-all cursor-pointer flex flex-col items-center gap-1 border hover:bg-white/5"
+                  style={{ backgroundColor: "rgba(255, 255, 255, 0.02)", borderColor: "rgba(255, 255, 255, 0.1)" }}
                 >
                   <Download className="h-4.5 w-4.5 text-neon-blue" />
                   SVG İNDİR

@@ -1,7 +1,13 @@
 import React from "react";
+import { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import QrClient from "./qr-client";
+
+export const metadata: Metadata = {
+  title: "Clinkor | Ücretsiz QR Kod Oluşturucu",
+  description: "Profiliniz, işletmeniz veya web siteniz için özel tasarımlı dinamik QR kodlar oluşturun.",
+};
 
 export const dynamic = "force-dynamic";
 
