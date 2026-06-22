@@ -389,13 +389,13 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 
     // Statik reklam alanlarını temizle
     let cleanedHtml = finalParsedHtml;
-    cleanedHtml = cleanedHtml.replace(/<(div|footer)\s+class="[^"]*(branding|footer)[^"]*">\s*<a\s+href="\/register"[^>]*>[\s\S]*?<\/a>\s*<\/\1>/gi, "");
-    cleanedHtml = cleanedHtml.replace(/<a\s+href="\/register"[^>]*>[\s\S]*?<\/a>/gi, "");
+    cleanedHtml = cleanedHtml.replace(/<(div|footer)\s+class="[^"]*(branding|footer)[^"]*">\s*<a\s+href="[^"]*(register|sign-in)[^"]*"[^>]*>[\s\S]*?<\/a>\s*<\/\1>/gi, "");
+    cleanedHtml = cleanedHtml.replace(/<a\s+href="[^"]*(register|sign-in)[^"]*"[^>]*>[\s\S]*?<\/a>/gi, "");
 
     // Dinamik branding enjeksiyonu (Eğer white-label değilse)
     if (!isWhiteLabelUser) {
       const dynamicBrandingHtml = `
-        <a href="/register" class="clinkor-global-branding" style="position: absolute !important; bottom: 24px !important; left: 50% !important; transform: translateX(-50%) !important; z-index: 9999 !important; background: rgba(255, 255, 255, 0.95) !important; color: #000 !important; padding: 8px 24px !important; border-radius: 50px !important; font-size: 11px !important; font-weight: 700 !important; text-decoration: none !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important; white-space: nowrap !important; font-family: sans-serif !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; cursor: pointer !important;">
+        <a href="https://www.clinkor.com/sign-in" class="clinkor-global-branding" style="position: absolute !important; bottom: 24px !important; left: 50% !important; transform: translateX(-50%) !important; z-index: 9999 !important; background: rgba(255, 255, 255, 0.95) !important; color: #000 !important; padding: 8px 24px !important; border-radius: 50px !important; font-size: 11px !important; font-weight: 700 !important; text-decoration: none !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important; white-space: nowrap !important; font-family: sans-serif !important; display: inline-block !important; visibility: visible !important; opacity: 1 !important; cursor: pointer !important;">
           ${lang === "tr" ? "Clinkor'da Kendi Sayfanı Oluştur" : "Create Your Own Page on Clinkor"}
         </a>
       `;
@@ -1021,7 +1021,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
          fontFamily: "sans-serif"
        }}
      >
-         <Link href="/register" className="branding-link" style={{ color: "#000", textDecoration: "none" }}>
+         <Link href="https://www.clinkor.com/sign-in" className="branding-link" style={{ color: "#000", textDecoration: "none" }}>
              {lang === "tr" ? "Clinkor'da Kendi Sayfanı Oluştur" : "Create Your Own Page on Clinkor"}
          </Link>
      </div>
