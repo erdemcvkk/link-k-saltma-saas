@@ -220,13 +220,19 @@ export default function TemplatesClient({
   const [newLinkTitle, setNewLinkTitle] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("default");
+  const [selectedCategory, setSelectedCategory] = useState("Tümü");
+
+  const categories = useMemo(() => {
+    return ["Tümü", ...Array.from(new Set(ownedTemplates.map((t) => t.category || "Genel")))];
+  }, [ownedTemplates]);
 
   const sortedTemplates = useMemo(() => {
     return [...ownedTemplates]
       .filter((template) => {
         const matchesQuery = template.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-          template.category.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesQuery;
+          (template.category || "Genel").toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = selectedCategory === "Tümü" || (template.category || "Genel") === selectedCategory;
+        return matchesQuery && matchesCategory;
       })
       .sort((a, b) => {
         const isActiveA = activeTemplate?.id === a.id;
@@ -1790,6 +1796,25 @@ export default function TemplatesClient({
           </select>
           <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
         </div>
+      </div>
+    )}
+
+    {/* Category Tabs */}
+    {ownedTemplates.length > 0 && (
+      <div className="flex flex-wrap gap-1.5 justify-start pb-4 border-b border-zinc-100 mb-4">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedCategory === cat
+                ? "bg-zinc-900 text-white shadow-sm"
+                : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 border border-zinc-200"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
     )}
 
