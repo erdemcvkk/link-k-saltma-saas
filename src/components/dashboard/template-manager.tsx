@@ -57,10 +57,19 @@ export default function TemplateManager({ adminUserId, initialTemplates }: Templ
   };
 
   if (view === 'editor') {
+    const categories = Array.from(
+      new Set(
+        templates
+          .map(t => t.category || "Genel")
+          .filter((cat): cat is string => typeof cat === 'string' && cat.trim() !== '')
+      )
+    );
+
     return (
       <TemplateEditor 
         adminUserId={adminUserId}
         initialTemplate={editingTemplate}
+        existingCategories={categories}
         onBack={() => setView('list')}
         onSaveSuccess={handleSaveSuccess}
       />

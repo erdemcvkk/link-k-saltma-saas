@@ -7,11 +7,12 @@ import { createTemplate, updateTemplate } from '@/app/actions';
 interface TemplateEditorProps {
   adminUserId?: string;
   initialTemplate?: any;
+  existingCategories?: string[];
   onBack?: () => void;
   onSaveSuccess?: (template: any) => void;
 }
 
-export default function TemplateEditor({ adminUserId, initialTemplate, onBack, onSaveSuccess }: TemplateEditorProps) {
+export default function TemplateEditor({ adminUserId, initialTemplate, existingCategories, onBack, onSaveSuccess }: TemplateEditorProps) {
   // Tabs and Architecture States
   const [activeTab, setActiveTab] = useState('html');
   const [masterHtml, setMasterHtml] = useState(
@@ -38,6 +39,21 @@ export default function TemplateEditor({ adminUserId, initialTemplate, onBack, o
   const [isFree, setIsFree] = useState(initialTemplate ? initialTemplate.price === 0 : false);
   const [isComingSoon, setIsComingSoon] = useState(initialTemplate?.isComingSoon || false);
   const [paymentUrl, setPaymentUrl] = useState(initialTemplate?.paymentUrl || "");
+
+  const [selectedCategory, setSelectedCategory] = useState(initialTemplate?.category || "Genel");
+  const [customCategory, setCustomCategory] = useState("");
+
+  const categoriesList = React.useMemo(() => {
+    const list = [...(existingCategories || [])];
+    const initialCat = initialTemplate?.category;
+    if (initialCat && !list.includes(initialCat)) {
+      list.push(initialCat);
+    }
+    if (!list.includes("Genel")) {
+      list.push("Genel");
+    }
+    return list;
+  }, [existingCategories, initialTemplate?.category]);
 
   const [isPending, setIsPending] = useState(false);
 
@@ -149,7 +165,7 @@ export default function TemplateEditor({ adminUserId, initialTemplate, onBack, o
       const payload = {
         name: templateName,
         price: isFree ? 0 : Number(templatePrice) || 0,
-        category: initialTemplate?.category || "Genel",
+        category: selectedCategory === "__new__" ? (customCategory.trim() || "Genel") : selectedCategory,
         coverUrl: initialTemplate?.coverUrl || "",
         bgColor: initialTemplate?.bgColor || "#000000",
         fontStyle: initialTemplate?.fontStyle || "Inter",
@@ -283,6 +299,42 @@ export default function TemplateEditor({ adminUserId, initialTemplate, onBack, o
                       className="w-full bg-zinc-950/50 border border-zinc-800/80 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
                     />
                   </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Kategori</label>
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => {
+                        setSelectedCategory(e.target.value);
+                        if (e.target.value !== "__new__") {
+                          setCustomCategory("");
+                        }
+                      }}
+                      className="w-full bg-zinc-950/50 border border-zinc-800/80 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer"
+                    >
+                      {categoriesList.map(cat => (
+                        <option key={cat} value={cat} className="bg-zinc-900 text-white">
+                          {cat}
+                        </option>
+                      ))}
+                      <option value="__new__" className="bg-zinc-900 text-indigo-400 font-bold">
+                        + Yeni Kategori Ekle
+                      </option>
+                    </select>
+                  </div>
+
+                  {selectedCategory === "__new__" && (
+                    <div className="flex flex-col gap-2 animate-in fade-in duration-300">
+                      <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Yeni Kategori Adı</label>
+                      <input 
+                        type="text"
+                        value={customCategory}
+                        onChange={(e) => setCustomCategory(e.target.value)}
+                        placeholder="Örn: Creator, E-Ticaret, Minimalist"
+                        className="w-full bg-zinc-950/50 border border-zinc-800/80 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                      />
+                    </div>
+                  )}
 
                   <div className="flex items-center justify-between p-4 bg-zinc-950/50 border border-zinc-800/80 rounded-xl">
                     <div className="flex flex-col">
