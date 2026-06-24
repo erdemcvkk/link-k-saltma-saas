@@ -5,6 +5,14 @@ export default clerkMiddleware(async (auth, request) => {
   const url = request.nextUrl;
   const pathname = url.pathname;
 
+  // Redirect Turkish characters in about-us path to standard URL path
+  try {
+    const decodedPath = decodeURIComponent(pathname);
+    if (decodedPath === '/hakkımızda' || decodedPath === '/hakkımızda/') {
+      return NextResponse.redirect(new URL('/hakkimizda', request.url));
+    }
+  } catch (e) {}
+
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-pathname', pathname);
 

@@ -94,6 +94,7 @@ const PUBLIC_SAAS_ROUTES = [
   "/gizlilik-politikasi",
   "/cerez-politikasi",
   "/hakkimizda",
+  "/hakkımızda",
   "/discover",
   "/kesfet"
 ];

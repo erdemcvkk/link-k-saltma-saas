@@ -44,7 +44,7 @@ export default async function Footer() {
           title: "Kurumsal",
           order: 0,
           links: [
-            { label: "Hakkımızda", url: "/", order: 0 },
+            { label: "Hakkımızda", url: "/hakkimizda", order: 0 },
             { label: "Şablonlar", url: "/sablonlar", order: 1 },
             { label: "Eklentiler", url: "/eklentiler", order: 2 },
           ],
@@ -150,16 +150,19 @@ export default async function Footer() {
                 <ul className="space-y-2">
                   {section.links
                     .sort((a, b) => a.order - b.order)
-                    .map((link) => (
-                      <li key={link.id}>
-                        <Link
-                          href={link.url}
-                          className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-corporate"
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
+                    .map((link) => {
+                      const displayUrl = (link.label === "Hakkımızda" && (link.url === "/" || link.url === "")) ? "/hakkimizda" : link.url;
+                      return (
+                        <li key={link.id}>
+                          <Link
+                            href={displayUrl}
+                            className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-corporate"
+                          >
+                            {link.label}
+                          </Link>
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
             ))}
