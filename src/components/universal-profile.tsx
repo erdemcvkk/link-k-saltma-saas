@@ -373,13 +373,90 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
       ).join('');
     });
 
+    // Inject Media Banner if configured
+    let mediaBannerHtml = "";
+    const mType = templateSettings?.mediaBannerType;
+    const mImg = templateSettings?.mediaBannerImage;
+    const mVideo = templateSettings?.mediaBannerVideo;
+
+    if (mType === "image" && mImg) {
+      mediaBannerHtml = `
+        <div class="clinkor-media-banner w-full mb-4 rounded-2xl overflow-hidden shadow-sm" style="max-width: 100%; width: 100%; display: block; border-radius: 16px;">
+          <img src="${mImg}" class="w-full h-auto object-cover rounded-2xl" style="width: 100%; height: auto; display: block; border-radius: 16px;" alt="Media Banner" />
+        </div>
+      `;
+    } else if (mType === "video" && mVideo) {
+      const regExpYt = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const matchYt = mVideo.match(regExpYt);
+      const regExpVm = /vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/;
+      const matchVm = mVideo.match(regExpVm);
+
+      if (matchYt && matchYt[2].length === 11) {
+        mediaBannerHtml = `
+          <div class="clinkor-media-banner w-full mb-4 rounded-2xl overflow-hidden aspect-video bg-black shadow-sm" style="max-width: 100%; width: 100%; display: block; aspect-ratio: 16/9; position: relative; border-radius: 16px;">
+            <iframe src="https://www.youtube.com/embed/${matchYt[2]}" class="w-full h-full border-none rounded-2xl" style="position: absolute; top:0; left:0; width:100%; height:100%; border-radius: 16px;" allowfullscreen></iframe>
+          </div>
+        `;
+      } else if (matchVm && matchVm[1]) {
+        mediaBannerHtml = `
+          <div class="clinkor-media-banner w-full mb-4 rounded-2xl overflow-hidden aspect-video bg-black shadow-sm" style="max-width: 100%; width: 100%; display: block; aspect-ratio: 16/9; position: relative; border-radius: 16px;">
+            <iframe src="https://player.vimeo.com/video/${matchVm[1]}" class="w-full h-full border-none rounded-2xl" style="position: absolute; top:0; left:0; width:100%; height:100%; border-radius: 16px;" allowfullscreen></iframe>
+          </div>
+        `;
+      } else {
+        mediaBannerHtml = `
+          <div class="clinkor-media-banner w-full mb-4 rounded-2xl overflow-hidden shadow-sm" style="max-width: 100%; width: 100%; display: block; border-radius: 16px;">
+            <video src="${mVideo}" controls class="w-full h-auto object-contain rounded-2xl" style="width: 100%; height: auto; display: block; border-radius: 16px;"></video>
+          </div>
+        `;
+      }
+    }
+
+    if (mediaBannerHtml) {
+      const mPos = templateSettings?.mediaBannerPosition || "top";
+      const isBottom = mPos === "bottom";
+      const isTop = mPos === "top";
+
+      if (isTop || isBottom) {
+        if (finalParsedHtml.includes("[LINK_LOOP]")) {
+          if (isBottom && finalParsedHtml.includes("[/LINK_LOOP]")) {
+            finalParsedHtml = finalParsedHtml.replace("[/LINK_LOOP]", "[/LINK_LOOP]" + mediaBannerHtml);
+          } else {
+            finalParsedHtml = finalParsedHtml.replace("[LINK_LOOP]", mediaBannerHtml + "[LINK_LOOP]");
+          }
+        } else if (finalParsedHtml.includes("[LINKS_SECTION]")) {
+          if (isBottom) {
+            finalParsedHtml = finalParsedHtml.replace("[LINKS_SECTION]", "[LINKS_SECTION]" + mediaBannerHtml);
+          } else {
+            finalParsedHtml = finalParsedHtml.replace("[LINKS_SECTION]", mediaBannerHtml + "[LINKS_SECTION]");
+          }
+        } else {
+          if (isBottom) {
+            finalParsedHtml = finalParsedHtml + mediaBannerHtml;
+          } else {
+            finalParsedHtml = mediaBannerHtml + finalParsedHtml;
+          }
+        }
+      }
+    }
+
     // Link Loop Parser
     finalParsedHtml = finalParsedHtml.replace(/\[LINK_LOOP\]([\s\S]*?)\[\/LINK_LOOP\]/g, (match, inner) => {
       if (!links || links.length === 0) return '';
-      return links.map((l: any) => 
-        inner.replace(/{{linkTitle}}/g, l.title || '')
-             .replace(/{{linkUrl}}/g, l.url || '')
-      ).join('');
+      const mPos = templateSettings?.mediaBannerPosition;
+      const parsedPos = parseInt(mPos || "");
+      const hasBetweenBanner = mType && mType !== "none" && !isNaN(parsedPos);
+
+      return links.map((l: any, idx: number) => {
+        let linkHtml = inner
+             .replace(/{{linkTitle}}/g, l.title || '')
+             .replace(/{{linkUrl}}/g, l.url || '');
+             
+        if (hasBetweenBanner && (idx + 1) === parsedPos && mediaBannerHtml) {
+          linkHtml = linkHtml + "\n" + mediaBannerHtml;
+        }
+        return linkHtml;
+      }).join('');
     });
 
     // Standart verileri de ekle
@@ -921,6 +998,34 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 
  {/* Links Grid */}
   <div className="links-container w-full flex flex-col gap-3" style={{ position: 'relative', height: 'auto', minHeight: 'fit-content' }}>
+    {/* Media Banner Section (if configured to top) */}
+    {(() => {
+      const mType = templateSettings?.mediaBannerType;
+      const mImg = templateSettings?.mediaBannerImage;
+      const mVideo = templateSettings?.mediaBannerVideo;
+      const mPos = templateSettings?.mediaBannerPosition || "top";
+
+      if (!mType || mType === "none" || mPos === "bottom" || !isNaN(parseInt(mPos))) return null;
+
+      if (mType === "image" && mImg) {
+        return (
+          <div className="w-full mb-3 rounded-2xl overflow-hidden shadow-sm">
+            <img src={mImg} className="w-full h-auto object-cover rounded-2xl" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '16px' }} alt="Media Banner" />
+          </div>
+        );
+      }
+
+      if (mType === "video" && mVideo) {
+        return (
+          <div className="w-full mb-3 rounded-2xl overflow-hidden shadow-sm">
+            <VideoPlayer title={lang === "tr" ? "Tanıtım Videosu" : "Promo Video"} url={mVideo} isDark={isDark} />
+          </div>
+        );
+      }
+
+      return null;
+    })()}
+
   {links.length > 0 && <h3 className={`text-[10px] uppercase tracking-widest font-bold mb-1 ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>Links</h3>}
   {links.length === 0 ? (
     <>
@@ -977,20 +1082,82 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
           );
         }
 
+        const mPos = templateSettings?.mediaBannerPosition;
+        const parsedPos = parseInt(mPos || "");
+        const isAfterThisLink = !isNaN(parsedPos) && (idx + 1) === parsedPos;
+
+        const renderedBlock = (
+          <React.Fragment key={link.id}>
+            {blockElement}
+            {isAfterThisLink && (() => {
+              const mType = templateSettings?.mediaBannerType;
+              const mImg = templateSettings?.mediaBannerImage;
+              const mVideo = templateSettings?.mediaBannerVideo;
+
+              if (!mType || mType === "none") return null;
+
+              if (mType === "image" && mImg) {
+                return (
+                  <div className="w-full mt-3 mb-3 rounded-2xl overflow-hidden shadow-sm">
+                    <img src={mImg} className="w-full h-auto object-cover rounded-2xl" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '16px' }} alt="Media Banner" />
+                  </div>
+                );
+              }
+
+              if (mType === "video" && mVideo) {
+                return (
+                  <div className="w-full mt-3 mb-3 rounded-2xl overflow-hidden shadow-sm">
+                    <VideoPlayer title={lang === "tr" ? "Tanıtım Videosu" : "Promo Video"} url={mVideo} isDark={isDark} />
+                  </div>
+                );
+              }
+
+              return null;
+            })()}
+          </React.Fragment>
+        );
+
         if (showAd && idx === adIndex) {
           return (
             <React.Fragment key={`ad-frag-${link.id}`}>
               {renderSponsoredBlock()}
-              {blockElement}
+              {renderedBlock}
             </React.Fragment>
           );
         }
 
-        return blockElement;
+        return renderedBlock;
       });
     })()
   )}
- </div>
+    {/* Media Banner Section (if configured to bottom) */}
+    {(() => {
+      const mType = templateSettings?.mediaBannerType;
+      const mImg = templateSettings?.mediaBannerImage;
+      const mVideo = templateSettings?.mediaBannerVideo;
+      const mPos = templateSettings?.mediaBannerPosition || "top";
+
+      if (!mType || mType === "none" || mPos !== "bottom") return null;
+
+      if (mType === "image" && mImg) {
+        return (
+          <div className="w-full mt-3 rounded-2xl overflow-hidden shadow-sm">
+            <img src={mImg} className="w-full h-auto object-cover rounded-2xl" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '16px' }} alt="Media Banner" />
+          </div>
+        );
+      }
+
+      if (mType === "video" && mVideo) {
+        return (
+          <div className="w-full mt-3 rounded-2xl overflow-hidden shadow-sm">
+            <VideoPlayer title={lang === "tr" ? "Tanıtım Videosu" : "Promo Video"} url={mVideo} isDark={isDark} />
+          </div>
+        );
+      }
+
+      return null;
+    })()}
+  </div>
 
  {/* Addons Grid */}
  {addons && addons.length > 0 && (

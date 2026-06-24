@@ -1601,6 +1601,163 @@ export default function TemplatesClient({
                           </div>
                         )}
                       </div>
+
+                      {/* 7. GÖRSEL VE VİDEO ALANI */}
+                      <div className="border border-zinc-200 rounded-2xl overflow-hidden shadow-sm bg-white">
+                        <button
+                          type="button"
+                          onClick={() => setActiveCategory(activeCategory === "mediaBanner" ? "" : "mediaBanner")}
+                          className="w-full px-5 py-4 flex items-center justify-between bg-zinc-50 hover:bg-zinc-100 transition-colors text-left"
+                        >
+                          <div className="flex items-center gap-3 text-zinc-800">
+                            <Image className="h-5 w-5 text-teal-500" />
+                            <span className="font-extrabold text-sm uppercase tracking-wider">
+                              {lang === "tr" ? "7. Görsel ve Video Alanı" : "7. Image and Video Section"}
+                            </span>
+                          </div>
+                          <ChevronDown className={`h-5 w-5 text-zinc-400 transition-transform duration-300 ${activeCategory === "mediaBanner" ? "rotate-180" : ""}`} />
+                        </button>
+                        {activeCategory === "mediaBanner" && (
+                          <div className="p-5 border-t border-zinc-150 space-y-4 animate-in fade-in duration-200">
+                            
+                            {/* Media Type Select */}
+                            <div className="space-y-1.5">
+                              <label className="text-xs font-bold text-zinc-700 block">
+                                {lang === "tr" ? "Blok Türü" : "Block Type"}
+                              </label>
+                              <select
+                                value={templateSettings.mediaBannerType || "none"}
+                                onChange={(e) => setTemplateSettings(prev => ({ ...prev, mediaBannerType: e.target.value }))}
+                                className="w-full px-3.5 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm outline-none focus:border-teal-500 cursor-pointer font-semibold text-zinc-800"
+                              >
+                                <option value="none">{lang === "tr" ? "Yok (Devre Dışı)" : "None (Disabled)"}</option>
+                                <option value="image">{lang === "tr" ? "Görsel (Image)" : "Image"}</option>
+                                <option value="video">{lang === "tr" ? "Video (YouTube / Vimeo / URL)" : "Video (YouTube / Vimeo / URL)"}</option>
+                              </select>
+                            </div>
+
+                            {/* Media Position Select */}
+                            {templateSettings.mediaBannerType && templateSettings.mediaBannerType !== "none" && (
+                              <div className="space-y-1.5 animate-in fade-in duration-200">
+                                <label className="text-xs font-bold text-zinc-700 block">
+                                  {lang === "tr" ? "Görüntülenme Sırası" : "Display Position"}
+                                </label>
+                                <select
+                                  value={templateSettings.mediaBannerPosition || "top"}
+                                  onChange={(e) => setTemplateSettings(prev => ({ ...prev, mediaBannerPosition: e.target.value }))}
+                                  className="w-full px-3.5 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm outline-none focus:border-teal-500 cursor-pointer font-semibold text-zinc-800"
+                                >
+                                  <option value="top">{lang === "tr" ? "Linklerin Üstünde (En Tepede)" : "Above Links (Top)"}</option>
+                                  {links.map((link, idx) => (
+                                    <option key={link.id} value={String(idx + 1)}>
+                                      {lang === "tr" ? `${idx + 1}. Linkten Sonra` : `After Link ${idx + 1}`} ({link.title})
+                                    </option>
+                                  ))}
+                                  <option value="bottom">{lang === "tr" ? "Linklerin Altında (En Altta)" : "Below Links (Bottom)"}</option>
+                                </select>
+                              </div>
+                            )}
+
+                            {/* Conditional Image Upload / URL Input */}
+                            {templateSettings.mediaBannerType === "image" && (
+                              <div className="space-y-4 pt-2 animate-in fade-in duration-200">
+                                <div className="space-y-2">
+                                  <label className="text-xs font-bold text-zinc-700 block">
+                                    {lang === "tr" ? "Görsel Yükle" : "Upload Image"}
+                                  </label>
+                                  <div className="p-4 rounded-xl border flex flex-col sm:flex-row items-center gap-4 bg-zinc-50 border-zinc-200">
+                                    <div className="w-24 h-16 rounded-xl border flex items-center justify-center overflow-hidden shrink-0 bg-white border-zinc-300 shadow-inner">
+                                      {templateSettings.mediaBannerImage ? (
+                                        <img src={templateSettings.mediaBannerImage} alt="Banner Preview" className="w-full h-full object-cover" />
+                                      ) : (
+                                        <Image className="h-6 w-6 text-slate-500" />
+                                      )}
+                                    </div>
+                                    <div className="space-y-1.5 flex-1 w-full">
+                                      <div className="flex gap-2">
+                                        <label className="px-3 py-2 rounded-lg border text-xs font-bold transition-all cursor-pointer select-none bg-white hover:bg-zinc-50 border-zinc-300 text-zinc-700 shadow-sm">
+                                          {lang === "tr" ? "Görsel Seç" : "Select Image"}
+                                          <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => {
+                                              const file = e.target.files?.[0];
+                                              if (file) {
+                                                if (file.size > 2.5 * 1024 * 1024) {
+                                                  alert(lang === "tr" ? "Lütfen 2.5MB'den küçük bir görsel seçin!" : "Please select an image smaller than 2.5MB!");
+                                                  return;
+                                                }
+                                                const reader = new FileReader();
+                                                reader.onload = (event) => {
+                                                  if (event.target?.result) {
+                                                    setTemplateSettings(prev => ({
+                                                      ...prev,
+                                                      mediaBannerImage: event.target.result as string
+                                                    }));
+                                                  }
+                                                };
+                                                reader.readAsDataURL(file);
+                                              }
+                                            }}
+                                          />
+                                        </label>
+                                        {templateSettings.mediaBannerImage && (
+                                          <button
+                                            type="button"
+                                            onClick={() => setTemplateSettings(prev => ({ ...prev, mediaBannerImage: "" }))}
+                                            className="px-3 py-2 rounded-lg border border-red-200 text-red-650 hover:bg-red-50 text-xs font-bold transition-colors cursor-pointer"
+                                          >
+                                            {lang === "tr" ? "Sil" : "Remove"}
+                                          </button>
+                                        )}
+                                      </div>
+                                      <p className="text-[10px] text-zinc-400">
+                                        {lang === "tr" ? "Maksimum 2.5MB, PNG veya JPG formatı önerilir." : "Recommended maximum 2.5MB size, PNG or JPG format."}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="space-y-1.5">
+                                  <label className="text-xs font-bold text-zinc-700 block">
+                                    {lang === "tr" ? "Veya Görsel URL Adresi" : "Or Image URL Address"}
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={templateSettings.mediaBannerImage || ""}
+                                    onChange={(e) => setTemplateSettings(prev => ({ ...prev, mediaBannerImage: e.target.value }))}
+                                    placeholder="https://example.com/banner.jpg"
+                                    className="w-full px-3.5 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm outline-none focus:border-teal-500 font-semibold text-zinc-800"
+                                  />
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Conditional Video Input */}
+                            {templateSettings.mediaBannerType === "video" && (
+                              <div className="space-y-4 pt-2 animate-in fade-in duration-200">
+                                <div className="space-y-1.5">
+                                  <label className="text-xs font-bold text-zinc-700 block">
+                                    {lang === "tr" ? "Video Paylaşım Linki (YouTube / Vimeo / MP4)" : "Video Sharing Link (YouTube / Vimeo / MP4)"}
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={templateSettings.mediaBannerVideo || ""}
+                                    onChange={(e) => setTemplateSettings(prev => ({ ...prev, mediaBannerVideo: e.target.value }))}
+                                    placeholder="https://www.youtube.com/watch?v=... veya MP4 Linki"
+                                    className="w-full px-3.5 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm outline-none focus:border-teal-500 font-semibold text-zinc-800"
+                                  />
+                                </div>
+                                <p className="text-[10px] text-zinc-400">
+                                  {lang === "tr" ? "YouTube izleme bağlantıları, Vimeo bağlantıları veya doğrudan mp4/webm dosya bağlantıları desteklenir." : "Supports YouTube watch links, Vimeo links, or direct mp4/webm links."}
+                                </p>
+                              </div>
+                            )}
+
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                      {/* 5. ACTION BUTTONS */}
