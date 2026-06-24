@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { Cookie, ArrowLeft } from "lucide-react";
+import { Cookie } from "lucide-react";
 import { Metadata } from "next";
 
 export const revalidate = 0;
@@ -96,15 +96,6 @@ export default async function CookiePolicyPage() {
  {/* Hero Header */}
  <div className="bg-white border-b border-zinc-100 shadow-sm">
  <div className="max-w-4xl mx-auto px-6 py-8">
- <div className="flex items-center gap-3 mb-4">
- <Link
- href="/"
- className="flex items-center gap-1.5 text-xs font-bold text-zinc-400 hover:text-amber-500 transition-colors"
- >
- <ArrowLeft className="h-3.5 w-3.5" />
- Ana Sayfa
- </Link>
- </div>
  <div className="flex items-center gap-4">
  <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-500">
  <Cookie className="h-6 w-6" />
