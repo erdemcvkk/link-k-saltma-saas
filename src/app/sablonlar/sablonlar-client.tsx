@@ -71,7 +71,7 @@ const getDummyData = (template: Template): UniversalProfileData => {
  templateId: template.id,
  username: "kullaniciadi",
  bio: "Bu harika şablonun canlı önizlemesidir. Kendi sayfanızda uygulamak için hemen sahip olun!",
- avatarUrl: null,
+ avatarUrl: "https://ui-avatars.com/api/?name=Clinkor+User&background=random&color=fff",
  theme: template.name,
  background: template.bgColor,
  fontStyle: template.fontStyle,
