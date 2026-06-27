@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+
 const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
@@ -19,6 +20,20 @@ const nextConfig: NextConfig = {
         hostname: 'ui-avatars.com',
       }
     ],
+  },
+  async headers() {
+    const isProd = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: isProd ? 'index, follow' : 'noindex, nofollow',
+          },
+        ],
+      },
+    ];
   },
 };
 
