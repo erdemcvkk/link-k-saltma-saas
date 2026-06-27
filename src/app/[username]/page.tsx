@@ -404,6 +404,7 @@ export default async function PublicProfilePage({ params, searchParams }: { para
         socials={mappedSocials}
         templateSettings={activeUser.profile?.templateSettings ?? null}
         isPremiumTemplateActive={activeUser.profile?.isPremiumTemplateActive ?? false}
+        showBadge={activeUser.plan !== "FREE"}
       />
     </>
   );

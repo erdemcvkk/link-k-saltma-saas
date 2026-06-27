@@ -96,6 +96,7 @@ interface UniversalProfileProps {
  lang?: "tr" | "en";
  isDashboardPreview?: boolean;
  forcePremiumRender?: boolean;
+ showBadge?: boolean;
 }
 
 const getAvatarShapeClass = (shape: string | undefined | null) => {
@@ -159,7 +160,7 @@ const scopeCssWithClass = (css: string, className: string): string => {
   return result;
 };
 
-export default function UniversalProfile({ data, isCompactMode = false, isDarkContext = true, lang = "tr", isDashboardPreview = false, forcePremiumRender = false }: UniversalProfileProps) {
+export default function UniversalProfile({ data, isCompactMode = false, isDarkContext = true, lang = "tr", isDashboardPreview = false, forcePremiumRender = false, showBadge = false }: UniversalProfileProps) {
  // Generate a unique ID to safely scope CSS per instance
  const rawId = useId();
  const wrapperId = `univ-profile-${rawId.replace(/:/g, "")}`;
@@ -271,13 +272,13 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
 
     return renderTemplate(
       templateParts,
-      { username, displayName: displayName || username, bio, avatarUrl },
+      { username, displayName: displayName || username, bio, avatarUrl, plan },
       links || [],
       jsonConfig,
       socials || socialLinks || null,
       templateSettings || null
     );
-  }, [isPremiumTemplateActive, forcePremiumRender, isCoded, customHtml, masterLayoutHtml, avatarHtml, headerHtml, socialHtml, linksHtml, backgroundHtml, customCss, jsonConfig, username, displayName, bio, avatarUrl, links, socialLinks, socials, templateSettings]);
+  }, [isPremiumTemplateActive, forcePremiumRender, isCoded, customHtml, masterLayoutHtml, avatarHtml, headerHtml, socialHtml, linksHtml, backgroundHtml, customCss, jsonConfig, username, displayName, bio, avatarUrl, links, socialLinks, socials, templateSettings, plan]);
 
   const isCodedRender = !!((isPremiumTemplateActive || forcePremiumRender) && (customHtml || masterLayoutHtml));
 
@@ -460,7 +461,12 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
     });
 
     // Standart verileri de ekle
-    finalParsedHtml = finalParsedHtml.replace(/{{displayName}}/g, displayName || username || '')
+    const hasBadge = showBadge || (plan && plan !== "FREE");
+    const proBadgeSvg = `<span class="clinkor-pro-badge"><svg class="clinkor-pro-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#1D9BF0"/><path d="M9.5 12.5L11 14L15 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+    const nameText = displayName || username || '';
+    const finalDisplayNameText = hasBadge ? `${nameText}${proBadgeSvg}` : nameText;
+
+    finalParsedHtml = finalParsedHtml.replace(/{{displayName}}/g, finalDisplayNameText)
                            .replace(/{{bio}}/g, bio || '')
                            .replace(/{{avatarUrl}}/g, avatarUrl || '');
 
@@ -937,7 +943,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  </div>
  <div className="space-y-0.5 flex-1 min-w-0">
  <h1 style={usernameColor ? { color: usernameColor } : undefined} className={`text-base font-black truncate leading-tight ${currentStyles.glowText}`}>
- @{username}
+ <span className="inline-flex items-center gap-1">@{username}{showBadge && <svg className="inline-block w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#1D9BF0"/><path d="M9.5 12.5L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}</span>
  </h1>
  {bio && (
  <p style={bioColor ? { color: bioColor } : undefined} className={`text-xs leading-normal line-clamp-2 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
@@ -965,7 +971,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  
  <div className="space-y-1 w-full px-4 mt-2">
  <h1 style={usernameColor ? { color: usernameColor } : undefined} className={`text-lg font-black tracking-tight ${currentStyles.glowText}`}>
- @{username}
+ <span className="inline-flex items-center gap-1 justify-center">@{username}{showBadge && <svg className="inline-block w-[18px] h-[18px] shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#1D9BF0"/><path d="M9.5 12.5L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}</span>
  </h1>
  {bio && (
  <p style={bioColor ? { color: bioColor } : undefined} className={`text-xs leading-relaxed max-w-xs mx-auto px-2 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>
@@ -985,7 +991,7 @@ export default function UniversalProfile({ data, isCompactMode = false, isDarkCo
  </div>
  <div className="space-y-1 w-full">
  <h1 style={usernameColor ? { color: usernameColor } : undefined} className={`text-xl font-bold ${currentStyles.glowText}`}>
- @{username}
+ <span className="inline-flex items-center gap-1 justify-center">@{username}{showBadge && <svg className="inline-block w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#1D9BF0"/><path d="M9.5 12.5L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>}</span>
  </h1>
  {bio && (
  <p style={bioColor ? { color: bioColor } : undefined} className={`text-xs leading-relaxed max-w-xs mx-auto px-2 ${isDark ? "text-zinc-400" : "text-zinc-600"}`}>

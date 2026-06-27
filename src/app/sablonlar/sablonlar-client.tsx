@@ -98,7 +98,8 @@ const getDummyData = (template: Template): UniversalProfileData => {
   { socialPlatform: "instagram", socialUrl: "https://instagram.com/clinkor" },
   { socialPlatform: "twitter", socialUrl: "https://twitter.com/clinkor" }
  ],
- isPremiumTemplateActive: false
+ isPremiumTemplateActive: false,
+ plan: "PRO"
  };
 };
 
@@ -349,6 +350,7 @@ export default function SablonlarClient({ initialTemplates, userId, initialOwned
  isCompactMode={true} 
  isDarkContext={!isLightColor(template.bgColor) && !["Sandstone Zen", "Swiss Minimalist", "Neo-Brutalist Grid"].includes(template.name)} 
  forcePremiumRender={true}
+ showBadge={true}
  />
  </div>
 

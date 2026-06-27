@@ -632,3 +632,17 @@
   margin: 0 !important;
   padding: 0 !important;
 }
+
+/* Premium/Pro Badge styling */
+.clinkor-pro-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin-left: 6px !important;
+  vertical-align: middle !important;
+}
+.clinkor-pro-svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+  display: inline-block !important;
+}

@@ -64,6 +64,7 @@ interface ProfileClientProps {
  } | null;
  purchasedTemplates?: any[];
  purchasedModules?: any[];
+ showBadge?: boolean;
  isActiveTemplatePremium?: boolean;
  hasActivePremiumModule?: boolean;
  isCoded?: boolean;
@@ -120,7 +121,8 @@ export default function ProfileClient({
   socialLinks = null,
   socials = null,
   isPremiumTemplateActive = false,
-  templateSettings = null
+  templateSettings = null,
+  showBadge = false
 }: ProfileClientProps) {
  const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
  const [cardNumber, setCardNumber] = useState("");
@@ -226,7 +228,7 @@ export default function ProfileClient({
  return (
  <>
  <GlobalOverlayManager onStateChange={handleStateChange} />
- <UniversalProfile data={profileData} isDarkContext={activeTheme === "dark"} lang={lang} />
+ <UniversalProfile data={profileData} isDarkContext={activeTheme === "dark"} lang={lang} showBadge={showBadge} />
  
  {/* Product Modals */}
  {selectedProduct && (
