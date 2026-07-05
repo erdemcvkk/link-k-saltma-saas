@@ -21,16 +21,6 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.clinkor.com' }],
-        destination: 'https://clinkor.com/:path*',
-        permanent: true,
-      },
-    ];
-  },
   async headers() {
     // VERCEL_ENV: 'production' | 'preview' | 'development'
     // NODE_ENV is always 'production' on Vercel builds, so we must use VERCEL_ENV
