@@ -24,6 +24,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Clinkor | Biyografi ve Link Yönetimi",
   description: "Clinkor, sosyal medya hesaplarınızı, dijital ürünlerinizi, eklentilerinizi ve bağlantılarınızı tek bir şık biyografi sayfasında toplamanıza ve analiz etmenize imkan tanıyan lider link yönetim platformudur.",
+  verification: {
+    google: "TYPyQyF4mJWpr8j6cyVhoz-YThJzErw1bRBRDfqa_UE",
+  },
   robots: {
     index: true,
     follow: true,
